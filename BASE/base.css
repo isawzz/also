@@ -1,0 +1,11 @@
+.linebreak {
+	flex-basis: 100%;
+	height: 0px;
+}
+.flexWrap {
+	display: flex;
+	flex: 1;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: flex-start; /* das ist bei den meisten nicht so gewesen! */
+}

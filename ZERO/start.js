@@ -18,15 +18,7 @@ async function _start() {
 	console.assert(isdef(DB));
 
 	initLive();
-	initTable();
-	initSidebar();
-	initAux();
-	initScore();
-	initSymbolTableForGamesAddons(); //creates Daat
-
-	//initAddons(); //old API ==>deprecate
-	addonFeatureInit(); //new API!
-
+	dTable = mBy('table');
 	Speech = new SpeechAPI('E');
 
 	KeySets = getKeySets();
