@@ -18,16 +18,13 @@ async function _start() {
 	console.assert(isdef(DB));
 
 	initLive();
-	dTable = mBy('table');
+	dTable = mBy('dTable');
 	Speech = new SpeechAPI('E');
 
 	KeySets = getKeySets();
 
-	if (IS_TESTING) loadUser(Username); else loadUser();
-	console.assert(isdef(G));
-
-	let keys = ['fly']; //fromKeySet('nemo',9);
-	showPictureGrid(keys, dTable); return;
+	t99();
+	return;
 	//test10_syms(); return;
 
 	//show('freezer');

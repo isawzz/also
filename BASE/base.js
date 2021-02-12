@@ -68,7 +68,7 @@ function mStyleX(elem, styles, unit = 'px') {
 			continue;
 		} else if (k == 'border') {
 			//console.log('________________________YES!')
-			if (isNumber(val)) val=`solid ${val}px ${isdef(styles.fg)?styles.fg:'#ffffff80'}`;
+			if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
 			if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
 		} else if (k == 'layout') {
 			elem.style.setProperty('display', 'flex');
@@ -107,8 +107,62 @@ function mStyleX(elem, styles, unit = 'px') {
 
 //#endregion
 
+//#region color
+function computeColor(c) { return (c == 'random') ? randomColor() : c; }
+function computeColorX(c) {
+
+	let res = c;
+	if (isList(c)) return chooseRandom(c);
+	else if (isString(c) && startsWith(c, 'rand')) {
+		res = randomColor();
+		let spec = c.substring(4);
+		//console.log('______________________', spec);
+		if (isdef(window['color' + spec])) {
+			console.log('YES!');
+			res = window['color' + spec](res);
+		}
+
+	}
+	return res;
+}
+function getExtendedColors(bg, fg) {
+	//#region doc 
+	/* handles values random, inherit, contrast	*/
+	//#endregion 
+	bg = computeColor(bg);
+	fg = computeColor(fg);
+	if (bg == 'inherit' && (nundef(fg) || fg == 'contrast')) {
+		fg = 'inherit'; //contrast to parent bg!
+
+	} else if (fg == 'contrast' && isdef(bg) && bg != 'inherit') fg = colorIdealText(bg);
+	else if (bg == 'contrast' && isdef(fg) && fg != 'inherit') { bg = colorIdealText(fg); }
+	return [bg, fg];
+}
+
+//#endregion
+
 //#region init 
 function initLive() { Live = {}; }
+
+//#endregion
+
+//#region keys
+function getKeySets() {
+	let ks = localStorage.getItem('KeySets');
+	if (isdef(ks)) return JSON.parse(ks);
+
+	let res={};
+	for(const k in Syms){
+		let info = Syms[k];
+		if (nundef(info.cats)) continue;
+		for (const ksk of info.cats){
+			lookupAddIfToList(res,[ksk],k);
+		}
+	}
+	localStorage.setItem('KeySets', JSON.stringify(res));
+	return res;
+
+}
 
 //#endregion
 
@@ -201,6 +255,195 @@ async function localOrRoute(key, url) {
 
 //#endregion
 
+//#region objects (arrays, dictionaries...)
+function lookup(dict, keys) {
+	let d = dict;
+	let ilast = keys.length - 1;
+	let i = 0;
+	for (const k of keys) {
+		if (k === undefined) break;
+		let e = d[k];
+		if (e === undefined || e === null) return null;
+		d = d[k];
+		if (i == ilast) return d;
+		i += 1;
+	}
+	return d;
+}
+function lookupSet(dict, keys, val) {
+	let d = dict;
+	let ilast = keys.length - 1;
+	let i = 0;
+	for (const k of keys) {
+		if (nundef(k)) continue; //skip undef or null values
+		if (d[k] === undefined) d[k] = (i == ilast ? val : {});
+		if (nundef(d[k])) d[k] = (i == ilast ? val : {});
+		d = d[k];
+		if (i == ilast) return d;
+		i += 1;
+	}
+	return d;
+}
+function lookupSetOverride(dict, keys, val) {
+	let d = dict;
+	let ilast = keys.length - 1;
+	let i = 0;
+	for (const k of keys) {
+
+		//console.log(k,d)
+		if (i == ilast) {
+			if (nundef(k)) {
+				//letzter key den ich eigentlich setzen will ist undef!
+				alert('lookupAddToList: last key indefined!' + keys.join(' '));
+				return null;
+			} else {
+				d[k] = val;
+			}
+			return d[k];
+		}
+
+		if (nundef(k)) continue; //skip undef or null values
+
+		if (nundef(d[k])) d[k] = {};
+
+		d = d[k];
+		i += 1;
+	}
+	return d;
+}
+function lookupAddToList(dict, keys, val) {
+	//usage: lookupAddToList({a:{b:[2]}}, [a,b], 3) => {a:{b:[2,3]}}
+	//usage: lookupAddToList({a:{b:[2]}}, [a,c], 3) => {a:{b:[2],c:[3]}}
+	//usage: lookupAddToList({a:[0, [2], {b:[]}]}, [a,1], 3) => { a:[ 0, [2,3], {b:[]} ] }
+	let d = dict;
+	let ilast = keys.length - 1;
+	let i = 0;
+	for (const k of keys) {
+
+		if (i == ilast) {
+			if (nundef(k)) {
+				//letzter key den ich eigentlich setzen will ist undef!
+				alert('lookupAddToList: last key indefined!' + keys.join(' '));
+				return null;
+			} else if (isList(d[k])) {
+				d[k].push(val);
+			} else {
+				d[k] = [val];
+			}
+			return d[k];
+		}
+
+		if (nundef(k)) continue; //skip undef or null values
+
+		// if (i ==ilast && d[k]) d[k]=val;
+
+		if (d[k] === undefined) d[k] = {};
+
+		d = d[k];
+		i += 1;
+	}
+	return d;
+}
+function lookupAddIfToList(dict, keys, val) {
+	//usage see lookupAddToList 
+	//only adds it to list if not contained!
+	let lst = lookup(dict, keys);
+	if (isList(lst) && lst.includes(val)) return;
+	lookupAddToList(dict, keys, val);
+}
+function lookupRemoveFromList(dict, keys, val, deleteIfEmpty = false) {
+	//usage: lookupRemoveFromList({a:{b:[2]}}, [a,b], 2) => {a:{b:[]}} OR {a:{}} (wenn deleteIfEmpty==true)
+	//usage: lookupRemoveFromList({a:{b:[2,3]}}, [a,b], 3) => {a:{b:[2]}}
+	//usage: lookupRemoveFromList({a:[ 0, [2], {b:[]} ] }, [a,1], 2) => { a:[ 0, [], {b:[]} ] }
+	let d = dict;
+	let ilast = keys.length - 1;
+	let i = 0;
+	for (const k of keys) {
+
+		if (i == ilast) {
+			if (nundef(k)) {
+				//letzter key den ich eigentlich setzen will ist undef!
+				alert('lookupRemoveFromList: last key indefined!' + keys.join(' '));
+				return null;
+			} else if (isList(d[k])) {
+				removeInPlace(d[k], val);
+				if (deleteIfEmpty && isEmpty(d[k])) delete d[k];
+			} else {
+				if (d[k] === undefined) {
+					error('lookupRemoveFromList not a list ' + d[k]);
+					return null;
+				}
+			}
+			return d[k];
+		}
+
+		if (nundef(k)) continue; //skip undef or null values
+
+		// if (i ==ilast && d[k]) d[k]=val;
+
+		if (d[k] === undefined) {
+			error('lookupRemoveFromList key not found ' + k);
+			return null;
+		}
+
+		d = d[k];
+		i += 1;
+	}
+	return d;
+}
+//#endregion
+
+//#region random
+function coin(percent=50) {
+	let r = Math.random();
+	//r ist jetzt zahl zwischen 0 und 1
+	r *= 100;
+	return r < percent;
+}
+function choose(arr, n, exceptIndices) {
+	var result = [];
+	var len = arr.length;
+	var taken = new Array(len);
+	if (isdef(exceptIndices) && exceptIndices.length < len - n) {
+		for (const i of exceptIndices) if (i >= 0 && i <= len) taken[i] = true;
+	}
+	if (n > len) n = len - 1; 
+	while (result.length < n) {
+		var iRandom = Math.floor(Math.random() * len);
+		while (taken[iRandom]) { iRandom += 1; if (iRandom >= len) iRandom = 0; }
+		result.push(arr[iRandom]);
+		taken[iRandom] = true;
+	}
+	return result;
+}
+function chooseRandom(arr, condFunc = null) {
+	let len = arr.length;
+	if (condFunc) {
+		let best = arr.filter(condFunc);
+		if (!isEmpty(best)) return chooseRandom(best);
+	}
+	let idx = Math.floor(Math.random() * len);
+	return arr[idx];
+}
+function randomColor(s, l, a) { return isdef(s) ? randomHslaColor(s, l, a) : randomHexColor(); }
+function randomHslaColor(s = 100, l = 70, a = 1) {
+	//s,l in percent, a in [0,1], returns hsla string
+	var hue = Math.round(Math.random() * 360);
+	return hslToHslaString(hue, s, l, a);
+}
+function randomHexColor() {
+	let s = '#';
+	for (let i = 0; i < 6; i++) {
+		s += chooseRandom(['f', 'c', '9', '6', '3', '0']);
+	}
+	return s;
+}
+function randomNumber(min = 0, max = 100) {
+	return Math.floor(Math.random() * (max - min + 1)) + min; //min and max inclusive!
+}
+
+//#endregion
+
 //#region type checking / checking
 function isdef(x) { return x !== null && x !== undefined; }
 function nundef(x) { return x === null || x === undefined; }
@@ -214,7 +457,22 @@ function isString(param) { return typeof param == 'string'; }
 
 //#endregion
 
+//#region misc helpers
+function createElementFromHTML(htmlString) {
+	//console.log('---------------',htmlString)
+	var div = document.createElement('div');
+	div.innerHTML = htmlString.trim();// '<div>halloooooooooooooo</div>';// htmlString.trim();
 
+	// Change this to div.childNodes to support multiple top-level nodes
+	//console.log(div.firstChild)
+	return div.firstChild;
+}
+function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
+	if (nundef(nOrString)) return defaultVal;
+	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
+	return nOrString;
+}
+//#endregion
 
 
 
