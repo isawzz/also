@@ -1,3 +1,27 @@
+//#region _globals
+var Username,Gamename,Tablename;
+
+var I; //running instance
+var Live, DB, G, T, P, U, User, Settings, SettingsChanged; //, G...Game, T...Table, U...Userdata
+
+var Speech;
+
+var Pictures, Goal, Selected, Score;
+
+var TO; //timeout dictionary
+
+var uiActivated, auxOpen;
+
+var AD, ADS; //addons: current instance and dict of all existing addons (form DB)
+
+var UIS = {}; 
+
+var App; //not sure!
+var Daat = {}; //some kind of global object for testing ...
+
+//#endregion
+
+//#region helpers
 //#region _DOM constants, shape functions, ZMax and iZMax to control max zIndex
 const MSCATS = { rect: 'g', g: 'g', circle: 'g', text: 'g', polygon: 'g', line: 'g', body: 'd', svg: 'd', div: 'd', p: 'd', table: 'd', button: 'd', a: 'd', span: 'd', image: 'd', paragraph: 'd', anchor: 'd' };
 const SHAPEFUNCS = {
@@ -5966,3 +5990,4854 @@ function getZoomFactor(gElement) {
 
 
 
+
+//#endregion
+
+//#region assets
+//#region globals
+const SHOW_SERVER_ROUTE = false; // true | false
+const SHOW_SERVER_RETURN = false; // true | false
+const EMOFONTLIST = ['emoOpen', 'openmoBlack', 'segoe ui emoji', 'segoe ui symbol'];
+
+var vidCache, allGames, playerConfig, c52, cinno, testCards; //session data
+var defaultSpec, userSpec, userCode, serverData, prevServerData, tupleGroups, boats; //new game data
+
+var symbolDict, symbolKeys, symbolList; //gibt es immer
+var svgDict, svgKeys, svgList; //?
+var Syms,SymKeys; //new API!
+
+//the following are only produced lazily! (see ensure)
+// byType hat keys: emo, icon, eduplo, iduplo!!!
+var symByType, symBySet;//hier sind info dicts
+var symKeysByType, symKeysBySet;//hier sind key lists (dict by key)
+var symListByType, symListBySet;//hier sind info lists (dict by key)
+var svgDict, svgKeys, svgList; //?
+
+var BestKeysD, BestKeysE, BestKeySets;
+var DeDict,EdDict; //deutsch=>engl, engl=>deutsch
+//var CorrectKeysByLanguage,CorrectByKey;
+//var CorrectWords, CorrectWordsExact, CorrectWordsCorrect, CorrectWordsFailed; //dep!
+
+var symKeysByGroupSub;
+
+//var cachedInfolists = {};
+
+//#endregion
+
+//#region color constants
+const LIGHTGREEN = '#afff45'; //'#bfef45';
+const LIGHTBLUE = '#42d4f4';
+const YELLOW = '#ffe119';
+const RED = '#e6194B';
+const GREEN = '#3cb44b';
+const BLUE = '#4363d8';
+const PURPLE = '#911eb4';
+const YELLOW2 = '#ffa0a0';
+const TEAL = '#469990';
+const ORANGE = '#f58231';
+const FIREBRICK = '#800000';
+const OLIVE = '#808000';
+const CRIMSON = colorDarker('crimson',.25);
+
+const ColorList = ['lightgreen', 'lightblue', 'yellow', 'red', 'green', 'blue', 'purple', 'violet', 'lightyellow',
+	'teal', 'orange', 'brown', 'olive', 'deepskyblue', 'deeppink', 'gold', 'black', 'white', 'grey'];
+const ColorDict = {
+	black: { c: 'black', E: 'black', D: 'schwarz' },
+	blue: { c: 'blue', E: 'blue', D: 'blau' },
+	blue1: { c: BLUE, E: 'blue', D: 'blau' },
+	brown: { c: FIREBRICK, E: 'brown', D: 'rotbraun' },
+	crimson: { c: CRIMSON, E: 'red', D: 'rot' },
+	gold: { c: 'gold', E: 'gold', D: 'golden' },
+	green: { c: 'green', E: 'green', D: 'grün' },
+	green1: { c: GREEN, E: 'green', D: 'grün' },
+	grey: { c: 'grey', E: 'grey', D: 'grau' },
+	lightblue: { c: LIGHTBLUE, E: 'lightblue', D: 'hellblau' },
+	lightgreen: { c: LIGHTGREEN, E: 'lightgreen', D: 'hellgrün' },
+	lightyellow: { c: YELLOW2, E: 'lightyellow', D: 'gelb' },
+	olive: { c: OLIVE, E: 'olive', D: 'oliv' },
+	orange: { c: ORANGE, E: 'orange', D: 'orange' },
+	pink: { c: 'deeppink', E: 'pink', D: 'rosa' },
+	purple: { c: PURPLE, E: 'purple', D: 'lila' },
+	red: { c: 'red', E: 'red', D: 'rot' },
+	red1: { c: RED, E: 'red', D: 'rot' },
+	skyblue: { c: 'deepskyblue', E: 'skyblue', D: 'himmelblau' },
+	teal: { c: TEAL, E: 'teal', D: 'blaugrün' },
+	violet: { c: 'indigo', E: 'violet', D: 'violett' },
+	white: { c: 'white', E: 'white', D: 'weiss' },
+	yellow: { c: 'yellow', E: 'yellow', D: 'gelb' },
+	CRIMSON: { c: colorDarker('crimson',.25), E: 'crimson', D: 'rot' },
+	OLIVE: { c: '#808000', E: 'olive', D: 'oliv' },
+	FIREBRICK: { c: '#800000', E: 'darkred', D: 'rotbraun' },
+	ORANGE: { c: '#f58231', E: 'orange', D: 'orange' },
+	TEAL: { c: '#469990', E: 'teal', D: 'blaugrün' },
+	YELLOW2: { c: '#ffff33', E: 'yellow', D: 'gelb' },
+	PURPLE: { c: '#911eb4', E: 'purple', D: 'lila' },
+	BLUE: { c: '#4363d8', E: 'blue', D: 'blau' },
+	GREEN: { c: '#3cb44b', E: 'green', D: 'grün' },
+	RED: { c: '#e6194B', E: 'red', D: 'rot' },
+	YELLOW: { c: '#ffe119', E: 'yellow', D: 'gelb' },
+	LIGHTBLUE: { c: '#42d4f4', E: 'lightblue', D: 'hellblau' },
+	LIGHTGREEN: { c: '#afff45', E: 'lightgreen', D: 'hellgrün' },
+};
+
+
+//#endregion
+
+//#region audio
+var _audioSources = {
+	incorrect1: '../assets/sounds/incorrect1.wav',
+	incorrect3: '../assets/sounds/incorrect3.mp3',
+	goodBye: "../assets/sounds/level1.wav",
+	down: "../assets/sounds/down.mp3",
+	levelComplete: "../assets/sounds/sound1.wav",
+	rubberBand: "../assets/sounds/sound2.wav",
+	hit: "../assets/sounds/hit.wav",
+};
+// var _SND = null;
+var TOSound, _sndPlayer, _loaded = false, _qSound, _idleSound = true, _sndCounter = 0;
+var _AUDIOCONTEXT;// browsers limit the number of concurrent audio contexts, so you better re-use'em
+
+function beep(vol, freq, duration) {
+	console.log('sollte beepen!!!'); //return;
+	if (nundef(_AUDIOCONTEXT)) _AUDIOCONTEXT = new AudioContext();
+	let a = _AUDIOCONTEXT;
+	v = a.createOscillator()
+	u = a.createGain()
+	v.connect(u)
+	v.frequency.value = freq
+	v.type = "square";
+	u.connect(a.destination)
+	u.gain.value = vol * 0.01
+	v.start(a.currentTime)
+	v.stop(a.currentTime + duration * 0.001);
+}
+function playSound(key, wait = true) {
+	//console.log(getFunctionsNameThatCalledThisFunction(),'=> playSound');
+	//console.log('_______playSound', 'key', key, '_sndPlayer', _sndPlayer, '\nIdle', _idleSound, 'loaded', _loaded, 'count:' + _sndCounter);
+	if (!wait) _qSound = [];
+	_enqSound(key);
+	if (_idleSound) { _idleSound = false; _deqSound(); }
+}
+function pauseSound() {
+	_qSound = [];
+	if (_loaded && isdef(_sndPlayer)) {
+		clearTimeout(TOSound);
+		_sndPlayer.onended = null;
+		_sndPlayer.onpause = whenSoundPaused;
+		_sndPlayer.pause();
+	}
+}
+function whenSoundPaused() {
+	_sndPlayer = null;
+	_sndPlayerIdle = true;
+	_loaded = false;
+	//console.log('ENDED!!! Idle=true loaded=false');
+	if (!isEmpty(_qSound)) { _deqSound(); } else { _idleSound = true; }
+}
+function _enqSound(key) { if (nundef(_qSound)) _qSound = []; _qSound.push(key); }
+function _deqSound() {
+	let key = _qSound.shift();
+	let url = _audioSources[key];
+	_sndPlayer = new Audio(url);
+	_sndPlayer.onended = whenSoundPaused;
+	_sndPlayer.onloadeddata = () => { _loaded = true; _sndPlayer.play(); };
+	_sndPlayer.load();
+}
+//#endregion audio
+
+//#region emoSets_
+
+//var selectedEmoSetNames = ['animal', 'body', 'drink', 'emotion', 'food', 'fruit', 'game', 'gesture', 'hand', 'kitchen', 'object', 'person', 'place', 'plant', 'sports', 'time', 'transport', 'vegetable'];
+var selectedEmoSetNames = ['all', 'animal', 'body', 'drink', 'emotion', 'food', 'fruit', 'game', 'gesture', 'kitchen', 'object', 'person', 'place', 'plant', 'sports', 'time', 'transport', 'vegetable'];
+
+var primitiveSetNames = ['all', 'activity', 'animal', 'body', 'drink',
+	'emotion', 'family', 'fantasy', 'food', 'fruit', 'game', 'gesture',
+	'kitchen', 'object', 'place', 'plant', 'person',
+	'role', 'shapes', 'sport', 'sports',
+	'time', 'transport', 'vegetable',
+
+	'toolbar', 'math', 'punctuation', 'misc'];
+
+var higherOrderEmoSetNames = {
+	animals: ['animal'],
+	animalplantfood: ['animal', 'plant', 'drink', 'food', 'fruit', 'vegetable'],
+	life: ['animal', 'plant', 'drink', 'food', 'fruit', 'vegetable', 'kitchen', 'game', 'sport'],
+	more: ['animal', 'plant', 'drink', 'food', 'fruit', 'kitchen', 'vegetable', 'game', 'sport', 'transport', 'object'],
+	// nosymbols: ['animal', 'plant', 'drink', 'food', 'fruit', 'kitchen', 'vegetable', 'game', 'sport', 'transport', 'object',
+	// 	'activity','body','emotion','fantasy'],
+};
+var higherOrderEmoSetNames1 = { all: ['all'], select: selectedEmoSetNames, abstract: ['time', 'symbols'], action: ['game', 'sports'], food: ['drink', 'food', 'fruit', 'kitchen', 'vegetable'], human: ['body', 'gesture', 'emotion', 'person', 'role'], life: ['animal', 'plant'], mood: ['emotion'], object: ['object'], places: ['place', 'transport'] };
+
+var emoSets = {
+	nosymbols: { name: 'nosymbols', f: o => o.group != 'symbols' && o.group != 'flags' && o.group != 'clock' },
+	nosymemo: { name: 'nosymemo', f: o => o.group != 'smileys-emotion' && o.group != 'symbols' && o.group != 'flags' && o.group != 'clock' },
+
+	all: { name: 'all', f: _ => true },
+	activity: { name: 'activity', f: o => o.group == 'people-body' && (o.subgroups == 'person-activity' || o.subgroups == 'person-resting') },
+	animal: { name: 'animal', f: o => startsWith(o.group, 'animal') && startsWith(o.subgroups, 'animal') },
+	body: { name: 'body', f: o => o.group == 'people-body' && o.subgroups == 'body-parts' },
+	clock: { name: 'clock', f: o => o.group == 'clock' },
+	drink: { name: 'drink', f: o => o.group == 'food-drink' && o.subgroups == 'drink' },
+	emotion: { name: 'emotion', f: o => o.group == 'smileys-emotion' },
+	family: { name: 'family', f: o => o.group == 'people-body' && o.subgroups == 'family' },
+	fantasy: { name: 'fantasy', f: o => o.group == 'people-body' && o.subgroups == 'person-fantasy' },
+	food: { name: 'food', f: o => o.group == 'food-drink' && startsWith(o.subgroups, 'food') },
+	fruit: { name: 'fruit', f: o => o.group == 'food-drink' && o.subgroups == 'food-fruit' },
+	game: { name: 'game', f: o => (o.group == 'activities' && o.subgroups == 'game') },
+	gesture: { name: 'gesture', f: o => o.group == 'people-body' && (o.subgroups == 'person-gesture' || o.subgroups.includes('hand')) },
+	kitchen: { name: 'kitchen', f: o => o.group == 'food-drink' && o.subgroups == 'dishware' },
+	math: { name: 'math', f: o => o.group == 'symbols' && o.subgroups == 'math' },
+	misc: { name: 'misc', f: o => o.group == 'symbols' && o.subgroups == 'other-symbol' },
+	// gesture: { name: 'gesture', f: o => o.group == 'people-body' && o.subgroups == 'person-gesture' },
+	// hand: { name: 'hand', f: o => o.group == 'people-body' && o.subgroups.includes('hand') },
+	//o=>o.group == 'people-body' && o.subgroups.includes('role'),
+	//objects:
+	object: {
+		name: 'object', f: o =>
+			(o.group == 'food-drink' && o.subgroups == 'dishware')
+			|| (o.group == 'travel-places' && o.subgroups == 'time')
+			|| (o.group == 'activities' && o.subgroups == 'event')
+			|| (o.group == 'activities' && o.subgroups == 'award-medal')
+			|| (o.group == 'activities' && o.subgroups == 'arts-crafts')
+			|| (o.group == 'activities' && o.subgroups == 'sport')
+			|| (o.group == 'activities' && o.subgroups == 'game')
+			|| (o.group == 'objects')
+			|| (o.group == 'activities' && o.subgroups == 'event')
+			|| (o.group == 'travel-places' && o.subgroups == 'sky-weather')
+	},
+
+	person: { name: 'person', f: o => o.group == 'people-body' && o.subgroups == 'person' },
+	place: { name: 'place', f: o => startsWith(o.subgroups, 'place') },
+	plant: { name: 'plant', f: o => startsWith(o.group, 'animal') && startsWith(o.subgroups, 'plant') },
+	punctuation: { name: 'punctuation', f: o => o.group == 'symbols' && o.subgroups == 'punctuation' },
+	role: { name: 'role', f: o => o.group == 'people-body' && o.subgroups == 'person-role' },
+	shapes: { name: 'shapes', f: o => o.group == 'symbols' && o.subgroups == 'geometric' },
+	sport: { name: 'sport', f: o => o.group == 'people-body' && o.subgroups == 'person-sport' },
+	sports: { name: 'sports', f: o => (o.group == 'activities' && o.subgroups == 'sport') },
+	sternzeichen: { name: 'sternzeichen', f: o => o.group == 'symbols' && o.subgroups == 'zodiac' },
+	symbols: { name: 'symbols', f: o => o.group == 'symbols' },
+	time: { name: 'time', f: o => (o.group == 'travel-places' && o.subgroups == 'time') },
+	//toolbar buttons:
+	toolbar: {
+		name: 'toolbar', f: o => (o.group == 'symbols' && o.subgroups == 'warning')
+			|| (o.group == 'symbols' && o.subgroups == 'arrow')
+			|| (o.group == 'symbols' && o.subgroups == 'av-symbol')
+			|| (o.group == 'symbols' && o.subgroups == 'other-symbol')
+			|| (o.group == 'symbols' && o.subgroups == 'keycap')
+	},
+
+	transport: { name: 'transport', f: o => startsWith(o.subgroups, 'transport') && o.subgroups != 'transport-sign' },
+	vegetable: { name: 'vegetable', f: o => o.group == 'food-drink' && o.subgroups == 'food-vegetable' },
+
+
+
+};
+//var emoGroupKeys; //ACHTUNG!!!! SPEECH wird nicht mehr gehen!!!!!!!!!
+
+function isEmosetMember(name, info) { return emoSets[name].f(info); }
+function makeEmoSetIndex() {
+	if (isdef(symBySet)) return;
+
+	symBySet = {}; symKeysBySet = {}; symListBySet = {};
+	for (const k in emoSets) {
+		let set = emoSets[k];
+		let name = set.name;
+		let f = set.f;
+		symBySet[name] = [];
+		for (const k1 in symbolDict) {
+			let info = symbolDict[k1];
+			if (info.type == 'icon') continue;
+			let o = info;
+			if (nundef(o.group) || nundef(o.subgroups)) continue;
+			let passt = f(o);
+			if (!passt) continue;
+			if (passt) {
+				//if (k=='role') console.log(k,k1);
+				lookupSet(symBySet, [name, k1], info);
+				lookupAddToList(symKeysBySet, [name], k1);
+				lookupAddToList(symListBySet, [name], info);
+			}
+		}
+	}
+	makeGroupSub();
+}
+function makeGroupSub() {
+	symKeysByGroupSub = {};
+	for (const k of symKeysBySet['all']) {
+		let info = symbolDict[k];
+		if (isEmpty(info.E) || isEmpty(info.D)) lookupAddIfToList(symKeysByGroupSub, ['NA', info.group + '-' + info.subgroups], k);
+		else lookupAddIfToList(symKeysByGroupSub, [info.group, info.subgroups], k);
+	}
+	//console.log(symKeysByGroupSub);
+}
+
+
+//#endregion
+
+//#region ensure
+function ensureAssets(set = true, type = true, hex = false, svg = false) {
+	if (set) ensureSymBySet();
+	if (type) ensureSymByType();
+	if (hex) ensureSymByHex();
+	if (svg) ensureSvgDict();
+}
+async function ensureAllAssets() { ensureAllAssets(true, true, true, true); }
+function ensureSymBySet() { if (nundef(symBySet)) { makeEmoSetIndex(); } }
+function ensureSymByType() {
+	if (nundef(symByType)) {
+		//console.log('doing it ONCE only!')
+		symByType = { emo: {}, eduplo: {}, icon: {}, iduplo: {} };
+		symKeysByType = { emo: [], eduplo: [], icon: [], iduplo: [] };
+		symListByType = { emo: [], eduplo: [], icon: [], iduplo: [] };
+		for (const k in symbolDict) {
+			let info = symbolDict[k];
+			if (info.type == 'emo' && info.isDuplicate) { symByType.eduplo[k] = info; symListByType.eduplo.push(info); symKeysByType.eduplo.push(k); }
+			else if (info.type == 'icon' && info.isDuplicate) { symByType.iduplo[k] = info; symListByType.iduplo.push(info); symKeysByType.iduplo.push(k); }
+			else if (info.type == 'emo') { symByType.emo[k] = info; symListByType.emo.push(info); symKeysByType.emo.push(k); }
+			else if (info.type == 'icon') { symByType.icon[k] = info; symListByType.icon.push(info); symKeysByType.icon.push(k); }
+		}
+	}
+
+}
+function ensureSymByHex() {
+	if (nundef(symByHex)) {
+		//console.log('doing it ONCE only!')
+		symByHex = {};
+		symKeysByHex = [];
+		for (const k in symbolDict) {
+			let info = symbolDict[k];
+			symByHex[info.hexcode] = info;
+		}
+		symKeysByHex = Object.keys(symByHex);
+	}
+
+}
+async function ensureSvgDict() {
+	if (nundef(svgDict)) {
+		svgDictC = await vidCache.load('svgDict', route_svgDict, true, false);
+		svgDict = vidCache.asDict('svgDict');
+		svgKeys = Object.keys(svgDict);
+		svgList = dict2list(svgDict);
+	}
+}
+//#endregion
+
+//symbolDict helpers
+function saveSymbolDict() {
+	//console.log(symbolDict_)
+	let y = jsonToYaml(symbolDict);
+
+	downloadTextFile(y, 'symbolDict', 'yaml');
+}
+
+//#region API: loadAssets, loadSpec_ (also merges), loadCode (also activates), loadInitialServerData
+async function loadAssets() {
+
+	vidCache = new LazyCache(!USE_LOCAL_STORAGE);
+	testCardsC = await vidCache.load('testCards', async () => await route_rsg_asset('testCards', 'yaml'));
+	testCards = vidCache.asDict('testCards');
+	c52C = await vidCache.load('c52', route_c52);
+	c52 = vidCache.asDict('c52');
+
+	//einfach nur symbolDict laden als symbolDict
+	symbolDictC = await vidCache.load('symbolDict', route_symbolDict);
+	symbolDict = vidCache.asDict('symbolDict');
+	symbolKeys = Object.keys(symbolDict);
+	symbolList = dict2list(symbolDict);
+
+
+}
+async function loadGameInfo(useAllGamesStub = true) {
+	if (useAllGamesStub) {
+		allGames = {
+			ttt: {
+				name: 'TicTacToe',
+				long_name: 'Tic-Tac-Toe',
+				short_name: 'ttt',
+				num_players: [2],
+				player_names: ['Player1', 'Player2'],
+			},
+			s1: {
+				name: 's1',
+				long_name: 's1',
+				short_name: 's1',
+				num_players: [2, 3, 4, 5],
+				player_names: ['Player1', 'Player2', 'Player3', 'Player4', 'Player5'],
+			},
+			starter: {
+				name: 'Starter',
+				long_name: 'Starter',
+				short_name: 'starter',
+				num_players: [2],
+				player_names: ['Player1', 'Player2'],
+			},
+			catan: {
+				name: 'Catan',
+				long_name: 'The Settlers of Catan',
+				short_name: 'catan',
+				num_players: [3, 4],
+				player_names: ['White', 'Red', 'Blue', 'Orange'],
+			},
+			aristocracy: {
+				name: 'Aristocracy',
+				long_name: 'Aristocracy',
+				short_name: 'aristocracy',
+				num_players: [2, 3, 4, 5],
+				player_names: ['Player1', 'Player2', 'Player3', 'Player4', 'Player5'],
+			}
+
+		};
+
+	} else {
+		allGamesC = await vidCache.load('allGames', route_allGames);
+		allGames = vidCache.asDict('allGames');
+	}
+
+	////console.log('allGames', GAME, allGames[GAME]);
+	playerConfig = stubPlayerConfig(allGames); //stub to get player info
+	// //console.log('playerConfig', playerConfig[GAME]);
+	// //console.log('testCards', testCards['green2']);
+	// //console.log('c52', c52['card_2C']);
+	// //console.log('icons', iconChars.crow);
+	// //console.log('allGames', allGames.catan);
+	// //console.log(vidCache);
+}
+async function loadSpec(path) {
+	if (TESTING) {
+
+		let url = DSPEC_PATH + '.yaml';
+		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), true, false);// last 2 params: reload, useLocal
+
+		url = (isdef(path) ? path : SPEC_PATH) + '.yaml';
+		if (USE_NON_TESTING_DATA) url = '/games/' + GAME + '/_rsg/' + GAME + VERSION + '.yaml';
+		userSpecC = await vidCache.load('userSpec', async () => await route_test_userSpec(url), true, false);// last 2 params: reload, useLocal
+
+	} else {
+
+		url = DSPEC_PATH + '.yaml';
+		//url = TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml'; //always the same default spec!
+		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), !CACHE_DEFAULTSPEC, CACHE_DEFAULTSPEC);// last 2 params: reload, useLocal
+
+		userSpecC = await vidCache.load('userSpec', async () => await route_userSpec(GAME, GAME + VERSION), !CACHE_USERSPEC, CACHE_USERSPEC);// last 2 params: reload, useLocal
+
+	}
+
+	defaultSpec = vidCache.asDict('defaultSpec');
+	userSpec = vidCache.asDict('userSpec');
+
+	//merge default and userSpec
+	SPEC = deepmerge(defaultSpec, userSpec);//, { arrayMerge: overwriteMerge });
+	DEFS = SPEC.defaults;
+	delete SPEC.defaults;
+
+	//need to correct areas because it should NOT be merged!!!
+	if (userSpec.layout_alias) { SPEC.areas = userSpec.layout_alias; }
+	if (userSpec.areas) { SPEC.areas = userSpec.areas; }
+	delete SPEC.layout_alias;
+	delete SPEC.asText;
+
+}
+async function loadCode() {
+	// let url = TEST_PATH + GAME + '/code' + CODE_VERSION + '.js';
+	if (TESTING && !CODE_VERSION) return;
+
+	let url = TESTING && !USE_NON_TESTING_DATA ? TEST_PATH + GAME + '/code' + CODE_VERSION + '.js'
+		: '/games/' + GAME + '/_rsg/' + GAME + VERSION + '.js';
+
+	let loader = new ScriptLoader();
+	await loader.load(SERVER + url);
+
+	if (TESTING) userCodeC = await vidCache.load('userCode', async () => await route_path_asText_dict(url), true, false);// last 2 params: reload, useLocal
+	else userCodeC = await vidCache.load('userCode', async () => await route_userCode(GAME, GAME + VERSION), !CACHE_CODE, CACHE_CODE); // last 2 params: reload, useLocal
+
+	userCode = vidCache.asDict('userCode');
+
+	// document.getElementById('code').innerHTML = '<pre>"' + userCode.asText + '"</pre>'; //PERFECT!!!!!!!!!!
+	let d = mBy('OLDCODE');
+	if (d && SHOW_CODE) { d.innerHTML = '<pre>' + userCode.asText + '</pre>'; }
+	//else //console.log('OLDCODE',userCode.asText);
+
+	//testingHallo('hallo das geht wirklich!!!!!');
+}
+async function loadTestServerData(url) {
+	let initial = 'testServerData';
+	serverDataC = initialDataC[GAME] = await vidCache.load(initial, async () => await route_path_yaml_dict(url), true, false); // last 2 params: reload, useLocal
+	serverData = vidCache.asDict(initial);
+	return serverData;
+}
+async function loadInitialServerData(unameStarts) {
+	let initialPath = GAME + (USE_MAX_PLAYER_NUM ? '_max' : '');
+
+	_syncUsernameOfSender(unameStarts);
+
+	if (TESTING) {
+		let url = SERVERDATA_PATH + '.yaml'; //console.log('loading',url)
+		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_path_yaml_dict(url), true, false); // last 2 params: reload, useLocal
+	} else {
+		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_initGame(GAME, playerConfig[GAME], Username), !CACHE_INITDATA, CACHE_INITDATA); // last 2 params: reload, useLocal 
+	}
+
+	serverData = vidCache.asDict('_initial_' + initialPath);
+	return serverData;
+}
+async function sendStatus(username) {
+	_syncUsernameOfSender(username);
+	if (!TESTING) serverData = await route_status(Username);
+}
+async function sendRestart(username) {
+	_syncUsernameOfSender(username);
+	if (TESTING) serverData = await loadInitialServerData(Username);
+	else serverData = await route_begin_status(Username);
+}
+async function sendAction(boat, username) {
+	if (TESTING) {
+		modifyServerDataRandom(username);
+	} else {
+		_syncUsernameOfSender(username);
+		if (nundef(boat)) boat = chooseRandom(boats);
+		let route = '/action/' + Username + '/' + serverData.key + '/' + boat.desc + '/';
+		let t = boat.tuple;
+		//console.log('tuple is:', t);
+		route += t.map(x => _pickStringForAction(x)).join('+');// /action/felix/91b7584a2265b1f5/loc-settlement/96
+		//console.log('sending action...', route);
+		let result = await route_server_js(route);
+		//console.log('server returned', result);
+		prevServerData = serverData;
+		serverData = result;
+	}
+}
+async function loadBestKeys() {
+
+	BestKeySets = await loadYamlDict('/assets/speech/keysets.yaml');
+	BestKeysD = await loadYamlDict('/assets/speech/bestKeysD.yaml');
+	BestKeysE = await loadYamlDict('/assets/speech/bestKeysE.yaml');
+
+	for (const e of BestKeysD) {
+		let info = symbolDict[e.k];
+		info.bestD = e.r;
+		info.bestDConf = e.c;
+	}
+	for (const e of BestKeysE) {
+		let info = symbolDict[e.k];
+		info.bestE = e.r;
+		info.bestEConf = e.c;
+	}
+	// console.log(BestKeySets.best100);
+	for (const setname in BestKeySets) {
+		for (const k of BestKeySets[setname]) {
+			let info = symbolDict[k];
+			if (nundef(info.bestE)) info.bestE = lastOfLanguage(k, 'E');
+			if (nundef(info.bestD)) info.bestD = lastOfLanguage(k, 'D');
+			//console.log(info)
+			info[setname] = { E: info.bestE, D: info.bestD };
+		}
+	}
+	// for(const k of BestKeySets.best50){
+	// 	let info = symbolDict[k];
+	// 	console.log(info)
+	// 	info.best50E=lastOfLanguage(k,'E');
+	// }
+}
+async function loadCorrectWords() {
+	CorrectKeysByLanguage = { E: [], EB: [], D: [] };
+	CorrectByKey = {};
+	//assume zira
+
+
+	let speechZira = await loadYamlDict('/assets/speech/speechZira.yaml');
+	for (const k in speechZira) {
+		let e = lookup(speechZira, [k, 'E', 'zira']);
+		if (e && e.correct) {
+			let c = Math.round(e.conf * 100);
+			lookupSet(CorrectByKey, [k, 'E'], { r: e.req, c: c });
+			addIf(CorrectKeysByLanguage.E, k);
+		}
+	}
+	let speechBritish = await loadYamlDict('/assets/speech/speechBritish.yaml');
+	for (const k in speechBritish) {
+		let e = lookup(speechBritish, [k, 'E', 'ukMale']);
+		if (e && e.correct) {
+			let c = Math.round(e.conf * 100);
+			lookupSet(CorrectByKey, [k, 'EB'], { r: e.req, c: c });
+			addIf(CorrectKeysByLanguage.EB, k);
+		}
+	}
+	let speechDeutsch = await loadYamlDict('/assets/speech/speechDeutsch.yaml');
+	for (const k in speechDeutsch) {
+		let e = lookup(speechDeutsch, [k, 'D', 'deutsch']);
+		if (e && e.correct) {
+			let c = Math.round(e.conf * 100);
+			lookupSet(CorrectByKey, [k, 'D'], { r: e.req, c: c });
+			addIf(CorrectKeysByLanguage.D, k);
+		}
+	}
+
+	//console.log(Object.keys(speechZira),Object.keys(speechDeutsch));
+	//console.log(CorrectByKey, CorrectKeysByLanguage.E);
+}
+async function loadCorrectWords_dep() {
+	CorrectWords = await loadYamlDict('/assets/correctWordsX.yaml');
+
+	CorrectWordsCorrect = { E: {}, D: {} };
+	CorrectWordsExact = { E: {}, D: {} };
+	CorrectWordsFailed = { E: {}, D: {} };
+
+	//remove duplicates from array
+	if (isdef(CorrectWords) && isdef(CorrectWords.data)) {
+		for (const cwentry of CorrectWords.data) {
+			let key = cwentry.key;
+			for (const lang of ['E', 'D']) {
+				let cw = cwentry[lang];
+				// console.log(cw);
+				if (cw.isCorrect) {
+					if (cw.answer == cw.req && !(cw.danger == true)) CorrectWordsExact[lang][key] = cw;
+					else CorrectWordsCorrect[lang][key] = cw;
+				} else CorrectWordsFailed[lang][key] = cw;
+			}
+		}
+	}
+
+
+	//console.log('CorrectWordsExact',CorrectWordsExact);
+	//console.log('CorrectWordsCorrect',CorrectWordsCorrect);
+	//console.log('CorrectWordsFailed',CorrectWordsFailed);
+
+}
+async function loadYamlDict(url) { return await route_path_yaml_dict(url); }
+async function loadJsonDict(url) { return await route_path_json_dict(url); }
+// serverData helpers
+//ACHTUNG!!! die player obj_types sind variable!!!
+function preProcessData(data) {
+	//console.log('preprocess:',data.players, 'plidSentStatus',plidSentStatus);
+	if (nundef(data)) data = serverData;
+	for (const plid in data.players) {
+		let pl = data.players[plid];
+		if (isdef(pl.obj_type)) continue; //**** ACHTUNG!!!!!!!!! */
+		pl.obj_type = plid == plidSentStatus ? 'GamePlayer' : 'opponent';
+	}
+	if (data.options) {
+		tupleGroups = getTupleGroups();
+		let iGroup = 0;
+		let iTuple = 0;
+		boats = [];
+		for (const tg of tupleGroups) {
+			for (const t of tg.tuples) {
+				let boatInfo = { obj_type: 'boat', oids: [], desc: tg.desc, tuple: t, iGroup: iGroup, iTuple: iTuple, text: t.map(x => x.val), weg: false };
+				boats[iTuple] = boatInfo;
+				iTuple += 1;
+			}
+			iGroup += 1;
+		}
+	} else {
+		tupleGroups = null;
+		boats = [];
+	}
+}
+function modifyServerDataRandom(username) {
+	//this should ONLY modify serverData
+	_syncUsernameOfSender(username);
+	prevServerData = jsCopy(serverData);
+
+	let ranks = ['2', '3', '4', 'Q', 'J', 'T', 'A', '9'];
+
+	let dModify = serverData.table ? serverData.table : serverData;
+	//console.log('dModify', dModify)
+	let keys = Object.keys(dModify);
+	//console.log('keys', keys);
+	let nChange = randomNumber(1, keys.length);
+	shuffle(keys);
+	console.log('>>>change', nChange, 'items!')
+
+	for (let i = 0; i < nChange; i++) {
+		let id = keys[i];
+		let val = dModify[id];
+		if (isLiteral(val)) dModify[id] = { id: id, value: val };
+		// console.log('change rank of id', id);
+		dModify[id].rank = chooseRandom(ranks);
+		// console.log(dModify[id])
+	}
+
+}
+function showServerData(data, domid = 'SERVERDATA') {
+	let d = mBy(domid);
+	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(data) + '</pre>'; }
+	//else consOutput('serverData',data);
+}
+function showPackages(data, domid = 'OLDCODE') {
+	let d = mBy(domid);
+	if (d) { d.innerHTML = '<pre>' + jsonToYaml(data) + '</pre>'; }
+	//else consOutput('serverData',data);
+}
+
+//#region _internal
+// serverData / server helpers
+function _syncUsernameOfSender(username) {
+	if (nundef(username)) username = Username; else Username = username;
+	plidSentStatus = getPlidForUsername(username);
+	//console.log('------------------', username, Username, plidSentStatus);
+
+}
+
+
+// playerConfig (stub)
+function setGamePlayer(username) {
+	Username = username;
+	GAMEPLID = firstCondDict(playerConfig[GAME].players, p => p.username == username);
+
+}
+function stubPlayerConfig(gameInfo) {
+	//automatically set a player configuration when starting in game view
+	gcs = {};
+	for (const gName in gameInfo) {
+		let info = gameInfo[gName]
+		////console.log(gName, info);
+		let nPlayers = info.num_players[0]; // min player number, info.num_players.length - 1]; // max player number
+		if (USE_MAX_PLAYER_NUM) nPlayers = info.num_players[info.num_players.length - 1]; // max player number
+		let pls = {};
+		for (let i = 0; i < nPlayers; i++) {
+			let id = info.player_names[i];
+			pls[id] = { id: id, playerType: 'me', agentType: null, username: Username + (i > 0 ? i : ''), index: i };
+			////console.log('player:', pl)
+			// pls.push(pl);
+		}
+		gcs[gName] = { numPlayers: nPlayers, players: pls };
+
+	}
+	return gcs;
+	////console.log('-------------------',gcs);
+}
+function updatePlayerConfig() {
+	let keysPlayerColors = Object.keys(PLAYER_COLORS);
+	//let players = playerConfig[GAME].players;
+
+	//match colors to better colors!
+	let iColor = 0;
+	for (const id in serverData.players) {
+		let pl = serverData.players[id];
+		let colorName = isdef(pl.color) ? pl.color : keysPlayerColors[iColor];
+		colorName = colorName.toLowerCase();
+		let altName = capitalize(colorName);
+		let color = isdef(PLAYER_COLORS[colorName]) ? PLAYER_COLORS[colorName] : colorName;
+
+
+		playerConfig[GAME].players[id].color = color;
+		//playerConfig[id].color = color;
+		// playerConfig[id].altName = altName;
+		// playerConfig[id].index = i;
+		iColor += 1;
+	}
+}
+
+// routes
+async function route_allGames() {
+	let gameNames = await route_server_js('/game/available');
+	//console.log('gamenames returned:', gameNames)
+	let res = {};
+	for (const name of gameNames) {
+		//console.log(name);
+		if (USE_ALL_GAMES_ROUTE) {
+			res[name] = await route_server_js('/game/info/' + name);
+		} else {
+			let url = '/games/' + name + '/info.yaml';
+			res[name] = await route_path_yaml_dict(url);// last 2 params: reload, useLocal
+			//console.log('game info', name, res[name]);
+		}
+	}
+	return res;
+}
+async function route_c52() {
+	return await route_rsg_asset('c52_blackBorder', 'yaml');
+}
+async function route_symbolDict(filename = 'symbolDict') {
+	//console.log('fetch symbolDict!!!')
+	let url = '/assets/' + filename + '.yaml';
+	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assts as well!
+	return response;
+
+}
+async function route_svgDict(filename = 'svgDict') {
+	let url = '/assets/' + filename + '.yaml';
+	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assts as well!
+	return response;
+
+}
+async function route_userSpec(game, fname) {
+	try {
+		let url = '/spec/' + game + (isdef(fname) ? '/' + fname : '');
+		//let url = '/spec/' + GAME + (isdef(fname) ? '/' + fname : '');
+		let text = await route_server_text(url);
+		let spec = jsyaml.load(text);
+		spec.asText = text;
+		return spec;
+	} catch (error) {
+		return { asText: '' }; //empty spec!
+	}
+}
+async function route_test_userSpec(url) {
+	try {
+		let text = await route_path_text(url);
+		let spec = jsyaml.load(text);
+		spec.asText = text;
+		return spec;
+	} catch (error) {
+		return { asText: '' }; //empty spec!
+	}
+}
+async function route_userCode(game, fname) {
+	try {
+		//let codePath = '/games/' + game + '/_rsg/' + fname + '.js';
+		let url = '/RSG/' + game + (isdef(fname) ? '/' + fname : '');
+		let text = await route_server_text(url);
+
+		return { asText: text };
+	} catch (error) { return {}; }
+
+}
+async function route_initGame(game, gc, username, seed = SEED) {
+	await fetch_wrapper(SERVER + '/restart');
+	await fetch_wrapper(SERVER + '/game/select/' + game);
+	let nPlayers = gc.numPlayers;
+	////console.log(gc)
+	// for (let i = 0; i < nPlayers; i++) {
+	for (plid in gc.players) {
+		let plInfo = gc.players[plid];
+		let isAI = plInfo.agentType !== null;
+		if (isAI) {
+			await postData(SERVER + '/add/client/agent/' + plInfo.username, { agent_type: plInfo.agentType, timeout: null });
+		}
+		await fetch_wrapper(SERVER + '/add/player/' + plInfo.username + '/' + plInfo);
+	}
+	return await route_begin_status(username, seed);
+}
+async function route_begin_status(username, seed = SEED) {
+	await fetch_wrapper(SERVER + '/begin/' + seed);
+	let data = await route_status(username);
+	////console.log(data)
+	return data;
+}
+async function route_status(username) { return await route_server_js('/status/' + username); }
+async function route_rsg_asset(filename, ext = 'yml') {
+	let url = '/assets/' + filename + '.' + ext;
+	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assts as well!
+	return response;
+}
+async function route_rsg_raw_asset(filename, ext = 'yml') {
+	let url = '/assets/raw/' + filename + '.' + ext;
+	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assts as well!
+	return response;
+}
+async function route_server_js(url) {
+	let data = await fetch_wrapper(SERVER + url);
+	return await data.json();
+}
+async function route_server_text(url) {
+	////console.log(url, SERVER + url)
+	let data = await fetch_wrapper(SERVER + url);
+	let text = await data.text();
+	return text;
+}
+async function route_path_yaml_dict(url) {
+	let data = await fetch_wrapper(url);
+	let text = await data.text();
+	let dict = jsyaml.load(text);
+	return dict;
+}
+async function route_path_json_dict(url) {
+	let data = await fetch_wrapper(url);
+	let json = await data.json();
+	//let dict = jsyaml.load(text);
+	return json;
+}
+async function route_path_text(url) {
+	let data = await fetch_wrapper(url);
+	return await data.text();
+}
+async function route_path_asText_dict(url) {
+	let data = await fetch_wrapper(url);
+	let res = {};
+	res.asText = await data.text();
+	////console.log(res.asText)
+	//res.asDict = JSON.parse(res.asText);//
+	return res; // await data.text();
+}
+async function postData(url = '', data = {}) {
+	//usage: postData('https://example.com/answer', { answer: 42 })
+
+	// Default options are marked with *
+	const response = await fetch(url, {
+		method: 'POST', // *GET, POST, PUT, DELETE, etc.
+		mode: 'cors', // no-cors, *cors, same-origin
+		cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+		credentials: 'same-origin', // include, *same-origin, omit
+		headers: {
+			'Content-Type': 'application/json'
+			// 'Content-Type': 'application/x-www-form-urlencoded',
+		},
+		redirect: 'follow', // manual, *follow, error
+		referrerPolicy: 'no-referrer', // no-referrer, *client
+		body: JSON.stringify(data) // body data type must match "Content-Type" header
+	});
+	return await response.json(); // parses JSON response into native JavaScript objects
+}
+async function route_server(url) { await fetch_wrapper(SERVER + url); }
+
+var route_counter = 0;
+async function fetch_wrapper_NO(url) {
+	route_counter += 1;
+	if (SHOW_SERVER_ROUTE) consOutput(route_counter + ': route:' + url);
+	let res = await fetch(url).then((response) => {
+		if (response.status === 200) {
+			if (SHOW_SERVER_RETURN) consOutput(route_counter + ': return:', response);
+			//return response;
+			// return response.json();
+		} else {
+			throw new Error('Something went wrong');
+			//return "ERROR";
+		}
+	}).catch((error) => {
+		console.log(error)
+	});
+	return res;
+	// .then((responseJson) => {
+	// 	// Do something with the response
+	// })
+	// .catch((error) => {
+	// 	console.log(error)
+	// });
+}
+async function fetch_wrapper(url) {
+	route_counter += 1;
+	if (SHOW_SERVER_ROUTE) consOutput(route_counter + ': route:' + url);
+	let res = await fetch(url);
+	if (SHOW_SERVER_RETURN) consOutput(route_counter + ': return:', res);
+	return res;
+	// try {
+	// 	let res = await fetch(url);
+	// 	if (SHOW_SERVER_RETURN) consOutput(route_counter + ': return:', res);
+	// 	return res;
+
+	// } catch (err) {
+	// 	console.log('FETCH ERROR:', err)
+	// 	return {};
+	// }
+}
+
+// caches & consts: playerColors, THEMES, iTHEME
+var allGamesC = null;
+var playerConfigC = null;
+var iconCharsC = null;
+var symbolDictC = null;
+var svgDictC = null;
+var emoCharsC = null;
+var c52C = null;
+var testCardsC = null
+var defaultSpecC = null;
+var userSpecC = null;
+var userCodeC = null;
+var initialDataC = {}; //mostly for testing
+var serverDataC = null;
+
+const playerColors = {
+	red: '#D01013',
+	blue: '#003399',
+	green: '#58A813',
+	orange: '#FF6600',
+	yellow: '#FAD302',
+	violet: '#55038C',
+	pink: '#ED527A',
+	beige: '#D99559',
+	sky: '#049DD9',
+	brown: '#A65F46',
+	white: '#FFFFFF',
+};
+const THEMES = ['#c9af98', '#2F4F4F', '#6B7A8F', '#00303F', 'rgb(3, 74, 166)', '#458766', '#7A9D96'];
+var iTHEME = 0;
+
+// tupleGroups
+function getTupleGroups() {
+	let act = serverData.options;
+
+	//console.log('options', act)
+	// json_str = JSON.stringify(act);
+	// saveFile("yourfilename.json", "data:application/json", new Blob([json_str], { type: "" }));
+
+	let tupleGroups = [];
+	for (const desc in act) {
+		let tg = { desc: desc, tuples: [] };
+		//let tuples = expand99(act[desc].actions);
+		let tuples = expand1_99(act[desc].actions);
+		////console.log('*** ', desc, '........tuples:', tuples);
+
+		if (tuples.length == 1 && !isList(tuples[0])) tuples = [tuples];
+		////console.log(tuples)
+		tg.tuples = tuples;
+		tupleGroups.push({ desc: desc, tuples: tuples });
+	}
+	////console.log('tupleGroups', tupleGroups);
+	return tupleGroups;
+}
+function expand1_99(x) {
+	////console.log('expand1_99 input', tsRec(x))
+	////console.log('expand1_99');
+	if (isList(x)) {
+		//console.log('expand1_99: x should be dict BUT is a list', x);
+	}
+	if (isDict(x)) { // TODO:  || isList(x)) {
+		// if (isList(x)) {
+		// 	//console.log('process: list',x)
+		// }
+		if ('_set' in x) {
+			////console.log('handleSet wird aufgerufen')
+			return handleSet(x._set);
+		} else if ('_tuple' in x) {
+			////console.log('handleTuple wird aufgerufen')
+			return handleTuple(x._tuple);
+		} else if ('type' in x) {
+			return handleAction(x);
+		} else { error('IMPOSSIBLE OBJECT', x); return null; }
+	} else { error('IMPOSSIBLE TYPE', x); return null; }
+}
+function handleSet(x) {
+	let irgend = x.map(expand1_99);
+	let res = stripSet(irgend);
+	return res;
+}
+function handleTuple(x) {
+	let irgend = x.map(expand1_99);
+	return multiCartesi(...irgend);
+}
+function handleAction(x) {
+	return [[x]];
+}
+function isActionElement(x) {
+	return typeof x == 'object' && 'type' in x;
+}
+function isListOfListOfActions(x) {
+	return isList(x) && x.length > 0 && isList(x[0]) && x[0].length > 0 && isActionElement(x[0][0]);
+}
+function cartesi(l1, l2) {
+	//l1,l2 are lists of list
+	let res = [];
+	for (var el1 of l1) {
+		for (var el2 of l2) {
+			res.push(el1.concat(el2));
+		}
+	}
+	return res;
+}
+function multiCartesi() {
+	//each arg is a list of list
+	let arr = Array.from(arguments);
+	if (arr.length > 2) {
+		return cartesi(arr[0], stripSet(multiCartesi(...arr.slice(1))));
+	} else if (arr.length == 2) return cartesi(arr[0], arr[1]);
+	else if (arr.length == 1) return arr[0];
+	else return [];
+}
+function stripSet(x) {
+	if (isListOfListOfActions(x)) return x;
+	else if (isActionElement(x)) return [[x]];
+	else if (isList(x) && isActionElement(x[0])) return [x];
+	else return [].concat(...x.map(stripSet));
+	//return isList(x)&&x.length>0?stripSet(x[0]):x;
+}
+
+//preProcessServerData
+
+
+// helpers
+function getUsernameForPlid(id) { return playerConfig[GAME].players[id].username; }
+function getPlidForUsername(username) {
+	let pl = firstCondDict(playerConfig[GAME].players, x => x.username == username);
+	// //console.log(getFunctionCallerName(),pl)
+	return pl;
+}
+function _getTestPathForPlayerNum() { return GAME + (USE_MAX_PLAYER_NUM ? '_max' : ''); }
+function _pickStringForAction(x) {
+	//x is a tuple element, eg., {type:'fixed', val:'pass'} or {ID: "0", val: "hex[0]", type: "obj"}
+	//console.log('pickStringForAction',x)
+	if (x.type == 'fixed') return x.val;
+	if (x.type == 'obj') return x.ID;
+	if (x.type == 'player') return x.val;
+}
+
+
+//#endregion
+
+
+
+
+
+//#endregion
+
+
+//#region assetHelpers
+//#region january 2021
+function getColorDictColor(c) { return isdef(ColorDict[c]) ? ColorDict[c].c : c; }
+function idealFontsizeX(elem, wmax, hmax, fz, fzmin) {
+	let tStyles = { w: wmax, fz: fz, family: 'arial' };
+	let i=0;
+	while (i<100) {
+		i+=1;
+		//console.log('trying fz', tStyles);
+		mStyleX(elem,tStyles);
+		let tSize = getElemSize(elem);
+		if (tSize.h <= hmax || tStyles.fz <= fzmin) { 
+			//console.log(elem)
+			return { w: tSize.w, h: tSize.h, fz: tStyles.fz };
+		}	else tStyles.fz -= 1;
+	}
+
+}
+function idealFontsize(txt, wmax, hmax, fz, fzmin, weight) {
+	let tStyles = { fz: fz, family: 'arial' };
+	if (isdef(weight)) tStyles.weight=weight;
+	while (true) {
+		//console.log('trying fz', tStyles, txt);
+		let tSize = getSizeWithStyles(txt, tStyles);
+
+		//console.log('text size of',txt, 'mit font', tStyles.fz, tSize)
+
+		//if (tStyles.fz <= fzmin && tSize.h > hmax) return { w: tSize.w, h: tSize.h, fz: tStyles.fz };
+		if (tSize.h <= hmax && tSize.w <= wmax || tStyles.fz <= fzmin) return { w: tSize.w, h: tSize.h, fz: tStyles.fz, family: 'arial' };
+		else tStyles.fz -= 1;
+	}
+
+}
+
+//#region november 2020: deprecated
+function maLayout(pics, dParent) {
+	mClass(dParent, 'flexWrap');
+	let numPics = pics.length;
+	let rows = Math.sqrt(numPics);
+	rows = Math.floor(rows);
+	let cols = Math.ceil(numPics / rows);
+	let [pictureSize, picsPerLine] = calcDimsAndSize(cols, rows);
+	clearElement(dParent);
+
+	let i = 0;
+	for (let r = 0; r < rows; r++) {
+		for (let c = 0; c < cols; c++) {
+			maResizePic(pics[i], dParent, pictureSize)
+			i += 1;
+			if (i >= pics.length) return;
+		}
+		mLinebreak(dParent);
+	}
+}
+function maResizePic(p, dParent, pictureSize) {
+
+	let d = p.div;
+
+	mAppend(dParent, d);
+	let oldSize = p.sz;
+	if (oldSize >= 200) return;
+
+	let x = pictureSize / oldSize;
+	if (Math.abs(x - 1) <= .1) return;
+
+	// console.log('old size',oldSize,'new size',pictureSize,'x',x);
+
+	let dpic = d.children[0];
+	let bpic = getBounds(dpic);
+	let wPicOld = bpic.width;
+	let wPicNew = bpic.width * x;
+	let hPicOld = bpic.height;
+	let hPicNew = bpic.height * x;
+
+	console.log('pic will be resized from', wPicOld, hPicOld, 'to', wPicNew, hPicNew)
+	console.log('info.hOrig', p.info.hOrig)
+	console.log('info', p.info)
+
+	mSize(d, pictureSize, pictureSize);
+
+	let dsym = dpic.children[0];
+	//let bsym = getBounds(dsym);
+	let fzPicOld = firstNumber(dsym.style.fontSize);
+	let fzPicNew = fzPicOld * x;
+
+	let hNew = fzPicNew * p.info.h[0] / 100;
+
+	console.log('new h should be', hNew, 'but is', hPicNew)
+
+	//old font = fzPicOld ... hOrig
+	// new font = fzPicNew
+	// new h should be info.h[0]
+
+
+	mStyleX(dpic, { w: wPicNew, h: hNew });
+
+
+	// console.log('resizing font of symbol from',fzPicOld,'to',fzPicNew);
+
+	mStyleX(dsym, { fz: fzPicNew });
+
+	let dtext = d.children[1];
+	//let bsym = getBounds(dsym);
+	let fzTextOld = firstNumber(dtext.style.fontSize);
+	let fzTextNew = Math.round(fzTextOld * x);
+	mStyleX(dtext, { fz: fzTextNew, w: 'auto', h: 'auto' });
+
+	//console.log('resizing font of text from',fzTextOld,'to',fzTextNew);
+
+	d.style.padding = '0px';
+
+	p.sz = pictureSize;
+
+	let htext = p.isLabelVisible ? getBounds(dtext).height : 0;
+	let hpic = getBounds(dpic).height;
+	//console.log(htext,hpic,getBounds(dsym).height)
+	d.style.paddingTop = '' + ((pictureSize - (htext + hpic)) / 2) + 'px';
+
+	//adjust font for ordinal, row, col info!
+	for (let i = 2; i < d.children.length; i++) {
+		let dOrdinal = d.children[i];
+		//console.log(dOrdinal)
+		let fzOld = firstNumber(dOrdinal.style.fontSize);
+		let fzNew = fzOld * x;
+		let leftOld = firstNumber(dOrdinal.style.left);
+		let leftNew = Math.floor(leftOld * x);
+		let topOld = firstNumber(dOrdinal.style.top);
+		let topNew = Math.floor(topOld * x);
+		mStyleX(dOrdinal, { fz: fzNew, left: leftNew, top: topNew });
+	}
+
+}
+function maShowPictures(keys, labels, dParent, onClickPictureHandler,
+	{ showRepeat, container, lang, border, picSize, bgs, colorKeys, contrast, repeat = 1,
+		sameBackground, shufflePositions = true } = {}, { sCont, sPic, sText } = {}) {
+	let pics = [];
+
+	//#region prelim
+	//console.log('maShowPictures_', 'keys', keys, '\n', 'labels', labels, '\n', 'bgs', bgs)
+	//console.log('sameBackground',sameBackground)
+
+	let numPics = keys.length * repeat;
+
+	//make a label for each key
+	let items = [];
+	for (let i = 0; i < keys.length; i++) {
+		let k = keys[i];
+		let info = isdef(lang) ? getRandomSetItem(lang, k) : symbolDict[k];
+		let bg = isList(bgs) ? bgs[i] : isdef(colorKeys) ? 'white' : sameBackground ? computeColor('random') : 'random';
+		let label = isList(labels) ? labels[i] : isdef(lang) ? info.best : k;
+		items.push({ key: k, info: info, label: label, bg: bg, iRepeat: 1 });
+	}
+
+
+	//console.log('________________',items,repeat)
+	let items1 = jsCopy(items);
+	for (let i = 0; i < repeat - 1; i++) {
+		// let newItems=jsCopy(items);
+		// for(const it of newItems) it.iRepeat=i+1;
+		items = items.concat(items1);
+	}
+	//console.log('________________',items,repeat)
+
+	//console.log(items)
+
+	let isText = true;
+	let isOmoji = false;
+	if (isdef(lang)) {
+		let textStyle = getParamsForMaPicStyle('twitterText');
+		isText = textStyle.isText;
+		isOmoji = textStyle.isOmoji;
+	}
+
+	//console.log(items);
+	numPics = items.length;
+
+	//console.log('numPics',numPics,'items',jsCopy(items))
+
+	//dann erst shuffle!
+	if (shufflePositions) { shuffle(items); }
+	// if (shufflePositions) {console.log('shuffling!!!'); shuffle(items);}
+
+	//console.log('after shuffling items',jsCopy(items))
+
+	//#endregion prelim
+
+	let lines = isdef(colorKeys) ? colorKeys.length : 1;
+	let [pictureSize, picsPerLine] = calcDimsAndSize(numPics, lines, container);
+	let stylesForLabelButton = { rounding: 10, margin: pictureSize / 8 };
+
+	//if (isdef(myStyles)) stylesForLabelButton = deepmergeOverride(stylesForLabelButton, myStyles);
+
+	if (isdef(border)) stylesForLabelButton.border = border;
+
+	if (isdef(picSize)) pictureSize = picSize;
+
+	//console.log('lines',lines,'picsPerLine',picsPerLine, 'items', items, 'numPics', numPics)
+
+	let labelRepeat = {};
+
+	for (let line = 0; line < lines; line++) {
+		let textShadowColor, colorKey;
+
+		if (isdef(colorKeys)) { colorKey = colorKeys[line]; textShadowColor = ColorDict[colorKey].c; labelRepeat = {}; }
+
+		for (let i = 0; i < numPics; i++) {
+			let item = items[i];
+			let info = item.info; //infos[i];
+			let label = item.label; //labels[i];
+			let iRepeat = labelRepeat[label];
+			if (nundef(iRepeat)) iRepeat = 1; else iRepeat += 1;
+			labelRepeat[label] = iRepeat;
+			let bg = item.bg; //bgs[i];
+			let ipic = (line * picsPerLine + i);
+			// if (ipic % picsPerLine == 0 && ipic > 0) {console.log('linebreak!',ipic,line,keys.length); mLinebreak(dParent);}
+			if (ipic % picsPerLine == 0 && ipic > 0) { mLinebreak(dParent); }
+			let id = 'pic' + ipic; // (line * keys.length + i);
+			let d1 = maPicLabelButtonFitText(info, label,
+				{ w: pictureSize, h: pictureSize, bgPic: bg, textShadowColor: textShadowColor, contrast: contrast, sPic: sPic },
+				onClickPictureHandler, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+			d1.id = id;
+
+			// console.log('---->',d1.children[0].children[0].style.fontSize)
+			//addRowColInfo(d1,line,i,pictureSize);
+			if (showRepeat) addRepeatInfo(d1, iRepeat, pictureSize);
+			let fzPic = firstNumber(d1.children[0].children[0].style.fontSize);
+			pics.push({
+				textShadowColor: textShadowColor, color: ColorDict[colorKey], colorKey: colorKey, key: info.key, info: info,
+				bg: bg, div: d1, id: id, sz: pictureSize, fzPic: fzPic,
+				index: ipic, row: line, col: i, iRepeat: iRepeat, label: label, isLabelVisible: true, isSelected: false
+			});
+		}
+	}
+	return pics;
+}
+function maPicLabelButtonFitText(info, label, { w, h, bgPic, textShadowColor, contrast, sPic = {} }, handler, dParent, styles, classes = 'picButton', isText, isOmoji, focusElement) {
+	//console.log('sPic', sPic)
+	let picLabelStyles = getHarmoniousStylesPlusPlus(styles, sPic, {}, w, h, 65, 0, 'arial', bgPic, 'transparent', null, null, true);
+
+	let x = maPicLabelFitX(info, label.toUpperCase(), { wmax: w, textShadowColor: textShadowColor, contrast: contrast }, dParent, picLabelStyles[0], picLabelStyles[1], picLabelStyles[2], isText, isOmoji);
+	x.id = 'd' + info.key;
+	if (isdef(handler)) x.onclick = handler;
+	x.style.cursor = 'pointer';
+	x.lastChild.style.cursor = 'pointer';
+	x.style.userSelect = 'none';
+	mClass(x, classes);
+	return x;
+}
+function getHarmoniousStylesPlusPlus(sContainer, sPic, sText, w, h, picPercent, padding, family, bg = 'blue', bgPic = 'random', fgPic = 'white', fgText = 'white', hasText = true) {
+	//15,55,0,20,10=80
+
+	//console.log(fgPic,fgText)
+
+	let fact = 55 / picPercent;
+	let [ptop, pbot] = [(80 - picPercent) * 3 / 5, (80 - picPercent) * 2 / 5];
+	//let numbers = hasText ? [ptop, picPercent, 0, 20, pbot] : [15, 70, 0, 0, 15];
+	let numbers = hasText ? [fact * 15, picPercent, 0, fact * 20, fact * 10] : [15, 70, 0, 0, 15];
+	numbers = numbers.map(x => h * x / 100);
+	[patop, szPic, zwischen, szText, pabot] = numbers;
+	patop = Math.max(patop, padding);
+	pabot = Math.max(pabot, padding);
+
+	// console.log(patop, szPic, zwischen, szText, pabot);
+	let styles = { h: h, bg: bg, fg: isdef(fgText) ? fgText : 'contrast', patop: patop, pabottom: pabot, align: 'center', 'box-sizing': 'border-box' };
+	let textStyles = { family: family, fz: Math.floor(szText * 3 / 4) };
+	let picStyles = { h: szPic, bg: bgPic, fg: isdef(fgPic) ? fgPic : 'contrast' };
+	if (w > 0) styles.w = w; else styles.paleft = styles.paright = Math.max(padding, 4);
+	for (const k in sContainer) { if (k != 'w' && nundef(styles[k])) styles[k] = sContainer[k]; }
+	for (const k in sPic) { if (k != 'w' && nundef(picStyles[k])) picStyles[k] = sPic[k]; }
+	for (const k in sText) { if (k != 'w' && nundef(textStyles[k])) textStyles[k] = sText[k]; }
+	return [styles, picStyles, textStyles];
+}
+function maPicLabelFitX(info, label, { wmax, hmax, textShadowColor, contrast = .35 }, dParent, containerStyles, picStyles, textStyles, isText = true, isOmoji = false) {
+	let d = mDiv(dParent);
+	//console.log('picStyles',picStyles);
+
+	if (isdef(textShadowColor)) {
+
+		//console.log('contrast',contrast,'textShadowColor',textShadowColor)
+		//console.log('===>textShadowColor',textShadowColor,'contrast',contrast);
+		//console.log(picStyles);
+		let sShade = '0 0 0 ' + textShadowColor; //green';
+		picStyles['text-shadow'] = sShade;// +', '+sShade+', '+sShade;
+		picStyles.fg = anyColorToStandardString('black', contrast); //'#00000080' '#00000030' 
+	}
+
+	//console.log(picStyles)
+	let dPic = maPic(info, d, picStyles, isText, isOmoji);
+	// mText(info.annotation, d, textStyles, ['truncate']);
+	let maxchars = 15; let maxlines = 1;
+	//console.log(containerStyles, picStyles, textStyles);
+
+	//if (isdef(hmax))
+	//console.log('maPicLabelFitX_', 'wmax', wmax, 'hmax', hmax)
+	let wAvail, hAvail;
+	hAvail = containerStyles.h - (containerStyles.patop + picStyles.h);// + containerStyles.pabottom);
+	wAvail = containerStyles.w;
+	//console.log('=>', 'wAvail', wAvail, 'hAvail', hAvail);
+	if (isdef(hmax)) {
+		hAvail = containerStyles.h - (containerStyles.patop + picStyles.h);// + containerStyles.pabottom);
+		if (hmax != 'auto') {
+			hAvail = Math.min(hAvail, hmax);
+		}
+	}
+	if (isdef(wmax)) {
+		wAvail = containerStyles.w;
+		if (wmax != 'auto') {
+			wAvail = Math.min(wAvail, wmax);
+		}
+	}
+	let fz = textStyles.fz;
+	//measure text height and width with this font!
+	//console.log('_ avail:', wAvail, hAvail)
+	let styles1 = textStyles;
+	let size = getSizeWithStylesX(label, styles1, isdef(wmax) ? wAvail : undefined, isdef(hmax) ? hAvail : undefined);
+	//console.log('__', 'size', size);
+	let size1 = getSizeWithStylesX(label, styles1);//, isdef(wmax) ? wAvail : undefined, isdef(hmax) ? hAvail : undefined);
+	//console.log('__', 'size1', size1);
+
+	let f1 = wAvail / size1.w;
+	let isTextOverflow = f1 < 1;
+	if (f1 < 1) {
+		textStyles.fz *= f1;
+		textStyles.fz = Math.floor(textStyles.fz);
+		//console.log('text overflow! textStyles', textStyles);
+	}
+
+	let [wBound, hBound] = [isdef(wmax) ? size.w : undefined, isdef(hmax) ? size.h : undefined];
+
+	let isOverflow = isdef(wBound) && size.w > wAvail || isdef(hBound) && size.h > hAvail;
+	//console.log('___ isOverflow',isOverflow);
+
+
+	let dText = mTextFit(label, { wmax: wBound, hmax: hBound }, d, textStyles, isTextOverflow ? ['truncate'] : null);
+	// d.style.textAlign = 'center';
+	// dText.style.textAlign = 'center';
+	// containerStyles.align = 'center';
+
+	mStyleX(d, containerStyles);
+
+	dText.style.margin = 'auto';
+	// console.log('____', d.id, d.style.textAlign, d, containerStyles)
+
+	////console.log(dParent,'\nd',d,'\ndPic',dPic,'\ndText',dText);
+
+	return d;
+}
+
+//#=========endregion 
+
+function addRowColInfo(dPic, row, col, szPic) {
+	let szi = Math.max(Math.floor(szPic / 12), 8);
+	console.log(szi);
+	dPic.style.position = 'relative';
+	let d2 = mText('row:' + row, dPic, { fz: szi, color: 'black', position: 'absolute', left: szi, top: szi / 2 })
+	let d3 = mText('col:' + col, dPic, { fz: szi, color: 'black', position: 'absolute', left: szi, top: (szi / 2 + szi + 2) })
+}
+function addRepeatInfo(dPic, iRepeat, szPic) {
+	//console.log(dPic,iRepeat,szPic)
+	let szi = Math.max(Math.floor(szPic / 8), 8);
+	//console.log(szi);
+	dPic.style.position = 'relative';
+	let d2 = mText('' + iRepeat, dPic, { fz: szi, weight: 'bold', fg: 'contrast', position: 'absolute', left: szi / 2, top: szi / 2 - 2 });
+	// let d3 = mText('col:' + col, dPic, { fz: szi, color: 'black', position: 'absolute', left: szi, top: (szi / 2 + szi + 2) })
+	return d2;
+}
+function calcDimsAndSize(cols, lines, dParent, wmax, hmax) {
+
+	let ww, wh, hpercent, wpercent;
+	if (isdef(dParent)) {
+		let b = getBounds(dParent);
+		ww = b.width;
+		wh = b.height;
+		hpercent = .9;
+		wpercent = .9;
+	} else if (isdef(wmax) && isdef(hmax)) {
+		ww = wmax;
+		wh = hmax;
+		hpercent = .6;
+		wpercent = .6;
+	} else {
+		ww = window.innerWidth;
+		wh = window.innerHeight;
+		hpercent = .56;
+		wpercent = .64;
+	}
+	let sz, picsPerLine;
+	if (lines > 1) {
+		let hpic = wh * hpercent / lines;
+		let wpic = ww * wpercent / cols;
+		sz = Math.min(hpic, wpic);
+		//console.log('sz', sz)
+		picsPerLine = cols; //keys.length;
+	} else {
+		let dims = calcRowsColsX(cols);
+		let hpic = wh * hpercent / dims.rows;
+		let wpic = ww * wpercent / dims.cols;
+		sz = Math.min(hpic, wpic);
+		picsPerLine = dims.cols;
+	}
+
+	pictureSize = Math.max(50, Math.min(sz, 200));
+	return [pictureSize, picsPerLine];
+}
+function maPic(infokey, dParent, styles, isText = true, isOmoji = false) {
+
+	let info = isString(infokey) ? picInfo(infokey) : infokey;
+	//console.log(infokey)
+	//console.log('isText', isText, 'isOmoji', isOmoji);
+
+	// as img
+	if (!isText && info.type == 'emo') {
+
+		//ensureSvgDict(); geht NICHT weil ja awaited werden muss!!!!!!!
+
+		let dir = isOmoji ? 'openmoji' : 'twemoji';
+		let hex = info.hexcode;
+		if (isOmoji && hex.indexOf('-') == 2) hex = '00' + hex;
+		let ui = mImg('/assets/svg/' + dir + '/' + hex + '.svg', dParent);
+		if (isdef(styles)) mStyleX(ui, styles);
+		return ui;
+	}
+
+	// as text
+	let outerStyles = isdef(styles) ? jsCopy(styles) : {};
+	outerStyles.display = 'inline-block';
+	let family = info.type == 'emo' && isString(isOmoji) ? isOmoji : isOmoji == true ? 'emoOpen' : info.family;
+
+	// let i = (family == info.family) ? 0 : EMOFONTLIST.indexOf(family)+1;
+	// console.log('i is', i,'\n',info.w,'\n',info.family,'\n',family,'\n',EMOFONTLIST)
+
+	// let iwInfo = (family == info.family) ? 0 : info.w.indexOf(family);
+	let i = (family == info.family) ? 0 : EMOFONTLIST.indexOf(family) + 1;
+	if (i < 0) {
+		i = 1; console.log('iiiiiii', i, family, info.family);
+	}
+	let wInfo = info.w[i];
+	// let ihInfo = (family == info.family) ? 0 : info.h.indexOf(family);
+	let hInfo = info.h[i];
+
+	// console.log('family', family, 'orig', info.family)
+	let innerStyles = { family: family };
+	let [padw, padh] = isdef(styles.padding) ? [styles.padding, styles.padding] : [0, 0];
+
+	let dOuter = isdef(dParent) ? mDiv(dParent) : mDiv();
+	let d = mDiv(dOuter);
+	d.innerHTML = info.text;
+
+	let wdes, hdes, fzdes, wreal, hreal, fzreal, f;
+
+	//console.log(info);
+	if (isdef(styles.w) && isdef(styles.h) && isdef(styles.fz)) {
+		[wdes, hdes, fzdes] = [styles.w, styles.h, styles.fz];
+		let fw = wdes / wInfo;
+		let fh = hdes / hInfo;
+		let ffz = fzdes / info.fz;
+		f = Math.min(fw, fh, ffz);
+	} else if (isdef(styles.w) && isdef(styles.h)) {
+		[wdes, hdes] = [styles.w, styles.h];
+		let fw = wdes / wInfo;
+		let fh = hdes / hInfo;
+		f = Math.min(fw, fh);
+	} else if (isdef(styles.w) && isdef(styles.fz)) {
+		[wdes, fzdes] = [styles.w, styles.fz];
+		let fw = wdes / wInfo;
+		let ffz = fzdes / info.fz;
+		f = Math.min(fw, ffz);
+	} else if (isdef(styles.h) && isdef(styles.fz)) {
+		[hdes, fzdes] = [styles.h, styles.fz];
+		let fh = hdes / hInfo;
+		let ffz = fzdes / info.fz;
+		f = Math.min(fh, ffz);
+	} else if (isdef(styles.h)) {
+		hdes = styles.h;
+		f = hdes / hInfo;
+	} else if (isdef(styles.w)) {
+		wdes = styles.w;
+		f = wdes / wInfo;
+		// } else if (isdef(styles.fz)) {
+		// 	fzdes = styles.fz;
+		// 	f = fzdes / info.fz;
+	} else {
+		mStyleX(d, innerStyles);
+		mStyleX(dOuter, outerStyles);
+		return dOuter;
+	}
+	fzreal = f * info.fz;
+	wreal = Math.round(f * wInfo);
+	hreal = Math.round(f * hInfo);
+	wdes = Math.round(wdes);
+	hdes = Math.round(hdes);
+	padw += isdef(styles.w) ? (wdes - wreal) / 2 : 0;
+	padh += isdef(styles.h) ? (hdes - hreal) / 2 : 0;
+
+	//console.log('padh',padh)
+	//console.log('====>>>>', family, '\nw.info', wInfo, '\nh.info', hInfo, '\nfactor', f, '\nw', wreal, '\nh', hreal);
+
+	if (!(padw >= 0 && padh >= 0)) {
+		console.log(info)
+		console.log('\nstyles.w', styles.w, '\nstyles.h', styles.h, '\nstyles.fz', styles.fz, '\nstyles.padding', styles.padding, '\nwInfo', wInfo, '\nhInfo', hInfo, '\nfzreal', fzreal, '\nwreal', wreal, '\nhreal', hreal, '\npadw', padw, '\npadh', padh);
+	}
+	//console.assert(padw >= 0 && padh >= 0, 'BERECHNUNG FALSCH!!!!', padw, padh, info, '\ninfokey', infokey);
+
+	innerStyles.fz = fzreal;
+	innerStyles.weight = 900;
+	innerStyles.w = wreal;
+	innerStyles.h = hreal;
+	mStyleX(d, innerStyles);
+
+	outerStyles.padding = '' + padh + 'px ' + padw + 'px';
+	outerStyles.w = wreal;
+	outerStyles.h = hreal;
+	//console.log(outerStyles)
+	mStyleX(dOuter, outerStyles);
+
+	return dOuter;
+
+}
+function maPicLabelShowHideHandler(ev) {
+	let id = evToClosestId(ev);
+	let info = symbolDict[id.substring(1)];
+	if (isLabelVisible(id)) maHideLabel(id, info); else maShowLabel(id, info);
+	if (isdef(mBy('dummy'))) mBy('dummy').focus();
+
+}
+function getSizeWithStylesX(text, styles, wmax, hmax) {
+	var d = document.createElement("div");
+	document.body.appendChild(d);
+	//console.log(styles);
+	let cStyles = jsCopy(styles);
+	cStyles.position = 'fixed';
+	cStyles.opacity = 0;
+	cStyles.top = '-9999px';
+	if (isdef(wmax)) cStyles.width = wmax;
+	if (isdef(hmax)) cStyles.height = wmax;
+	//if (isdef(wMax)) d.maxWidth=wMax;
+	mStyleX(d, cStyles);
+	d.innerHTML = text;
+	height = d.clientHeight;
+	width = d.clientWidth;
+	let x = getBounds(d)
+	//console.log('==>',x.width,x.height);
+	d.parentNode.removeChild(d);
+	let res = { w: x.width, h: x.height };
+	//console.log(res)
+	return res;
+}
+function mpGridLabeled(dParent, list, picLabelStyles) {
+	//cont,pic,text
+	let dGrid = mDiv(dParent);
+	let elems = [];
+	let isText = true;
+	let isOmoji = false;
+	for (const k of list) {
+		let info = symbolDict[k];
+		let el = maPicLabel(info, dGrid, picLabelStyles[0], picLabelStyles[1], picLabelStyles[2], isText, isOmoji)
+		elems.push(el);
+	}
+	let gridStyles = { 'place-content': 'center', gap: 4, margin: 4, padding: 4, rounding: 5 };
+	let size = layoutGrid(elems, dGrid, gridStyles, { rows: 10, isInline: true });
+	//console.log(size);
+}
+
+//#region badges
+var badges = [];
+function removeBadges(dParent, level) {
+	while (badges.length > level) {
+		let badge = badges.pop()
+		removeElem(badge.div);
+	}
+}
+function addBadge(dParent, level, clickHandler, animateRubberband = false) {
+	let fg = '#00000080';
+	let textColor = 'white';
+	let stylesForLabelButton = { rounding: 8, margin: 4 };
+	//const picStyles = ['twitterText', 'twitterImage', 'openMojiText', 'openMojiImage', 'segoe', 'openMojiBlackText', 'segoeBlack'];
+	let isText = true; let isOmoji = false;
+	let i = level - 1;
+	let key = levelKeys[i];
+	let k = replaceAll(key, ' ', '-');
+	let info = symbolDict[k];
+	let label = "level " + i;
+	let h = window.innerHeight; let hBadge = h / 14;
+	let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: levelColors[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+	d1.id = 'dBadge_' + i;
+	if (animateRubberband) mClass(d1, 'aniRubberBand');
+	if (isdef(clickHandler)) d1.onclick = clickHandler;
+	badges.push({ key: info.key, info: info, div: d1, id: d1.id, index: i });
+	return arrLast(badges);
+}
+function showBadges(dParent, level, clickHandler) {
+	clearElement(dParent); badges = [];
+	for (let i = 1; i <= level; i++) {
+		addBadge(dParent, i, clickHandler);
+	}
+	//console.log(badges)
+}
+function showBadgesX(dParent, level, clickHandler, maxLevel) {
+	clearElement(dParent);
+	badges = [];
+	for (let i = 1; i <= maxLevel + 1; i++) {
+		if (i > level) {
+			let b = addBadge(dParent, i, clickHandler, false);
+			b.div.style.opacity = .25;
+			b.achieved = false;
+		} else {
+			let b = addBadge(dParent, i, clickHandler, true);
+			b.achieved = true;
+		}
+	}
+	//console.log(badges)
+}
+//#endregion
+
+//deprecated
+function mpLineup(dParent, keys, bgs, fg, textColor, texts) {
+	let g2Pics = [];
+
+	//let styles = { w: 200, h: 200, margin: 20, bg: 'random', cursor: 'pointer', rounding: 16, padding: 10 };
+	let stylesForLabelButton = { rounding: 10, margin: 4 };
+	const picStyles = ['twitterText', 'twitterImage', 'openMojiText', 'openMojiImage', 'segoe', 'openMojiBlackText', 'segoeBlack'];
+	let isText = true; let isOmoji = false;
+
+	for (let i = 0; i < keys.length; i++) {
+		//console.log(keys[i]);
+		let k = replaceAll(keys[i], ' ', '-');
+		let info = symbolDict[k];
+
+		let label = "level " + i; //info.key;
+
+		let h = window.innerHeight; let hBadge = Math.floor((h) / 14);
+		//console.log('hBadge',hBadge)
+		let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: bgs[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+		// let d1 = mpBadge(info, label, { w: 72, h: 72, bg: bgs[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+
+		g2Pics.push({ key: info.key, info: info, div: d1, id: d1.id, index: i });
+	}
+	return g2Pics;
+
+}
+function mpOver(d, dParent, fz, color, picStyle) {
+	//maPicOver
+	//d is pos fixed!!!
+	//console.log('dParent',dParent)
+	let b = getBounds(dParent);
+
+	let cx = b.width / 2 + b.x;
+	let cy = b.height / 2 + b.y;
+	//console.log('picStyle')
+	d.style.top = picStyle == 'segoeBlack' ? ((cy - fz * 2 / 3) + 'px') : ((cy - fz / 2) + 'px');
+	d.style.left = picStyle == 'segoeBlack' ? ((cx - fz / 3) + 'px') : ((cx - fz * 1.2 / 2) + 'px');
+
+	//console.log(b);
+	// d.style.top = picStyle == 'segoeBlack' ? (b.y + 60 - fz / 2 + 'px') : (b.y + 100 - fz / 2 + 'px');
+	// d.style.left = picStyle == 'segoeBlack' ? (b.x + 120 - fz / 2 + 'px') : (b.x + 100 - fz / 2 + 'px');
+	d.style.color = color;
+	d.style.fontSize = fz + 'px';
+	d.style.display = 'block';
+	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
+	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
+	return d;
+}
+function labelToggler(ev) {
+	let id = evToClosestId(ev);
+	let info = symbolDict[id.substring(1)];
+	if (isLabelVisible(id)) maHideLabel(id, info); else maShowLabel(id, info);
+	mBy('dummy').focus();
+}
+function mpSimpleButton(key, dParent, handler) {
+	let info = symbolDict[key];
+	let label = stringAfterLast(info.E, '|');
+	let st = { w: 200, h: 200, bg: 'random', fgPic: 'random', fgText: 'contrast' };
+	//let handler = null;
+	let stylesForLabelButton = { rounding: 10, margin: 24 };
+	let { isText, isOmoji } = getParamsForMaPicStyle('twitterText');
+	let d1 = maPicLabelButtonFitText(info, label, st, handler, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+	return d1;
+}
+function mpButton(info, label, { w, h, bg, fgPic, fgText }, handler, dParent, styles, classes = 'picButton', isText, isOmoji) {
+	//maPicLabelButtonFitText_
+	if (nundef(handler)) handler = labelToggler; // (ev) => { let id = evToClosestId(ev); let info = symbolDict[id.substring(1)]; if (isLabelVisible(id)) maHideLabel(id, info); else maShowLabel(id, info); mBy('dummy').focus(); }
+	let picLabelStyles = getHarmoniousStylesPlusPlus(styles, {}, {}, w, h, 65, 0, 'arial', bg, 'transparent', fgPic, fgText, true);
+	let x = maPicLabelFitX(info, label.toUpperCase(), { wmax: w }, dParent, picLabelStyles[0], picLabelStyles[1], picLabelStyles[2], true, false);
+	x.id = 'd' + info.key;
+	x.onclick = handler;
+	x.style.cursor = 'pointer';
+	x.lastChild.style.cursor = 'pointer';
+	x.style.userSelect = 'none';
+	mClass(x, classes);
+	return x;
+}
+function mpBadge(info, label, { w, h, bg, fgPic, fgText }, handler, dParent, styles, classes = 'picButton', isText, isOmoji) {
+	//maPicLabelButtonFitText_
+	if (nundef(handler)) handler = (ev) => { let id = evToClosestId(ev); let info = symbolDict[id.substring(1)]; if (isLabelVisible(id)) maHideLabel(id, info); else maShowLabel(id, info); mBy('dummy').focus(); }
+	let picLabelStyles = getBadgeStyles(styles, {}, {}, w, h, 60, 2, 4, 'arial', bg, 'transparent', fgPic, fgText, true);
+	let x = maPicLabelFitX(info, label.toUpperCase(), { wmax: w }, dParent, picLabelStyles[0], picLabelStyles[1], picLabelStyles[2], true, false);
+	x.id = 'd' + info.key;
+	//x.onclick = handler;
+	//x.style.cursor = 'pointer';
+	x.lastChild.style.cursor = 'default';
+	x.style.userSelect = 'none';
+	return x;
+}
+function getBadgeStyles(sContainer, sPic, sText, w, h, picPercent, paddingTop, paddingBot, family, bg = 'blue', bgPic = 'random', fgPic = 'white', fgText = 'white', hasText = true) {
+	//15,55,0,20,10=80
+
+	//console.log(fgPic,fgText)
+
+	let fact = 55 / picPercent;
+	let [ptop, pbot] = [(isdef(paddingTop) ? paddingTop : (80 - picPercent) * 3 / 5),
+	(isdef(paddingBot) ? paddingBot : (80 - picPercent) * 2 / 5)];
+	let pText = 100 - picPercent - ptop - pbot;
+	// let [ptop, pbot] = [(80 - picPercent) * 3 / 5, (80 - picPercent) * 2 / 5];
+	//let numbers = hasText ? [ptop, picPercent, 0, 20, pbot] : [15, 70, 0, 0, 15];
+	// let numbers = hasText ? [fact * 15, picPercent, 0, fact * 20, fact * 10] : [15, 70, 0, 0, 15];
+	let numbers = hasText ? [fact * ptop, picPercent, 0, fact * pText, fact * pbot] : [15, 70, 0, 0, 15];
+	numbers = numbers.map(x => h * x / 100);
+	let [patop, szPic, zwischen, szText, pabot] = numbers;
+	patop = Math.max(patop, paddingTop);
+	pabot = Math.max(pabot, paddingBot);
+	fzText=fact*(100-picPercent-pabot-patop)*h*3/400;
+
+	// console.log(patop, szPic, zwischen, szText, pabot);
+	let styles = { h: h, bg: bg, fg: isdef(fgText) ? fgText : 'contrast', patop: patop, pabottom: pabot, align: 'center', 'box-sizing': 'border-box' };
+	let textStyles = { family: family, fz: fzText }; //Math.floor(szText * 3 / 4) };
+	let picStyles = { h: szPic, bg: bgPic, fg: isdef(fgPic) ? fgPic : 'contrast' };
+	if (w > 0) styles.w = w; else styles.paleft = styles.paright = Math.max(padding, 4);
+	for (const k in sContainer) { if (k != 'w' && nundef(styles[k])) styles[k] = sContainer[k]; }
+	for (const k in sPic) { if (k != 'w' && nundef(picStyles[k])) picStyles[k] = sPic[k]; }
+	for (const k in sText) { if (k != 'w' && nundef(textStyles[k])) textStyles[k] = sText[k]; }
+	return [styles, picStyles, textStyles];
+}
+
+//#region words, dictionaries
+function getInfos(cats, lang,
+	{ minlen, maxlen, wShort = false, wLast = false, wExact = false, sorter = null }) {
+	let keys = setCategories(cats);
+	//console.log(keys);
+	//return keys.map(x=>symbolDict[x]);
+	let infos = [];
+	if (isdef(minlen && isdef(maxlen))) {
+		keys = keys.filter(k => {
+			let info = jsCopy(symbolDict[k]);
+			let exact = CorrectWordsExact[lang][k];
+			if (wExact && nundef(exact)) return false;
+			let ws = wExact ? [exact.req] : wLast ? [lastOfLanguage(k, lang)] : wordsOfLanguage(k, lang);
+			if (wShort) ws = [getShortestWord(ws, false)];
+			//console.log('ws',ws);
+			//console.log('__________', k, ws);
+			//console.log('INFO.WORDS', k, symbolDict[k].words);
+			info.words = [];
+			for (const w of ws) {
+				if (w.length >= minlen && w.length <= maxlen) {
+					//console.log('YES! w',w,minlen,maxlen);
+					info.words.push(w);
+					info.best = w;
+				}
+			}
+			//console.log('best',symbolDict[k].best,info.words)
+			//console.log(info.words)
+			if (!isEmpty(info.words)) { infos.push(info); return true; } else return false;
+		});
+	}
+	if (isdef(sorter)) sortByFunc(infos, sorter);
+
+	return infos;
+}
+
+function isEnglish(lang) { return startsWith(lang.toLowerCase(), 'e'); }
+function wordsOfLanguage(key, language) {
+	//console.log(language)
+	let y = symbolDict[key];
+	//console.log(y)
+	let w = y[language];
+	let wlist = w.split('|');
+	return wlist.map(x => x.trim());
+}
+function lastOfLanguage(key, language) {
+	//console.log(language)
+	let y = symbolDict[key];
+	//console.log(y)
+	let w = y[language];
+	//console.log(key,w)
+	let last = stringAfterLast(w, '|');
+	//console.log(last)
+	return last.trim();
+}
+function makeHigherOrderGroups() {
+	for (const honame in higherOrderEmoSetNames) {
+		for (const name of (higherOrderEmoSetNames[honame])) {
+			for (const k in symBySet[name]) {
+				let info = symbolDict[k];
+				lookupSet(symBySet, [honame, k], info);
+				lookupAddToList(symKeysBySet, [honame], k);
+				lookupAddToList(symListBySet, [honame], info);
+			}
+		}
+	}
+	let s = '';
+	for (const k in symKeysBySet) {
+		s += k + ':' + symKeysBySet[k].length + ', ';
+	}
+	//console.log(s);
+	//console.log('group names:',Object.keys(symKeysBySet).sort());
+	ensureSymByType();
+}
+function setCategories(groupNameList) {
+
+	ensureSymBySet();
+	//console.log(groupNameList)
+	let keys = [];
+	for (const cat of groupNameList) {
+		let name = cat.toLowerCase();
+		//console.log(name)
+		//console.log(name,symKeysBySet,symKeysBySet[name])
+		for (const k of symKeysBySet[name]) {
+			//console.log(k)
+			keys.push(k);
+		}
+	}
+	return keys;
+}
+function groupSizes() {
+	ensureSymBySet();
+	for (const gname in symKeysBySet) {
+		console.log('group', gname + ': ' + symKeysBySet[gname].length);
+	}
+}
+
+function getKeySetX(categories, language, minlength, maxlength, bestOnly = false, sortAccessor = null, correctOnly = false, reqOnly = false) {
+	let keys = setCategories(categories);
+	//console.log(keys);//ok
+	//console.log(CorrectWordsCorrect)
+	if (isdef(minlength && isdef(maxlength))) {
+		keys = keys.filter(k => {
+
+			let ws = bestOnly ? [lastOfLanguage(k, language)] : wordsOfLanguage(k, language);
+			//console.log(ws)
+			for (const w of ws) {
+				if (w.length >= minlength && w.length <= maxlength
+					&& (!correctOnly || isdef(CorrectWordsExact[k]))
+					&& (!reqOnly || w.toLowerCase() == CorrectWordsExact[k].req))
+					return true;
+			}
+			return false;
+		});
+	}
+	//console.log('________________',keys);//ok
+
+	if (isdef(sortAccessor)) sortByFunc(keys, sortAccessor); //keys.sort((a,b)=>fGetter(a)<fGetter(b));
+	return keys;
+}
+function getKeySet(groupName, language, maxlength) {
+	let keys = setGroup(groupName);
+	keys = isdef(maxlength) && maxlength > 0 ?
+		keys.filter(x => lastOfLanguage(x, language).length <= maxlength)
+		: keys;
+	return keys;
+
+}
+function setGroup(groupName) { //deprecated! use setCategories!
+	ensureSymBySet();
+	return jsCopy(symKeysBySet[groupName]);
+}
+function getRandomSetItem(lang = 'E', key, keylist) {
+	//console.log(keylist)
+	if (nundef(keylist)) keylist = setCategories(['animal']);
+
+	if (nundef(key)) key = chooseRandom(keylist);
+
+	//#region individual keys for test
+	//key = 'fever'; //fever
+	//key= 'onion'; //onion
+	//key = 'mouse'; // mouse '1FA79'; //bandage '1F48E'; // gem '1F4E3';//megaphone '26BE'; //baseball '1F508'; //speaker low volume
+	// key='baseball'; // baseball '26BD'; //soccer '1F988'; //shark '1F41C'; //ant '1F1E6-1F1FC';
+	//key = 'adhesive bandage';
+	//key = 'hippopotamus';
+	// key = 'llama';
+	//key = "chess pawn";
+	//key='briefcase';
+	//key = 'four-thirty';
+	//key='chopsticks';
+	//key='orangutan';
+	//key = 'person with veil';
+	//key='medal';
+	//key='leopard';
+	//key='telephone';
+	//#endregion
+
+	let info = jsCopy(picInfo(key));
+	let valid, words;
+	let oValid = info[lang + '_valid_sound'];
+	if (isEmpty(oValid)) valid = []; else valid = sepWordListFromString(oValid, ['|']);
+	let oWords = info[lang];
+	if (isEmpty(oWords)) words = []; else words = sepWordListFromString(oWords, ['|']);
+
+	let dWords = info.D;
+	if (isEmpty(dWords)) dWords = []; else dWords = sepWordListFromString(dWords, ['|']);
+	let eWords = info.E;
+	if (isEmpty(eWords)) eWords = []; else eWords = sepWordListFromString(eWords, ['|']);
+
+	words = isEnglish(lang) ? eWords : dWords;
+	info.eWords = eWords;
+	info.dWords = dWords;
+	info.words = words;
+	info.best = arrLast(words);
+	info.valid = valid;
+
+	currentLanguage = lang;
+
+	return info;
+}
+function getBestWord(info, lang) {
+	let w = info[lang];
+	let best = stringAfterLast(w, '|');
+	//console.log('best',best);
+	if (isEmpty(best)) best = info.annotation;
+	return best;
+}
+function isLabelVisible(id) { return isVisible(mBy(id).children[1]); }
+function maHideLabel(id, info) {
+	let d = mBy(id);
+	let dPic = d.children[0];
+	let dText = d.children[1];
+	dText.style.display = 'none';
+
+	let dPicText = dPic.children[0];
+	let family = dPicText.style.fontFamily;
+	let i = (family == info.family) ? 0 : EMOFONTLIST.indexOf(family) + 1;
+	let wInfo = info.w[i];
+	let hInfo = info.h[i];
+	let b = getBounds(d);
+	let styles = { w: b.width, h: b.height };
+	let [ptop, pbottom] = [firstNumber(d.style.paddingTop), firstNumber(d.style.paddingBottom)];
+	//console.log('___________', ptop, pbottom)
+	let p = (isdef(ptop) && isdef(pbottom)) ? Math.min(ptop, pbottom) :
+		isdef(ptop) ? ptop : isdef(pbottom) ? pbottom / 2 : 0;
+	let [padw, padh] = [p, p];
+	let [wtotal, htotal] = [styles.w, styles.h];
+	let [wpic, hpic] = [wtotal - 2 * padw, htotal - 2 * padh];
+	let fw = wpic / wInfo;
+	let fh = hpic / hInfo;
+	f = Math.min(fw, fh);
+	fzreal = f * info.fz;
+	wreal = f * wInfo;
+	hreal = f * hInfo;
+	padw += isdef(styles.w) ? (wpic - wreal) / 2 : 0;
+	padh += isdef(styles.h) ? (hpic - hreal) / 2 : 0;
+	if (!(padw >= 0 && padh >= 0)) { console.log(info); }
+	let innerStyles = {};
+	innerStyles.fz = fzreal;
+
+	innerStyles.weight = 900;
+
+	info.fzOrig = dPicText.style.fontSize; //firstNumber(dPicText.style.fontSize);
+	info.textColorOrig = dPicText.style.color;
+	dPicText.style.fontSize = fzreal + 'px';
+
+	info.wOrig = dPic.style.width;
+	info.hOrig = dPic.style.height;
+	innerStyles.w = wreal;
+	innerStyles.h = hreal + 2 * padh;
+	mStyleX(dPic, innerStyles);
+
+	let outerStyles = {};
+
+	info.paddingOrig = d.style.padding;
+	info.paddingTopOrig = d.style.paddingTop;
+	info.paddingBottomOrig = d.style.paddingBottom;
+	// outerStyles.padding = '' + padh + 'px ' + padw + 'px';
+	outerStyles.padding = '' + 2 * padh + 'px ' + padw + 'px' + '0' + 'px ' + padw + 'px';
+	mStyleX(d, outerStyles);
+
+}
+function maShowLabel(id, info) {
+	let d = mBy(id);
+	let dPic = d.children[0];
+	let dText = d.children[1];
+	let dPicText = dPic.children[0];
+	dPicText.style.fontSize = info.fzOrig;
+	dPicText.style.color = info.textColorOrig;
+	dPic.style.width = info.wOrig;
+	dPic.style.height = info.hOrig;
+	d.style.paddingTop = info.paddingTopOrig;
+	d.style.paddingBottom = info.paddingBottomOrig;
+	dText.style.display = 'block';
+	dText.style.width = 'auto'
+
+}
+
+//#endregion
+
+//#region layouts
+function layoutGrid(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+	//console.log(elist, elist.length)
+	let dims = calcRowsCols(elist.length, rows, cols);
+	//console.log('dims', dims);
+
+	let parentStyle = jsCopy(containerStyles);
+	parentStyle.display = isInline ? 'inline-grid' : 'grid';
+	parentStyle['grid-template-columns'] = `repeat(${dims.cols}, auto)`;
+	parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+
+	//console.log('parentStyle', parentStyle)
+
+	mStyleX(dGrid, parentStyle);
+	let b = getBounds(dGrid);
+	return { w: b.width, h: b.height };
+
+}
+function layoutFlex(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+	console.log(elist, elist.length)
+	let dims = calcRowsCols(elist.length, rows, cols);
+	console.log('dims', dims);
+
+	let parentStyle = jsCopy(containerStyles);
+	if (containerStyles.orientation == 'v') {
+		// console.log('vertical!');
+		// parentStyle['flex-flow']='row wrap';
+		parentStyle['writing-mode'] = 'vertical-lr';
+	}
+	parentStyle.display = 'flex';
+	parentStyle.flex = '0 0 auto';
+	parentStyle['flex-wrap'] = 'wrap';
+	// parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+
+	mStyleX(dGrid, parentStyle);
+	let b = getBounds(dGrid);
+	return { w: b.width, h: b.height };
+
+}
+
+//#endregion
+
+//#region maPic
+function maPicOver(d, dParent, fz, color, picStyle) { // styles, isText = true, isOmoji = false) {
+
+	let b = getBounds(dParent);
+	//console.log(b);
+	//let fz = 40;
+	d.style.top = picStyle == 'segoeBlack' ? (b.y + 60 - fz / 2 + 'px') : (b.y + 100 - fz / 2 + 'px');
+	d.style.left = picStyle == 'segoeBlack' ? (b.x + 120 - fz / 2 + 'px') : (b.x + 100 - fz / 2 + 'px');
+	d.style.color = color;
+	d.style.fontSize = fz + 'px';
+	d.style.display = 'block';
+	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
+	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
+	return d;
+}
+function maPicOver(d, dParent, fz, color, picStyle) { // styles, isText = true, isOmoji = false) {
+
+	let b = getBounds(dParent);
+	//console.log(b);
+	//let fz = 40;
+	d.style.top = picStyle == 'segoeBlack' ? (b.y + 60 - fz / 2 + 'px') : (b.y + 100 - fz / 2 + 'px');
+	d.style.left = picStyle == 'segoeBlack' ? (b.x + 120 - fz / 2 + 'px') : (b.x + 100 - fz / 2 + 'px');
+	d.style.color = color;
+	d.style.fontSize = fz + 'px';
+	d.style.display = 'block';
+	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
+	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
+	return d;
+}
+function maPicSimple(key) {
+	let info = picInfo(key);
+	let d = mText(info.text);
+	d.style.setProperty('font-family', info.family);
+	return d;
+}
+function maPicButton(key, handler, dParent, styles, classes = 'picButton', isText, isOmoji) {
+	let x = maPic(key, dParent, styles, isText, isOmoji);
+	if (isdef(handler)) x.onclick = handler;
+	mClass(x, classes);
+	return x;
+}
+function maPicLabelButtonXX(info, label, handler, dParent, styles, classes = 'picButton', isText, isOmoji) {
+	let handler1 = (ev) => {
+		let id = evToClosestId(ev);
+		let info = infoDictionary[id.substring(1)];
+		if (isLabelVisible(id)) maHideLabel(id, info); else maShowLabel(id, info);
+		mBy('dummy').focus();
+	}
+	let picLabelStyles = getHarmoniousStylesPlusPlus(styles, {}, {}, 200, 200, 65, 0, 'arial', 'random', 'transparent', null, null, true);
+	let x = maPicLabelFit(info, label.toUpperCase(), dParent, picLabelStyles[0], picLabelStyles[1], picLabelStyles[2], true, false);
+	x.id = 'd' + label;
+	x.onclick = handler;
+	x.style.cursor = 'pointer';
+	x.lastChild.style.cursor = 'pointer';
+	x.style.userSelect = 'none';
+	return x;
+}
+function maPicLabelButtonX(info, label, handler, dParent, styles, classes = 'picButton', isText, isOmoji) {
+	let handler1 = (ev) => {
+		let id = evToClosestId(ev);
+		let info = symbolDict[id.substring(1)];
+		if (isLabelVisible(id)) maHideLabel(id, info); else maShowLabel(id, info);
+		mBy('dummy').focus();
+	}
+	let picLabelStyles = getHarmoniousStylesPlus(styles, {}, {}, 200, 200, 0, 'arial', 'random', 'transparent', true);
+	let x = maPicLabelX(info, label.toUpperCase(), dParent, picLabelStyles[0], picLabelStyles[1], picLabelStyles[2], true, false);
+	x.id = 'd' + label;
+	x.onclick = handler;
+	x.style.cursor = 'pointer';
+	x.lastChild.style.cursor = 'pointer';
+	x.style.userSelect = 'none';
+	return x;
+}
+function maPicLabelButton(info, label, handler, dParent, styles, classes = 'picButton', isText, isOmoji) {
+	let sz = isdef(styles) && isdef(styles.w) ? styles.w : 200;
+	//let [g, p, t] = getHarmoniousStylesX(styles.w, 'arial', 'random', 'random');
+	let [g, p, t] = getHarmoniousStyles1(styles.w, styles.h, 10, 'arial', 'random', 'random', true);
+	g.display = 'inline-block';
+	for (const k in styles) {
+		g[k] = styles[k];
+		if (k == 'rounding') p.rounding = styles.rounding;
+	}
+	console.log('g', g, '\np', p, '\nt', t)
+	let x = maPicLabelX(info, label, dParent, g, p, t, isText, isOmoji);
+	//let x = maPicLabel(info, dParent, styles,{},{}, isText, isOmoji);
+	if (isdef(handler)) x.onclick = handler;
+	mClass(x, classes);
+	return x;
+}
+function maPicSimpleEmoHexText(hex, parent, fontSize) {
+	if (isString(parent)) parent = mBy(parent);
+	let d = mDiv(parent);
+	let s1 = '&#' + hex + ';'; //'\u{1F436}';
+	d.innerHTML = s1;
+	d.style.fontSize = fontSize + 'pt';
+	return d;
+}
+
+function maPicLabelFit(info, label, dParent, containerStyles, picStyles, textStyles, isText = true, isOmoji = false) {
+	let d = mDiv(dParent);
+	//console.log('picStyles',picStyles);
+	let dPic = maPic(info, d, picStyles, isText, isOmoji);
+	// mText(info.annotation, d, textStyles, ['truncate']);
+	let maxchars = 15; let maxlines = 1;
+	console.log(containerStyles, picStyles, textStyles);
+
+	let hAvail = containerStyles.h -
+		(containerStyles.patop + picStyles.h + containerStyles.pabottom);
+	let wAvail = containerStyles.w;
+	let fz = textStyles.fz;
+	//measure text height and width with this font!
+	console.log('_ avail:', wAvail, hAvail)
+	let styles1 = textStyles;
+	let size = getSizeWithStylesX(label, styles1, wAvail);
+	console.log('__', size);
+
+	let dText = mTextFit(label, maxchars, maxlines, d, textStyles, ['truncate']);
+	mStyleX(d, containerStyles);
+
+	//console.log(dParent,'\nd',d,'\ndPic',dPic,'\ndText',dText);
+
+	return d;
+}
+
+function maPicLabelX(info, label, dParent, containerStyles, picStyles, textStyles, isText = true, isOmoji = false) {
+	let d = mDiv(dParent);
+	//console.log('picStyles',picStyles);
+	let dPic = maPic(info, d, picStyles, isText, isOmoji);
+	// mText(info.annotation, d, textStyles, ['truncate']);
+	let dText = mText(label, d, textStyles, ['might-overflow']);
+	mStyleX(d, containerStyles);
+
+	//console.log(dParent,'\nd',d,'\ndPic',dPic,'\ndText',dText);
+
+	return d;
+}
+
+function maPicLabel(info, dParent, containerStyles, picStyles, textStyles, isText = true, isOmoji = false) {
+	let d = mDiv(dParent);
+	let dPic = maPic(info, d, picStyles, isText, isOmoji);
+	// mText(info.annotation, d, textStyles, ['truncate']);
+	let dText = mText(info.annotation, d, textStyles, ['might-overflow']);
+	mStyleX(d, containerStyles);
+
+	//console.log(dParent, '\nd', d, '\ndPic', dPic, '\ndText', dText);
+
+	return d;
+}
+function maPicFrame(info, dParent, containerStyles, picStyles, isText = true, isOmoji = false) {
+	let d = mDiv(dParent);
+	maPic(info, d, picStyles, isText, isOmoji);
+	mStyleX(d, containerStyles);
+	return d;
+}
+function maPic4(info, dParent, styles) {
+	//uses svgDict! and symBySet
+	mStyleX(dParent, { display: 'flex', 'flex-flow': 'row wrap' });
+	//let info = picInfo(key);
+	maPic(info, table, styles, true);
+	maPic(info, table, styles, true, 'segoe ui emoji');
+	maPic(info, table, styles, false);
+	maPic(info, table, styles, false, true);
+	mLinebreak(table);
+
+
+}
+function maPicLabel_dep(info, dParent, styles, isText = true, isOmoji = false) {
+	//info, dParent, styles, isText = true, isOmoji = false) {
+	let d = mDiv(dParent, { bg: 'random', fg: 'contrast', padding: 4, margin: 2 });//mStyleX(d,{align:'center'})
+	maPic(info, d, styles, isText, isOmoji);
+	mText(info.annotation, d);
+	d.style.textAlign = 'center';
+	return d;
+}
+
+//#endregion
+
+//#region style factories
+function getHarmoniousStyles1(w, h, padding, family, bg = 'blue', fg = 'random', hasText = true) {
+	let numbers = hasText ? [15, 55, 0, 20, 10] : [15, 70, 0, 0, 15];
+	numbers = numbers.map(x => h * x / 100);
+	[patop, szPic, zwischen, szText, pabot] = numbers;
+	patop = Math.max(patop, padding);
+	pabot = Math.max(pabot, padding);
+
+	// console.log(patop, szPic, zwischen, szText, pabot);
+	let styles = { h: h, bg: bg, fg: 'contrast', patop: patop, pabottom: pabot, align: 'center', 'box-sizing': 'border-box' };
+	let textStyles = { family: family, fz: Math.floor(szText * 3 / 4) };
+	let picStyles = { h: szPic, bg: fg };
+	if (w > 0) styles.w = w; else styles.paleft = styles.paright = Math.max(padding, 4);
+	return [styles, picStyles, textStyles];
+}
+function getHarmoniousStylesPlus(sContainer, sPic, sText, w, h, padding, family, bg = 'blue', fg = 'random', hasText = true) {
+	let numbers = hasText ? [15, 55, 0, 20, 10] : [15, 70, 0, 0, 15];
+	numbers = numbers.map(x => h * x / 100);
+	[patop, szPic, zwischen, szText, pabot] = numbers;
+	patop = Math.max(patop, padding);
+	pabot = Math.max(pabot, padding);
+
+	// console.log(patop, szPic, zwischen, szText, pabot);
+	let styles = { h: h, bg: bg, fg: 'contrast', patop: patop, pabottom: pabot, align: 'center', 'box-sizing': 'border-box' };
+	let textStyles = { family: family, fz: Math.floor(szText * 3 / 4) };
+	let picStyles = { h: szPic, bg: fg };
+	if (w > 0) styles.w = w; else styles.paleft = styles.paright = Math.max(padding, 4);
+	for (const k in sContainer) { if (k != 'w' && nundef(styles[k])) styles[k] = sContainer[k]; }
+	for (const k in sPic) { if (k != 'w' && nundef(picStyles[k])) picStyles[k] = sPic[k]; }
+	for (const k in sText) { if (k != 'w' && nundef(textStyles[k])) textStyles[k] = sText[k]; }
+	return [styles, picStyles, textStyles];
+}
+function getHarmoniousStylesXX(w, h, padding, family, bg = 'blue', fg = 'random', hasText = true) {
+	let numbers = hasText ? [15, 55, 0, 20, 10] : [15, 70, 0, 0, 15];
+	numbers = numbers.map(x => h * x / 100);
+	[patop, szPic, zwischen, szText, pabot] = numbers;
+	patop = Math.max(patop, padding);
+	pabot = Math.max(pabot, padding);
+
+	// console.log(patop, szPic, zwischen, szText, pabot);
+	let styles = { h: h, bg: bg, fg: 'contrast', patop: patop, pabottom: pabot, align: 'center', 'box-sizing': 'border-box' };
+	let textStyles = { family: family, fz: Math.floor(szText * 3 / 4) };
+	let picStyles = { h: szPic, bg: fg };
+	if (w > 0) styles.w = w; else styles.paleft = styles.paright = Math.max(padding, 4);
+	return [styles, picStyles, textStyles];
+}
+function getHarmoniousStylesX(sz, family, bg = 'blue', fg = 'random', hasText = true, setWidth = false) {
+	let numbers = hasText ? [15, 55, 0, 20, 10] : [15, 70, 0, 0, 15];
+	numbers = numbers.map(x => sz * x / 100);
+	[patop, szPic, zwischen, szText, pabot] = numbers;
+
+	console.log(patop, szPic, zwischen, szText, pabot);
+	let styles = { h: sz, bg: bg, fg: 'contrast', patop: patop, pabottom: pabot, align: 'center', 'box-sizing': 'border-box' };
+	let textStyles = { family: family, fz: Math.floor(szText * 3 / 4) };
+	let picStyles = { h: szPic, bg: fg };
+	if (setWidth) styles.w = sz; else styles.paleft = styles.paright = 4;
+	return [styles, picStyles, textStyles];
+}
+function getHarmoniousStyles(sz, family, bg = 'blue', fg = 'random', hasText = true) {
+	let fpic = 2 / 3; let ffont = 1 / 8; let ftop = 1 / 9; let fbot = 1 / 12;
+	let styles = { w: sz, h: sz, bg: bg, fg: 'contrast', patop: sz * ftop, pabottom: sz * fbot, align: 'center', 'box-sizing': 'border-box' };
+	let textStyles = { family: family, fz: Math.floor(sz * ffont) };
+	let picStyles = { h: sz * fpic, bg: fg };
+	return [styles, picStyles, textStyles];
+}
+function getSimpleStyles(sz, family, bg, fg) {
+	let styles = { bg: bg, fg: 'contrast', align: 'center', 'box-sizing': 'border-box', padding: 4, margin: 2 };
+	let textStyles = { family: family };
+	let picStyles = { w: sz, h: sz, bg: fg };
+	return [styles, picStyles, textStyles];
+}
+function getParamsForMaPicStyle(desc = 'segoeBlack') {
+	desc = desc.toLowerCase();
+	switch (desc) {
+		case 'twittertext': return { isText: true, isOmoji: false };
+		case 'twitterimage': return { isText: false, isOmoji: false };
+		case 'openmojitext': return { isText: true, isOmoji: true };
+		case 'openmojiimage': return { isText: false, isOmoji: true };
+		case 'openmojiblacktext': return { isText: true, isOmoji: 'openmoBlack' };
+		case 'segoe': return { isText: true, isOmoji: 'segoe ui emoji' };
+		case 'segoeblack': return { isText: true, isOmoji: 'segoe ui symbol' };
+		default: return { isText: true, isOmoji: false };
+	}
+
+}
+//#endregion
+
+//#region pic helpers
+function picInfo(key) {
+	//#region doc 
+	/*	
+usage: info = picInfo('red heart');
+
+key ... string or hex key or keywords (=>in latter case will perform picSearch and return random info from result)
+
+returns info
+	*/
+	//#endregion 
+	if (isdef(symbolDict[key])) return symbolDict[key];
+	else {
+		ensureSymByHex();
+		let info = symByHex[key];
+		if (isdef(info)) { return info; }
+		else {
+			let infolist = picSearch({ keywords: key });
+			//console.log('result from picSearch(' + key + ')', infolist);
+			if (infolist.length == 0) return null;
+			else return chooseRandom(infolist);
+		}
+	}
+}
+function picRandom(type, keywords, n = 1) {
+	let infolist = picSearch({ type: type, keywords: keywords });
+	//console.log(infolist)
+	return n == 1 ? chooseRandom(infolist) : choose(infolist, n);
+}
+function picSearch({ keywords, type, func, set, group, subgroup, props, isAnd, justCompleteWords }) {
+	//#region doc 
+	/*	
+usage: ilist = picSearch({ type: 'all', func: (d, kw) => allCondX(d, x => /^a\w*r$/.test(x.key)) });
+
+keywords ... list of strings or just 1 string  =>TODO: allow * wildcards!
+type ... E [all,eduplo,iduplo,emo,icon] =>dict will be made from that!
+func ... (dict,keywords) => infolist
+
+>the following params are used to select one of standard filter functions (see helpers region filter functions)
+props ... list of properties to match with filter function
+isAnd ... all keywords must match in filter function
+justCompleteWords ... matches have to be complete words
+
+returns list of info
+	*/
+	//#endregion 
+
+	if (isdef(set)) ensureSymBySet();
+
+	if (isdef(type) && type != 'all') ensureSymByType();
+
+	//if (type == 'icon') console.log(symByType,'\n=>list',symListByType)
+
+	let [dict, list] = isdef(set) ? [symBySet[set], symListBySet[set]]
+		: nundef(type) || type == 'all' ? [symbolDict, symbolList] : [symByType[type], symListByType[type]];
+
+	//console.log(dict);
+
+	//console.log('_____________',keywords,type,dict,func)
+	//if (nundef(keywords)) return isdef(func) ? func(dict) : dict2list(dict);
+	if (set == 'role' && firstCond(dict2list(dict), x => x.id == 'rotate')) console.log('===>', symBySet[set], dict, dict2list(dict));
+
+	if (nundef(keywords)) return isdef(func) ? func(dict) : list;
+	if (!isList(keywords)) keywords = [keywords];
+	if (isString(props)) props = [props];
+
+	let infolist = [];
+	if (isList(props)) {
+		if (isAnd) {
+			if (justCompleteWords) {
+				infolist = allWordsContainedInPropsAsWord(dict, keywords, props);
+			} else {
+				infolist = allWordsContainedInProps(dict, keywords, props);
+			}
+		} else {
+			if (justCompleteWords) {
+				infolist = anyWordContainedInPropsAsWord(dict, keywords, props);
+			} else {
+				infolist = anyWordContainedInProps(dict, keywords, props);
+			}
+		}
+	} else if (nundef(props) && nundef(func)) {
+		if (isAnd) {
+			if (justCompleteWords) {
+				infolist = allWordsContainedInKeysAsWord(dict, keywords);
+			} else {
+				infolist = allWordsContainedInKeys(dict, keywords);
+			}
+		} else {
+			if (justCompleteWords) {
+				infolist = anyWordContainedInKeysAsWord(dict, keywords);
+			} else {
+				infolist = anyWordContainedInKeys(dict, keywords);
+			}
+		}
+	} else if (isdef(func)) {
+		//propList is a function!
+		//console.log('calling func',dict,keywords)
+		infolist = func(dict, keywords);
+	}
+	return infolist;
+}
+function picSet(setname) {
+	//if no key is give, just get a random pic from this set
+	ensureSymBySet();
+	return chooseRandom(symListBySet[setname]);
+	// if (isdef(key)) {
+	// 	if (isdef(symBySet[setname][key])) return symbolDict[key];
+	// 	else return picSearch({ set: setname, keywords: [key] });
+	// } else return chooseRandom(symListBySet[name]);
+}
+//#endregion
+
+//#region helpers (empty)
+//#endregion
+
+
+
+
+
+
+
+
+
+
+//#endregion
+
+
+function initTable() {
+	let table = mBy('table');
+	clearElement(table);
+
+	//initLineNavi();
+	initLineTop();
+	initLineTitle();
+	initLineTable();
+	initLineBottom();
+
+	dTable = dLineTableMiddle;
+	dTitle = dLineTitleMiddle;
+	//console.log(dTable,dTitle)
+}
+function initSidebar() {
+	let dParent = mBy('sidebar');
+	clearElement(dParent);
+	dLeiste = mDiv(dParent);
+	mStyleX(dLeiste, { 'min-width':70, 'max-height': '100vh', display: 'flex', 'flex-flow': 'column wrap' });
+}
+function initAux() {
+	dAux = mBy('dAux');
+	//show('dTemple');
+	//show('dGear');
+
+}
+function initLineNavi() {
+	dNavi = mBy('freezer');
+	mStyleX(dNavi,{bg:'navy',margin:0,padding:0,pabottom:4,paleft:4})
+	dLineNaviOuter = mDiv(dNavi); dLineNaviOuter.id = 'lineNaviOuter';
+
+	dLineNavi = mDiv(dLineNaviOuter); dLineNavi.id = 'lineNavi';
+	dLineNaviLeft = mDiv(dLineNavi); dLineNaviLeft.id = 'lineNaviLeft';
+	dLineNaviRight = mDiv(dLineNavi); dLineNaviRight.id = 'lineNaviRight';
+	dLineNaviMiddle = mDiv(dLineNavi); dLineNaviMiddle.id = 'lineNaviMiddle';
+
+	mLinebreak(table);
+}
+function initLineTop() {
+	dLineTopOuter = mDiv(table); dLineTopOuter.id = 'lineTopOuter';
+	dLineTop = mDiv(dLineTopOuter); dLineTop.id = 'lineTop';
+	dLineTopLeft = mDiv(dLineTop); dLineTopLeft.id = 'lineTopLeft';
+	dLineTopRight = mDiv(dLineTop); dLineTopRight.id = 'lineTopRight';
+	dLineTopMiddle = mDiv(dLineTop); dLineTopMiddle.id = 'lineTopMiddle';
+
+	dScore = mDiv(dLineTopMiddle);
+	dScore.id = 'dScore';
+
+	dLevel = mDiv(dLineTopLeft);
+	dLevel.id = 'dLevel';
+
+	dGameTitle = mDiv(dLineTopRight);
+	dGameTitle.id = 'dGameTitle';
+	let d = mDiv(dLineTopRight);
+	d.id = 'time';
+
+	mLinebreak(table);
+}
+function initLineTitle() {
+	dLineTitleOuter = mDiv(table); dLineTitleOuter.id = 'lineTitleOuter';
+	dLineTitle = mDiv(dLineTitleOuter); dLineTitle.id = 'lineTitle';
+	dLineTitleLeft = mDiv(dLineTitle); dLineTitleLeft.id = 'lineTitleLeft';
+	dLineTitleRight = mDiv(dLineTitle); dLineTitleRight.id = 'lineTitleRight';
+	dLineTitleMiddle = mDiv(dLineTitle); dLineTitleMiddle.id = 'lineTitleMiddle';
+
+	mLinebreak(table);
+}
+function initLineTable() {
+	dLineTableOuter = mDiv(table); dLineTableOuter.id = 'lineTableOuter';
+	dLineTable = mDiv(dLineTableOuter); dLineTable.id = 'lineTable';
+	dLineTableLeft = mDiv(dLineTable); dLineTableLeft.id = 'lineTableLeft';
+	dLineTableMiddle = mDiv(dLineTable); dLineTableMiddle.id = 'lineTableMiddle';
+	mClass(dLineTableMiddle, 'flexWrap');
+	dLineTableRight = mDiv(dLineTable); dLineTableRight.id = 'lineTableRight';
+
+	mLinebreak(table);
+}
+function initLineBottom() {
+	dLineBottomOuter = mDiv(table); dLineBottomOuter.id = 'lineBottomOuter';
+	dLineBottom = mDiv(dLineBottomOuter); dLineBottom.id = 'lineBottom';
+	dLineBottomLeft = mDiv(dLineBottom); dLineBottomLeft.id = 'lineBottomLeft';
+	dLineBottomRight = mDiv(dLineBottom); dLineBottomRight.id = 'lineBottomRight';
+	dLineBottomMiddle = mDiv(dLineBottom); dLineBottomMiddle.id = 'lineBottomMiddle';
+
+	mLinebreak(table);
+}
+
+
+//#region pic new API
+function _createDivs(items, ifs, options) {
+	//options needs to have showPics,showLabels
+	if (nundef(options.textPos)) options.textPos = 'none';
+
+	let w = isdef(options.w) ? options.w : options.sz;
+	let h = isdef(options.h) ? options.h : options.sz;
+
+	let padding = (isdef(ifs.padding) ? ifs.padding : 1);
+
+	let bo = ifs.border;
+	bo = isdef(bo) ? isString(bo) ? firstNumber(bo) : bo : 0;
+
+	let wNet = w - 2 * padding - 2 * bo;
+	let hNet = h - 2 * padding - 2 * bo;
+
+	let pictureSize = wNet;
+	options.center = true;
+	//options.showLabels=false;
+	let picStyles = { w: wNet, h: isdef(options.center) ? hNet : hNet + padding }; //if no labels!
+
+	let textStyles, hText;
+	if (options.showLabels) {
+		let longestLabel = findLongestLabel(items);
+		let oneWord = longestLabel.label.replace(' ', '_');
+
+		let maxTextHeight = options.showPics ? hNet / 2 : hNet;
+		textStyles = idealFontsize(oneWord, hNet, maxTextHeight, 22, 8);
+		hText = textStyles.h;
+
+		pictureSize = hNet - hText;
+		picStyles = { w: pictureSize, h: pictureSize };
+
+		delete textStyles.h;
+		delete textStyles.w;
+	}
+
+	let outerStyles = { rounding: 10, margin: w / 12, display: 'inline-block', w: w, h: h, padding: padding, bg: 'white', align: 'center', 'box-sizing': 'border-box' };
+	if (options.showLabels == true && options.textPos == 'none' && nundef(options.h)) delete outerStyles.h;
+	outerStyles = deepmergeOverride(outerStyles, ifs);
+	let pic, text;
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		let k = item.key;
+		let d = mDiv();
+		if (isdef(item.textShadowColor)) {
+			let sShade = '0 0 0 ' + item.textShadowColor;
+			if (options.showPics) {
+				picStyles['text-shadow'] = sShade;
+				picStyles.fg = anyColorToStandardString('black', item.contrast); //'#00000080' '#00000030' 
+			} else {
+				textStyles['text-shadow'] = sShade;
+				textStyles.fg = anyColorToStandardString('black', item.contrast); //'#00000080' '#00000030' 
+			}
+		}
+		//add pic if needed
+		if (options.showPics) {
+			pic = zPic(k, null, picStyles, true, false);
+			delete pic.info;
+			mAppend(d, pic.div);
+		}
+		//add text if needed
+		if (options.showLabels) {
+			textStyles.fg = item.fg;
+			text = zText1Line(item.label, null, textStyles, hText);
+			mAppend(d, text.div);
+		}
+		//style container div
+		outerStyles.bg = item.bg;
+		outerStyles.fg = item.fg;
+		mStyleX(d, outerStyles);
+		//console.log('===>iGroup',item.iGroup,i)
+		d.id = getUID(); // 'pic' + (i + item.iGroup); //$$$$$
+		d.onclick = options.onclick;
+		//complete item info
+		item.id = d.id;
+		item.row = Math.floor(item.index / options.cols);
+		item.col = item.index % options.cols;
+		item.div = d;
+		if (isdef(pic)) { item.pic = pic; item.fzPic = pic.innerDims.fz; }
+		if (isdef(text)) item.text = text;
+		item.isSelected = false;
+		item.isLabelVisible = options.showLabels;
+		item.dims = parseDims(w, w, d.style.padding);
+		if (options.showRepeat) addRepeatInfo(d, item.iRepeat, w);
+	}
+
+}
+function createStandardItems(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
+	//#region prelim: default ifs and options, keys & infos
+	//console.log('ifs', jsCopy(ifs)); console.log('options', jsCopy(options));
+
+	// let showLabels = Settings.labels == true;
+	if (nundef(Settings)) Settings = {};// language: 'E' };
+	let infos = keys.map(k => (isdef(Settings.language) ? getRandomSetItem(Settings.language, k) : symbolDict[k]));
+	//ifs and options: defaults
+	let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
+	let fg = (i, info, item) => colorIdealText(item.bg);
+	let defIfs = { bg: bg, fg: fg, label: isdef(labels) ? labels : (i, info) => info.best, contrast: .32, fz: 20, padding: 10 };
+	let defOptions = { showLabels: Settings.labels == true, shufflePositions: true, sameBackground: true, showRepeat: false, repeat: 1, onclick: onClickPictureHandler, iStart: 0 };
+	ifs = deepmergeOverride(defIfs, ifs);
+	options = deepmergeOverride(defOptions, options);
+	//console.log('keys', keys); console.log('ifs', ifs); 
+	//console.log('options', options);
+	//#endregion
+
+	//#region phase1: make items: hier jetzt mix and match
+	let items = zItems(infos, ifs, options);
+	if (options.repeat > 1) items = zRepeatEachItem(items, options.repeat, options.shufflePositions);
+	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
+	//console.log('____________ options.rows', options.rows)
+	items.map(x => x.label = x.label.toUpperCase());
+	//#endregion phase1
+
+	return [items, ifs, options];
+}
+function getRandomItems(n, keyOrSet, text = true, pic = true, styles = {}) {
+	let keys = getRandomKeys(n, keyOrSet);
+	//console.log(keys)
+	if (pic == true) return getPics(() => console.log('click'), styles, { showLabels: text }, keys);
+	else return getLbls(() => console.log('click'), styles, { showLabels: text }, keys);
+}
+function getPics(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
+	let items;
+	[items, ifs, options] = createStandardItems(onClickPictureHandler, ifs, options, keys, labels);
+	// prepX(Pictures, ifs, options);
+	prepDims(items, options);
+	prepPics(items, ifs, options);
+	return items;
+}
+function getLbls(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
+	let items;
+	[items, ifs, options] = createStandardItems(onClickPictureHandler, ifs, options, keys, labels);
+	// prepX(Pictures, ifs, options);
+	prepDims(items, options);
+	prepLbls(items, ifs, options);
+	return items;
+}
+function getPic(key, sz, bg, label) {
+	let items, ifs = { bg: bg }, options = { sz: sz };
+	if (isdef(label)) options.showLabels = true; else options.showLabels = false;
+	[items, ifs, options] = createStandardItems(null, ifs, options, [key], isdef(label) ? [label] : undefined);
+	// prepX(Pictures, ifs, options);
+	prepDims(items, options);
+	prepPics(items, ifs, options);
+	return items[0];
+}
+function getLbl(key, sz, bg, label) {
+	let items, ifs = { bg: bg }, options = { sz: sz };
+	if (isdef(label)) options.showLabels = true; else options.showLabels = false;
+	[items, ifs, options] = createStandardItems(null, ifs, options, [key], isdef(label) ? [label] : undefined);
+	// prepX(Pictures, ifs, options);
+	prepDims(items, options);
+	prepLbls(items, ifs, options);
+	return items[0];
+}
+function presentItems(items, dParent, rows) {
+	//#region phase3: prep container for items
+	//mClass(dParent, 'flexWrap'); //frage ob das brauche????
+	//#endregion
+
+	//#region phase4: add items to container!
+	let dGrid = mDiv(dParent);
+	items.map(x => mAppend(dGrid, x.div));
+	let gridStyles = { 'place-content': 'center', gap: 4, margin: 4, padding: 4 };
+	let gridSize = layoutGrid(items, dGrid, gridStyles, { rows: rows, isInline: true });
+	// console.log('size of grid',gridSize,'table',getBounds(dTable))
+
+	//#endregion
+
+
+	//console.log('*** THE END ***', Pictures[0]);
+	return { dGrid: dGrid, sz: gridSize };
+}
+function replaceLabel(item, label) { }
+function replacePic(item, key) { }
+function replacePicAndLabel(item, key, label) {
+	//if item has both pic and label, replace them
+	//if item has only pic, replace it and add label from new key
+	//if item has onlt text, resize it and add both pic and label
+	//if label param is missing, use default label param from key
+	//console.log('item',item,'key',key,'label',label)
+	let div = item.div;
+	//console.log(item);
+	let newItem = getPic(key, item.sz, item.bg, label);
+	clearElement(div);
+	mAppend(div, newItem.div.children[0]);
+	mAppend(div, newItem.div.children[0]);
+	item.pic = newItem.pic;
+	item.text = newItem.text;
+}
+function addLabel(item, label) { }
+function removeLabel(item) {
+	//console.log('old item',item);
+	let div = item.div;
+	let newItem = getPic(item.key, item.sz, item.bg);
+	//console.log('newItem',newItem);
+	clearElement(div);
+	mAppend(div, newItem.div.children[0]);
+	item.pic = newItem.pic;
+	delete item.text;
+}
+function addPic(item, key) {
+	let div = item.div;
+	//console.log(item);
+	let newItem = getPic(key, item.sz, item.bg, item.label);
+	clearElement(div);
+	mAppend(div, newItem.div.children[0]);
+	mAppend(div, newItem.div.children[0]);
+	item.pic = newItem.pic;
+	item.text = newItem.text;
+
+}
+function removePic(item) {
+	//if item does not have a label, add the label for its key
+	let div = item.div;
+	//console.log(item);
+	let newItem = getLbl(item.key, item.sz, item.bg, item.label);
+	clearElement(div);
+	mAppend(div, newItem.div.children[0]);
+	delete item.pic;
+	item.text = newItem.text;
+}
+function showLbls(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
+	let items = getLbls(onClickPictureHandler, ifs, options, keys, labels);
+	presentItems(items, dTable, 1);
+	return items;
+}
+function showPics(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
+	let items = getPics(onClickPictureHandler, ifs, options, keys, labels);
+	presentItems(items, dTable, options.rows);
+	return items;
+}
+
+
+function ty01(){
+
+}
+function yRandomPic(ifs,options){
+	//make a random key,
+}
+
+function yPics(ifs,options) {
+	let keys = choose(SymKeys, n);
+	console.log(keys)
+	showPicsS(keys);
+
+}
+function showPicsS(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
+	let items = getPicsS(onClickPictureHandler, ifs, options, keys, labels);
+	presentItems(items, dTable, options.rows);
+	return items;
+}
+function getPicsS(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
+	let items;
+	[items, ifs, options] = createStandardItemsS(onClickPictureHandler, ifs, options, keys, labels);
+	console.log(items)
+	// prepX(Pictures, ifs, options);
+	prepDims(items, options);
+	// prepPics(items, ifs, options);
+	options.showPics = true;
+	_createDivs(items, ifs, options);
+	return items;
+}
+function createStandardItemsS(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
+	if (nundef(Settings)) Settings = {};
+	let lang = isdef(Settings.language) ? Settings.language : 'E';
+	let defShowLabels = isdef(Settings.labels) && Settings.labels == true;
+
+	let infos = keys.map(k => Syms[k]);
+	infos.map(x => x.best = x['best' + lang]);
+	console.log(infos.map(x => x.best));
+
+	let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
+	let fg = (i, info, item) => colorIdealText(item.bg);
+	let defIfs = { bg: bg, fg: fg, label: isdef(labels) ? labels : (i, info) => info.best, contrast: .32, fz: 20, padding: 10 };
+	let defOptions = { showLabels: defShowLabels, shufflePositions: true, sameBackground: true, showRepeat: false, repeat: 1, onclick: onClickPictureHandler, iStart: 0 };
+	ifs = deepmergeOverride(defIfs, ifs);
+	options = deepmergeOverride(defOptions, options);
+	let items = zItems(infos, ifs, options);
+	if (options.repeat > 1) items = zRepeatEachItem(items, options.repeat, options.shufflePositions);
+	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
+	items.map(x => x.label = x.label.toUpperCase());
+	return [items, ifs, options];
+}
+function _createDivsS(items, ifs, options) {
+	//options needs to have showPics,showLabels
+	if (nundef(options.textPos)) options.textPos = 'none';
+
+	let w = isdef(options.w) ? options.w : options.sz;
+	let h = isdef(options.h) ? options.h : options.sz;
+
+	let padding = (isdef(ifs.padding) ? ifs.padding : 1);
+
+	let bo = ifs.border;
+	bo = isdef(bo) ? isString(bo) ? firstNumber(bo) : bo : 0;
+
+	let wNet = w - 2 * padding - 2 * bo;
+	let hNet = h - 2 * padding - 2 * bo;
+
+	let pictureSize = wNet;
+	options.center = true;
+	//options.showLabels=false;
+	let picStyles = { w: wNet, h: isdef(options.center) ? hNet : hNet + padding }; //if no labels!
+
+	let textStyles, hText;
+	if (options.showLabels) {
+		let longestLabel = findLongestLabel(items);
+		let oneWord = longestLabel.label.replace(' ', '_');
+
+		let maxTextHeight = options.showPics ? hNet / 2 : hNet;
+		textStyles = idealFontsize(oneWord, hNet, maxTextHeight, 22, 8);
+		hText = textStyles.h;
+
+		pictureSize = hNet - hText;
+		picStyles = { w: pictureSize, h: pictureSize };
+
+		delete textStyles.h;
+		delete textStyles.w;
+	}
+
+	let outerStyles = { rounding: 10, margin: w / 12, display: 'inline-block', w: w, h: h, padding: padding, bg: 'white', align: 'center', 'box-sizing': 'border-box' };
+	if (options.showLabels == true && options.textPos == 'none' && nundef(options.h)) delete outerStyles.h;
+	outerStyles = deepmergeOverride(outerStyles, ifs);
+	let pic, text;
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		let k = item.key;
+		let d = mDiv();
+		if (isdef(item.textShadowColor)) {
+			let sShade = '0 0 0 ' + item.textShadowColor;
+			if (options.showPics) {
+				picStyles['text-shadow'] = sShade;
+				picStyles.fg = anyColorToStandardString('black', item.contrast); //'#00000080' '#00000030' 
+			} else {
+				textStyles['text-shadow'] = sShade;
+				textStyles.fg = anyColorToStandardString('black', item.contrast); //'#00000080' '#00000030' 
+			}
+		}
+		//add pic if needed
+		if (options.showPics) {
+			pic = zPicS(item, null, picStyles, true, false);
+			delete pic.info;
+			mAppend(d, pic.div);
+		}
+		//add text if needed
+		if (options.showLabels) {
+			textStyles.fg = item.fg;
+			text = zText1Line(item.label, null, textStyles, hText);
+			mAppend(d, text.div);
+		}
+		//style container div
+		outerStyles.bg = item.bg;
+		outerStyles.fg = item.fg;
+		mStyleX(d, outerStyles);
+		//console.log('===>iGroup',item.iGroup,i)
+		d.id = getUID(); // 'pic' + (i + item.iGroup); //$$$$$
+		d.onclick = options.onclick;
+		//complete item info
+		item.id = d.id;
+		item.row = Math.floor(item.index / options.cols);
+		item.col = item.index % options.cols;
+		item.div = d;
+		if (isdef(pic)) { item.pic = pic; item.fzPic = pic.innerDims.fz; }
+		if (isdef(text)) item.text = text;
+		item.isSelected = false;
+		item.isLabelVisible = options.showLabels;
+		item.dims = parseDims(w, w, d.style.padding);
+		if (options.showRepeat) addRepeatInfo(d, item.iRepeat, w);
+	}
+
+}
+function zPicS(item, dParent, styles = {}) {
+	let w = styles.w, h = styles.h, padding = styles.padding, hpadding = styles.hpadding, wpadding = styles.wpadding;
+	if (isdef(styles.sz)) {
+		if (nundef(w)) w = styles.sz;
+		if (nundef(h)) h = styles.sz;
+	}
+	let stylesNew = jsCopy(styles);
+	if (isdef(w)) {
+		if (isdef(padding)) { w -= 2 * padding; }//stylesNew.padding=0;}
+		else if (isdef(wpadding)) { w -= 2 * wpadding; }//stylesNew.wpadding=0;}
+		stylesNew.w = w;
+	}
+	if (isdef(h)) {
+		if (isdef(padding)) { h -= 2 * padding; }//stylesNew.padding=0;}
+		else if (isdef(hpadding)) { h -= 2 * hpadding; }//stylesNew.hpadding=0;}
+		stylesNew.h = h;
+	}
+	// console.log('old',styles)
+	// console.log('new:',stylesNew)
+	return _zPicS(item, dParent, stylesNew);
+}
+function detectItemInfoKey(itemInfoKey) {
+	let item, info, key;
+	if (isString(itemInfoKey)) { key = itemInfoKey; info = Syms[key]; item = { info: info, key: key }; }
+	else if (isDict(itemInfoKey)) {
+		if (isdef(itemInfoKey.info)) { item = itemInfoKey; info = item.info; key = item.info.key; }
+		else { info = itemInfoKey; key = info.key; item = { info: info, key: key }; }
+	}
+	return [item, info, key];
+}
+function _zPicS(itemInfoKey, dParent, styles = {}) {
+	let [item, info, key] = detectItemInfoKey(itemInfoKey);
+
+	let outerStyles = isdef(styles) ? jsCopy(styles) : {};
+	outerStyles.display = 'inline-block';
+	let family = info.family;
+	let wInfo = info.w;
+	let hInfo = info.h; if (info.type == 'icon' && hInfo == 133) hInfo = 110;
+	info.fz = 100;
+
+	let innerStyles = { family: family };
+	let [padw, padh] = isdef(styles.padding) ? [styles.padding, styles.padding] : [0, 0];
+
+	let dOuter = isdef(dParent) ? mDiv(dParent) : mDiv();
+	let d = mDiv(dOuter);
+	d.innerHTML = info.text;
+
+	let wdes, hdes, fzdes, wreal, hreal, fzreal, f;
+
+	if (isdef(styles.w) && isdef(styles.h) && isdef(styles.fz)) {
+		[wdes, hdes, fzdes] = [styles.w, styles.h, styles.fz];
+		let fw = wdes / wInfo;
+		let fh = hdes / hInfo;
+		let ffz = fzdes / info.fz;
+		f = Math.min(fw, fh, ffz);
+	} else if (isdef(styles.w) && isdef(styles.h)) {
+		[wdes, hdes] = [styles.w, styles.h];
+		let fw = wdes / wInfo;
+		let fh = hdes / hInfo;
+		f = Math.min(fw, fh);
+	} else if (isdef(styles.w) && isdef(styles.fz)) {
+		[wdes, fzdes] = [styles.w, styles.fz];
+		let fw = wdes / wInfo;
+		let ffz = fzdes / info.fz;
+		f = Math.min(fw, ffz);
+	} else if (isdef(styles.h) && isdef(styles.fz)) {
+		[hdes, fzdes] = [styles.h, styles.fz];
+		let fh = hdes / hInfo;
+		let ffz = fzdes / info.fz;
+		f = Math.min(fh, ffz);
+	} else if (isdef(styles.h)) {
+		hdes = styles.h;
+		f = hdes / hInfo;
+	} else if (isdef(styles.w)) {
+		wdes = styles.w;
+		f = wdes / wInfo;
+	} else {
+		mStyleX(d, innerStyles);
+		mStyleX(dOuter, outerStyles);
+		return dOuter;
+	}
+	fzreal = Math.floor(f * info.fz);
+	wreal = Math.round(f * wInfo);
+	hreal = Math.round(f * hInfo);
+	wdes = Math.round(wdes);
+	hdes = Math.round(hdes);
+	padw += isdef(styles.w) ? (wdes - wreal) / 2 : 0;
+	padh += isdef(styles.h) ? (hdes - hreal) / 2 : 0;
+
+	//console.log('padh',padh)
+	//console.log('====>>>>', family, '\nw.info', wInfo, '\nh.info', hInfo, '\nfactor', f, '\nw', wreal, '\nh', hreal);
+
+	if (!(padw >= 0 && padh >= 0)) {
+		console.log(info)
+		console.log('\nstyles.w', styles.w, '\nstyles.h', styles.h, '\nstyles.fz', styles.fz, '\nstyles.padding', styles.padding, '\nwInfo', wInfo, '\nhInfo', hInfo, '\nfzreal', fzreal, '\nwreal', wreal, '\nhreal', hreal, '\npadw', padw, '\npadh', padh);
+	}
+	//console.assert(padw >= 0 && padh >= 0, 'BERECHNUNG FALSCH!!!!', padw, padh, info, '\ninfokey', infokey);
+
+
+	innerStyles.fz = fzreal;
+	innerStyles.weight = 900;
+	innerStyles.w = wreal;
+	innerStyles.h = hreal;
+	mStyleX(d, innerStyles);
+
+	outerStyles.padding = '' + padh + 'px ' + padw + 'px';
+	outerStyles.w = wreal; //das ist groesse von inner!
+	outerStyles.h = hreal;
+	// let [bg,fg] = getExtendedColors(outerStyles.bg,outerStyles.fg);
+	// outerStyles.bg = bg;
+	// outerStyles.bg = fg;
+	//console.log(outerStyles)
+	mStyleX(dOuter, outerStyles);
+
+	return {
+		info: info, key: info.key, div: dOuter, outerDims: { w: wdes, h: hdes, hpadding: padh, wpadding: padw },
+		innerDims: { w: wreal, h: hreal, fz: fzreal }, bg: dOuter.style.backgroundColor, fg: dOuter.style.color
+	};
+
+}
+
+//#endregion
+
+//#region speech
+var RecogOutput = false;
+var RecogOutputError = true;
+var RecogHighPriorityOutput = true;
+var SpeakerOutput = false;
+var MicrophoneUi;
+var SessionId;
+//var RecognitionAvailable = true;
+
+class SpeechAPI {
+	constructor(lang) {
+		this.recorder = new Recorder(lang);
+		this.speaker = new Speaker(lang);
+		SessionId = Date.now();
+	}
+	testRecorder() {
+		this.st
+		this.recorder.start();
+	}
+	train() {
+
+	}
+	setLanguage(lang) {
+		//console.log('settings the language to:',lang)
+		this.speaker.setLanguage(lang);
+		this.recorder.setLanguage(lang);
+	}
+	isSpeakerRunning() { return this.speaker.isRunning; }
+	startRecording(lang, callback) {
+		this.recorder.isCancelled = false;
+		this.recorder.callback = callback;
+		this.recorder.setLanguage(lang);
+		this.recorder.start();
+	}
+	stopRecording() {
+		this.recorder.isCancelled = true;
+		this.recorder.stop();
+	}
+
+	say(text, r = .5, p = .8, v = .5, voicekey, callback, lang) {
+
+		//what happens if change lang in the middle of speaking???
+		if (isdef(lang)) this.speaker.setLanguage(lang);
+		this.speaker.enq(arguments);
+		this.speaker.deq();
+	}
+
+	stopSpeaking() {
+		this.speaker.clearq();
+	}
+
+}
+
+class Recorder {
+	constructor(lang) {
+		let rec = this.rec = new webkitSpeechRecognition();
+		//console.log('speech recognition', rec)
+		rec.continuous = true;
+		rec.interimResults = true;
+		rec.maxAlternatives = 5;
+		this.setLanguage(lang);
+		//flags
+		this.isRunning = false;
+		this.isCancelled = false;
+		//result
+		this.result = null;
+		this.isFinal = null;
+		this.confidence = null;
+
+		this.callback = null;
+
+		let genHandler = (ev, name) => {
+			if (RecogOutput) console.log('recorder', name, 'isCancelled', this.isCancelled, 'isRunning', this.isRunning);
+		}
+		rec.onerror = ev => {
+			genHandler(ev, 'error');
+			// console.log('____________', ev.error == 'no-speech', ev.error)
+			if (ev.error == 'network') {
+				alert('no internet connection: Speech Recognition is not available! (error:'+ev.error+')');
+				RecognitionAvailable = false;
+			} //else {
+			// 	alert('Great! Speech Recognition is available! '+ev.error)
+			// 	RecognitionAvailable = true;
+			// }
+			if (RecogOutputError) console.error(ev);
+			this.stop();
+		};
+		rec.onstart = ev => {
+			genHandler(ev, 'started');
+			if (!this.isCancelled) this.isRunning = true;
+		};
+		rec.onresult = ev => {
+			genHandler(ev, 'result!');
+			if (!this.isCancelled) this.processResult(ev);
+		};
+		rec.onend = ev => {
+			genHandler(ev, 'ended');
+			if (!this.isCancelled && this.callback) {
+				//console.log('-------------------------')
+				this.callback(this.isFinal, this.result, this.confidence, SessionId);
+			}
+			this.isCancelled = this.isRunning = false;
+			this.callback = null;
+		};
+
+	}
+	processResult(ev) {
+		//console.log('**********', ev)
+		let res = ev.results[0];
+		this.isFinal = res.isFinal;
+		this.result = res[0].transcript;
+		this.confidence = res[0].confidence;
+
+		if (this.isFinal) console.log('....result', this.result, 'FINAL?', this.isFinal)
+
+		if (this.isFinal) {
+			this.stop();
+		}
+	}
+	setLanguage(lang) { this.rec.lang = (lang == 'E' ? 'en-US' : 'de-DE'); }
+	start() {
+		MicrophoneShow();
+		setTimeout(() => this.rec.start(), 10);
+	}
+	stop() {
+		//console.log('stopping!')
+		MicrophoneHide();
+		setTimeout(() => this.rec.stop(), 10);
+	}
+	getLastResult() {
+		//should be of form {isFinal:,result:,confidence:}
+		return { isFinal: this.isFinal, result: this.result, confidence: this.confidence };
+	}
+}
+class Speaker {
+	static get VOICES() {
+		return {
+			david: 'Microsoft David Desktop - English',
+			zira: 'Microsoft Zira Desktop - English',
+			us: 'Google US English',
+			ukFemale: 'Google UK English Female',
+			ukMale: 'Google UK English Male',
+			deutsch: 'Google Deutsch',
+		};
+	}
+	constructor(lang) {
+		//console.log('init speaker...')
+		this.lang = lang;
+		this.q = [];
+		this.isRunning = false;
+		let awaitVoices = new Promise(resolve =>
+			speechSynthesis.onvoiceschanged = resolve)
+			.then(this.initVoices.bind(this));
+	}
+	initVoices() {
+		this.voices = speechSynthesis.getVoices().sort(function (a, b) {
+			const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
+			if (aname < bname) return -1;
+			else if (aname == bname) return 0;
+			else return +1;
+		});
+		//console.log('voices:', this.voices.map(x => x.name))
+	}
+	setLanguage(lang) { this.lang = lang; }
+	enq(args) { this.q.push(args); }
+	deq() {
+		if (nundef(this.voices)){
+			setTimeout(this.deq.bind(this),500);
+		}
+		else if (!isEmpty(this.q)) {
+			let args = this.q.pop();
+			this.utter(...args);
+		} else {
+			this.isRunning = false;
+
+		}
+	}
+	clearq() {
+		this.q = [];
+	}
+
+	utter(text, r = .5, p = .8, v = .5, voicekey, callback = null) {
+
+
+		speechSynthesis.cancel();
+		var u = new SpeechSynthesisUtterance();
+		//u.text = text;
+		let [vkey, voice] = this.findSuitableVoice(text, voicekey);
+		//console.log(this.voices,vkey)
+		u.text = sepWords(text, vkey);// 'Hi <silence msec="2000" /> Flash!'; //text.toLowerCase();
+		u.rate = r;
+		u.pitch = p;
+		u.volume = v;
+		u.voice = voice;
+
+		u.onend = ev => {
+			if (isdef(callback)) callback();
+
+			this.deq();
+		};
+
+		this.isRunning = true;
+		speechSynthesis.speak(u);
+	}
+	findSuitableVoice(text, voicekey) {
+		//console.log('findSuitableVoice',text,voicekey,this.lang);
+		// voicekey ... random | key in voiceNames | starting phrase of voices.name
+		//console.log(typeof voices, voices)
+		let voicenames = Speaker.VOICES;
+		let vkey = 'david';
+		if (this.lang == 'D') {
+			vkey = 'deutsch';
+		} else if (text.includes('bad')) {
+			vkey = 'zira';
+		} else if (voicekey == 'random') {
+			vkey = chooseRandom(['david', 'zira', 'us', 'ukFemale', 'ukMale']);
+		} else if (isdef(voicenames[voicekey])) {
+			vkey = voicekey;
+		} else if (isdef(voicekey)) {
+			let tryVoiceKey = firstCondDict(voicenames, x => startsWith(x, voicekey));
+			if (tryVoiceKey) vkey = tryVoiceKey;
+		}
+		let voiceName = voicenames[vkey];
+		let voice = firstCond(this.voices, x => startsWith(x.name, voiceName));
+		return [vkey, voice];
+	}
+
+}
+
+
+//#region Microphone UI
+
+function mMicrophone(dParent, color) {
+	let d = mDiv(dParent);
+	d.innerHTML = '🎤';
+
+	let c = bestContrastingColor(color, ['yellow', 'orange', 'red']);
+	//let style = { bg: '#FF413680', rounding: '50%', fz: 50, padding: 5 };
+	let bg = c;
+	let style = { bg: bg, rounding: '50%', fz: 50, padding: 5, transition: 'opacity .35s ease-in-out' };
+	mStyleX(d, style);
+	mLinebreak(dParent);
+	return d;
+}
+function MicrophoneShow() {
+	//could use class blink
+	if (nundef(MicrophoneUi)) return;
+	if (RecogOutput) console.log('* mic start')
+	MicrophoneUi.style.opacity = 1;
+}
+function MicrophoneHide() {
+	if (nundef(MicrophoneUi)) return;
+	if (RecogOutput) console.log('* mic end')
+	MicrophoneUi.style.opacity = .31;
+}
+
+//#endregion
+
+function isSimilar(reqAnswer, answer, lang) {
+	if (answer == reqAnswer) return true;
+	else if (replaceAll(answer, ' ', '') == replaceAll(reqAnswer, ' ', '')) return true;
+	else if (differInAtMost(reqAnswer, answer, 1)) return true;
+	else if (isSimilarSound(reqAnswer, answer, lang)) return true;
+	else return false;
+}
+
+
+//#region helpers: TODO: put them in helpers and make syllabify a proper function
+const germanNumbers = {
+	ein: 1, eins: 1, zwei: 2, 1: 'eins', 2: 'zwei', 3: 'drei', drei: 3, vier: 4, 4: 'vier', 5: 'fuenf', fuenf: 5, sechs: 6, 6: 'sechs', sex: 6,
+	sieben: 7, 7: 'sieben', 8: 'acht', acht: 8, 9: 'neun', neun: 9, zehn: 10, elf: 11, zwoelf: 12, zwanzig: 20, dreissig: 30,
+	10: 'zehn', 11: 'elf', 12: 'zwoelf', 20: 'zwanzig', 30: 'dreissig', vierzig: 40, fuenfzig: 50, 40: 'vierzig', 50: 'fuenfzig'
+};
+function convertTimesAndNumbersToWords(w) {
+	//console.log('B',typeof (w), isNumber(w), w);
+	//check if w1 is a time (like 12:30)
+	if (w.includes(':')) {
+		//only works for hh:mm
+		let h = stringBefore(w, ':');
+		let m = stringAfter(w, ':');
+		let hn = Number(h);
+		let mn = Number(m);
+		//console.log('_________',hn,mn);
+		let xlist = allIntegers(w);
+		if (xlist.length == 2) {
+			if (xlist[1] == 0) xlist = [xlist[0]];
+			xlist = xlist.map(n => n.toString());
+			let res1 = xlist.join('');
+			//console.log('C','turned time',w,'into number',res1);
+			w = res1;
+		}
+	}
+	if (isNumber(w)) {
+		let res = toWords(w);
+		//console.log('D','got number:', w, '=>', res)
+		return res;
+	}
+	return w;
+}
+function detectSilben(words) {
+	const syllableRegex = /[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]))?/gi;
+	return words.match(syllableRegex);
+}
+function differInAtMost(req, given, n = 1) {
+
+	let diffs = levDist(req, given);
+
+	return diffs <= n;
+	//der reihe nach jeden buchstaben aus dem given rausnehmen
+	//given soll 
+	//for(const)
+}
+function isSimilarSound(reqAnswer, s, lang) {
+	let sParts = s.split(' ');
+	let aParts = reqAnswer.split(' ');
+	if (isNumber(s) || isTimeString(s, lang)) s = convertTimesAndNumbersToWords(s);
+	if (isNumber(reqAnswer) || isTimeString(reqAnswer, lang)) reqAnswer = convertTimesAndNumbersToWords(reqAnswer);
+	if (sParts.length != aParts.length) return false;
+	for (let i = 0; i < sParts.length; i++) {
+		if (!soundsSimilar(sParts[i], aParts[i], lang)) return false;
+	}
+	return true;
+}
+function isTimeString(w, lang) {
+	let res1 = (w.includes(':') && w.length >= 4 && w.length <= 5);
+	let res2 = (lang == 'D' && stringAfterLast(w.toLowerCase(), ' ') == 'uhr'); //endsWith(w.trim().toUpperCase(), 'UHR'));
+	//console.log('CHECKING isTimeString_', w, res1 || res2);
+	return res1 || res2;
+}
+function levDist(s, t) {
+	var d = []; //2d matrix
+
+	// Step 1
+	var n = s.length;
+	var m = t.length;
+
+	if (n == 0) return m;
+	if (m == 0) return n;
+
+	//Create an array of arrays in javascript (a descending loop is quicker)
+	for (var i = n; i >= 0; i--) d[i] = [];
+
+	// Step 2
+	for (var i = n; i >= 0; i--) d[i][0] = i;
+	for (var j = m; j >= 0; j--) d[0][j] = j;
+
+	// Step 3
+	for (var i = 1; i <= n; i++) {
+		var s_i = s.charAt(i - 1);
+
+		// Step 4
+		for (var j = 1; j <= m; j++) {
+
+			//Check the jagged ld total so far
+			if (i == j && d[i][j] > 4) return n;
+
+			var t_j = t.charAt(j - 1);
+			var cost = (s_i == t_j) ? 0 : 1; // Step 5
+
+			//Calculate the minimum
+			var mi = d[i - 1][j] + 1;
+			var b = d[i][j - 1] + 1;
+			var c = d[i - 1][j - 1] + cost;
+
+			if (b < mi) mi = b;
+			if (c < mi) mi = c;
+
+			d[i][j] = mi; // Step 6
+
+			//Damerau transposition
+			if (i > 1 && j > 1 && s_i == t.charAt(j - 2) && s.charAt(i - 2) == t_j) {
+				d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + cost);
+			}
+		}
+	}
+	// Step 7
+	return d[n][m];
+}
+function sepWords(text, voiceKey, s = '') { //<silence msec="200" />') {
+	text = text.toLowerCase();
+	//console.log(voice,'\nlang=',voice.lang.trim(),'\ntrue or false=',voice.lang.trim()=='en-US');
+	//console.log('voiceKey',voiceKey)
+	if (voiceKey == 'zira') {
+
+		return text; // + ' hello <audio src="/assets/sounds/down.mp3">didnt get your MP3 audio file</audio> no way!';
+	} else if (startsWith(voiceKey, 'u')) { return text; }
+	let words = text.split(' ');
+	//s='? ';//' - ';
+	text = words.join(' '); text += s;
+	//console.log('text', text)
+	return text;
+}
+function soundsSimilar(w1, w2, lang) {
+	//console.log('_______________ soundsSimilar')
+	//console.log('A',typeof (w1), typeof (w2), isNumber(w1), isNumber(w2), w1, w2);
+	w1 = convertTimesAndNumbersToWords(w1);
+	w2 = convertTimesAndNumbersToWords(w2);
+	const syllableRegex = /[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]))?/gi;
+	function syllabify(words) {
+		return words.match(syllableRegex);
+	}
+	let a1 = syllabify(w1);
+	let a2 = syllabify(w2);
+	//console.log('E', typeof (w1), typeof (w2), isNumber(w1), isNumber(w2), w1, w2)
+	//console.log('a1', a1, 'a2', a2);
+	if (!a1) a1 = [w1];
+	if (!a2) a2 = [w2];
+	if (lang == 'D' && isdef(germanNumbers[a1]) && germanNumbers[a1] == germanNumbers[a2]) return true;
+	if (a1.length != a2.length) return false;
+
+	//actually: EVERY syllable must match not just some!!!!!!!
+	let SUPER_WEAK_SIMILARTY = false;
+	if (SUPER_WEAK_SIMILARTY) {
+		for (let i = 0; i < a1.length; i++) {
+			let s1 = a1[i];
+			let s2 = a2[i];
+			if (s1 == s2) return true;
+			let x1 = stringAfterLeadingConsonants(s1);
+			let x2 = stringAfterLeadingConsonants(s2);
+			if (lang == 'E' && 'ou'.includes(x1) && 'ou'.includes(x2) && x1.substring(1) == x2.substring(1)) return true;
+			if (lang == 'E' && 'oa'.includes(x1) && 'ao'.includes(x2) && x1.substring(1) == x2.substring(1)) return true;
+			if (lang == 'E' && x1.replace('ee', 'i') == x2.replace('ee', 'i')) return true;
+			if (lang == 'E' && x1.replace('ea', 'ai') == x2.replace('ea', 'ai')) return true;
+			if (lang == 'E' && x1.replace('au', 'o') == x2.replace('au', 'o')) return true;
+		}
+	} else {
+		for (let i = 0; i < a1.length; i++) {
+			let yesItsAMatch = false;
+			let s1 = a1[i];
+			let s2 = a2[i];
+			if (s1 == s2) yesItsAMatch = true;
+			let x1 = stringAfterLeadingConsonants(s1);
+			let x2 = stringAfterLeadingConsonants(s2);
+			if (x1 == x2) yesItsAMatch = true;
+			if (lang == 'E' && 'ou'.includes(x1) && 'ou'.includes(x2) && x1.substring(1) == x2.substring(1)) yesItsAMatch = true;
+			if (lang == 'E' && 'oa'.includes(x1) && 'ao'.includes(x2) && x1.substring(1) == x2.substring(1)) yesItsAMatch = true;
+			if (lang == 'E' && x1.replace('ee', 'i') == x2.replace('ee', 'i')) yesItsAMatch = true;
+			if (lang == 'E' && x1.replace('ea', 'ai') == x2.replace('ea', 'ai')) yesItsAMatch = true;
+			if (lang == 'E' && x1.replace('au', 'o') == x2.replace('au', 'o')) yesItsAMatch = true;
+			if (!yesItsAMatch) return false;
+		}
+		return true;
+	}
+	return false;
+
+}
+function stringAfterLeadingConsonants(s) {
+	let regexpcons = /^([^aeiou])+/g;
+	let x = s.match(regexpcons);
+	return x ? s.substring(x[0].length) : s;
+}
+function toWords(s) {
+	// American Numbering System
+	var th = ['', 'thousand', 'million', 'billion', 'trillion'];
+	// uncomment this line for English Number System
+	// var th = ['','thousand','million', 'milliard','billion'];
+	var dg = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+	var tn = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+	var tw = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+	s = s.toString();
+	s = s.replace(/[\, ]/g, '');
+	if (s != parseFloat(s)) return 'not a number';
+	var x = s.indexOf('.');
+	if (x == -1) x = s.length;
+	if (x > 15) return 'too big';
+	var n = s.split('');
+	var str = '';
+	var sk = 0;
+	for (var i = 0; i < x; i++) {
+		if ((x - i) % 3 == 2) {
+			if (n[i] == '1') { str += tn[Number(n[i + 1])] + ' '; i++; sk = 1; }
+			else if (n[i] != 0) { str += tw[n[i] - 2] + ' '; sk = 1; }
+		} else if (n[i] != 0) {
+			str += dg[n[i]] + ' '; if ((x - i) % 3 == 0) str += 'hundred '; sk = 1;
+		} if ((x - i) % 3 == 1) {
+			if (sk) str += th[(x - i - 1) / 3] + ' '; sk = 0;
+		}
+	}
+	if (x != s.length) {
+		var y = s.length;
+		str += 'point ';
+		//for (var i = x + 1; 
+		str.replace(/\s+/g, ' ');
+	}
+	return str.trim();
+}
+//#endregion
+
+//#region german number word similarity helpers (unused and needs info)
+
+function matchingNumberOrTime(info, answer) {
+
+	if (infoHasNumberOrTimeString(info) && isNumberOrTimeString(answer)) {
+		//solve this thing using timestring or number
+		//console.log('HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+		if (isNumber(answer) && infoHasNumber(info)) {
+			//compare the numbers
+			//console.log('1')
+			let best1 = firstCond(info.words, x => isNumber(x));
+			return best1 == answer;
+		} else if (isTimeString(answer) && infoHasTimeString(info)) {
+			let ts = firstCond(info.words, x => isTimeString(x));
+			//console.log('222222222222200000000000000000000');
+			let x1 = convertGermanUhrzeitToNumbers(answer);
+			let x2 = convertTimeStringToNumbers(ts);
+			//console.log(x1, x2);
+			//remove all 0 from lists
+			removeInPlace(x1, 0);
+			removeInPlace(x2, 0);
+
+			//console.log('after removeInPlace', x1, x2)
+			return sameList(x1, x2);
+		} else if (infoHasTimeString(info)) {
+			//console.log('3')
+			let best1 = firstCond(info.words, x => isTimeString(x));
+			let x1 = convertTimesAndNumbersToWords(best1);
+			let x2 = convertTimesAndNumbersToWords(answer);
+			return x1 == x2;
+		}
+	}
+}
+
+function convertGermanUhrzeitToNumbers(w) {
+	console.log('...', w)
+	//geht nur fuer ein eins zwei ... und dreissig
+	let parts = multiSplit(w, ' :');
+	console.log('...parts', parts)
+	let res = [];
+	for (const p of parts) {
+		let p1 = p.trim().toLowerCase();
+		if (isNumber(p1)) res.push(Number(p1));
+		else if (isdef(germanNumbers[p1])) res.push(germanNumbers[p1]);
+		// continue;
+		// switch (p1) {
+		// 	case '1': res.push(1); break;
+		// 	case 'ein': res.push(1); break;
+		// 	case 'eins': res.push(1); break;
+		// 	case '2': res.push(2); break;
+		// 	case 'zwei': res.push(2); break;
+		// 	case '3': res.push(3); break;
+		// 	case 'drei': res.push(3); break;
+		// 	case '4': res.push(4); break;
+		// 	case 'vier': res.push(4); break;
+		// 	case '5': res.push(5); break;
+		// 	case 'fuenf': res.push(5); break;
+		// 	case '6': res.push(6); break;
+		// 	case 'sechs': res.push(6); break;
+		// 	case '7': res.push(7); break;
+		// 	case 'sieben': res.push(7); break;
+		// 	case '8': res.push(8); break;
+		// 	case 'acht': res.push(8); break;
+		// 	case '9': res.push(9); break;
+		// 	case 'neun': res.push(9); break;
+		// 	case '10': res.push(10); break;
+		// 	case 'zehn': res.push(10); break;
+		// 	case '11': res.push(11); break;
+		// 	case 'elf': res.push(11); break;
+		// 	case '12': res.push(12); break;
+		// 	case 'zwoelf': res.push(12); break;
+		// 	case 'dreissig': res.push(30); break;
+		// 	case '30': res.push(30); break;
+		// 	default:
+		// }
+	}
+	return res;
+
+}
+function convertTimeStringToNumbers(ts) {
+	return allIntegers(ts);
+}
+//#endregion
+
+//#endregion
+
+//#region time
+var TimestampStarted, TimeElapsed, OnTimeOver = null, TimeElem, TimeLeft;
+function restartTime(elem) { TimestampStarted = msNow(); TimeElapsed = 0; startTime(elem); }
+function startTime(elem) {
+
+	if (nundef(Settings.showTime) || !Settings.showTime) return;
+	if (nundef(TimestampStarted)) { TimestampStarted = msNow(); TimeElapsed = 0; }
+	if (nundef(elem) && isdef(TimeElem)) { elem = TimeElem; }
+	else { if (isString(elem)) elem = mBy(elem); TimeElem = elem; }
+
+	// console.log(TimestampStarted, _getFunctionsNameThatCalledThisFunction())
+	var timeLeft = TimeLeft = Settings.minutesPerUnit * 60000 - getTimeElapsed();
+	if (timeLeft > 0) {
+		let t = msToTime(timeLeft);
+		let s = format2Digits(t.h) + ":" + format2Digits(t.m) + ":" + format2Digits(t.s);
+
+		elem.innerHTML = s;//h + ":" + m + ":" + s;
+		setTimeout(() => startTime(elem), 500);
+	} else {
+		elem.innerHTML = '00:00:00';
+		if (OnTimeOver) OnTimeOver();
+	}
+}
+function unitTimeUp() { return (Settings.minutesPerUnit * 60000 - getTimeElapsed()) <= 0; }
+function startTimeClock(elem) {
+	if (nundef(Settings.showTime) || !Settings.showTime) return;
+	var today = new Date(),
+		h = format2Digits(today.getHours()),
+		m = format2Digits(today.getMinutes()),
+		s = format2Digits(today.getSeconds());
+
+	if (isString(elem)) elem = mBy(elem); elem.innerHTML = h + ":" + m + ":" + s;
+	setTimeout(() => startTimeClock(elem), 500);
+
+}
+function format2Digits(i) { return (i < 10) ? "0" + i : i; }
+function getTimeElapsed() { return TimeElapsed + msElapsedSince(TimestampStarted); }
+function msNow() { return Date.now(); }
+function msToTime(ms) {
+	let secs = Math.floor(ms / 1000);
+	let mins = Math.floor(secs / 60);
+	secs = secs - mins * 60;
+	let hours = Math.floor(mins / 60);
+	mins = mins - hours * 60;
+	return { h: hours, m: mins, s: secs };
+}
+function msElapsedSince(msStart) { return Date.now() - msStart; }
+function timeToMs(h, m, s) { return ((((h * 60) + m) * 60) + s) * 1000; }
+
+
+class TimeoutManager {
+	constructor() {
+		this.TO = {};
+	}
+	clear(key) {
+		if (nundef(key)) key = Object.keys(this.TO);
+		else if (isString(key)) key = [];
+
+		for (const k of key) {
+			clearTimeout(this.TO[k]);
+			delete this.TO[k];
+		}
+	}
+	set(ms, callback, key) {
+		if (nundef(key)) key = getUID();
+		TO[key] = setTimeout(ms, callback);
+	}
+}
+
+
+class CountdownTimer {
+	constructor(ms, elem) {
+		this.timeLeft = ms;
+		this.msStart = Daat.now();
+		this.elem = elem;
+		this.tick();
+	}
+	msElapsed() { return Date.now() - this.msStart; }
+	tick() {
+		this.timeLeft -= this.msElapsed;
+		this.elem.innerHTML = this.timeLeft;
+		if (this.timeLeft > 1000) {
+			setTimeout(this.tick.bind(this), 500);
+		} else this.elem.innerHTML = 'timeover';
+	}
+}
+
+//#endregion
+
+//#region settings
+function saveSettings(){
+
+}
+function initSettings(game) {
+	Settings = deepmergeOverride(DB.settings, U.settings);
+	delete Settings.games;
+	let gsSettings = lookup(U, ['games', game, 'settings']);
+	if (isdef(gsSettings)) Settings = deepmergeOverride(Settings, gsSettings);
+	updateSettings();
+
+}
+
+function updateSettings() {
+
+	appSpecificSettings();
+
+	//welche settings kommen wohin?
+	for (const k in SettingTypesCommon) {
+		if (SettingTypesCommon[k]) {
+			//console.log('should be set for all games:',k,Settings[k]);
+
+			lookupSetOverride(U, ['settings', k], Settings[k]);
+
+		} else {
+			if (isdef(G.id)) lookupSetOverride(U, ['games', G.id, 'settings', k], Settings[k]);
+
+		}
+	}
+
+}
+
+
+function setSettingsKeys(elem) {
+	let val = elem.type == 'number' ? Number(elem.value) : elem.type == 'checkbox' ? elem.checked : elem.value;
+	lookupSetOverride(Settings, elem.keyList, val);
+	SettingsChanged = true;
+	console.log(elem.keyList, val)
+	//console.log(Settings);
+}
+function setSettingsKeysSelect(elem) {
+
+	let val;
+	for (const opt of elem.children) {
+		if (opt.selected) val = opt.value;
+	}
+
+	// console.log('lllllllllllllllll', a, a.value, a.keyList);
+	//let val = elem.type == 'number' ? Number(elem.value) : elem.value;
+	SettingsChanged = true;
+	lookupSetOverride(Settings, elem.keyList, val);
+	//console.log('result', lookup(Settings, elem.keyList));
+}
+
+function setzeEineZahl(dParent, label, init, skeys) {
+	// <input id='inputPicsPerLevel' class='input' type="number" value=1 />
+	let d = mDiv(dParent);
+	let val = lookup(Settings, skeys);
+	if (nundef(val)) val = init;
+	let inp = createElementFromHTML(
+		// `<input id="${id}" type="number" class="input" value="1" onfocusout="setSettingsKeys(this)" />`); 
+		`<input type="number" class="input" value="${val}" onfocusout="setSettingsKeys(this)" />`);
+	let labelui = createElementFromHTML(`<label>${label}</label>`);
+	mAppend(d, labelui);
+	mAppend(labelui, inp);
+
+	mStyleX(inp, { maleft: 12, mabottom: 4 });
+	mClass(inp, 'input');
+
+	inp.keyList = skeys;
+}
+function setzeEineCheckbox(dParent, label, init, skeys) {
+	// <input id='inputPicsPerLevel' class='input' type="number" value=1 />
+	let d = mDiv(dParent);
+	let val = lookup(Settings, skeys);
+	if (nundef(val)) val = init;
+	let inp = createElementFromHTML(
+		`<input type="checkbox" class="checkbox" ` + (val === true ? 'checked=true' : '') + ` onfocusout="setSettingsKeys(this)" >`
+		// `<input id="${id}" type="number" class="input" value="1" onfocusout="setSettingsKeys(this)" />`); 
+		// `<input type="number" class="input" value="${val}" onfocusout="setSettingsKeys(this)" />`
+	);
+	let labelui = createElementFromHTML(`<label>${label}</label>`);
+	mAppend(d, labelui);
+	mAppend(labelui, inp);
+
+	mStyleX(inp, { maleft: 12, mabottom: 4 });
+	mClass(inp, 'input');
+
+	inp.keyList = skeys;
+}
+function setzeEinOptions(dParent, label, optionList, friendlyList, init, skeys) {
+
+	// <input id='inputPicsPerLevel' class='input' type="number" value=1 />
+	let d = mDiv(dParent);
+	let val = lookup(Settings, skeys);
+	if (nundef(val)) val = init;
+
+	let inp = createElementFromHTML(`<select class="options" onfocusout="setSettingsKeysSelect(this)"></select>`);
+	for (let i = 0; i < optionList.length; i++) {
+		let opt = optionList[i];
+		let friendly = friendlyList[i];
+		let optElem = createElementFromHTML(`<option value="${opt}">${friendly}</option>`);
+		mAppend(inp, optElem);
+		if (opt == val) optElem.selected = true;
+	}
+	// // `<input id="${id}" type="number" class="input" value="1" onfocusout="setSettingsKeys(this)" />`); 
+	// `<input type="number" class="input" value="${val}" onfocusout="setSettingsKeys(this)" />`);
+	let labelui = createElementFromHTML(`<label>${label}</label>`);
+	mAppend(d, labelui);
+	mAppend(labelui, inp);
+
+	mStyleX(inp, { maleft: 12, mabottom: 4 });
+
+	inp.keyList = skeys;
+}
+
+
+function mInputGroup(dParent, styles) {
+	let baseStyles = { display: 'inline-block', align: 'right', bg: '#00000080', rounding: 10, padding: 20, margin: 12 };
+	if (isdef(styles)) styles = deepmergeOverride(baseStyles, styles); else styles = baseStyles;
+	return mDiv(dParent, styles);
+}
+
+//#endregion
+
+//#region menu
+var SelectedMenuKey, MenuItems;
+
+function createMenuUi(dParent) {
+	clearElement(dParent);
+	mAppend(dParent, createElementFromHTML(`<h1>Choose Game:</h1>`));
+	MenuItems = {};
+
+	//#region prelim: keys,labels,ifs,options
+	let games = isdef(User)?User.getAvailableGames() : U.avGames;
+	//console.log('navi',window.navigator.onLine);
+	if (!navigator.onLine){removeInPlace(games,'gSayPic');}
+	//console.log(games, games.map(g => DB.games[g]));
+	let labels = games.map(g => DB.games[g].friendly);
+	let keys = games.map(g => DB.games[g].logo);
+	let infos = keys.map(x => symbolDict[x]);
+	let bgs = games.map(g => getColorDictColor(DB.games[g].color));
+	let ifs = { label: labels, bg: bgs, fg: 'white', padding: 10 };
+	let options = { onclick: onClickMenuItem, showLabels: true };
+	//#endregion
+
+	//#region phase1: make items: hier jetzt mix and match
+	let items = zItems(infos, ifs, options);
+	items.map(x => x.label = x.label.toUpperCase());
+	//items.map(x=>console.log(x));
+	//#endregion phase1
+
+	//#region phase2: prepare items for container
+	prepareItemsForContainerRegularGrid(items,ifs,options,Math.floor(Math.sqrt(items.length)));
+
+	for (let i = 0; i < games.length; i++) {
+		let item = items[i];
+		item.div.id = 'menu_' + item.label.substring(0, 3);
+		//console.log('game', games[i]); 
+		let key = item.div.key = games[i];
+		MenuItems[key] = item;
+	}
+	//#endregion
+
+	//#region phase3: prep container for items
+	let d = mDiv(dParent);
+	mClass(d, 'flexWrap');
+	d.style.height = '100%';
+	//#endregion
+
+	//#region phase4: add items to container!
+	let dGrid = mDiv(d);
+	items.map(x => mAppend(dGrid, x.div));
+	let gridStyles = { 'place-content': 'center', gap: 4, margin: 4, padding: 4 };
+	let gridSize = layoutGrid(items, dGrid, gridStyles, { rows: options.rows, isInline: true });
+	//console.log('size of grid', gridSize, 'table', getBounds(dTable))
+	//#endregion
+
+	if (nundef(G)) return; else console.log('G',G);
+	//select the current game
+	SelectedMenuKey = G.id;
+	toggleSelectionOfPicture(MenuItems[G.id]);
+}
+
+//#endregion
+
+//#region keys
+const KSKeys = ['action', 'actionPlus', 'all', 'best25', 'best50', 'best75', 'best100', 'emo', 'huge', 
+								'life', 'life50', 'lifePlus', 'nemo', 'nemo100', 'obejct', 'object50', 'objectPlus'];
+
+var KeySets;
+function catFiltered(cats, name, best) {
+	//console.log(cats, name)
+	let keys = setCategories(cats);
+
+	let bestName = null;
+	let k1 = keys.filter(x => best.includes(x));
+	if (k1.length > 80) bestName = name + '100';
+	else if (k1.length > 40) bestName = name + '50';
+	else if (k1.length > 20) bestName = name + '25';
+	let result = {};
+	result[name] = keys;
+	if (bestName) result[bestName] = k1;
+
+	return result;
+}
+
+function getKeySets() {
+	let ks = localStorage.getItem('KeySets');
+	if (isdef(ks)) return JSON.parse(ks);
+
+	let huge = [];
+	for (const k in symbolDict) {
+		let info = symbolDict[k];
+		if (isdef(info.bestD)) huge.push(k);
+	}
+
+	//push all the keys that are in Syms but not in symbolDict!
+	for (const k of ['zebra']) huge.push(k);
+
+	let allKeys = symKeysBySet.nosymbols;
+	let keys = allKeys.filter(x => isdef(symbolDict[x].best100));
+	let keys1 = allKeys.filter(x => isdef(symbolDict[x].best100) && isdef(symbolDict[x].bestE));
+	let keys2 = allKeys.filter(x => isdef(symbolDict[x].best50));
+	let keys3 = allKeys.filter(x => isdef(symbolDict[x].best25));
+	let res = { huge: huge, best25: keys3, best50: keys2, best75: keys1, best100: keys, all: allKeys };
+	let res1 = catFiltered(['nosymemo'], 'nemo', res.best100);
+	let res2 = catFiltered(['animal', 'plant', 'fruit', 'vegetable'], 'life', res.best100);
+	let res3 = catFiltered(['object'], 'object', res.best100);
+	let res4 = catFiltered(['gesture', 'emotion'], 'emo', res.best100);
+	let res5 = catFiltered(['activity', 'role', 'sport', 'sports', 'game'], 'action', res.best100);
+	for (const o of [res1, res2, res3, res4, res5]) {
+		for (const k in o) res[k] = o[k];
+	}
+
+	res['objectPlus'] = union(res.object, res.best100);
+	res['lifePlus'] = union(res.life, res.best100);
+	res['actionPlus'] = union(res.action, res.best100);
+
+	localStorage.setItem('KeySets', JSON.stringify(res));
+	return res;
+
+}
+function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc } = {}) {
+
+
+	let keys = jsCopy(keysets[key]);
+	//console.log('setKeys (from',getFunctionsNameThatCalledThisFunction()+')',keys)
+
+	if (isdef(nMin)) {
+		let diff = nMin - keys.length;
+		let additionalSet = diff > 0 ? firstCondDictKeys(keysets, k => k != key && keysets[k].length > diff) : null;
+
+		//console.log('diff',diff,additionalSet, keys)
+		if (additionalSet) KeySets[additionalSet].map(x => addIf(keys, x)); //
+		//if (additionalSet) keys = keys.concat(keysets[additionalSet]);
+		//console.log(keys)
+	}
+
+	let primary = [];
+	let spare = [];
+	for (const k of keys) {
+		let info = symbolDict[k];
+		let klang = 'best' + lang;
+		//console.log(k,lang,klang)
+		if (nundef(info[klang])) info[klang] = lastOfLanguage(k, lang);
+		info.best = info[klang];
+		//console.log(k,lang,lastOfLanguage(k,lang),info.best,info)
+		let isMatch = true;
+		if (isdef(filterFunc)) isMatch = isMatch && filterFunc(k, info.best);
+		if (isdef(confidence)) isMatch = info[klang + 'Conf'] >= confidence;
+		if (isMatch) { primary.push(k); } else { spare.push(k); }
+	}
+
+	//console.assert(isEmpty(intersection(spare,primary)))
+
+	if (isdef(nMin)) {
+		//if result does not have enough elements, take randomly from other
+		let len = primary.length;
+		let nMissing = nMin - len;
+		if (nMissing > 0) { let list = choose(spare, nMissing); spare = arrMinus(arr, list); primary = primary.concat(list); }
+	}
+
+	if (isdef(sortByFunc)) { sortBy(primary, sortByFunc); }
+
+	if (isdef(nMin)) console.assert(primary.length >= nMin);
+	//console.log(primary)
+	return primary;
+}
+
+function getRandomKeys(n, kSetOrList) { return choose(isList(kSetOrList) ? kSetOrList : KeySets[kSetOrList], n); }
+function getRandomKeysIncluding(n, k, kSetOrList) {
+	let keys = getRandomKeys(n, kSetOrList);
+	if (!keys.includes(k)) {
+		//randomly replace one of the keys by this one!
+		let i = randomNumber(0, keys.length - 1);
+		keys.splice(i, 1, k);
+	}
+	shuffle(keys);
+	return keys;
+}
+
+function getSym(key, lang = 'E') {
+
+	let info = jsCopy(picInfo(key));
+	if (nundef(info.bestD)) { info.bestE = info.E.key; return info; }
+
+	let valid, words;
+	let oValid = info[lang + '_valid_sound'];
+	if (isEmpty(oValid)) valid = []; else valid = sepWordListFromString(oValid, ['|']);
+	let oWords = info[lang];
+	if (isEmpty(oWords)) words = []; else words = sepWordListFromString(oWords, ['|']);
+
+	let dWords = info.D;
+	if (isEmpty(dWords)) dWords = []; else dWords = sepWordListFromString(dWords, ['|']);
+	let eWords = info.E;
+	if (isEmpty(eWords)) eWords = []; else eWords = sepWordListFromString(eWords, ['|']);
+
+	words = isEnglish(lang) ? eWords : dWords;
+	info.eWords = eWords;
+	info.dWords = dWords;
+	info.words = words;
+	info.best = arrLast(words);
+	info.valid = valid;
+
+	currentLanguage = lang;
+
+	return info;
+}
+
+
+
+//#endregion
+
+//#region hey
+var BlockServerSend = false;
+var SERVER_DATA = null;
+
+async function broadcastSIMA(usersPath = './_users.yaml', settingsPath = './_settings.yaml', gamesPath = './_games.yaml', addonsPath = './_addons.yaml') {
+	let users = await loadYamlDict(usersPath);
+	let settings = await loadYamlDict(settingsPath);
+	let games = await loadYamlDict(gamesPath);
+	let addons = await loadYamlDict(addonsPath);
+
+	DB = {
+		id: 'speechGames',
+		users: users,
+		settings: settings,
+		games: games,
+		addons: addons,
+	};
+
+	//console.log('...saving from BROADCASTING')
+	saveSIMA();
+
+	if (CLEAR_LOCAL_STORAGE) localStorage.clear();
+	await loadAssetsSIMA('../assets/');
+
+}
+
+async function loadSIMA(callback) {
+	//console.log('...loading...');
+	let url = SERVERURL;
+	fetch(url, {
+		method: 'GET',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+	}).then(async data => {
+		let sData = await data.json();
+		DB = sData[0];
+		//console.log(DB)
+		//hier kann ich assets laden!!!
+		if (CLEAR_LOCAL_STORAGE) localStorage.clear();
+		await loadAssetsSIMA('../assets/');
+
+		if (isdef(callback)) callback();
+	});
+}
+async function localOrRoute(key, url) {
+	if (USE_LOCAL_STORAGE) {
+		let x = localStorage.getItem(key);
+		if (isdef(x)) return JSON.parse(x);
+		else {
+			let data = await route_path_yaml_dict(url);
+			if (key != 'svgDict') localStorage.setItem(key, JSON.stringify(data));
+			return data;
+		}
+	} else return await route_path_yaml_dict(url);
+}
+async function loadAssetsSIMA(assetsPath) {
+	c52 = await localOrRoute('c52', assetsPath + 'c52_blackBorder.yaml');
+	//testCards = await localOrRoute('testCards', assetsPath + 'testCards.yaml');
+	cinno = await localOrRoute('cinno', assetsPath + 'fe/inno.yaml');
+
+	//return;
+	symbolDict = await localOrRoute('symbolDict', assetsPath + 'symbolDict.yaml');
+	symbolKeys = Object.keys(symbolDict);
+	symbolList = dict2list(symbolDict);
+	ensureSymBySet(); makeHigherOrderGroups();
+
+	svgDict = await localOrRoute('svgDict', assetsPath + 'svgDict.yaml'); //TODO: depending on ext, treat other assts as well!
+	svgKeys = Object.keys(svgDict);
+	svgList = dict2list(svgDict);
+
+	Syms = await localOrRoute('syms', assetsPath + 'syms.yaml');
+	SymKeys = Object.keys(Syms);
+
+	//console.log('SymKeys',SymKeys)
+
+}
+
+async function saveSIMA() {
+	if (BlockServerSend) {
+		//console.log('...wait for unblocked...');
+		setTimeout(saveSIMA, 1000);
+	} else {
+		//console.log('posting DB: startLevel Pictures!', lookupSet(DB.users,[Username,'games','gTouchPic','startLevel'],0)); //DB.users[Username].games.gTouchPic.startLevel);
+		//console.log(DB);
+
+		let url = SERVERURL + 'speechGames';
+		BlockServerSend = true;
+		//console.log('blocked...');
+		fetch(url, {
+			method: 'PUT',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(DB)
+		}).then(() => { BlockServerSend = false; }); //console.log('unblocked...'); });
+	}
+
+}
+
+
+
+
+
+
+//#endregion
+
+//#region user
+class UserManager{}
+
+function addScoreToUserSession() {
+	//at end of level
+	//adds Score to session
+	//console.log('Score', Score)
+	//console.assert(isdef(Score.nTotal) && Score.nTotal > 0)
+	let sc = { nTotal: Score.nTotal, nCorrect: Score.nCorrect, nCorrect1: Score.nCorrect1 };
+	let game = G.id;
+	let level = G.level;
+	let session = U.session;
+	if (nundef(session)) {
+		console.log('THERE WAS NO USER SESSION IN _addScoreToUserSession!!!!!!!!!!!!!!!!!!!!!')
+		U.session = {};
+	}
+
+	let sGame = session[game];
+	if (nundef(sGame)) {
+		sGame = session[game] = jsCopy(sc);
+		sGame.byLevel = {};
+		sGame.byLevel[level] = jsCopy(sc);
+	} else {
+		addByKey(sc, sGame);
+		let byLevel = lookupSet(sGame, ['byLevel', level], {});
+		addByKey(sc, byLevel);
+	}
+	sGame.percentage = Math.round(100 * sGame.nCorrect / sGame.nTotal);
+
+	saveUser();
+
+}
+function addSessionToUserGames() {
+	// adds session to U.games and deletes session
+
+	if (!isEmpty(U.session)) {
+		for (const g in U.session) {
+			let recOld = lookup(U, ['games', g]);
+			let recNew = U.session[g];
+
+			//console.assert(isdef(recOld));
+
+			addByKey(recNew, recOld);
+			recOld.percentage = Math.round(100 * recOld.nCorrect / recOld.nTotal);
+			if (nundef(recOld.byLevel)) recOld.byLevel = {};
+			for (const l in recNew.byLevel) {
+				if (nundef(recOld.byLevel[l])) recOld.byLevel[l] = jsCopy(recNew.byLevel[l]);
+				else addByKey(recNew.byLevel[l], recOld.byLevel[l]);
+			}
+		}
+	}
+	U.session = {};
+}
+function changeUserTo(name) {
+	if (name != Username) { saveUser(); }
+	mBy('spUser').innerHTML = name;
+	loadUser(name);
+	startUnit();
+}
+function editableUsernameUi(dParent) {
+	//console.log('creating input elem for user', Username)
+	let inp = mEditableInput(dParent, 'user: ', Username);
+	inp.id = 'spUser';
+	inp.addEventListener('focusout', () => { changeUserTo(inp.innerHTML.toLowerCase()); });
+	return inp;
+}
+function getStartLevels(user) {
+	let udata = lookup(DB, ['users', user]);
+	if (!udata) return 'not available';
+	let res = [];
+	let res2 = {};
+	for (const g in udata.games) {
+		res2[g] = udata.games[g].startLevel;
+		res.push(g + ': ' + udata.games[g].startLevel);
+	}
+	return res2; // res.join(',');
+
+}
+function getUserStartLevel(game) {
+	gInfo = U.games[game];
+	level = isdef(gInfo) && isdef(gInfo.startLevel) ? gInfo.startLevel : 0;
+	return level;
+}
+function cleanupOldGame(){
+	updateUserScore();//this saves user data + clears the score.nTotal,nCorrect,nCorrect1!!!!!
+
+	//clear previous game (timeouts...)
+	if (isdef(G) && isdef(G.instance)) {
+		G.instance.clear();
+	}
+
+}
+function loadUser(newUser) {
+
+	//if (Username == newUser) return;
+	//console.log('newUser', newUser)
+
+	cleanupOldGame();
+
+	Username = isdef(newUser) ? newUser : localStorage.getItem('user');
+
+	if (nundef(Username)) Username = DEFAULTUSERNAME;
+
+	//console.log('U anfang von loadUser', U, '\nDB', DB.users[Username]);
+
+	let uData = lookupSet(DB, ['users', Username]);
+	if (newUser == 'test') { uData = DB.users[Username] = jsCopy(DB.users.test0); uData.id = Username; }
+	if (!uData) { uData = DB.users[Username] = jsCopy(DB.users.guest0); uData.id = Username; }
+
+	U = new UserManager(Username);
+	U = DB.users[Username];
+
+	let uiName = 'spUser';
+	let dUser = mBy(uiName);
+	if (nundef(dUser)) { dUser = editableUsernameUi(dLineTopLeft); dUser.id = uiName; }
+
+	let game = !window.navigator.onLine && U.lastGame == 'gSayPic' ? 'gTouchPic' : U.lastGame; //do NOT start in gSayPic if no internet!!!
+	if (nundef(game)) game = U.avGames[0]; //chooseRandom(U.avGames);
+
+	let gInfo = U.games[game];
+	let level = isdef(gInfo) && isdef(gInfo.startLevel) ? gInfo.startLevel : 0;
+
+	setGame(game, level);
+}
+function saveUnit() { saveUser(); }
+function saveUser() {
+	//console.log('saveUser:', Username,G.id,G.level); //_getFunctionsNameThatCalledThisFunction()); 
+	U.lastGame = G.id;
+	if (Username != 'test') localStorage.setItem('user', Username);
+	DB.users[Username] = U;
+	//console.log('...saving from saveUser called by', getFunctionsNameThatCalledThisFunction())
+	saveSIMA();
+}
+function setGame(game, level) {
+
+	cleanupOldGame();
+	//set new game: friendly,logo,color,key,maxLevel,level 
+	//console.log('set game to', game)
+	if (isdef(G) && G.id != game) Score.gameChange = true;
+
+	
+	G = jsCopy(DB.games[game]); //jsCopy(DB.games[game]);
+	//console.log('color', G.color, ColorDict[G.color], window[G.color])
+
+	//let c = firstCondDict(ColorDict,x=>x.c == )
+	G.color = getColorDictColor(G.color); //isdef(ColorDict[G.color]) ? ColorDict[G.color].c : G.color;
+	// G.color = isdef(ColorDict[G.color])?ColorDict[G.color]:isdef(window[G.color])?window[G.color]:G.color;
+	//console.log('_________setGame: color',G.color);
+
+	initSettings(game);
+
+	let levels = lookup(DB.games, [game, 'levels']);
+	G.maxLevel = isdef(levels) ? Object.keys(levels).length - 1 : 0;
+
+	G.id = game;
+
+	//if (isCal) supdateStartLevelForUser(game, 0);
+
+	if (isdef(level)) G.level = level;
+	else { G.level = getUserStartLevel(game); }
+
+	//console.log('setGame:', game, Username, getUserStartLevel(game));
+
+	if (G.level > G.maxLevel) G.level = G.maxLevel;
+
+	if (nundef(U.games[game])) {
+		U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0, byLevel: {} };
+	}
+
+	saveUser();
+	//console.log('game',game,'level',level)
+
+}
+function setNextGame() {
+	let game = G.id;
+	let i = U.avGames.indexOf(game);
+	let iNew = (i + 1) % U.avGames.length;
+	setGame(U.avGames[iNew]);
+}
+function updateStartLevelForUser(game, level, msg) {
+	//console.log('updating startLevel for', Username, game, level, '(' + msg + ')')
+	lookupSetOverride(U.games, [game, 'startLevel'], level);
+	saveUser();
+}
+function updateUserScore() {
+	if (nundef(Score.nTotal) || Score.nTotal <= 0) return;
+
+	let sc = { nTotal: Score.nTotal, nCorrect: Score.nCorrect, nCorrect1: Score.nCorrect1 };
+	let g = G.id;
+
+	let recOld = lookupSet(U, ['games', g], { startLevel: 0, nTotal: 0, nCorrect: 0, nCorrect1: 0 });
+	let recSession = lookupSet(U, ['session', g], { startLevel: 0, nTotal: 0, nCorrect: 0, nCorrect1: 0 });
+
+	addByKey(sc, recSession);
+	recSession.percentage = Math.round(100 * recSession.nCorrect / recSession.nTotal);
+
+	addByKey(sc, recOld);
+	recOld.percentage = Math.round(100 * recOld.nCorrect / recOld.nTotal);
+
+	//console.log('updated user score for', g, sc, recOld);
+	//console.log('updated user score session', recSession);
+	Score.nTotal = Score.nCorrect = Score.nCorrect1 = 0;
+	saveUser();
+}
+
+
+//#endregion
+
+//#region serverConfig
+
+const IS_TESTING = true; // *** only set this one! ***
+
+var USE_LOCAL_STORAGE = !BROADCAST_SETTINGS; // true | false //localStorage is cleared when false!!!!!
+var PROD_START = !IS_TESTING;
+
+
+//#endregion
+
+//#region
+
+//#endregion
+
+//#region
+
+//#endregion
+
+//#region
+
+//#endregion
+
+//#region live
+//uses _globals
+//manages (writes) Live
+
+function initLive() { Live = {}; }
+
+
+class LiveObject {
+	static States = { none: 0, gettingReady: 1, ready: 2, running: 3, on: 3, off: 4 }
+	constructor(k) { //a live object gets an id at birth
+		//console.log('__________________k',k)
+		this.key = k;
+		let id = this.id = getUID();
+		Live[id] = this;
+		this.TOList = [];
+		this.UIS = [];
+		this.uiActivated = false;
+		this.uiState = LiveObject.States.none;
+	}
+	//#region hidden API
+	_clearTO() { this.TOList.map(x => clearTimeout(x)); this.TOList = []; }
+	_clearUI() { }// TODO: think about this!!!!! for(const k in this.UIS){this.UIS[k].}}
+	//#endregion
+	activate() { this.uiActivated = true; }
+	clear() { this._clearTO(); } //just hide its UI???
+	deactivate() { this.uiActivated = false; }
+	die() { this._clearTO(); console.assert(isdef(this.div)); this.div.remove(); Live[this.id] = null; }
+	run() { console.log('object', this.id, 'is running...') }
+
+	setGettingReady() { this.running = false; this.uiState = LiveObject.States.gettingReady; console.log('...getting ready!'); }
+	setRunning() { this.running = true; this.uiState = LiveObject.States.running; }
+	setReady() { this.running = false; this.uiState = LiveObject.States.ready; console.log('ready!'); }
+	getReady(ms) {
+		if (isdef(ms)) { this.setGettingReady(); setTimeout(this.setReady.bind(this), ms); }
+		else this.setReady();
+	}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//#endregion
+
+//#region start
+async function _loader() {
+
+	if (!IS_TESTING) {
+		ifPageVisible.on('blur', function () {
+			// example code here..
+			//animations.pause();
+			enterInterruptState();
+			console.log('stopping game', G.id)
+		});
+
+		ifPageVisible.on('focus', function () {
+			// resume all animations
+			// animations.resume();
+			if (isdef(G.instance)) {
+				//cleanupOldGame();//this saves user data + clears the score.nTotal,nCorrect,nCorrect1!!!!!
+				setGame(G.id);
+			}
+			closeAux();
+			startGame();
+			// auxOpen = false;
+			// startGame();
+			console.log('restarting game', G.id)
+		});
+	}
+	// if ('serviceWorker' in navigator) {
+	// 	console.log('CLIENT: service worker registration in progress.');
+	// 	navigator.serviceWorker.register('/service-worker.js').then(function() {
+	// 		console.log('CLIENT: service worker registration complete.');
+	// 	}, function() {
+	// 		console.log('CLIENT: service worker registration failure.');
+	// 	});
+	// } else {
+	// 	console.log('CLIENT: service worker is not supported.');
+	// }
+
+	//timit = new TimeIt('start');
+	if (BROADCAST_SETTINGS) {
+		console.log('...broadcasting ...')
+		await broadcastSIMA();
+		_start();
+	} else { loadSIMA(_start); }
+
+}
+async function makeDictionaries() {
+	// let ddd = await route_path_yaml_dict('../assets/ddAlles.yaml');
+	// console.log(ddd)
+	let ddd = await route_path_text('../assets/speech/ddAlles.txt');
+	console.log(ddd)
+	let lines = ddd.split('\n');
+	console.log(lines);
+	let newLines = [];
+	let deDict = {};
+	let deNouns = {};
+	let edDict = {};
+	let edNouns = {};
+	for (let i = 0; i < lines.length; i++) {
+		let l = lines[i];
+		if (startsWith(l, 'German')) console.log(l);
+		else if (startsWith(l, 'A ')) console.log(l);
+		else {
+			newLines.push(l);
+			let d = stringBefore(l, ' :');
+			// let info={isNoun:false};
+			let gen = null;
+			if (d.includes('{')) {
+				let parts = d.split('{');
+				d = parts[0].trim();
+				gen = stringBefore(parts[1], '}').trim();
+				// d=stringBefore(d,'{').trim();
+				// let gen = stringBefore(stringAfter(d,'{'),'}');
+				//info = {isNoun:true,gen:gen};
+				lookupSet(deDict, [d, 'gen'], gen);
+				lookupSet(deNouns, [d, 'gen'], gen);
+			}
+			let elist = stringAfter(l, ': ').split(',').map(x => x.trim());
+			for (const e of elist) {
+				lookupAddIfToList(deDict, [d, 'e'], e);
+				lookupAddIfToList(edDict, [e, 'd'], d);
+				if (isdef(gen)) {
+					lookupAddIfToList(edNouns, [e, 'd'], d);
+					lookupAddIfToList(deNouns, [d, 'e'], e);
+				}
+			}
+			// deDict[d].info=info;
+		}
+		//if (i>100) break;
+	}
+	console.log(deDict);
+	console.log(edDict);
+	downloadTextFile(newLines.join('\n'), 'ddText', ext = 'txt')
+	downloadAsYaml(deDict, 'deDict');
+	downloadAsYaml(edDict, 'edDict');
+	downloadAsYaml(deNouns, 'deNouns');
+	downloadAsYaml(edNouns, 'edNouns');
+}
+async function updateSymbolDictFromDictionaries() {
+	// [EdDict,DeDict]=await loadGermanNouns();
+	[EdDict, DeDict] = await loadGerman();
+	let ekeys = Object.keys(EdDict);
+	let lowerEKeys = ekeys.map(x => x.toLowerCase());
+	console.log('dict e=>d', ekeys);
+
+	ensureSymByType();
+	let keys = symKeysByType['icon']; //symbolKeys;
+	console.log('keys', keys);
+	let inter = intersection(keys, lowerEKeys);
+	console.log('intersection:', inter);
+
+	//von denen die in der intersection sind, gibt ihnen eine translation to german und save again in symbolDict!
+
+	for (const k of inter) {
+		let entry = lookup(EdDict, [k, 'd']);
+		if (nundef(entry)) {
+			console.log('gibt es nicht!', k)
+		} else {
+			console.log('entry', entry)
+			console.log('JA!', k, entry.join('|'));
+			symbolDict[k].D = entry.join('|').toLowerCase();
+			symbolDict[k].E = k;
+		}
+	}
+	downloadAsYaml(symbolDict, 'symbolDict');
+
+}
+async function loadGerman(justNouns = false) {
+	let root = justNouns ? 'Nouns' : 'Dict';
+	let ed = await route_path_yaml_dict('../assets/speech/ed' + root + '.yaml');
+	let de = await route_path_yaml_dict('../assets/speech/de' + root + '.yaml');
+	//alle keys sollen immer lower case sein!
+
+	return [ed, de];
+
+}
+function recomputeBestED() {
+	for (const k in symbolDict) {
+		let info = symbolDict[k];
+		if (info.type == 'emo' && isString(info.D) && isString(info.E)) {
+			info.bestD = stringAfterLast(info.D, '|').trim().toLowerCase();
+			info.bestE = stringAfterLast(info.E, '|').trim().toLowerCase();
+		} else if (nundef(info.E) || isNumber(info.E) || isdef(info.bestE)) continue;
+
+		// console.log('info.E', info.E, k);
+
+		if (info.type == 'emo') continue;
+
+		if (info.E.includes('|')) {
+			console.log('he das gibt es doch nicht!!!', k, info);
+		} else {
+			info.bestE = info.E;
+		}
+		if (nundef(info.D)) {
+			console.log('he das gibt es doch nicht!!! KEIN DEUTSCH!', k, info);
+		} else {
+			info.bestD = stringBefore(info.D, '|').trim().toLowerCase();
+		}
+	}
+
+	downloadAsYaml(symbolDict, 'sym');
+
+}
+function generateWordFiles() {
+	let i = 0; let n = 13000; let len = symbolKeys.length;
+	while (i < len) {
+		wordsFromToText(i, n);
+		i += n;
+	}
+}
+function wordsFromToText(i, n = 300) {
+	let list = [];
+	for (const k in symbolDict) {
+		let info = symbolDict[k];
+		if (nundef(info.bestE) || !isString(info.bestE) || info.bestE.length < 2) continue;
+		addIf(list, info.bestE);
+	}
+	//divide list into chunks of under 3900 characters each!
+	let sfromi = arrFromIndex(list, i);
+	s300 = arrTake(sfromi, n);
+	let s = s300.join('\n');
+	console.log(s);
+	downloadTextFile(s, 'words_' + i);
+	// downloadTextFile(s1.join('\n'),'words1');
+	// downloadTextFile(srest.join('\n'),'words2');
+
+}
+async function wegMitwh(){
+	let syms = await route_path_yaml_dict('../assets/syms.yaml');
+	let newSyms = {};
+	for(const k in syms){
+		let info = jsCopy(syms[k]);
+		info.w=info.w[0];
+		info.h=info.h[0];
+
+		newSyms[k]=info;
+	}
+	downloadAsYaml(newSyms,'syms');
+}
+async function makeNewSyms() {
+	let etext = await route_path_text('../assets/speech/di/_wE.txt');
+	// console.log(etext);
+	let ew = etext.split('\n');
+	console.log('eng', ew);
+	let dtext = await route_path_text('../assets/speech/di/_wD.txt');
+	let ftext = await route_path_text('../assets/speech/di/_wF.txt');
+	let stext = await route_path_text('../assets/speech/di/_wS.txt');
+	let ctext = await route_path_text('../assets/speech/di/_wC.txt');
+	let dw = dtext.split('\n');
+	let fw = ftext.split('\n');
+	let sw = stext.split('\n');
+	let cw = ctext.split('\n');
+	let edict = {};
+	for (let i = 0; i < ew.length; i++) {
+		edict[ew[i]] = { E: ew[i], D: dw[i], F: fw[i], S: sw[i], C: cw[i] };
+	}
+	let symNew = {};
+	for (const k in symbolDict) {
+		let info = symbolDict[k];
+		let inew = {};
+		for(const k1 of ['key','hexcode','hex','family','text','type','isDuplicate']){
+			if (isdef(info[k1])) inew[k1]=info[k1];
+		}
+		inew.w=info.w;
+		inew.h=info.h;
+		let wk=inew.E=isdef(info.bestE)?info.bestE:k;
+		let e=edict[wk];
+		if (isdef(e)){
+			inew.D=e.D;
+			inew.F=e.F;
+			inew.S=e.S;
+			inew.C=e.C;
+		}
+		if (nundef(inew.D) && isdef(info.bestD)) inew.D=info.bestD;
+		symNew[k]=inew;
+		console.log('key',k,inew)
+	}
+
+	return symNew;
+}
+
+function startUnit() {
+
+	restartTime();
+	U.session = {};
+	if (PROD_START) { PROD_START = false; onClickTemple(); } else startGame();
+
+}
+
+function initSymbolTableForGamesAddons() {
+	//console.log('Daat', Daat);//yes this is an empty dict!
+	Daat.GameClasses = {
+		gTouchPic: GTouchPic, gNamit: GNamit,
+		gTouchColors: GTouchColors, gPremem: GPremem, gMem: GMem, gMissingLetter: GMissingLetter,
+		gMissingNumber: GMissingNumber, gWritePic: GWritePic, gSayPic: GSayPic, gSteps: GSteps, gElim: GElim,
+		gAnagram: GAnagram, gAbacus: GAbacus, gPasscode: GPasscode
+
+	}
+}
+
+
+//#endregion
+
+//#region db init (von db.js)
+var BlockServerSend = false;
+async function dbInit(appName, {usersPath = './_users.yaml', settingsPath = './_settings.yaml', gamesPath = './_games.yaml', tablesPath = './_tables.yaml', addonsPath = './_addons.yaml'}={}) {
+	let users = await loadYamlDict(usersPath);
+	let settings = await loadYamlDict(settingsPath);
+	let addons = await loadYamlDict(addonsPath);
+	let games = await loadYamlDict(gamesPath);
+	let tables = isdef(tablesPath)? await loadYamlDict(tablesPath):null;
+
+	DB = {
+		id: appName,
+		users: users,
+		settings: settings,
+		games: games,
+		tables: tables,
+		addons: addons,
+	};
+
+	//console.log('...saving from BROADCASTING')
+	dbSave(appName);
+
+	if (CLEAR_LOCAL_STORAGE) localStorage.clear();
+	await loadBasicAssets('../assets/');
+}
+async function dbLoad(appName, callback) {
+	let url = SERVERURL;
+	fetch(url, {
+		method: 'GET',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+	}).then(async data => {
+		let sData = await data.json();
+
+		DB = firstCond(sData, x => x.id == appName);
+		//console.log('DB', DB);
+
+		if (CLEAR_LOCAL_STORAGE) localStorage.clear();
+		await loadBasicAssets('../assets/');
+
+		if (isdef(callback)) callback();
+	});
+}
+async function dbSave(appName) {
+	if (BlockServerSend) {
+		//console.log('...wait for unblocked...');
+		setTimeout(()=>dbSave(appName), 1000);
+	} else {
+		//console.log('saving DB:',DB);
+		let url = SERVERURL + appName;
+		BlockServerSend = true;
+		//console.log('blocked...');
+		fetch(url, {
+			method: 'PUT',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(DB)
+		}).then(() => { BlockServerSend = false; }); //console.log('unblocked...'); });
+	}
+}
+async function loadBasicAssets(assetsPath) {
+	c52 = await localOrRoute('c52', assetsPath + 'c52_blackBorder.yaml');
+	//testCards = await localOrRoute('testCards', assetsPath + 'testCards.yaml');
+	cinno = await localOrRoute('cinno', assetsPath + 'fe/inno.yaml');
+	//other game data should be loaded here!
+
+	symbolDict = await localOrRoute('symbolDict', assetsPath + 'symbolDict.yaml');
+	symbolKeys = Object.keys(symbolDict);
+	symbolList = dict2list(symbolDict);
+	ensureSymBySet(); makeHigherOrderGroups();
+
+	svgDict = await localOrRoute('svgDict', assetsPath + 'svgDict.yaml'); //TODO: depending on ext, treat other assts as well!
+	svgKeys = Object.keys(svgDict);
+	svgList = dict2list(svgDict);
+}
+async function localOrRoute(key, url) {
+	if (USE_LOCAL_STORAGE) {
+		let x = localStorage.getItem(key);
+		if (isdef(x)) return JSON.parse(x);
+		else {
+			let data = await route_path_yaml_dict(url);
+			if (key != 'svgDict') localStorage.setItem(key, JSON.stringify(data));
+			return data;
+		}
+	} else return await route_path_yaml_dict(url);
+}
+
+
+
+
+
+
+
+
+//#endregion

@@ -1,20 +1,16 @@
-var Username,Gamename,Tablename;
+const BROADCAST_SETTINGS = true;
 
-var I; //running instance
-var Live, DB, G, T, P, U, User, Settings, SettingsChanged; //, G...Game, T...Table, U...Userdata
+//#region config
 
-var Speech;
+var USE_ADDONS = false;
+const DEFAULTUSERNAME = 'gul'; // nil | gul | felix
+const OFFLINE = true;
 
-var Pictures, Goal, Selected, Score;
+const SERVERURL = OFFLINE ? 'http://localhost:3000/app/' : 'https://speech-games.herokuapp.com/app/';
+var USE_LOCAL_STORAGE = !BROADCAST_SETTINGS; // true | false //localStorage is cleared when false!!!!!
+const CLEAR_LOCAL_STORAGE = BROADCAST_SETTINGS;
 
-var TO; //timeout dictionary
+//#endregion
 
-var uiActivated, auxOpen;
-
-var AD, ADS; //addons: current instance and dict of all existing addons (form DB)
-
-var UIS = {}; 
-
-var App; //not sure!
-var Daat = {}; //some kind of global object for testing ...
+var C52, Syms, SymKeys, KeySets;
 
