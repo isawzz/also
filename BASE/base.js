@@ -1,8 +1,10 @@
 //#region DOM m
 function mAppend(d, child) { d.appendChild(child); }
 function mBy(id) { return document.getElementById(id); }
+function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag) { return document.createElement(tag); }
 function mDiv(dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); return d; }
+function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
 		align: 'text-align',
@@ -104,6 +106,13 @@ function mStyleX(elem, styles, unit = 'px') {
 		}
 	}
 }
+function mText(text, dParent, styles, classes) {
+	let d = mDiv(dParent);
+	if (!isEmpty(text)) d.innerHTML = text;
+	if (isdef(styles)) mStyleX(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	return d;
+}
 
 //#endregion
 
@@ -141,8 +150,107 @@ function getExtendedColors(bg, fg) {
 
 //#endregion
 
+//#region fire
+function fireClick(node) {
+	if (document.createEvent) {
+		var evt = document.createEvent('MouseEvents');
+		evt.initEvent('click', true, false);
+		//console.log('fireClick: createEvent and node.dispatchEvent exist!!!', node)
+		//console.log('****************fireClick: node.onclick exists!!!', node)
+		//node.click();
+		node.dispatchEvent(evt);
+	} else if (document.createEventObject) {
+		//console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
+		node.fireEvent('onclick');
+	} else if (typeof node.onclick == 'function') {
+		//console.log('****************fireClick: node.onclick exists!!!', node)
+		node.onclick();
+	}
+}
+function fireWheel(node) {
+	if (document.createEvent) {
+		var evt = document.createEvent('MouseEvents');
+		evt.initEvent('wheel', true, false);
+		console.log('fireClick: createEvent and node.dispatchEvent exist!!!', node)
+		node.dispatchEvent(evt);
+	} else if (document.createEventObject) {
+		console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
+		node.fireEvent('onclick');
+	} else if (typeof node.onclick == 'function') {
+		console.log('fireClick: node.onclick exists!!!', node)
+		node.onclick();
+	}
+}
+function fireKey(k, { control, alt, shift } = {}) {
+	console.log('fireKey called!' + document.createEvent)
+	if (document.createEvent) {
+		// var evt = document.createEvent('KeyEvents');
+		// evt.initEvent('keyup', true, false);
+		console.log('fireKey: createEvent and node.dispatchEvent exist!!!', k, control, alt, shift);
+		//el.dispatchEvent(new Event('focus'));
+		//el.dispatchEvent(new KeyboardEvent('keypress',{'key':'a'}));
+		window.dispatchEvent(new KeyboardEvent('keypress', { key: '+', ctrlKey: true }));
+	} else if (document.createEventObject) {
+		console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
+		node.fireEvent('onclick');
+	} else if (typeof node.onclick == 'function') {
+		console.log('fireClick: node.onclick exists!!!', node)
+		node.onclick();
+	}
+}
+//#endregion
+
+//#region file IO
+function downloadTextFile(s, filenameNoExt, ext = 'txt') {
+	saveFileAtClient(
+		filenameNoExt + "." + ext,
+		"data:application/text",
+		new Blob([s], { type: "" }));
+
+}
+function saveFileAtClient(name, type, data) {
+	//usage:
+	// json_str = JSON.stringify(someObject);
+	// saveFileAtClient("yourfilename.json", "data:application/json", new Blob([json_str], {type: ""}));
+
+	//console.log(navigator.msSaveBlob);
+	if (data != null && navigator.msSaveBlob) return navigator.msSaveBlob(new Blob([data], { type: type }), name);
+	let a = document.createElement('a');
+	a.style.display = 'none';
+	let url = window.URL.createObjectURL(new Blob([data], { type: type }));
+	a.href = url;
+	a.download = name;
+	document.body.appendChild(a);
+	fireClick(a);
+	setTimeout(function () {
+		// fixes firefox html removal bug
+		window.URL.revokeObjectURL(url);
+		a.remove();
+	}, 500);
+}
+function downloadAsText(s, filename, ext = 'txt') {
+	downloadTextFile(s, filename, ext);
+}
+function downloadAsYaml(o, filename) {
+	//console.log(symbolDict_)
+	let y = jsonToYaml(o);
+	downloadTextFile(y, filename, 'yaml');
+}
+function jsonToYaml(o) {
+	// this is your json object
+	//JSONObject jsonobject = new JSONObject(map);
+	// get json string
+	let y = jsyaml.dump(o);
+	return y;
+	//  let text= JSON.stringify(o); //o.toString(4);
+	//  let di = jsyaml.load(text);
+	//  let y = jsyaml.dump(di);
+}
+
+//#endregion
+
 //#region init 
-function initLive() { Live = {}; }
+function initLive() { Live = {};Daat={}; }
 
 //#endregion
 
@@ -151,12 +259,12 @@ function getKeySets() {
 	let ks = localStorage.getItem('KeySets');
 	if (isdef(ks)) return JSON.parse(ks);
 
-	let res={};
-	for(const k in Syms){
+	let res = {};
+	for (const k in Syms) {
 		let info = Syms[k];
 		if (nundef(info.cats)) continue;
-		for (const ksk of info.cats){
-			lookupAddIfToList(res,[ksk],k);
+		for (const ksk of info.cats) {
+			lookupAddIfToList(res, [ksk], k);
 		}
 	}
 	localStorage.setItem('KeySets', JSON.stringify(res));
@@ -253,6 +361,60 @@ async function localOrRoute(key, url) {
 }
 
 
+//#endregion
+
+//#region measure size and pos
+function getRect(elem, relto) {
+
+	if (isString(elem)) elem = document.getElementById(elem);
+
+	let res = elem.getBoundingClientRect();
+	console.log(res)
+	if (isdef(relto)) {
+		let b2 = relto.getBoundingClientRect();
+		res = {
+			x: b1.x - b2.x,
+			y: b1.y - b2.y,
+			left: b1.left - b2.left,
+			top: b1.top - b2.top,
+			right: b1.right - b2.right,
+			bottom: b1.bottom - b2.bottom,
+			width: b1.width,
+			height: b1.height
+		};
+	}
+	return {x:Math.round(res.left),y:Math.round(res.top),w:Math.round(res.width),h:Math.round(res.height)};
+}
+function getSizeWithStyles(text, styles) {
+	var d = document.createElement("div");
+	document.body.appendChild(d);
+	//console.log(styles);
+	let cStyles = jsCopy(styles);
+	cStyles.position = 'fixed';
+	cStyles.opacity = 0;
+	cStyles.top = '-9999px';
+	mStyleX(d, cStyles);
+	d.innerHTML = text;
+	height = d.clientHeight;
+	width = d.clientWidth;
+	d.parentNode.removeChild(d);
+	return { w: Math.round(width), h: Math.round(height) };
+}
+function toBase10(s,base=16){
+	//console.log(s);
+	let s1=reverseString(s.toLowerCase());
+	//console.log(s1);
+	let res=0;
+	let mult=1;
+	for(let i=0;i<s1.length;i++){
+		let l=s1[i];
+		let hexarr=['a','b','c','d','e','f'];
+		let n= isNumber(l)?Number(l):10+hexarr.indexOf(l);
+		res+=mult*n;
+		mult*=base;
+	}
+	return res;
+}
 //#endregion
 
 //#region objects (arrays, dictionaries...)
@@ -394,7 +556,7 @@ function lookupRemoveFromList(dict, keys, val, deleteIfEmpty = false) {
 //#endregion
 
 //#region random
-function coin(percent=50) {
+function coin(percent = 50) {
 	let r = Math.random();
 	//r ist jetzt zahl zwischen 0 und 1
 	r *= 100;
@@ -407,7 +569,7 @@ function choose(arr, n, exceptIndices) {
 	if (isdef(exceptIndices) && exceptIndices.length < len - n) {
 		for (const i of exceptIndices) if (i >= 0 && i <= len) taken[i] = true;
 	}
-	if (n > len) n = len - 1; 
+	if (n > len) n = len - 1;
 	while (result.length < n) {
 		var iRandom = Math.floor(Math.random() * len);
 		while (taken[iRandom]) { iRandom += 1; if (iRandom >= len) iRandom = 0; }
@@ -444,6 +606,55 @@ function randomNumber(min = 0, max = 100) {
 
 //#endregion
 
+//#region string functions
+function replaceAll(str, sSub, sBy) {
+	let regex = new RegExp(sSub, 'g');
+	return str.replace(regex, sBy);
+}
+function reverseString(s) {
+	return toLetterList(s).reverse().join('');
+}
+function sameCaseInsensitive(s1, s2) {
+	return s1.toLowerCase() == s2.toLowerCase();
+}
+function startsWith(s, sSub) {
+	//testHelpers('startWith: s='+s+', sSub='+sSub,typeof(s),typeof(sSub));
+	return s.substring(0, sSub.length) == sSub;
+}
+function stringAfter(sFull, sSub) {
+	//testHelpers('s='+sFull,'sub='+sSub)
+	let idx = sFull.indexOf(sSub);
+	//testHelpers('idx='+idx)
+	if (idx < 0) return '';
+	return sFull.substring(idx + sSub.length);
+}
+function stringAfterLast(sFull, sSub) {
+	let parts = sFull.split(sSub);
+	return arrLast(parts);
+}
+function stringBefore(sFull, sSub) {
+	let idx = sFull.indexOf(sSub);
+	if (idx < 0) return sFull;
+	return sFull.substring(0, idx);
+}
+function stringBeforeLast(sFull, sSub) {
+	let parts = sFull.split(sSub);
+	return sFull.substring(0, sFull.length - arrLast(parts).length - 1);
+}
+function stringBetween(sFull, sStart, sEnd) {
+	return stringBefore(stringAfter(sFull, sStart), isdef(sEnd) ? sEnd : sStart);
+}
+function stringBetweenLast(sFull, sStart, sEnd) {
+	let s1 = stringBeforeLast(sFull, isdef(sEnd) ? sEnd : sStart);
+	return stringAfterLast(s1, sStart);
+	//return stringBefore(stringAfter(sFull,sStart),isdef(sEnd)?sEnd:sStart);
+}
+function toLetterList(s) {
+	return [...s];
+}
+
+//#endregion
+
 //#region type checking / checking
 function isdef(x) { return x !== null && x !== undefined; }
 function nundef(x) { return x === null || x === undefined; }
@@ -466,6 +677,16 @@ function createElementFromHTML(htmlString) {
 	// Change this to div.childNodes to support multiple top-level nodes
 	//console.log(div.firstChild)
 	return div.firstChild;
+}
+function isEmpty(arr) {
+	return arr === undefined || !arr
+		|| (isString(arr) && (arr == 'undefined' || arr == ''))
+		|| (Array.isArray(arr) && arr.length == 0)
+		|| Object.entries(arr).length === 0;
+}
+function jsCopy(o) {
+	//console.log(o)
+	return JSON.parse(JSON.stringify(o));
 }
 function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
 	if (nundef(nOrString)) return defaultVal;

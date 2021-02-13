@@ -23,8 +23,9 @@ async function _start() {
 
 	KeySets = getKeySets();
 
-	t99();
-	return;
+	//t92_makeText(); //
+	t95_showImages(); //t96_parseEmojiString(); //t98_base(); //t99();
+	//return;
 	//test10_syms(); return;
 
 	//show('freezer');

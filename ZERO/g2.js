@@ -21,9 +21,9 @@ function showPictureGrid(n = 9, dParent, ifs = {}, options = {}) {
 		d.innerHTML = info.D;
 
 		//let dpic=mDiv(d,{fz:100,family:'noto3'});
-		let dpic = mDiv(d, { fz: 100, family: 'emoNoto' });
-		
+		let dpic = mDiv(d, { fz: 100, family: 'emoNoto', display:'inline', bg:'yellow' });
 		dpic.innerHTML = info.text;
+		console.log(getRect(dpic));
 	}
 
 }

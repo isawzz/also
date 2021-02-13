@@ -2031,6 +2031,20 @@ abstract-121:
   w: 100
   h: 108
   E: abstract-121
+accordion:
+  hex: 1fa97
+  hexcode: 1fa97
+  key: accordion
+  text: '&#129687;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: accordion
+  D: akkordeon
+  F: accordéon
+  S: acordeón
+  C: 手風琴
 ace:
   key: ace
   hexcode: E0B2
@@ -2936,7 +2950,7 @@ anatomical heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 anatomy:
@@ -6387,6 +6401,20 @@ beating heart:
   F: impulsion
   S: legumbres
   C: 脈衝
+beaver:
+  hex: 1f9ab
+  hexcode: 1f9ab
+  key: beaver
+  text: '&#129451;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: beaver
+  D: biber
+  F: castor
+  S: castor
+  C: 海狸
 bed:
   key: bed
   hexcode: 1F6CF
@@ -6422,7 +6450,7 @@ bee:
   type: emo
   isDuplicate: true
   w: 125
-  h: 133
+  h: 117
   E: bee
   D: biene
   F: abeille
@@ -6525,6 +6553,20 @@ beet:
   F: betterave
   S: remolacha
   C: 甜菜
+beetle:
+  hex: 1fab2
+  hexcode: 1fab2
+  key: beetle
+  text: '&#129714;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: beetle
+  D: käfer
+  F: scarabée
+  S: escarabajo
+  C: 甲蟲
 beetle-shell:
   key: beetle-shell
   hexcode: E40F
@@ -6633,6 +6675,20 @@ bellhop bell:
   F: cloche
   S: campana
   C: 鐘
+bell pepper:
+  hex: 1fad1
+  hexcode: 1fad1
+  key: bell pepper
+  text: '&#129745;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: bell pepper
+  D: paprika
+  F: poivron
+  S: pimiento morrón
+  C: 燈籠椒
 belt:
   key: belt
   hexcode: EC24
@@ -7034,15 +7090,14 @@ birthday-cake:
   h: 133
   E: birthday-cake
 bison:
+  hex: 1f9ac
+  hexcode: 1f9ac
   key: bison
-  hexcode: E565
-  hex: E565
-  family: pictoGame
-  text: '&#58725;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129452;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: bison
   D: bison
   F: bison
@@ -7071,7 +7126,7 @@ black heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 black large square:
@@ -7563,7 +7618,7 @@ blue heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 blue square:
@@ -7577,6 +7632,20 @@ blue square:
   w: 125
   h: 133
   E: blue square
+blueberries:
+  hex: 1fad0
+  hexcode: 1fad0
+  key: blueberries
+  text: '&#129744;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: blueberries
+  D: blaubeeren
+  F: myrtilles
+  S: arándanos
+  C: 藍莓
 blunderbuss:
   key: blunderbuss
   hexcode: E2AC
@@ -8146,15 +8215,14 @@ bookshelf:
   S: estante para libros
   C: 書架
 boomerang:
+  hex: 1fa83
+  hexcode: 1fa83
   key: boomerang
-  hexcode: E272
-  hex: E272
-  family: pictoGame
-  text: '&#57970;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129667;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: boomerang
   D: boomerang
   F: boomerang
@@ -9395,7 +9463,7 @@ brown heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 brown square:
@@ -9461,6 +9529,20 @@ bubble-field:
   w: 100
   h: 133
   E: bubble-field
+bubble tea:
+  hex: 1f9cb
+  hexcode: 1f9cb
+  key: bubble tea
+  text: '&#129483;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: bubble tea
+  D: bubble tea
+  F: thé à bulles
+  S: té de burbujas
+  C: 珍珠奶茶
 bubbles:
   key: bubbles
   hexcode: E9B2
@@ -9509,6 +9591,20 @@ bubbling-flask:
   w: 100
   h: 133
   E: bubbling-flask
+bucket:
+  hex: 1faa3
+  hexcode: 1faa3
+  key: bucket
+  text: '&#129699;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: bucket
+  D: eimer
+  F: baquet
+  S: cubeta
+  C: 桶
 bud:
   key: bud
   hexcode: EAB5
@@ -11901,6 +11997,20 @@ carousel horse:
   F: carrousel
   S: carrusel
   C: 輪播
+carpentry saw:
+  hex: 1fa9a
+  hexcode: 1fa9a
+  key: carpentry saw
+  text: '&#129690;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: saw
+  D: säge
+  F: scie
+  S: sierra
+  C: 鋸
 carpet-bombing:
   key: carpet-bombing
   hexcode: E4A6
@@ -14682,10 +14792,10 @@ cockroach:
   text: '&#129715;'
   type: emo
   isDuplicate: false
-  w: 113
-  h: 133
+  w: 125
+  h: 117
   E: cockroach
-  D: schabe
+  D: kakerlake
   F: cockroche
   S: cucaracha
   C: 雞尾酒
@@ -14908,6 +15018,20 @@ coiling-curl:
   w: 100
   h: 133
   E: coiling-curl
+coin:
+  hex: 1fa99
+  hexcode: 1fa99
+  key: coin
+  text: '&#129689;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: coin
+  D: münze
+  F: pièce de monnaie
+  S: moneda
+  C: 硬幣
 coins:
   key: coins
   hexcode: E14F
@@ -18918,6 +19042,20 @@ discussion:
   F: discussion
   S: discusión
   C: 討論區
+disguised face:
+  hex: 1f978
+  hexcode: 1f978
+  key: disguised face
+  text: '&#129400;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: disguise
+  D: verkleidung
+  F: déguisement
+  S: disfraz
+  C: 偽裝
 disintegrate:
   key: disintegrate
   hexcode: E436
@@ -19204,6 +19342,20 @@ dodging:
   F: esquiver
   S: regate
   C: 躲避
+dodo:
+  hex: 1f9a4
+  hexcode: 1f9a4
+  key: dodo
+  text: '&#129444;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: dodo
+  D: dodo
+  F: dodo
+  S: vejestorio
+  C: 渡渡鳥
 dog:
   key: dog
   hexcode: 1F415
@@ -21248,15 +21400,14 @@ elephant-head:
   h: 133
   E: elephant-head
 elevator:
+  hex: 1f6d7
+  hexcode: 1f6d7
   key: elevator
-  hexcode: E7BA
-  hex: E7BA
-  family: pictoGame
-  text: '&#59322;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#128727;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: elevator
   D: aufzug
   F: ascenseur
@@ -22315,7 +22466,7 @@ eye:
   h: 133
   E: eye
   D: auge
-  F: œil
+  F: oeil
   S: ojo
   C: 眼
 eye in speech bubble:
@@ -23276,15 +23427,14 @@ fearful face:
   S: angustiado
   C: 痛苦的
 feather:
+  hex: 1fab6
+  hexcode: 1fab6
   key: feather
-  hexcode: E67E
-  hex: E67E
-  family: pictoGame
-  text: '&#59006;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129718;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: feather
   D: feder
   F: plume
@@ -25191,6 +25341,20 @@ flatbed-covered:
   w: 100
   h: 133
   E: flatbed-covered
+flatbread:
+  hex: 1fad3
+  hexcode: 1fad3
+  key: flatbread
+  text: '&#129747;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: flatbread
+  D: fladenbrot
+  F: galette
+  S: pan plano
+  C: 大餅
 flax:
   key: flax
   hexcode: EAA1
@@ -25569,19 +25733,18 @@ flute:
   S: flauta
   C: 長笛
 fly:
+  hex: 1fab0
+  hexcode: 1fab0
   key: fly
-  hexcode: E408
-  hex: E408
-  family: pictoGame
-  text: '&#58376;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129712;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: fly
-  D: fliegen
+  D: fliege
   F: mouche
-  S: volar
+  S: mosca
   C: 飛
 flying disc:
   key: flying disc
@@ -25838,6 +26001,20 @@ fomorian:
   w: 100
   h: 110
   E: fomorian
+fondue:
+  hex: 1fad5
+  hexcode: 1fad5
+  key: fondue
+  text: '&#129749;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: fondue
+  D: fondue
+  F: fondue
+  S: fondue
+  C: 火鍋
 font:
   key: font
   hexcode: f031
@@ -28476,7 +28653,7 @@ green heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 green salad:
@@ -30213,6 +30390,20 @@ headshot-2:
   w: 100
   h: 110
   E: headshot-2
+headstone:
+  hex: 1faa6
+  hexcode: 1faa6
+  key: headstone
+  text: '&#129702;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: headstone
+  D: grabstein
+  F: pierre tombale
+  S: lápida mortuoria
+  C: 墓石
 healing:
   key: healing
   hexcode: E913
@@ -30321,7 +30512,7 @@ heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 heart decoration:
@@ -30351,7 +30542,7 @@ heart exclamation:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 heart suit:
@@ -30366,7 +30557,7 @@ heart suit:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 heart with arrow:
@@ -30606,7 +30797,7 @@ hearts:
   h: 110
   E: hearts
   D: herzen
-  F: cœurs
+  F: coeurs
   S: corazones
   C: 心
 heat-haze:
@@ -31568,6 +31759,20 @@ hoof:
   F: sabot
   S: casco
   C: 蹄
+hook:
+  hex: 1fa9d
+  hexcode: 1fa9d
+  key: hook
+  text: '&#129693;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: hook
+  D: haken
+  F: crochet
+  S: gancho
+  C: 鉤
 hops:
   key: hops
   hexcode: EAA8
@@ -32192,16 +32397,19 @@ hushed face:
   S: sorprendido
   C: 驚訝的
 hut:
+  hex: 1f6d6
+  hexcode: 1f6d6
   key: hut
-  hexcode: E7CC
-  hex: E7CC
-  family: pictoGame
-  text: '&#59340;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#128726;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: hut
+  D: hütte
+  F: cabane
+  S: cabaña
+  C: 小屋
 huts-village:
   key: huts-village
   hexcode: E7CD
@@ -32268,8 +32476,8 @@ hypodermic-test:
   w: 100
   h: 133
   E: hypodermic-test
-i-beam:
-  key: i-beam
+i_beam:
+  key: i_beam
   hexcode: E7CE
   hex: E7CE
   family: pictoGame
@@ -32278,9 +32486,9 @@ i-beam:
   isDuplicate: false
   w: 100
   h: 110
-  E: i-beam
-i-brick:
-  key: i-brick
+  E: i_beam
+i_brick:
+  key: i_brick
   hexcode: ED93
   hex: ED93
   family: pictoGame
@@ -32289,9 +32497,9 @@ i-brick:
   isDuplicate: false
   w: 100
   h: 110
-  E: i-brick
-i-cursor:
-  key: i-cursor
+  E: i_brick
+i_cursor:
+  key: i_cursor
   hexcode: f246
   hex: f246
   family: pictoFa
@@ -32300,7 +32508,7 @@ i-cursor:
   isDuplicate: false
   w: 50
   h: 110
-  E: i-cursor
+  E: i_cursor
 i_abacus:
   key: i_abacus
   hexcode: EB80
@@ -32521,6 +32729,21 @@ i_biohazard:
   w: 100
   h: 110
   E: i_biohazard
+i_bison:
+  key: i_bison
+  hexcode: E565
+  hex: E565
+  family: pictoGame
+  text: '&#58725;'
+  type: icon
+  isDuplicate: true
+  w: 100
+  h: 133
+  E: bison
+  D: bison
+  F: bison
+  S: bisonte
+  C: 野牛
 i_bomb:
   key: i_bomb
   hexcode: f1e2
@@ -32554,6 +32777,21 @@ i_bookmark:
   w: 100
   h: 110
   E: i_bookmark
+i_boomerang:
+  key: i_boomerang
+  hexcode: E272
+  hex: E272
+  family: pictoGame
+  text: '&#57970;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: boomerang
+  D: boomerang
+  F: boomerang
+  S: bumerang
+  C: 迴旋鏢
 i_brain:
   key: i_brain
   hexcode: E6C0
@@ -33082,6 +33320,21 @@ i_elephant:
   w: 100
   h: 110
   E: i_elephant
+i_elevator:
+  key: i_elevator
+  hexcode: E7BA
+  hex: E7BA
+  family: pictoGame
+  text: '&#59322;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: elevator
+  D: aufzug
+  F: ascenseur
+  S: ascensor
+  C: 電梯
 i_envelope:
   key: i_envelope
   hexcode: EBAB
@@ -33126,6 +33379,21 @@ i_fairy:
   w: 100
   h: 110
   E: i_fairy
+i_feather:
+  key: i_feather
+  hexcode: E67E
+  hex: E67E
+  family: pictoGame
+  text: '&#59006;'
+  type: icon
+  isDuplicate: true
+  w: 100
+  h: 133
+  E: feather
+  D: feder
+  F: plume
+  S: pluma
+  C: 羽毛
 i_fire:
   key: i_fire
   hexcode: E34E
@@ -33170,6 +33438,21 @@ i_flashlight:
   w: 100
   h: 110
   E: i_flashlight
+i_fly:
+  key: i_fly
+  hexcode: E408
+  hex: E408
+  family: pictoGame
+  text: '&#58376;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: fly
+  D: fliegen
+  F: mouche
+  S: mosca
+  C: 飛
 i_fog:
   key: i_fog
   hexcode: EC74
@@ -33379,6 +33662,21 @@ i_house:
   w: 100
   h: 110
   E: i_house
+i_hut:
+  key: i_hut
+  hexcode: E7CC
+  hex: E7CC
+  family: pictoGame
+  text: '&#59340;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: hut
+  D: hütte
+  F: cabane
+  S: cabaña
+  C: 小屋
 i_infinity:
   key: i_infinity
   hexcode: E10E
@@ -33478,6 +33776,36 @@ i_kneeling:
   w: 100
   h: 110
   E: i_kneeling
+i_knot:
+  key: i_knot
+  hexcode: E54A
+  hex: E54A
+  family: pictoGame
+  text: '&#58698;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 108
+  E: knot
+  D: knoten
+  F: noeud
+  S: nudo
+  C: 結
+i_ladder:
+  key: i_ladder
+  hexcode: E7D1
+  hex: E7D1
+  family: pictoGame
+  text: '&#59345;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: ladder
+  D: leiter
+  F: échelle
+  S: escalera
+  C: 階梯
 i_ladybug:
   key: i_ladybug
   hexcode: E40A
@@ -33566,6 +33894,21 @@ i_magnet:
   w: 100
   h: 110
   E: i_magnet
+i_mammoth:
+  key: i_mammoth
+  hexcode: E56B
+  hex: E56B
+  family: pictoGame
+  text: '&#58731;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: mammoth
+  D: mammut-
+  F: mammouth
+  S: mamut
+  C: 長毛象
 i_medal:
   key: i_medal
   hexcode: E8A3
@@ -33764,6 +34107,21 @@ i_ogre:
   w: 100
   h: 110
   E: i_ogre
+i_olive:
+  key: i_olive
+  hexcode: E5C4
+  hex: E5C4
+  family: pictoGame
+  text: '&#58820;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: olive
+  D: olive
+  F: olive
+  S: aceituna
+  C: 橄欖
 i_om:
   key: i_om
   hexcode: f679
@@ -33929,6 +34287,17 @@ i_pill:
   w: 100
   h: 110
   E: i_pill
+i_pinata:
+  key: i_pinata
+  hexcode: E37F
+  hex: E37F
+  family: pictoGame
+  text: '&#58239;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: pinata
 i_pineapple:
   key: i_pineapple
   hexcode: ECED
@@ -33940,6 +34309,21 @@ i_pineapple:
   w: 100
   h: 110
   E: i_pineapple
+i_plunger:
+  key: i_plunger
+  hexcode: EB65
+  hex: EB65
+  family: pictoGame
+  text: '&#60261;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: plunger
+  D: kolben
+  F: piston
+  S: émbolo
+  C: 柱塞
 i_plus:
   key: i_plus
   hexcode: f067
@@ -34105,6 +34489,20 @@ i_robot:
   w: 125
   h: 110
   E: i_robot
+i_rock:
+  hex: 1faa8
+  hexcode: 1faa8
+  key: i_rock
+  text: '&#129704;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: rock
+  D: felsen
+  F: roche
+  S: rock
+  C: 岩石
 i_rocket:
   key: i_rocket
   hexcode: E617
@@ -34226,6 +34624,21 @@ i_scorpion:
   w: 100
   h: 110
   E: i_scorpion
+i_screwdriver:
+  key: i_screwdriver
+  hexcode: EB75
+  hex: EB75
+  family: pictoGame
+  text: '&#60277;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: screwdriver
+  D: schraubenzieher
+  F: tournevis
+  S: destornillador
+  C: 螺絲刀
 i_scroll:
   key: i_scroll
   hexcode: f70e
@@ -34248,6 +34661,21 @@ i_seedling:
   w: 100
   h: 110
   E: i_seedling
+i_sewing needle:
+  key: i_sewing needle
+  hexcode: EB76
+  hex: EB76
+  family: pictoGame
+  text: '&#60278;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: sewing needle
+  D: nähnadel
+  F: aiguille à coudre
+  S: aguja de coser
+  C: 縫紉針
 i_shamrock:
   key: i_shamrock
   hexcode: EAB0
@@ -34600,6 +35028,21 @@ i_taxi:
   w: 100
   h: 110
   E: i_taxi
+i_teapot:
+  key: i_teapot
+  hexcode: E757
+  hex: E757
+  family: pictoGame
+  text: '&#59223;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: teapot
+  D: teekanne
+  F: théière
+  S: tetera
+  C: 茶壺
 i_thermometer:
   key: i_thermometer
   hexcode: f491
@@ -34831,6 +35274,21 @@ i_watermelon:
   w: 100
   h: 133
   E: i_watermelon
+i_window:
+  key: i_window
+  hexcode: E7FD
+  hex: E7FD
+  family: pictoGame
+  text: '&#59389;'
+  type: icon
+  isDuplicate: false
+  w: 100
+  h: 133
+  E: window
+  D: fenster
+  F: fenêtre
+  S: ventana
+  C: 窗口
 i_wrench:
   key: i_wrench
   hexcode: EB7D
@@ -37259,16 +37717,19 @@ knockout:
   h: 108
   E: knockout
 knot:
+  hex: 1faa2
+  hexcode: 1faa2
   key: knot
-  hexcode: E54A
-  hex: E54A
-  family: pictoGame
-  text: '&#58698;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 108
+  text: '&#129698;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: knot
+  D: knoten
+  F: noeud
+  S: nudo
+  C: 結
 koala:
   key: koala
   hexcode: E379
@@ -37370,15 +37831,14 @@ lacrosse:
   S: lacrosse
   C: 長曲棍球
 ladder:
+  hex: 1fa9c
+  hexcode: 1fa9c
   key: ladder
-  hexcode: E7D1
-  hex: E7D1
-  family: pictoGame
-  text: '&#59345;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129692;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: ladder
   D: leiter
   F: échelle
@@ -39498,6 +39958,22 @@ lollipop:
   F: sucette
   S: chupete
   C: 棒糖
+long drum:
+  hex: 1fa98
+  hexcode: 1fa98
+  key: long drum
+  text: '&#129688;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: long drum
+  D: lange trommel
+  F: tambour long
+  S: tambor largo
+  C: 長鼓
+  cats:
+  - object
 long-antennae-bug:
   key: long-antennae-bug
   hexcode: E411
@@ -40067,6 +40543,20 @@ magic:
   F: la magie
   S: magia
   C: 魔法
+magic wand:
+  hex: 1fa84
+  hexcode: 1fa84
+  key: magic wand
+  text: '&#129668;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: magic wand
+  D: zauberstab
+  F: baguette magique
+  S: varita mágica
+  C: 魔法棒
 magic-gate:
   key: magic-gate
   hexcode: E805
@@ -40334,17 +40824,16 @@ male sign:
   h: 118
   E: male sign
 mammoth:
+  hex: 1f9a3
+  hexcode: 1f9a3
   key: mammoth
-  hexcode: E56B
-  hex: E56B
-  family: pictoGame
-  text: '&#58731;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129443;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: mammoth
-  D: mammut-
+  D: mammut
   F: mammouth
   S: mamut
   C: 長毛象
@@ -42349,6 +42838,20 @@ mighty-spanner:
   w: 100
   h: 133
   E: mighty-spanner
+military helmet:
+  hex: 1fa96
+  hexcode: 1fa96
+  key: military helmet
+  text: '&#129686;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: military helmet
+  D: militärhelm
+  F: casque militaire
+  S: casco militar
+  C: 軍用頭盔
 military-ambulance:
   key: military-ambulance
   hexcode: E4A4
@@ -42637,6 +43140,20 @@ miracle-medecine:
   w: 100
   h: 133
   E: miracle-medecine
+mirror:
+  hex: 1fa9e
+  hexcode: 1fa9e
+  key: mirror
+  text: '&#129694;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: mirror
+  D: spiegel
+  F: miroir
+  S: espejo
+  C: 鏡子
 mirror-mirror:
   key: mirror-mirror
   hexcode: E63B
@@ -43478,6 +43995,20 @@ mouse:
   F: souris
   S: ratón
   C: 老鼠
+mouse trap:
+  hex: 1faa4
+  hexcode: 1faa4
+  key: mouse trap
+  text: '&#129700;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: mouse trap
+  D: mausefalle
+  F: piege a souris
+  S: trampa para ratones
+  C: 鼠標陷阱
 mouse-2:
   key: mouse-2
   hexcode: EB93
@@ -44237,6 +44768,20 @@ nested-hexagons:
   w: 100
   h: 133
   E: nested-hexagons
+nesting dolls:
+  hex: 1fa86
+  hexcode: 1fa86
+  key: nesting dolls
+  text: '&#129670;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: babushka
+  D: babuschka
+  F: poupées gigognes
+  S: muñecas de anidación
+  C: 嵌套娃娃
 network-bars:
   key: network-bars
   hexcode: EB40
@@ -44411,6 +44956,20 @@ nine-thirty:
   F: neuf heures trente
   S: nueve y media
   C: 9 30
+ninja:
+  hex: 1f977
+  hexcode: 1f977
+  key: ninja
+  text: '&#129399;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: ninja
+  D: ninja
+  F: ninja
+  S: ninja
+  C: 忍者
 ninja-armor:
   key: ninja-armor
   hexcode: E8E4
@@ -45233,15 +45792,14 @@ older person:
   S: pelo blanco
   C: 白色的頭髮
 olive:
+  hex: 1fad2
+  hexcode: 1fad2
   key: olive
-  hexcode: E5C4
-  hex: E5C4
-  family: pictoGame
-  text: '&#58820;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129746;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: olive
   D: olive
   F: olive
@@ -45652,7 +46210,7 @@ orange heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 orange square:
@@ -47350,6 +47908,20 @@ people holding hands:
   F: main dans la main
   S: tomados de la mano
   C: 手牽著手
+people hugging:
+  hex: 1fac2
+  hexcode: 1fac2
+  key: people hugging
+  text: '&#129730;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: hugging
+  D: umarmen
+  F: étreindre
+  S: abrazar
+  C: 擁抱
 people-carry:
   key: people-carry
   hexcode: f4ce
@@ -48073,6 +48645,20 @@ pickelhaube:
   w: 100
   h: 133
   E: pickelhaube
+pickup truck:
+  hex: 1f6fb
+  hexcode: 1f6fb
+  key: pickup truck
+  text: '&#128763;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: pickup truck
+  D: pick-up
+  F: pick-up
+  S: camioneta
+  C: 皮卡車
 pie:
   key: pie
   hexcode: 1F967
@@ -48310,17 +48896,20 @@ pin:
   F: épingle
   S: alfiler
   C: 銷
-pinata:
-  key: pinata
-  hexcode: E37F
-  hex: E37F
-  family: pictoGame
-  text: '&#58239;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
-  E: pinata
+piñata:
+  hex: 1fa85
+  hexcode: 1fa85
+  key: piñata
+  text: '&#129669;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: piñata
+  D: piñata
+  F: piñata
+  S: piñata
+  C: 皮納塔
 pinball-flipper:
   key: pinball-flipper
   hexcode: EC49
@@ -48347,6 +48936,20 @@ pincers:
   F: tenailles
   S: tenazas
   C: 鉗
+pinched fingers:
+  hex: 1f90c
+  hexcode: 1f90c
+  key: pinched fingers
+  text: '&#129292;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: pinching
+  D: kneifen
+  F: pincement
+  S: ratería
+  C: 捏
 pinching hand:
   key: pinching hand
   hexcode: 1F90F
@@ -48617,6 +49220,20 @@ pizza-slice:
   w: 100
   h: 133
   E: pizza-slice
+placard:
+  hex: 1faa7
+  hexcode: 1faa7
+  key: placard
+  text: '&#129703;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: placard
+  D: plakat
+  F: placard
+  S: cartel
+  C: 標語牌
 place of worship:
   key: place of worship
   hexcode: 1F6D0
@@ -49020,15 +49637,14 @@ plug:
   S: enchufe
   C: 插頭
 plunger:
+  hex: 1faa0
+  hexcode: 1faa0
   key: plunger
-  hexcode: EB65
-  hex: EB65
-  family: pictoGame
-  text: '&#60261;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129696;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: plunger
   D: kolben
   F: piston
@@ -49696,6 +50312,20 @@ potion-of-madness:
   w: 100
   h: 133
   E: potion-of-madness
+potted plant:
+  hex: 1fab4
+  hexcode: 1fab4
+  key: potted plant
+  text: '&#129716;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: potted plant
+  D: topfpflanze
+  F: plante en pot
+  S: planta en maceta
+  C: 盆栽植物
 poultry leg:
   key: poultry leg
   hexcode: 1F357
@@ -50498,7 +51128,7 @@ purple heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 purple square:
@@ -51630,7 +52260,7 @@ red heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 red paper lantern:
@@ -52782,6 +53412,20 @@ roller coaster:
   F: montagnes russes
   S: montaña rusa
   C: 過山車
+roller skate:
+  hex: 1f6fc
+  hexcode: 1f6fc
+  key: roller skate
+  text: '&#128764;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: roller skate
+  D: rollschuh
+  F: patin à roulettes
+  S: patín
+  C: 溜冰鞋
 rolling on the floor laughing:
   key: rolling on the floor laughing
   hexcode: 1F923
@@ -54357,15 +55001,14 @@ screw-2:
   h: 133
   E: screw-2
 screwdriver:
+  hex: 1fa9b
+  hexcode: 1fa9b
   key: screwdriver
-  hexcode: EB75
-  hex: EB75
-  family: pictoGame
-  text: '&#60277;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129691;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: screwdriver
   D: schraubenzieher
   F: tournevis
@@ -54511,6 +55154,20 @@ seahorse:
   w: 100
   h: 110
   E: seahorse
+seal:
+  hex: 1f9ad
+  hexcode: 1f9ad
+  key: seal
+  text: '&#129453;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: seal
+  D: dichtung
+  F: joint
+  S: sello
+  C: 海豹
 search:
   key: search
   hexcode: f002
@@ -54893,17 +55550,20 @@ sewed-shell:
   w: 100
   h: 133
   E: sewed-shell
-sewing-needle:
-  key: sewing-needle
-  hexcode: EB76
-  hex: EB76
-  family: pictoGame
-  text: '&#60278;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
-  E: sewing-needle
+sewing needle:
+  hex: 1faa1
+  hexcode: 1faa1
+  key: sewing needle
+  text: '&#129697;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: sewing needle
+  D: nähnadel
+  F: aiguille à coudre
+  S: aguja de coser
+  C: 縫紉針
 sewing-string:
   key: sewing-string
   hexcode: EC19
@@ -57320,6 +57980,20 @@ smiling face with sunglasses:
   F: des lunettes de soleil
   S: gafas de sol
   C: 墨鏡
+smiling face with tear:
+  hex: 1f972
+  hexcode: 1f972
+  key: smiling face with tear
+  text: '&#129394;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: tear
+  D: träne
+  F: larme
+  S: lágrima
+  C: 眼淚
 smirking face:
   key: smirking face
   hexcode: 1F60F
@@ -58506,7 +59180,7 @@ sparkling heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 sparkling-sabre:
@@ -62035,8 +62709,8 @@ suspicious:
   F: méfiant
   S: suspicaz
   C: 可疑
-sverd-i-fjell:
-  key: sverd-i-fjell
+sverd-i_fjell:
+  key: sverd-i_fjell
   hexcode: E7EC
   hex: E7EC
   family: pictoGame
@@ -62045,7 +62719,7 @@ sverd-i-fjell:
   isDuplicate: false
   w: 100
   h: 118
-  E: sverd-i-fjell
+  E: sverd-i_fjell
 swallow:
   key: swallow
   hexcode: E44C
@@ -62819,6 +63493,20 @@ tall-bridge:
   w: 100
   h: 133
   E: tall-bridge
+tamale:
+  hex: 1fad4
+  hexcode: 1fad4
+  key: tamale
+  text: '&#129748;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: tamale
+  D: tamale
+  F: tamale
+  S: tamal
+  C: 玉米粉蒸肉
 tangerine:
   key: tangerine
   hexcode: 1F34A
@@ -63069,15 +63757,14 @@ team-upgrade:
   h: 133
   E: team-upgrade
 teapot:
+  hex: 1fad6
+  hexcode: 1fad6
   key: teapot
-  hexcode: E757
-  hex: E757
-  family: pictoGame
-  text: '&#59223;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129750;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: teapot
   D: teekanne
   F: théière
@@ -63922,6 +64609,20 @@ thompson-m1928:
   w: 100
   h: 133
   E: thompson-m1928
+thong sandal:
+  hex: 1fa74
+  hexcode: 1fa74
+  key: thong sandal
+  text: '&#129652;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: thong sandal
+  D: tangasandale
+  F: sandale string
+  S: sandalia de tanga
+  C: 涼鞋
 thor-fist:
   key: thor-fist
   hexcode: E985
@@ -64845,6 +65546,20 @@ tooth:
   F: dent
   S: diente
   C: 齒
+toothbrush:
+  hex: 1faa5
+  hexcode: 1faa5
+  key: toothbrush
+  text: '&#129701;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: toothbrush
+  D: zahnbürste
+  F: brosse à dents
+  S: cepillo de dientes
+  C: 牙刷
 top hat:
   key: top hat
   hexcode: 1F3A9
@@ -65362,8 +66077,12 @@ transgender symbol:
   type: emo
   isDuplicate: false
   w: 125
-  h: 133
-  E: transgender symbol
+  h: 118
+  E: transgender
+  D: transgender
+  F: transgenres
+  S: transgénero
+  C: 變性人
 transgender-alt:
   key: transgender-alt
   hexcode: f225
@@ -69606,7 +70325,7 @@ white heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 white large square:
@@ -69861,20 +70580,19 @@ windmill:
   S: molino
   C: 風車
 window:
+  hex: 1fa9f
+  hexcode: 1fa9f
   key: window
-  hexcode: E7FD
-  hex: E7FD
-  family: pictoGame
-  text: '&#59389;'
-  type: icon
-  isDuplicate: false
-  w: 100
-  h: 133
+  text: '&#129695;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
   E: window
   D: fenster
   F: fenêtre
   S: ventana
-  C: 窗口
+  C: 窗戶
 window-bars:
   key: window-bars
   hexcode: E021
@@ -70111,7 +70829,7 @@ winking face:
   h: 118
   E: wink
   D: zwinkern
-  F: clin d'œil
+  F: clin d'oeil
   S: guiño
   C: 眨眼
 winking face with tongue:
@@ -70894,6 +71612,20 @@ won-sign:
   w: 113
   h: 110
   E: won-sign
+wood:
+  hex: 1fab5
+  hexcode: 1fab5
+  key: wood
+  text: '&#129717;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: wood
+  D: holz
+  F: bois
+  S: madera
+  C: 木頭
 wood-axe:
   key: wood-axe
   hexcode: E745
@@ -71130,6 +71862,20 @@ world map:
   F: monde
   S: mundo
   C: 世界
+worm:
+  hex: 1fab1
+  hexcode: 1fab1
+  key: worm
+  text: '&#129713;'
+  type: emo
+  family: emoNoto
+  w: 125
+  h: 118
+  E: worm
+  D: wurm
+  F: ver de terre
+  S: gusano
+  C: 蟲
 worm-mouth:
   key: worm-mouth
   hexcode: E3F6
@@ -71376,7 +72122,7 @@ yellow heart:
   h: 133
   E: heart
   D: herz
-  F: cœur
+  F: coeur
   S: corazón
   C: 心
 yellow square:
