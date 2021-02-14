@@ -1,41 +1,42 @@
-async function t92_makeText(){
-	let snew=await route_path_yaml_dict('../assets/syms2020.yaml');
-	let keys=Object.keys(snew);
-	let s=keys.join('\n');
-	downloadAsText(s,'snew');
+
+//#region Syms preppers
+async function t92_makeText() {
+	let snew = await route_path_yaml_dict('../assets/syms2020.yaml');
+	let keys = Object.keys(snew);
+	let s = keys.join('\n');
+	downloadAsText(s, 'snew');
 }
-function t93_checkDuplicates(infos){
-	let listOfNewWords=[];
-	
+function t93_checkDuplicates(infos) {
+	let listOfNewWords = [];
+
 	for (const k in infos) {
 		let info = infos[k];
 		if (isEmpty(k)) continue;
 		if (isdef(Syms[k])) {
-			let ex=jsCopy(Syms[k]);
+			let ex = jsCopy(Syms[k]);
 			if (ex.type == 'icon') {
 				// Syms[k]=info;
-				for(const l of ['E','D','F','S','C']){
+				for (const l of ['E', 'D', 'F', 'S', 'C']) {
 					info[l] = ex[l];
 				}
-				exkey = 'i_'+k;
+				exkey = 'i_' + k;
 				ex.key = exkey;
-				Syms[exkey]=ex;
-				console.log('copy',exkey,ex,'\n',k,info)
+				Syms[exkey] = ex;
+				console.log('copy', exkey, ex, '\n', k, info)
 			}
 			// console.log('dupl:',k,Syms[k].type);
 			// console.log('dupl:',k,Syms[k].type);
-		}else{
+		} else {
 			listOfNewWords.push(k);
-			console.log('new word:',k);
-			Syms[k]=info;
-			info.E=k;
+			console.log('new word:', k);
+			Syms[k] = info;
+			info.E = k;
 		}
 	}
 	console.log(infos)
-	for(const k in infos){delete infos[k].div;}
-	downloadAsYaml(infos,'infos');
+	for (const k in infos) { delete infos[k].div; }
+	downloadAsYaml(infos, 'infos');
 }
-
 function t94_measureInfos(infos) {
 	for (const k in infos) {
 		let info = infos[k];
@@ -50,10 +51,10 @@ function t94_measureInfos(infos) {
 function t95_showImages() {
 	let infos = t96_parseEmojiString();
 
+	//display images:
 	for (const k in infos) {
 		let info = infos[k];
-
-		let d = mText(info.text, dTable, { fz: 100, family: 'emoNoto', display: 'inline-block', bg: 'random' });
+		let d = mText(info.text, dTable, { sz: 200, fz: 100, family: 'emoNoto', display: 'inline-block', bg: 'random' });
 		info.div = d;
 
 	}
@@ -145,6 +146,7 @@ function t97_getEmojiString() {
 
 
 }
+//#endregion
 
 function t98_base() {
 	let a = toBase10('1f972', 16);
@@ -217,11 +219,22 @@ function t98_base() {
 	<a class="plain" href="emoji-list.html#26a7" target="list"><img alt="⚧" title="U+26A7 ⚧ transgender symbol" class="imga" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAA8UExURVBme2qJpXSVtHmcvFRsg2F9l2aDnlFpf1t1jVJpf2+PrP///8bW45ayy4OlxVlziqvD17rJ1ezv8amxuDtQOsYAAAAKdFJOUwL///+f///t7UhA2+rTAAAEXUlEQVRYw62Yi2KjIBBFAwhRAijy//+68+CtTZt2B4IEhuNlQKN5PJpty7J+YMuyPW5sW9Zda8gf2L5eWcuqtTFG/DiRaT2hthUowloVPKafZSUt8PS6jRxhlY/uI4teAaojbStg5KcYRqGqSiLO4X5lB4pac5y1AT0u/o6E09NLnhjNC9NB5fuiJPBFczA7ntxihAxHhATZHZi/LlzLEb0djAtSGJS04nodhfSOQt3swiVXcXIQpU2joD8ZSNIbzMwOIN/ZPOK+z2OUFgSp2ul9ShDA/EnJD0Z92aDvoAFoCsINIZKKGdTqXp2d2HjU4uz7XD03gKRgUGiCzwnU29jXJho6UEnZ+XTuhHS0DkjhoMYzu7QxHQjMByrZK9KXoPjguxIaI0vy3IaHARR60EmklFK4WqyKqlWQGkCkPSmVTgiEmjkpe3QgRTsSN3b1VgFcIsmKOOLlRxDRgXFgoS4gnJvihIxI5Yto1IjG3SoyPWYQtiu8VZoCKo6kSKkSc6akUFCk51AqKyIB0MkgQ6BBkeKVOcElRVjv83QxKdYDAJUVqVERglQ+Z1FE8YG1S65uwtOlPC/wOzKQST1I5WAEnJBMJUYZc9aShrNgXwWNoGzxdQaU9SqXFlwKsCuOsnnYFzxcN+gOBMGTCDqkdIRR1CsVodro0HMqaCCBefhxoLgXBejtzzqz2ST+kKxajJLg7BJMoaDMYVG+kzSMgN82XUCYlFS1wgJc1wLJscTZV/YgNWZIsUysjrK0yZpLOzaQRG6XIWFEpJStQVL4z+ZSj8PU8pBW4tltQed2VBmqSzv2igYKGG0BKwezRwb1jh3ITP5vQa9w4ywQ9ATQlWTL1IZGvDLUjbM1rAjnZqckafWnNkcLMDVaSU9bqAie+eTAgiwwsGlsT1nlfFIEPR/PHUHwjYua6T4wtNPMwuRG/QwiRQXVGQ5LfXvCS2RyYpQwe1V0MUFbMrUGus2qW19DIK3FPcnTTRIigCb59njvKTQp0veSgET3RLhd442bbmtfOJoGKolzTiKMjw1h8OtSA02E8k3Y2G7+ETbwcKpa60FktvvU0tNvUPRWNLOlN9fmqeX2oYBXFNjPThgeZktXP6SBjHhnEUHvzPwQ5L4DCf0diF/KUBHXvlOE0b7LJpHhNc81euW78dM7gXZ+dbxmWq+6/Lh29OZ4de1AYw8nPTwq0yMxd/ZO/FbaKcpvqTksbLI9xVLFKXN1olfbHtQcmh938D4yXzn1IG2+Ns2rpgv2zuV7kK7L//ZcBFoy6O5DB132kf7CSVcQBImctJmPdHCsqLTOjhoVPZfHtpOkOpJP1DnrLkaTQ3YDQTu81FKQcADDsZKP+ZuNUZb66JDH0cwePLdMYQczkbSee8YjAPDleGNJfzAQRP9FZEl/4JCgB0Vp/w+C/ji5vXGY9EvWwKkkZBGvFV390rsjZuDgP2yEItpQdHV91/u8/MvWUB/Y8/aPvw1YH9lA+QcDMaAvOG76MwAAAABJRU5ErkJggg=="></a></td>	`;
 }
 
+function t99_showPics() {
+	let items = getItems(20, 'life'); //getItems(['bee', 'cockroach']);
+	items[0]=getItem('seedling');
 
+	let options = {
+		label: item => item.info.S.toUpperCase(), //func on item or language or null/false for NO LABEL!
+		labelStyles: { float: 'left' },//, 'font-variant': 'small-caps' },
+		picStyles: { fz: 80, rounding: '50%', bg: 'white', padding: 12, matop: 20 },
+		outerStyles: { w: 150, align: 'center', bg: 'dimgray', fg: 'white', display: 'inline-block',// box: true, 
+		border: '4px solid silver', rounding: 10, padding: 6, margin: 4 },
+	};
 
-function t99() {
-	let keys = ['bee', 'cockroach'];
+	let d = showItems(items, dTable, options);
 
-	showPictureGrid(keys, dTable);
+	console.log(items[4]);
+	console.log(d);
 
+	setTimeout(() => items.map(x => x.rect = getRect(x.div)), 200);//erst jetzt ist es richtig!!!
 }

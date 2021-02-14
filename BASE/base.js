@@ -250,7 +250,7 @@ function jsonToYaml(o) {
 //#endregion
 
 //#region init 
-function initLive() { Live = {};Daat={}; }
+function initLive() { Live = {}; Daat = {}; }
 
 //#endregion
 
@@ -274,7 +274,7 @@ function getKeySets() {
 
 //#endregion
 
-//#region loading DB, yaml,json,text
+//#region loading DB, yaml, json, text
 async function dbInit(appName, dir = '../DATA/') {
 	let users = await route_path_yaml_dict(dir + '_users.yaml');
 	let settings = await route_path_yaml_dict(dir + '_settings.yaml');
@@ -369,7 +369,7 @@ function getRect(elem, relto) {
 	if (isString(elem)) elem = document.getElementById(elem);
 
 	let res = elem.getBoundingClientRect();
-	console.log(res)
+	//console.log(res)
 	if (isdef(relto)) {
 		let b2 = relto.getBoundingClientRect();
 		res = {
@@ -383,7 +383,7 @@ function getRect(elem, relto) {
 			height: b1.height
 		};
 	}
-	return {x:Math.round(res.left),y:Math.round(res.top),w:Math.round(res.width),h:Math.round(res.height)};
+	return { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
 }
 function getSizeWithStyles(text, styles) {
 	var d = document.createElement("div");
@@ -400,18 +400,18 @@ function getSizeWithStyles(text, styles) {
 	d.parentNode.removeChild(d);
 	return { w: Math.round(width), h: Math.round(height) };
 }
-function toBase10(s,base=16){
+function toBase10(s, base = 16) {
 	//console.log(s);
-	let s1=reverseString(s.toLowerCase());
+	let s1 = reverseString(s.toLowerCase());
 	//console.log(s1);
-	let res=0;
-	let mult=1;
-	for(let i=0;i<s1.length;i++){
-		let l=s1[i];
-		let hexarr=['a','b','c','d','e','f'];
-		let n= isNumber(l)?Number(l):10+hexarr.indexOf(l);
-		res+=mult*n;
-		mult*=base;
+	let res = 0;
+	let mult = 1;
+	for (let i = 0; i < s1.length; i++) {
+		let l = s1[i];
+		let hexarr = ['a', 'b', 'c', 'd', 'e', 'f'];
+		let n = isNumber(l) ? Number(l) : 10 + hexarr.indexOf(l);
+		res += mult * n;
+		mult *= base;
 	}
 	return res;
 }
@@ -607,6 +607,17 @@ function randomNumber(min = 0, max = 100) {
 //#endregion
 
 //#region string functions
+function firstNumber(s) {
+	// returns first number in string s
+	if (s) {
+		let m = s.match(/-?\d+/);
+		if (m) {
+			let sh = m.shift();
+			if (sh) { return Number(sh); }
+		}
+	}
+	return null;
+}
 function replaceAll(str, sSub, sBy) {
 	let regex = new RegExp(sSub, 'g');
 	return str.replace(regex, sBy);
