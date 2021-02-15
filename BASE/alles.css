@@ -146,16 +146,16 @@
 	/* --scaleStart: 0.3; */
 	/* position: absolute; */
 	/* left: var(--xStart); */
-	transform: translate(var(--xStart),var(--yStart));
+	transform: translate(var(--xStart), var(--yStart));
 	/* animation: breath2 2s alternate infinite ease-in-out; */
 	animation: breath2 2s forwards ease-in-out;
 }
 @keyframes breath2 {
 	0% {
-		transform: translate(var(--xStart),var(--yStart));
+		transform: translate(var(--xStart), var(--yStart));
 	}
 	100% {
-		transform: translate(var(--xEnd),var(--yEnd));
+		transform: translate(var(--xEnd), var(--yEnd));
 	}
 }
 
@@ -219,7 +219,7 @@ body {
 }
 
 /* #endregion animations */
-#dAux{
+#dAux {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -227,139 +227,137 @@ body {
 	min-width: 100%;
 	padding: 20px;
 	box-sizing: border-box;
-	background:powderBlue;
+	background: powderBlue;
 }
-#dButtons{
+#dButtons {
 	position: fixed;
 	display: inline-block;
 	bottom: 20px;
 	right: 40px;
 }
-#dButtons div{
-	cursor:pointer;
+#dButtons div {
+	cursor: pointer;
 	display: inline-block;
 	padding: 10px;
 }
 /* #region fieldset */
-.fsc{
-	height:290px;
+.fsc {
+	height: 290px;
 	display: flex;
 	justify-content: center;
 }
 legend {
-	border:1px solid green;
-	color:green;
-	font-size:75%;
-	margin-left:16px;
-	text-align:left;
-}
-fieldset{
-	font-size:90%;
-	border: none;
-	margin-top:2%;
-	height:96%;
-	min-width:130px;
-	float:left;
-	position:relative;
+	border: 1px solid green;
+	color: green;
+	font-size: 75%;
+	margin-left: 16px;
 	text-align: left;
-	color:dimgray;
+}
+fieldset {
+	font-size: 90%;
+	border: none;
+	margin-top: 2%;
+	height: 96%;
+	min-width: 130px;
+	float: left;
+	position: relative;
+	text-align: left;
+	color: dimgray;
 	/* background-color: blue; */
 }
-fieldset div{
-	margin:10px 16px;
+fieldset div {
+	margin: 10px 16px;
 }
 /* #endregion fieldset */
 
 /* #region radio */
 .radio {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border-radius: 50%;
+	width: 16px;
+	height: 16px;
 	border: 1px solid #999;
 	color: silver;
-  transition: 0.2s all linear;
-  margin: 5px;
+	transition: 0.2s all linear;
+	margin: 5px;
 	padding: 0px;
-  position: relative;
+	position: relative;
 	top: 7px;
 	left: 0px;
 }
 .radio:focus {
-  outline-width: 0px;
-  outline-style: solid;
-	outline-color: transparent; 
+	outline-width: 0px;
+	outline-style: solid;
+	outline-color: transparent;
 	/* outline-color: Highlight; */
 }
 .radio:checked {
-  border: 8px solid green;
+	border: 8px solid green;
 }
 /* #endregion radio */
 
-.input{
-	width:70px;
+.input {
+	width: 70px;
 }
-.options{
-	width:77px;
+.options {
+	width: 77px;
 }
-#dGameSettings input{
-	width:70px;
+#dGameSettings input {
+	width: 70px;
 }
-#dGameSettings select{
-	width:77px;
+#dGameSettings select {
+	width: 77px;
 }
-
 
 /* #region checkbox */
 .checkbox {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  /* border-radius: 50%; */
-  width: 76px;
-  height: 18px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	/* border-radius: 50%; */
+	width: 76px;
+	height: 18px;
 	border: 1px solid #999;
-	color:  #999;
+	color: #999;
 	text-align: center;
-  transition: 0.2s all linear;
-  margin: 0px;
+	transition: 0.2s all linear;
+	margin: 0px;
 	padding: 0px;
-  position: relative;
+	position: relative;
 	top: -2px;
 	left: 0px;
 }
 .checkbox:focus {
-  outline-width: 0px;
-  outline-style: solid;
-	outline-color: transparent; 
+	outline-width: 0px;
+	outline-style: solid;
+	outline-color: transparent;
 	/* outline-color: Highlight; */
 }
 .checkbox:checked {
 	color: black;
 	background-color: white;
 	border: 1px solid #00000080;
-
 }
-.checkbox::before{
-	content: "no";
+.checkbox::before {
+	content: 'no';
 }
 .checkbox:checked::before {
-  content: "yes";
+	content: 'yes';
 }
 /* #endregion checkbox */
 .dragelem {
-	position:fixed;
+	position: fixed;
 	z-index: 100;
-	cursor:pointer;
-  color: rgb(60, 0, 248);  /* change [input cursor color] by this*/
-  text-shadow: 0px 0px 0px #D60B0B; /* change [input font] by this*/
+	cursor: pointer;
+	color: rgb(60, 0, 248); /* change [input cursor color] by this*/
+	text-shadow: 0px 0px 0px #d60b0b; /* change [input font] by this*/
 	-webkit-text-fill-color: transparent;
 	border: 2px solid pink;
 }
 .dropzone {
-	display:inline-block;
+	display: inline-block;
 	background: green;
 	color: white;
 	width: 50px;
@@ -369,92 +367,91 @@ fieldset div{
 	cursor: pointer;
 }
 .draggable {
-	display:inline-block;
+	display: inline-block;
 	background: white;
 	width: 25px;
 	height: 25px;
-	font-size:20px;
+	font-size: 20px;
 	text-align: center;
 	cursor: pointer;
-	margin:12px;
+	margin: 12px;
 }
 
-html,body,#md,#rightSide{
+html,
+body,
+#md,
+#rightSide {
 	height: 100%;
-	padding:0;
-	margin:0;
+	padding: 0;
+	margin: 0;
 	font: 20px Arial;
 	color: white;
-	
 }
-div{
+div {
 	user-select: none;
 }
 
-.noCursor{
+.noCursor {
 	cursor: none;
 }
 
-#dLevelComplete{
-	position:fixed;
+#dLevelComplete {
+	position: fixed;
 	text-align: center;
-	background-color: #000000BF;
-	font-size:80px;
+	background-color: #000000bf;
+	font-size: 80px;
 	top: 32%;
 	padding: 80px;
 	border-radius: 20px;
 	max-height: 40%;
 	width: 80%;
-
 }
-.feedbackMarker{
-	position:fixed;
-	font-size:40px;
+.feedbackMarker {
+	position: fixed;
+	font-size: 40px;
 }
-#dCheckMark,#dX{
-	position:fixed;
-	font-size:40px;
+#dCheckMark,
+#dX {
+	position: fixed;
+	font-size: 40px;
 }
-#md,#rightSide{
-	display:flex;
+#md,
+#rightSide {
+	display: flex;
 	/* overflow:hidden; */
 }
-#sidebar{
+#sidebar {
 	height: 100%;
 	flex: 0 0 auto;
-	background-color:#ffffff80;
-	box-sizing:border-box;
+	background-color: #ffffff80;
+	box-sizing: border-box;
 	padding: 12px;
 	text-align: center;
 }
-#rightSide{
+#rightSide {
 	flex-direction: column;
 	flex-grow: 10;
 	/* background-color: orange; */
 }
 
-
-
-#dSpeaker{
+#dSpeaker {
 	position: fixed;
 	display: inline-block;
 	top: 10px;
 	right: 10px;
-	cursor:pointer;
+	cursor: pointer;
 	/* background:blue; */
-
 }
-#dRecord{
-	background-color: #FF413680;
-	border-radius:50%;
+#dRecord {
+	background-color: #ff413680;
+	border-radius: 50%;
 	position: fixed;
 	top: 400px;
 	left: 50%;
 	font-size: 50px;
 	padding: 5px;
-	
 }
-#table{
+#table {
 	flex: 0 0 auto;
 	/* height: -moz-calc(100% - (20px + 30px));
 	height: -webkit-calc(100% - (20px + 30px));
@@ -462,61 +459,61 @@ div{
 	/*height: calc(100% - 60px); /* needs space on either side of operator!!!!! */
 	/* background-color: green; */
 	padding: 10px;
-	box-sizing:border-box;
+	box-sizing: border-box;
 }
-#divInput{
+#divInput {
 	display: flex;
 	/* line-height: 30px; */
 }
 #spUsername {
-	outline:none;
-	border:none;
-	padding:2px 4px;
+	outline: none;
+	border: none;
+	padding: 2px 4px;
 	min-width: 100px;
 }
 #inputAdded {
 	margin: 0px 0px 0px 10px;
 	padding: 0 4px;
 	min-width: 100px;
-	height:26px;
-	line-height:26px;
-	outline:none;
+	height: 26px;
+	line-height: 26px;
+	outline: none;
 	background-color: white;
 	border: 1px solid dimgray;
 	color: black;
 }
-#status{
+#status {
 	height: 30px;
 	padding: 2px 10px;
 	/* background-color: skyblue; */
 }
-#bAdd,#bAddSound{
-	padding:2px 10px;
+#bAdd,
+#bAddSound {
+	padding: 2px 10px;
 	border-radius: 4px;
 	margin: 3px 0px 3px 6px;
 	/* height: 25px; */
 }
-#statusMessage{	
-	margin-top:2px;
+#statusMessage {
+	margin-top: 2px;
 	float: right;
 	/* height:25px; */
 	/* text-align: right; */
 	/* padding-right: 10px; */
 }
 
-.selectedGroupButton{
+.selectedGroupButton {
 	background-color: skyblue;
 }
 
 /* #region buttonClass */
-.buttonClass{
-  border-radius: 2px;
+.buttonClass {
+	border-radius: 2px;
 	margin: 2px;
-	padding:0px;
-  border: none;
+	padding: 0px;
+	border: none;
 	/* background-color: #79d7e4; */
-  outline: none;
-	
+	outline: none;
 }
 .buttonClass:hover {
 	background-color: #79d7e4;
@@ -524,40 +521,40 @@ div{
 .buttonClass:active {
 	background-color: orange;
 }
-.buttonPlus{
+.buttonPlus {
 	padding: 4px 12px;
 	margin: 0px 14px;
 	font-size: 20px;
 }
-.hMinus60{
-	height: calc( 100vh - 60px );
+.hMinus60 {
+	height: calc(100vh - 60px);
 }
-.hPercentMinus60{
-	height: calc( 100% - 60px );
+.hPercentMinus60 {
+	height: calc(100% - 60px);
 	margin-top: 16px;
 }
-.whMinus60{
+.whMinus60 {
 	/* min-height: 100%;  */
-	min-height: calc( 100% - 25px );
-	min-width: calc( 100% - 50px );
+	min-height: calc(100% - 25px);
+	min-width: calc(100% - 50px);
 	/* margin: 16px 16px 0px 16px; */
 	/* margin: 16px; */
 }
 /* #endregion */
 
-#lineTopOuter{
+#lineTopOuter {
 	min-width: 100%;
 	/* //background-color: blue; */
 	padding: 4px 12px;
 	box-sizing: border-box;
 }
-#lineTop{
+#lineTop {
 	/* display: flex; */
 	/* justify-content: space-between; */
 	font-size: 20pt;
 	position: relative;
 }
-#lineTopLeft{
+#lineTopLeft {
 	display: inline-block;
 	/* float: left; */
 	position: absolute;
@@ -567,7 +564,7 @@ div{
 	text-align: left;
 	/* background-color: aqua; */
 }
-#lineTopRight{
+#lineTopRight {
 	/* float: right; */
 	display: inline-block;
 	position: absolute;
@@ -581,26 +578,26 @@ div{
 	padding: 10px; */
 	/* background-color: rgb(9, 51, 51); */
 }
-#lineTopMiddle{
+#lineTopMiddle {
 	width: 100%;
 	/* font-size: 60; */
 	text-align: center;
 }
 
-#lineTitleOuter{
+#lineTitleOuter {
 	min-width: 100%;
 	/* //background-color: blue; */
 	padding: 4px 12px;
 	box-sizing: border-box;
 }
-#lineTitle{
+#lineTitle {
 	/* display: flex; */
 	/* justify-content: space-between; */
 	font-size: 20pt;
 	position: relative;
 	margin-top: 40px;
 }
-#lineTitleLeft{
+#lineTitleLeft {
 	display: inline-block;
 	/* float: left; */
 	position: absolute;
@@ -609,7 +606,7 @@ div{
 	min-width: 20px;
 	/* background-color: aqua; */
 }
-#lineTitleRight{
+#lineTitleRight {
 	/* float: right; */
 	display: inline-block;
 	position: absolute;
@@ -619,138 +616,195 @@ div{
 	min-width: 20px;
 	/* background-color: rgb(9, 51, 51); */
 }
-#lineTitleMiddle{
+#lineTitleMiddle {
 	width: 100%;
 	/* font-size: 60; */
 	text-align: center;
 }
 
 /* #region score */
-#scoreDiv{
+#scoreDiv {
 	/* font-size: 22pt; */
 	text-align: center;
 	margin: 4px 0px 12px 0px;
 	cursor: default;
 }
-#scoreSpan{
+#scoreSpan {
 	/* margin-left:10px;
 	background-color: white;
 	color: black; */
-	padding: 0px 12px; 
+	padding: 0px 12px;
 	border-radius: 8px;
 }
 /* #endregion */
 
 /* #region start button */
-#divControls{
-	position:fixed;
-	top:50px;
+#divControls {
+	position: fixed;
+	top: 50px;
 	left: 100px;
 }
-#divControls > div{
-  border: none;
-  outline: none;
+#divControls > div {
+	border: none;
+	outline: none;
 	border-radius: 8px;
 	padding: 4px 16px;
 	font-size: 32px;
 	background-color: dimgrey;
 	margin: 4px;
 }
-#divControls > div:hover{
+#divControls > div:hover {
 	background-color: #79d7e4;
 }
-#divControls > div:active{
+#divControls > div:active {
 	background-color: red;
 }
-#freezer,#dPassPlay,#dAddons{
-	background-color: #000000C0;
-	position:fixed;
-	top:0px;
-	left:0px;
-	width:100%;
-	height:100%;
-	font-size:100pt;
-
+#freezer,
+#dPassPlay,
+#dAddons {
+	background-color: #000000c0;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	font-size: 100pt;
 }
-#freezer2{
+#freezer2 {
 	background-color: indigo;
-	position:fixed;
-	top:0px;
-	left:0px;
-	width:100%;
-	height:100%;
-	font-size:60pt;
-
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	font-size: 60pt;
 }
-#freezer2 >div{
+#freezer2 > div {
 	text-align: center;
 }
 /* #endregion */
 
 /* #region right side of lineTitle */
 
-
 /* #endregion */
 
-#lineTableOuter{
+#lineTableOuter {
 	min-width: 100%;
 	/* background-color: red; */
 	padding: 4px 12px;
 	box-sizing: border-box;
 }
-#lineTable,#dExpContent{
+#lineTable,
+#dExpContent {
 	display: flex;
 	box-sizing: border-box;
 	justify-content: space-between;
 }
-#lineTableLeft{
+#lineTableLeft {
 	display: inline-block;
 	min-width: 20px;
 	/* background-color: yellow; */
 }
-#lineTableMiddle,#dExpContent{
+#lineTableMiddle,
+#dExpContent {
 	position: relative;
 	text-align: center;
 	min-width: 20px;
 	/* background-color:orange; */
 }
-#lineTableRight{
+#lineTableRight {
 	display: inline-block;
 	min-width: 20px;
 	/* background-color:green; */
 }
 
-
-
-
 /* #region animations */
-.komisch{animation: kkomisch 1200ms ease-in-out;}
-@keyframes kkomisch{ 
-	0%{ transform: scale(1); background-color: yellow; } 
-	50%{ transform: scale(1.5); background-color: green; }
-	100%{ transform: scale(1); background-color: yellow; }
+.komisch {
+	animation: kkomisch 1200ms ease-in-out;
 }
-.pulse{animation: pulse_animation 800ms ease-in-out 0s 6 alternate;}
-.transPos{	transition: left 500 ease-in-out;}
-.transColor{	transition: color 500 ease-in-out;}
-.aniGrow800{ animation: growcp5 800ms ease-in-out 0s 1 forwards; }
-.aniGrow2{ animation: growcp5 800ms ease-in-out; }
-.aniShrink800{ animation: shrinkcp5 800ms ease-in-out 0s 1 forwards; }
-@keyframes growcp5{ 
-	0%{ transform: scale(1); background-color: yellow;  } 
-	100%{ transform: scale(1.25); background-color: red; }
+@keyframes kkomisch {
+	0% {
+		transform: scale(1);
+		background-color: yellow;
+	}
+	50% {
+		transform: scale(1.5);
+		background-color: green;
+	}
+	100% {
+		transform: scale(1);
+		background-color: yellow;
+	}
 }
-@keyframes shrinkcp5{ 
-	0%{ transform: scale(1.5); background-color: red; }
-	100%{ transform: scale(1); background-color: yellow;  } 
+.pulse {
+	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;
+}
+.transPos {
+	transition: left 500 ease-in-out;
+}
+.transColor {
+	transition: color 500 ease-in-out;
+}
+.aniGrow800 {
+	animation: growcp5 800ms ease-in-out 0s 1 forwards;
+}
+.aniGrow2 {
+	animation: growcp5 800ms ease-in-out;
+}
+.aniShrink800 {
+	animation: shrinkcp5 800ms ease-in-out 0s 1 forwards;
+}
+@keyframes growcp5 {
+	0% {
+		transform: scale(1);
+		background-color: yellow;
+	}
+	100% {
+		transform: scale(1.25);
+		background-color: red;
+	}
+}
+@keyframes shrinkcp5 {
+	0% {
+		transform: scale(1.5);
+		background-color: red;
+	}
+	100% {
+		transform: scale(1);
+		background-color: yellow;
+	}
 }
 
-.pulse800green {	color: green;	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;	transition: color 500 ease-in-out;}
-.pulse800blue {	color: blue;	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;	transition: color 500 ease-in-out;}
-.pulse800violet {	color: violet;	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;	transition: color 500 ease-in-out;}
-.pulse800orange {	color: orange;	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;	transition: color 500 ease-in-out;}
-.pulse800skyblue {	color: skyblue;	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;	transition: color 500 ease-in-out;}
-.pulse800greenyellow {	color: greenyellow;	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;	transition: color 500 ease-in-out;}
+.pulse800green {
+	color: green;
+	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;
+	transition: color 500 ease-in-out;
+}
+.pulse800blue {
+	color: blue;
+	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;
+	transition: color 500 ease-in-out;
+}
+.pulse800violet {
+	color: violet;
+	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;
+	transition: color 500 ease-in-out;
+}
+.pulse800orange {
+	color: orange;
+	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;
+	transition: color 500 ease-in-out;
+}
+.pulse800skyblue {
+	color: skyblue;
+	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;
+	transition: color 500 ease-in-out;
+}
+.pulse800greenyellow {
+	color: greenyellow;
+	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;
+	transition: color 500 ease-in-out;
+}
 .pulse800yellow {
 	animation: pulse_animation 800ms ease-in-out 0s 6 alternate;
 	color: yellow;
@@ -774,189 +828,358 @@ div{
 	/* animation-iteration-count: 3;
 	animation-timing-function: cubic-bezier(); */
 }
-.onPulse1 { 
-	animation: pulse_small .25s ease-in-out .25s 2 alternate;
+.onPulse1 {
+	animation: pulse_small 0.25s ease-in-out 0.25s 2 alternate;
 	/* animation: stretch 3s ease-in-out 0s 1 reverse; */
 	/* animation: stretch 3s ease-in-out 0s 1 reverse, pulse 3s ease-out; */
 }
-.onPulse2 { animation: pulse_small .5s ease-in-out .2s 2 alternate;}
-
-.pulseBg{ color:white; animation: pulseBackground2TA .8s ease-in-out 1.5s 3;}
-@keyframes pulseColor{ 0%{ color:  black; } 100%{ color: transparent; }} 
-@keyframes pulseBackgroundTA{ 0%{ background-color: transparent; } 50%{ background-color: #FF413680; }100%{ background-color: transparent; }} 
-@keyframes pulseBackground2TA{ 0%{ background-color:  #FF413680; } 50%{ background-color: transparent; }100%{ background-color:  #FF413680; }} 
-@keyframes pulseBackgroundT{ 0%{ background-color: transparent; } 100%{ background-color: #FF4136; }} 
-@keyframes pulseBackground{ 0%{ background-color: #001F3F; } 100%{ background-color: #FF4136; }} 
-@keyframes pulseBackground1{ 0%, 100%{ background-color: yellow; } 50%{ background-color: red; }}
-@keyframes stretch{ 
-	0%{ transform: scale(.8); background-color: red; border-radius: 100%; } 
-	50%{ background-color: orange; } 
-	100%{ transform: scale(1.5); background-color: yellow; }
+.onPulse2 {
+	animation: pulse_small 0.5s ease-in-out 0.2s 2 alternate;
 }
 
-@keyframes pulse_small {	0% { transform: scale(1); }	100% { transform: scale(1.2); }}
+.pulseBg {
+	color: white;
+	animation: pulseBackground2TA 0.8s ease-in-out 1.5s 3;
+}
+@keyframes pulseColor {
+	0% {
+		color: black;
+	}
+	100% {
+		color: transparent;
+	}
+}
+@keyframes pulseBackgroundTA {
+	0% {
+		background-color: transparent;
+	}
+	50% {
+		background-color: #ff413680;
+	}
+	100% {
+		background-color: transparent;
+	}
+}
+@keyframes pulseBackground2TA {
+	0% {
+		background-color: #ff413680;
+	}
+	50% {
+		background-color: transparent;
+	}
+	100% {
+		background-color: #ff413680;
+	}
+}
+@keyframes pulseBackgroundT {
+	0% {
+		background-color: transparent;
+	}
+	100% {
+		background-color: #ff4136;
+	}
+}
+@keyframes pulseBackground {
+	0% {
+		background-color: #001f3f;
+	}
+	100% {
+		background-color: #ff4136;
+	}
+}
+@keyframes pulseBackground1 {
+	0%,
+	100% {
+		background-color: yellow;
+	}
+	50% {
+		background-color: red;
+	}
+}
+@keyframes stretch {
+	0% {
+		transform: scale(0.8);
+		background-color: red;
+		border-radius: 100%;
+	}
+	50% {
+		background-color: orange;
+	}
+	100% {
+		transform: scale(1.5);
+		background-color: yellow;
+	}
+}
+
+@keyframes pulse_small {
+	0% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(1.2);
+	}
+}
 
 @keyframes pulse_animation {
-	0% { transform: scale(1); }
+	0% {
+		transform: scale(1);
+	}
 	/* 30% { transform: scale(1); }
 	40% { transform: scale(1.08); } */
-	100% { transform: scale(1.5); }
+	100% {
+		transform: scale(1.5);
+	}
 	/* 60% { transform: scale(1); }
 	70% { transform: scale(1.05); }
 	80% { transform: scale(1); }
 	100% { transform: scale(1); } */
 }
 
-.transopaOff{	opacity:0;transition: opacity 5s ease-in-out;}
-.transopaOn{	opacity:1;transition: opacity .5s ease-in-out;}
-.transitionOpacity{	transition: opacity 5s ease-in-out;}
-/* .aniFadeInOut{ animation: fadeinout 5s ease-in-out 0s 1;} */
-.aniSlowlyDisappear{ animation: fadeinout 5s ease-out 0s 1 forwards;}
-.aniFastDisappear{ animation: fadeOut .5s ease-out 0s 1 forwards;}
-.aniSlowlyAppear{ animation: example 3s ease-in-out 0s 1 forwards;}
-
-.aniFadeOut{ animation: example .5s ease-in-out 0s 1 reverse;}
-.aniFadeIn{ animation: example .5s ease-in-out;}
-.aniFadeOutIn{ animation: fadeoutin 2s ease-in-out;}
-/* example 4s ease-in-out 2s infinite reverse forwards */
-.aniFadeInOut{ animation: fadeinout 1.5s ease-in-out 0s 1 forwards;}
-.aniRubberBand{animation: rubberBand 1.2s ease-in-out;}
-@keyframes example { from { opacity: 0; }  to { opacity: 1; }}
-@keyframes fadeOut { from { opacity: 1; }  to { opacity: 0; }}
-@keyframes fadeoutin { 
-	from { opacity: 1; }  
-	50% { opacity: 0;  }
-	to { opacity: 1; }
+.transopaOff {
+	opacity: 0;
+	transition: opacity 5s ease-in-out;
 }
-@keyframes fadeinout { 
-	from { opacity: 0; }  
-	10% { opacity: 1;  }
-	to { opacity: 0; }
+.transopaOn {
+	opacity: 1;
+	transition: opacity 0.5s ease-in-out;
+}
+.transitionOpacity {
+	transition: opacity 5s ease-in-out;
+}
+/* .aniFadeInOut{ animation: fadeinout 5s ease-in-out 0s 1;} */
+.aniSlowlyDisappear {
+	animation: fadeinout 5s ease-out 0s 1 forwards;
+}
+.aniFastDisappear {
+	animation: fadeOut 0.5s ease-out 0s 1 forwards;
+}
+.aniSlowlyAppear {
+	animation: example 3s ease-in-out 0s 1 forwards;
+}
+
+.aniFadeOut {
+	animation: example 0.5s ease-in-out 0s 1 reverse;
+}
+.aniFadeIn {
+	animation: example 0.5s ease-in-out;
+}
+.aniFadeOutIn {
+	animation: fadeoutin 2s ease-in-out;
+}
+/* example 4s ease-in-out 2s infinite reverse forwards */
+.aniFadeInOut {
+	animation: fadeinout 1.5s ease-in-out 0s 1 forwards;
+}
+.aniRubberBand {
+	animation: rubberBand 1.2s ease-in-out;
+}
+@keyframes example {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+@keyframes fadeoutin {
+	from {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes fadeinout {
+	from {
+		opacity: 0;
+	}
+	10% {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
 }
 @keyframes rubberBand {
-  from {
+	from {
 		transform: scale3d(1, 1, 1);
 		opacity: 0;
-  }
+	}
 
-  10% {
-    transform: scale3d(1.5, 0.75, 1);
+	10% {
+		transform: scale3d(1.5, 0.75, 1);
 		opacity: 0.25;
-  }
+	}
 
-  40% {
-    transform: scale3d(0.5, 1.25, 1);
+	40% {
+		transform: scale3d(0.5, 1.25, 1);
 		/* opacity: 0.5; */
-  }
-  50% {
-    transform: scale3d(1.3, 0.85, 1);
+	}
+	50% {
+		transform: scale3d(1.3, 0.85, 1);
 		/* opacity: 0.75; */
-  }
+	}
 
-  60% {
-    transform: scale3d(.85, 1.05, 1);
+	60% {
+		transform: scale3d(0.85, 1.05, 1);
 		/* opacity: 1; */
-  }
+	}
 
-  65% {
-    transform: scale3d(1.15, 0.9, 1);
-  }
+	65% {
+		transform: scale3d(1.15, 0.9, 1);
+	}
 
-  72% {
-    transform: scale3d(.95, 1.05, 1);
-  }
+	72% {
+		transform: scale3d(0.95, 1.05, 1);
+	}
 
-  80% {
-    transform: scale3d(1.05, .95, 1);
-  }
-  85% {
-    transform: scale3d(.95, 1.05, 1);
-  }
+	80% {
+		transform: scale3d(1.05, 0.95, 1);
+	}
+	85% {
+		transform: scale3d(0.95, 1.05, 1);
+	}
 
-  90% {
-    transform: scale3d(1.05, .95, 1);
-  }
+	90% {
+		transform: scale3d(1.05, 0.95, 1);
+	}
 
-  to {
-    transform: scale3d(1, 1, 1);
-  }
+	to {
+		transform: scale3d(1, 1, 1);
+	}
 }
 
 @keyframes rubberBand1 {
-  from {
-    transform: scale3d(1, 1, 1);
-  }
+	from {
+		transform: scale3d(1, 1, 1);
+	}
 
-  30% {
-    transform: scale3d(1.25, 0.75, 1);
-  }
+	30% {
+		transform: scale3d(1.25, 0.75, 1);
+	}
 
-  40% {
-    transform: scale3d(0.75, 1.25, 1);
-  }
+	40% {
+		transform: scale3d(0.75, 1.25, 1);
+	}
 
-  50% {
-    transform: scale3d(1.15, 0.85, 1);
-  }
+	50% {
+		transform: scale3d(1.15, 0.85, 1);
+	}
 
-  65% {
-    transform: scale3d(.95, 1.05, 1);
-  }
+	65% {
+		transform: scale3d(0.95, 1.05, 1);
+	}
 
-  75% {
-    transform: scale3d(1.05, .95, 1);
-  }
+	75% {
+		transform: scale3d(1.05, 0.95, 1);
+	}
 
-  to {
-    transform: scale3d(1, 1, 1);
-  }
+	to {
+		transform: scale3d(1, 1, 1);
+	}
 }
 
 .rubberBand {
-  -webkit-animation-name: rubberBand;
-  animation-name: rubberBand;
+	-webkit-animation-name: rubberBand;
+	animation-name: rubberBand;
 }
 
-
-.blink{ animation: blinking .5s ease-in-out infinite alternate;}
-@keyframes blinking { from { opacity: .1; }  to { opacity: 1; }}
+.blink {
+	animation: blinking 0.5s ease-in-out infinite alternate;
+}
+@keyframes blinking {
+	from {
+		opacity: 0.1;
+	}
+	to {
+		opacity: 1;
+	}
+}
 
 .phone {
-  animation: vibratePhone 2s cubic-bezier(.36, .07, .19, .97) 2s infinite;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  perspective: 300px;
-  /* -webkit-animation: vibrate 2s cubic-bezier(.36, .07, .19, .97) infinite;
+	animation: vibratePhone 2s cubic-bezier(0.36, 0.07, 0.19, 0.97) 2s infinite;
+	transform: translate3d(0, 0, 0);
+	backface-visibility: hidden;
+	perspective: 300px;
+	/* -webkit-animation: vibrate 2s cubic-bezier(.36, .07, .19, .97) infinite;
   -webkit-transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
   -webkit-perspective: 300px; */
 }
 @keyframes vibratePhone {
-  0%, 2%, 4%, 6%, 8%, 10%, 12%, 14%, 16%, 18% {
-            transform: translate3d(-2px, 0, 0);
-  }
-  1%, 3%, 5%, 7%, 9%, 11%, 13%, 15%, 17%, 19% {
-            transform: translate3d(2px, 0, 0);
-  }
-  20%, 100% {
-            transform: translate3d(0, 0, 0);
-  }
+	0%,
+	2%,
+	4%,
+	6%,
+	8%,
+	10%,
+	12%,
+	14%,
+	16%,
+	18% {
+		transform: translate3d(-2px, 0, 0);
+	}
+	1%,
+	3%,
+	5%,
+	7%,
+	9%,
+	11%,
+	13%,
+	15%,
+	17%,
+	19% {
+		transform: translate3d(2px, 0, 0);
+	}
+	20%,
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
 }
 
-
 @keyframes vibrate1 {
-  0%, 2%, 4%, 6%, 8%, 10%, 12%, 14%, 16%, 18% {
-    -webkit-transform: translate3d(-1px, 0, 0);
-            transform: translate3d(-1px, 0, 0);
-  }
-  1%, 3%, 5%, 7%, 9%, 11%, 13%, 15%, 17%, 19% {
-    -webkit-transform: translate3d(1px, 0, 0);
-            transform: translate3d(1px, 0, 0);
-  }
-  20%, 100% {
-    -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-  }
+	0%,
+	2%,
+	4%,
+	6%,
+	8%,
+	10%,
+	12%,
+	14%,
+	16%,
+	18% {
+		-webkit-transform: translate3d(-1px, 0, 0);
+		transform: translate3d(-1px, 0, 0);
+	}
+	1%,
+	3%,
+	5%,
+	7%,
+	9%,
+	11%,
+	13%,
+	15%,
+	17%,
+	19% {
+		-webkit-transform: translate3d(1px, 0, 0);
+		transform: translate3d(1px, 0, 0);
+	}
+	20%,
+	100% {
+		-webkit-transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0);
+	}
 }
 /* body {
   -webkit-animation: background 5s cubic-bezier(1,0,0,1) infinite;
@@ -975,29 +1198,12 @@ div{
   100% { background-color: #f99; }
 } */
 
-	/* #endregion animations */
+/* #endregion animations */
 
 .wdiv:active:hover {
-  color: white;
-  background: rebeccapurple;
-  /* animation: active 0s;
+	color: white;
+	background: rebeccapurple;
+	/* animation: active 0s;
   -moz-animation: active 0s;
   -webkit-animation: active 0s; */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

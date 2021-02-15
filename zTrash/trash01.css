@@ -1,0 +1,40 @@
+/* #region table */
+#dMain{
+	flex: 0 0 auto;
+	padding: 10px;
+	box-sizing:border-box;
+}
+
+
+#lineTableOuter {
+	min-width: 100%;
+	/* background-color: red; */
+	padding: 4px 12px;
+	box-sizing: border-box;
+}
+#lineTable,
+#dExpContent {
+	display: flex;
+	box-sizing: border-box;
+	justify-content: space-between;
+}
+#lineTableLeft {
+	display: inline-block;
+	min-width: 20px;
+	/* background-color: yellow; */
+}
+#lineTableMiddle,
+#dExpContent {
+	position: relative;
+	text-align: center;
+	min-width: 20px;
+	/* background-color:orange; */
+}
+#lineTableRight {
+	display: inline-block;
+	min-width: 20px;
+	/* background-color:green; */
+}
+
+
+/* #endregion */

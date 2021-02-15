@@ -1,3 +1,4 @@
+
 .linebreak {
 	flex-basis: 100%;
 	height: 0px;
@@ -9,3 +10,54 @@
 	justify-content: center;
 	align-content: flex-start; /* das ist bei den meisten nicht so gewesen! */
 }
+
+html,body,#rightSide {
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	font: 20px Arial;
+	/* background: dimgray; */
+	/* color: white; */
+}
+div {
+	user-select: none;
+}
+
+/* #region left middle right line */
+.lineOuter {
+	min-width: 100%;
+	padding: 4px 12px;
+	box-sizing: border-box;
+}
+.lineOuter >div {
+	position: relative;
+}
+.lineLeft {
+	display: inline-block;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	min-width: 20px;
+}
+.lineMiddle {
+	width: 100%;
+	text-align: center;
+}
+.lineRight {
+	display: inline-block;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	min-width: 20px;
+}
+/* #endregion */
+
+
+
+
+
+
+
+
+
+

@@ -4,6 +4,7 @@ function mBy(id) { return document.getElementById(id); }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag) { return document.createElement(tag); }
 function mDiv(dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); return d; }
+function mGap(d, gap) { mText('_', d, { fg: 'transparent', h: gap }); }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
@@ -43,7 +44,7 @@ function mStyleX(elem, styles, unit = 'px') {
 	if (isdef(styles.vpadding) && isdef(styles.hpadding)) {
 
 		styles.padding = styles.vpadding + unit + ' ' + styles.hpadding + unit;
-		console.log('::::::::::::::', styles.vpadding, styles.hpadding)
+		//console.log('::::::::::::::', styles.vpadding, styles.hpadding)
 	}
 	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
 	//console.log(styles.bg,styles.fg);
@@ -117,6 +118,135 @@ function mText(text, dParent, styles, classes) {
 //#endregion
 
 //#region color
+function anyColorToStandardString(cAny, a, allowHsl = false) {
+	//if allowHsl is false: only return rgb,rgba,or hex7,hex9 string! >pBSC algo!!!
+	//if a is undefined, leaves a as it is in cAny, otherwise modifies to a
+	if (Array.isArray(cAny)) {
+		// cAny is rgb array
+		if (cAny.length < 3) {
+			return randomHexColor();
+		} else if (cAny.length == 3) {
+			//assume this is a rgb
+			let r = cAny[0];
+			let g = cAny[1];
+			let b = cAny[2];
+			return a == undefined || a == 1 ? `rgb(${r},${g},${b})` : `rgba(${r},${g},${b},${a})`;
+		}
+	} else if (isString(cAny)) {
+		if (cAny[0] == '#') {
+			if (a == undefined) return cAny;
+			cAny = cAny.substring(0, 7);
+			return cAny + (a == 1 ? '' : alphaToHex(a));
+		} else if (cAny[0] == 'r' && cAny[1] == 'g') {
+			if (a == undefined) return cAny;
+			//this is rbg or rgba string
+			if (cAny[3] == 'a') {
+				//rgba string!
+				//console.log('its an rgba string!!!!!');
+				if (a < 1) {
+					return stringBeforeLast(cAny, ',') + ',' + a + ')';
+				} else {
+					let parts = cAny.split(',');
+					let r = firstNumber(parts[0]);
+					return 'rgb(' + r + ',' + parts[1] + ',' + parts[2] + ')';
+				}
+			} else {
+				// simple rgb string
+				if (a < 1) {
+					//console.log(cAny.length)
+					return 'rgba' + cAny.substring(3, cAny.length - 1) + ',' + a + ')';
+				} else {
+					return cAny;
+				}
+			}
+		} else if (cAny[0] == 'h' && cAny[1] == 's') {
+			//hsl or hsla string
+			//if hsla and hsla allowed do same as for rgba
+			if (allowHsl) {
+				if (a == undefined) return cAny;
+				if (cAny[3] == 'a') {
+					if (a < 1) {
+						return stringBeforeLast(cAny, ',') + ',' + a + ')';
+					} else {
+						let parts = cAny.split(',');
+						let r = firstNumber(parts[0]);
+						return 'hsl(' + r + ',' + parts[1] + ',' + parts[2] + ')';
+					}
+				} else {
+					//simple hsl string
+					return a == 1 ? cAny : 'hsla' + cAny.substring(3, cAny.length - 1) + ',' + a + ')'; //cAny.substring(0,cAny.length-1) + ',' + a + ')';
+				}
+			} else {
+				//convert hsl(a) into rgb(a)
+				if (cAny[3] == 'a') {
+					cAny = HSLAToRGBA(cAny);
+				} else {
+					cAny = HSLToRGB(cAny);
+				}
+				return anyColorToStandardString(cAny, a, allowHsl);
+			}
+		} else {
+			//cAny is color name
+			let newcAny = colorNameToHex(cAny);
+			//console.log(cAny,newcAny);
+			return anyColorToStandardString(newcAny, a, allowHsl);
+		}
+	} else if (typeof cAny == 'object') {
+		//console.log('anyColorToStandardString: cAny is object!!!', cAny);
+		//koennte {h: ,s: , l:} oder {r: ,g: ,b:} sein
+		if ('h' in cAny) {
+			//hsl object
+			let hslString = '';
+			if (a == undefined || a == 1) {
+				hslString = `hsl(${cAny.h},${Math.round(cAny.s <= 1.0 ? cAny.s * 100 : cAny.s)}%,${Math.round(cAny.l <= 1.0 ? cAny.l * 100 : cAny.l)}%)`;
+			} else {
+				hslString = `hsla(${cAny.h},${Math.round(cAny.s <= 1.0 ? cAny.s * 100 : cAny.s)}%,${Math.round(cAny.l <= 1.0 ? cAny.l * 100 : cAny.l)}%,${a})`;
+			}
+			if (allowHsl) {
+				return hslString;
+			} else {
+				return anyColorToStandardString(hslString, a, allowHsl);
+			}
+		} else if ('r' in cAny) {
+			//rgb object
+			if (a !== undefined && a < 1) {
+				return `rgba(${cAny.r},${cAny.g},${cAny.b},${a})`;
+			} else {
+				return `rgb(${cAny.r},${cAny.g},${cAny.b})`;
+			}
+		}
+	}
+} //ok
+function colorIdealText(bg, grayPreferred = false) {
+	let rgb = colorRGB(bg, true);
+	//jetzt ist bg rgb object
+	const nThreshold = 105; //40; //105;
+	let r = rgb.r;
+	let g = rgb.g;
+	let b = rgb.b;
+	var bgDelta = r * 0.299 + g * 0.587 + b * 0.114;
+	var foreColor = 255 - bgDelta < nThreshold ? 'black' : 'white';
+	if (grayPreferred) foreColor = 255 - bgDelta < nThreshold ? 'dimgray' : 'snow';
+	return foreColor;
+	// return 'white';
+}
+function colorRGB(cAny, asObject = false) {
+	//returns { r:[0,255], g:[0,255], b:[0,255]}
+	let res = anyColorToStandardString(cAny);
+	let srgb = res;
+	if (res[0] == '#') {
+		srgb = pSBC(0, res, 'c');
+	}
+	//console.log(shsl);
+	let n = allNumbers(srgb);
+	//console.log(n);
+	if (asObject) {
+		return { r: n[0], g: n[1], b: n[2], a: n.length > 3 ? n[3] : 1 };
+	} else {
+		return srgb;
+	}
+} //ok
+
 function computeColor(c) { return (c == 'random') ? randomColor() : c; }
 function computeColorX(c) {
 
@@ -147,6 +277,55 @@ function getExtendedColors(bg, fg) {
 	else if (bg == 'contrast' && isdef(fg) && fg != 'inherit') { bg = colorIdealText(fg); }
 	return [bg, fg];
 }
+function pSBC(p, c0, c1, l) {
+	//usage:
+	// (blacken) -1.0 <= p <= 1.0 (whiten), or (c0) 0 <= p <= 1.0 (c1) when blending (ie., c1 given)
+	// c0: #F3D or #F3DC or #FF33DD or #FF33DDCC or rgb(23,4,55) or rgba(23,4,55,0.52) ... from color
+	// c1: #F3D or #F3DC or #FF33DD or #FF33DDCC or rgb(23,4,55) or rgba(23,4,55,0.52) ... to color (blending)
+	// 		or 'c' for conversion between hex string and rgb string
+	// l true:log blending, [false:linear blending]=default!
+	let r,
+		g,
+		b,
+		P,
+		f,
+		t,
+		h,
+		i = parseInt,
+		m = Math.round,
+		a = typeof c1 == 'string';
+	if (typeof p != 'number' || p < -1 || p > 1 || typeof c0 != 'string' || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
+	if (!this.pSBCr)
+		this.pSBCr = d => {
+			let n = d.length,
+				x = {};
+			if (n > 9) {
+				([r, g, b, a] = d = d.split(',')), (n = d.length);
+				if (n < 3 || n > 4) return null;
+				(x.r = i(r[3] == 'a' ? r.slice(5) : r.slice(4))), (x.g = i(g)), (x.b = i(b)), (x.a = a ? parseFloat(a) : -1);
+			} else {
+				if (n == 8 || n == 6 || n < 4) return null;
+				if (n < 6) d = '#' + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : '');
+				d = i(d.slice(1), 16);
+				if (n == 9 || n == 5) (x.r = (d >> 24) & 255), (x.g = (d >> 16) & 255), (x.b = (d >> 8) & 255), (x.a = m((d & 255) / 0.255) / 1000);
+				else (x.r = d >> 16), (x.g = (d >> 8) & 255), (x.b = d & 255), (x.a = -1);
+			}
+			return x;
+		};
+	(h = c0.length > 9),
+		(h = a ? (c1.length > 9 ? true : c1 == 'c' ? !h : false) : h),
+		(f = pSBCr(c0)),
+		(P = p < 0),
+		(t = c1 && c1 != 'c' ? pSBCr(c1) : P ? { r: 0, g: 0, b: 0, a: -1 } : { r: 255, g: 255, b: 255, a: -1 }),
+		(p = P ? p * -1 : p),
+		(P = 1 - p);
+	if (!f || !t) return null;
+	if (l) (r = m(P * f.r + p * t.r)), (g = m(P * f.g + p * t.g)), (b = m(P * f.b + p * t.b));
+	else (r = m((P * f.r ** 2 + p * t.r ** 2) ** 0.5)), (g = m((P * f.g ** 2 + p * t.g ** 2) ** 0.5)), (b = m((P * f.b ** 2 + p * t.b ** 2) ** 0.5));
+	(a = f.a), (t = t.a), (f = a >= 0 || t >= 0), (a = f ? (a < 0 ? t : t < 0 ? a : a * P + t * p) : 0);
+	if (h) return 'rgb' + (f ? 'a(' : '(') + r + ',' + g + ',' + b + (f ? ',' + m(a * 1000) / 1000 : '') + ')';
+	else return '#' + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2);
+} //ok SUPER COOL!!!!
 
 //#endregion
 
@@ -364,6 +543,119 @@ async function localOrRoute(key, url) {
 //#endregion
 
 //#region measure size and pos
+function calcRowsColsSizeNew(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
+
+	//berechne outer dims
+	let ww, wh, hpercent, wpercent;
+	if (isdef(dParent)) {
+		let b = getBounds(dParent);
+		ww = b.width;
+		wh = b.height;
+		hpercent = .9;
+		wpercent = .9;
+	} else if (isdef(wmax) && isdef(hmax)) {
+		ww = wmax;
+		wh = hmax;
+		hpercent = .9;
+		wpercent = .9;
+	} else {
+		ww = window.innerWidth;
+		wh = window.innerHeight;
+		hpercent = .9;
+		wpercent = .9;
+	}
+	let dims = calcRowsColsX(n, rows, cols);
+	let hpic = wh * hpercent / dims.rows;
+	let wpic = ww * wpercent / dims.cols;
+	hpic = Math.max(minsz, Math.min(hpic, maxsz));
+	wpic = Math.max(minsz, Math.min(wpic, maxsz));
+	return [wpic, hpic, dims.rows, dims.cols];
+}
+function calcRowsColsSize(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
+
+	//berechne outer dims
+	let ww, wh, hpercent, wpercent;
+	if (isdef(dParent)) {
+		let b = getBounds(dParent);
+		ww = b.width;
+		wh = b.height;
+		hpercent = .9;
+		wpercent = .9;
+	} else if (isdef(wmax) && isdef(hmax)) {
+		ww = wmax;
+		wh = hmax;
+		hpercent = .9;
+		wpercent = .9;
+	} else {
+		ww = window.innerWidth;
+		wh = window.innerHeight;
+		hpercent = .56;
+		wpercent = .64;
+	}
+
+	//console.log(ww,wh)
+	let sz;//, picsPerLine;
+	//if (lines <= 1) lines = undefined;
+
+	//console.log('===>vor calcRowsColsX: rows='+rows,'cols'+cols);
+	let dims = calcRowsColsX(n, rows, cols);
+	//console.log('===>nach calcRowsColsX: rows='+rows,'cols'+cols);
+
+	let hpic = wh * hpercent / dims.rows;
+	let wpic = ww * wpercent / dims.cols;
+
+	//console.log('hpic', hpic, 'wpic', wpic, ww, window.innerWidth, wh, window.innerHeight);
+	sz = Math.min(hpic, wpic);
+	//picsPerLine = dims.cols;
+	sz = Math.max(minsz, Math.min(sz, maxsz)); //Math.max(50, Math.min(sz, 200));
+	return [sz, dims.rows, dims.cols]; //pictureSize, picsPerLine];
+}
+function calcRowsColsX(num, rows, cols) {
+	const table = {
+		2: { rows: 1, cols: 2 },
+		5: { rows: 2, cols: 3 },
+		7: { rows: 2, cols: 4 },
+		11: { rows: 3, cols: 4 },
+		40: { rows: 5, cols: 8 },
+	};
+	if (isdef(rows) || isdef(cols)) return calcRowsCols(num, rows, cols);
+	else if (isdef(table[num])) return table[num];
+	else return calcRowsCols(num, rows, cols);
+}
+function calcRowsCols(num, rows, cols) {
+	//=> code from RSG testFactory arrangeChildrenAsQuad(n, R);
+	//console.log(num, rows, cols);
+	let shape = 'rect';
+	if (isdef(rows) && isdef(cols)) {
+		//do nothing!
+	} else if (isdef(rows)) {
+		cols = Math.ceil(num / rows);
+	} else if (isdef(cols)) {
+		rows = Math.ceil(num / cols);
+	} else if (num == 2) {
+		rows = 1; cols = 2;
+	} else if ([4, 6, 9, 12, 16, 20, 25, 30, 36, 42, 49, 56, 64].includes(num)) {
+		rows = Math.floor(Math.sqrt(num));
+		cols = Math.ceil(Math.sqrt(num));
+	} else if ([3, 8, 15, 24, 35, 48, 63].includes(num)) {
+		let lower = Math.floor(Math.sqrt(num));
+		console.assert(num == lower * (lower + 2), 'RECHNUNG FALSCH IN calcRowsCols');
+		rows = lower;
+		cols = lower + 2;
+	} else if (num > 1 && num < 10) {
+		shape = 'circle';
+	} else if (num > 16 && 0 == num % 4) {
+		rows = 4; cols = num / 4;
+	} else if (num > 9 && 0 == num % 3) {
+		rows = 3; cols = num / 3;
+	} else if (0 == num % 2) {
+		rows = 2; cols = num / 2;
+	} else {
+		rows = 1; cols = num;
+	}
+	//console.log(rows, cols, shape);
+	return { rows: rows, cols: cols, recommendedShape: shape };
+}
 function getRect(elem, relto) {
 
 	if (isString(elem)) elem = document.getElementById(elem);
@@ -417,7 +709,91 @@ function toBase10(s, base = 16) {
 }
 //#endregion
 
+//#region merge
+//#region internal
+const _overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
+function _isMergeableObject(val) {
+	var nonNullObject = val && typeof val === 'object'
+
+	return nonNullObject
+		&& Object.prototype.toString.call(val) !== '[object RegExp]'
+		&& Object.prototype.toString.call(val) !== '[object Date]'
+}
+function _emptyTarget(val) {
+	return Array.isArray(val) ? [] : {}
+}
+function _cloneIfNecessary(value, optionsArgument) {
+	var clone = optionsArgument && optionsArgument.clone === true
+	return (clone && _isMergeableObject(value)) ? deepmerge(_emptyTarget(value), value, optionsArgument) : value
+}
+function _defaultArrayMerge(target, source, optionsArgument) {
+	var destination = target.slice()
+	source.forEach(function (e, i) {
+		if (typeof destination[i] === 'undefined') { //el[i] nur in source
+			destination[i] = _cloneIfNecessary(e, optionsArgument)
+		} else if (_isMergeableObject(e)) { //el[i] in beidem
+			destination[i] = deepmerge(target[i], e, optionsArgument)
+		} else if (target.indexOf(e) === -1) { //el[i] nur in target
+			destination.push(_cloneIfNecessary(e, optionsArgument))
+		}
+	})
+	return destination
+}
+function _mergeObject(target, source, optionsArgument) {
+	var destination = {}
+	if (_isMergeableObject(target)) {
+		Object.keys(target).forEach(function (key) {
+			destination[key] = _cloneIfNecessary(target[key], optionsArgument)
+		})
+	}
+	Object.keys(source).forEach(function (key) {
+		if (!_isMergeableObject(source[key]) || !target[key]) {
+			//console.log('das sollte bei data triggern!',key,source[key])
+			destination[key] = _cloneIfNecessary(source[key], optionsArgument)
+		} else {
+			destination[key] = deepmerge(target[key], source[key], optionsArgument)
+		}
+	})
+	return destination;
+}
+function _deepMerge(target, source, optionsArgument) {
+	var array = Array.isArray(source);
+	var options = optionsArgument || { arrayMerge: _defaultArrayMerge }
+	var arrayMerge = options.arrayMerge || _defaultArrayMerge
+
+	if (array) {
+		return Array.isArray(target) ? arrayMerge(target, source, optionsArgument) : _cloneIfNecessary(source, optionsArgument)
+	} else {
+		return _mergeObject(target, source, optionsArgument)
+	}
+}
+//#endregion
+
+function mergeCombine(base, drueber) { return _deepMerge(base, drueber); }
+
+function mergeOverride(base, drueber) { return _deepMerge(base, drueber, { arrayMerge: _overwriteMerge }); }
+
+//#endregion
+
 //#region objects (arrays, dictionaries...)
+function arrMinMax(arr, func) {
+	if (nundef(func)) func = x => x;
+	let min = func(arr[0]), max = func(arr[0]), imin = 0, imax = 0;
+	console.log('arr', arr, '\nmin', min, 'max', max)
+
+	for (let i = 1, len = arr.length; i < len; i++) {
+		let v = func(arr[i]);
+		if (v < min) {
+			min = v; imin = i;
+			console.log('new min!', '\nv', v, 'min', min, 'i', i);
+		} else if (v > max) {
+			max = v; imax = i;
+			console.log('new max!', '\nv', v, 'max', max, 'i', i);
+		}
+	}
+
+	return { min: min, imin: imin, max: max, imax: imax };
+}
 function lookup(dict, keys) {
 	let d = dict;
 	let ilast = keys.length - 1;
@@ -432,6 +808,7 @@ function lookup(dict, keys) {
 	}
 	return d;
 }
+function lookupDef(o, proplist, def) { return lookup(o, proplist) || def; }
 function lookupSet(dict, keys, val) {
 	let d = dict;
 	let ilast = keys.length - 1;
@@ -607,6 +984,11 @@ function randomNumber(min = 0, max = 100) {
 //#endregion
 
 //#region string functions
+function allNumbers(s) {
+	//returns array of all numbers within string s
+	return s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => Number(v));
+	// {console.log(v,typeof v,v[0],v[0]=='-',v[0]=='-'?-(+v):+v,Number(v));return Number(v);});
+}
 function firstNumber(s) {
 	// returns first number in string s
 	if (s) {
@@ -680,6 +1062,15 @@ function isString(param) { return typeof param == 'string'; }
 //#endregion
 
 //#region misc helpers
+function clearElement(elem) {
+	//console.log(elem);
+	if (isString(elem)) elem = document.getElementById(elem);
+	if (window.jQuery == undefined) { elem.innerHTML = ''; return elem; }
+	while (elem.firstChild) {
+		$(elem.firstChild).remove();
+	}
+	return elem;
+}
 function createElementFromHTML(htmlString) {
 	//console.log('---------------',htmlString)
 	var div = document.createElement('div');

@@ -1,4 +1,36 @@
+function t89_showPics() {
+	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
 
+	items.map(x => x.label = x.info.S.toUpperCase());
+	//items[0] = getItem('seedling');
+
+	//let 
+
+	let options = {
+
+		// labelTop: true,
+		labelBottom: true,
+		labelStyles: { fz: '1.3vw', matop: '5%' }, //float: 'left' }, //, 'font-variant': 'small-caps' },
+		picStyles: { fz: '8vw' },//, padding: 12, matop: 20 },
+		outerStyles: {
+			align: 'center', bg: 'random', fg: 'contrast', display: 'inline-block', box: true,
+			border: '2px solid silver', rounding: '1%', margin: '1%', // hpadding: 12, vpadding: 2, margin: 4
+		},
+		//layout: 'grid1',rows:4,cols:4,
+	};
+
+	let d = showItems(items, dTable, options);
+	d.id = 'd1';
+	//console.log(items[0]);
+	//console.log(d);
+
+	//console.log('_____size of layout:', getRect(d)); 
+	//mStyleX(mBy('d1'),{'justify-content':'center'});
+	setTimeout(() => {
+		items.map(x => x.rect = getRect(x.div));
+		//console.log(getRect(mBy('d1')));
+	}, 200);//erst jetzt ist es richtig!!!
+}
 //#region Syms preppers
 async function t92_makeText() {
 	let snew = await route_path_yaml_dict('../assets/syms2020.yaml');
@@ -220,15 +252,18 @@ function t98_base() {
 }
 
 function t99_showPics() {
-	let items = getItems(20, 'life'); //getItems(['bee', 'cockroach']);
-	items[0]=getItem('seedling');
+	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
+	//items[0] = getItem('seedling');
 
 	let options = {
 		label: item => item.info.S.toUpperCase(), //func on item or language or null/false for NO LABEL!
-		labelStyles: { float: 'left' },//, 'font-variant': 'small-caps' },
+		labelStyles: { float: 'left' }, //, 'font-variant': 'small-caps' },
 		picStyles: { fz: 80, rounding: '50%', bg: 'white', padding: 12, matop: 20 },
-		outerStyles: { w: 150, align: 'center', bg: 'dimgray', fg: 'white', display: 'inline-block',// box: true, 
-		border: '4px solid silver', rounding: 10, padding: 6, margin: 4 },
+		outerStyles: {
+			w: 150, align: 'center', bg: 'dimgray', fg: 'white', display: 'inline-block', box: true,
+			border: '2px solid silver', rounding: 10, hpadding: 12, vpadding: 2, margin: 4
+		},
+		layout: 'grid1', rows: 4, cols: 4,
 	};
 
 	let d = showItems(items, dTable, options);
@@ -236,5 +271,10 @@ function t99_showPics() {
 	console.log(items[4]);
 	console.log(d);
 
-	setTimeout(() => items.map(x => x.rect = getRect(x.div)), 200);//erst jetzt ist es richtig!!!
+	console.log('_____size of layout:', getRect(d)); d.id = 'd1';
+	//mStyleX(mBy('d1'),{'justify-content':'center'});
+	setTimeout(() => {
+		items.map(x => x.rect = getRect(x.div));
+		console.log(getRect(mBy('d1')));
+	}, 200);//erst jetzt ist es richtig!!!
 }

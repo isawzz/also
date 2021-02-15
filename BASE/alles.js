@@ -1363,7 +1363,6 @@ function randomColorX(contrastColor, minContrast = 25, mod = 60, startWheel = 0,
 	return result; //"hsl(" + hue + ',' + sat + '%,' + lum + '%)';
 	//return "hsl(" + 360 * Math.random() + ',' + (25 + 70 * Math.random()) + '%,' + (85 + 10 * Math.random()) + '%)';
 }
-
 function anyColorToStandardString(cAny, a, allowHsl = false) {
 	//if allowHsl is false: only return rgb,rgba,or hex7,hex9 string! >pBSC algo!!!
 	//if a is undefined, leaves a as it is in cAny, otherwise modifies to a
@@ -1500,7 +1499,6 @@ function colorBright(c, percent) {
 		((0 | (1 << 8) + g + (256 - g) * percent / 100).toString(16)).substr(1) +
 		((0 | (1 << 8) + b + (256 - b) * percent / 100).toString(16)).substr(1);
 }
-
 function alphaToHex(zero1) {
 	zero1 = Math.round(zero1 * 100) / 100;
 	var alpha = Math.round(zero1 * 255);
@@ -4139,7 +4137,7 @@ const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
 function mergeOverrideArrays(base, drueber) {
 	return deepmerge(base, drueber, { arrayMerge: overwriteMerge });
 }
-function mergeCombineArrays(base, drueber) {
+function mergeCombine(base, drueber) {
 	return deepmerge(base, drueber);
 }
 function deepmergeOverride(base, drueber) { return mergeOverrideArrays(base, drueber); }
