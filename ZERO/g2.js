@@ -112,6 +112,31 @@ function idealRows(items, options, sz) {
 	// let rows=!isEmpty(res) ?res[0].r:Math.floor(Math.sqrt(n));
 	return rows;
 }
+function bestFitRowsCols(n,area,wimin=50,wimax=200,himin=50,himax=200){
+
+	if (nundef(area)) area={w:window.innerWidth,h:window.innerHeight};
+	let wi={w:3,h:2};
+	let res = idealRowsCols(n,1,15,1,n); //area.w/wimin,1,area.h/himin);
+	console.log('N='+n);//res);
+	area.ratio=area.w/area.h;
+
+	let best,mindiff=1000;
+	for(const r of res){
+		//console.log(r);
+		//console.log(r,wi);
+		let ratio=r.c/r.r;//r.c*wi.w/(r.r*wi.h);
+		//console.log('ratio',ratio)
+		rdiff = Math.abs(area.ratio-ratio);
+		//console.log('ratio',ratio)
+		if (rdiff < mindiff){
+			mindiff=rdiff;best=[r.r,r.c];//{rows:r.rows,cols:r.cols};
+			console.log('new best:',rdiff,best)
+		}
+	}
+	console.log('best',best)
+	return best;
+
+}
 function idealItemSizeFit(items, options) {
 	let szText = sizeOfLongestLabel(items, options);
 
@@ -168,7 +193,7 @@ function idealItemSize(items, options) {
 
 	return { w: w, h: h };
 }
-function ideaRowsCols(n, rmin, rmax, cmin, cmax) {
+function idealRowsCols(n, rmin, rmax, cmin, cmax) {
 	let res = [];
 	for (let r = rmin; r <= rmax; r++) {
 		for (let c = cmin; c <= cmax; c++) {

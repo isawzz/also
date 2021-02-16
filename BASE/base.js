@@ -544,6 +544,34 @@ async function localOrRoute(key, url) {
 
 //#region measure size and pos
 function calcRowsColsSizeNew(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
+	//berechne outer dims
+	let ww, wh, hpercent, wpercent;
+	if (isdef(dParent)) {
+		let b = getBounds(dParent);
+		ww = b.width;
+		wh = b.height;
+		hpercent = .9;
+		wpercent = .9;
+	} else if (isdef(wmax) && isdef(hmax)) {
+		ww = wmax;
+		wh = hmax;
+		hpercent = .9;
+		wpercent = .9;
+	} else {
+		ww = window.innerWidth;
+		wh = window.innerHeight;
+		hpercent = .9;
+		wpercent = .9;
+	}
+	let dims = calcRowsColsX(n, rows, cols);
+	if (dims.rows < dims.cols && ww < wh) { let h = dims.rows; dims.rows = dims.cols; dims.cols = h; }
+	let hpic = wh * hpercent / dims.rows;
+	let wpic = ww * wpercent / dims.cols;
+	hpic = Math.max(minsz, Math.min(hpic, maxsz));
+	wpic = Math.max(minsz, Math.min(wpic, maxsz));
+	return [wpic, hpic, dims.rows, dims.cols];
+}
+function calcRowsColsSizeNew(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
 
 	//berechne outer dims
 	let ww, wh, hpercent, wpercent;
@@ -565,6 +593,7 @@ function calcRowsColsSizeNew(n, rows, cols, dParent, wmax, hmax, minsz = 50, max
 		wpercent = .9;
 	}
 	let dims = calcRowsColsX(n, rows, cols);
+	if (dims.rows < dims.cols && ww < wh) { let h = dims.rows; dims.rows = dims.cols; dims.cols = h; }
 	let hpic = wh * hpercent / dims.rows;
 	let wpic = ww * wpercent / dims.cols;
 	hpic = Math.max(minsz, Math.min(hpic, maxsz));
@@ -793,6 +822,27 @@ function arrMinMax(arr, func) {
 	}
 
 	return { min: min, imin: imin, max: max, imax: imax };
+}
+function firstCond(arr, func) {
+	//return first elem that fulfills condition
+	if (nundef(arr)) return null;
+	for (const a of arr) {
+		if (func(a)) return a;
+
+	}
+	return null;
+}
+function firstNCond(n, arr, func) {
+	//return first elem that fulfills condition
+	if (nundef(arr)) return [];
+	let result = [];
+	let cnt = 0;
+	for (const a of arr) {
+		cnt += 1; if (cnt > n) break;
+		if (func(a)) result.push(a);
+
+	}
+	return result;
 }
 function lookup(dict, keys) {
 	let d = dict;

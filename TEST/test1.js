@@ -1,3 +1,56 @@
+
+function t87_showPicsEmptyOptions() {
+
+	
+	mStyleX(document.body, { bg: 'black' });
+	mStyleX(dTable, { w: '100%', h: '80%' });
+
+	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
+	items.map(x => x.label = x.info.S.toUpperCase());
+
+	let w = window.innerWidth;
+	let fz = 1.4 * w / 100;
+	let szmin=1.5*window.innerWidth*12/100;
+	console.log('fz', fz);
+	//return;
+
+	let options = {
+		labelBottom: true,
+		picStyles: { fz: '12vw' },
+		labelStyles: { fz: '1.8vw' },
+		outerStyles: { wmin: szmin,margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast' },
+	};
+
+	let res = showItems(items, dTable, options);
+	let d = res.dGrid;
+	let sz = res.sz; 
+	//d.id = 'd1';
+
+	mStyleX(d, { bg: 'black' });
+	centerWrap(d);
+	//console.log('d',d,'sz',sz)
+
+	setTimeout(() => { items.map(x => x.rect = getRect(x.div)); }, 200);//erst jetzt ist es richtig!!!
+}
+function t88_showPicsClean() {
+	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
+	items.map(x => x.label = x.info.S.toUpperCase());
+
+	let options = {
+		labelBottom: true,
+		labelStyles: { fz: '1.3vw', matop: '5%' },
+		picStyles: { fz: '8vw' },
+		outerStyles: {
+			align: 'center', bg: 'random', fg: 'contrast', display: 'inline-block', box: true,
+			border: '2px solid silver', rounding: '1%', margin: '1%', // hpadding: 12, vpadding: 2, margin: 4
+		},
+	};
+
+	let d = showItems(items, dTable, options);
+	d.id = 'd1';
+	setTimeout(() => { items.map(x => x.rect = getRect(x.div)); }, 200);//erst jetzt ist es richtig!!!
+}
+
 function t89_showPics() {
 	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
 

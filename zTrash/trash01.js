@@ -1,3 +1,45 @@
+function layoutGrid(elist, dGrid, containerStyles, { rows, cols, sz, isInline = false } = {}) {
+	console.log(elist.length,rows,cols,sz);rows=undefined;
+	let [r,c,s] = calcRowsColsSize(elist.length, rows, cols);
+	console.log('dims', r,c,s);
+
+	let parentStyle = jsCopy(containerStyles);
+	parentStyle.display = isInline ? 'inline-grid' : 'grid';
+	parentStyle['grid-template-columns'] = `repeat(${6}, auto)`;
+	parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return { w: b.w, h: b.h };
+
+}
+function presentItems1(items, dParent, rows) {
+	mStyleX(dParent, { display: 'flex', 'justify-content': 'center' })
+
+	let dGrid = mDiv(dParent);
+	items.map(x => mAppend(dGrid, x.div));
+	let gridStyles = {};// { 'place-content': 'center', gap: 4, margin: 4, padding: 4 };
+	let gridSize = layoutGrid(items, dGrid, gridStyles, { rows: rows, isInline: true });
+
+	return { dGrid: dGrid, sz: gridSize };
+}
+function layoutGrid1(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+	//console.log(elist, elist.length)
+	let dims = calcRowsCols(elist.length, rows, cols);
+	//console.log('dims', dims);
+
+	let parentStyle = jsCopy(containerStyles);
+	parentStyle.display = isInline ? 'inline-grid' : 'grid';
+	parentStyle['grid-template-columns'] = `repeat(${dims.cols}, auto)`;
+	parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+
+	//console.log('parentStyle', parentStyle)
+
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return { w: b.w, h: b.h };
+
+}
 function showItems(items, dParent, options = {}) {
 
 	let sz = idealItemSize(items, options);//labels are added!

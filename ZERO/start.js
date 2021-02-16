@@ -1,9 +1,11 @@
-async function _start(){
-	t89_showPics(); //t99_showPics();
+async function _start() {
+	t87_showPicsEmptyOptions(); //t89_showPics(); //t99_showPics();
+	//t88_showPicsClean();
 	//t92_makeText(); //t95_showImages(); //t96_parseEmojiString(); //t98_base(); 
 	//return;
 }
 
+window.onclick = () => { clearElement(dTable); t87_showPicsEmptyOptions(); }
 window.onload = _loader;
 
 async function _loader() {
@@ -43,7 +45,7 @@ function initTable() {
 	mClass(dLineTableMiddle, 'flexWrap');
 	dLineTableRight = mDiv(dLineTable); dLineTableRight.id = 'lineTableRight';
 
-	mGap(table,10);
+	mGap(table, 10);
 
 	dTable = dLineTableMiddle;
 	return dTable;

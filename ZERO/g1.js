@@ -21,10 +21,23 @@ function showItems(items, dParent, options = {}) {
 		item.options = options;
 	}
 
-	presentItems(items, dParent, options);
-	return dParent;
+
+	return presentItems(items, dParent, options);
 }
 
+function measureForArea(items,szCont,options){
+	let dGrid = mDiv(dParent);
+	items.map(x => mAppend(dGrid, x.div));
+	let [rows,cols]=bestFitRowsCols(items.length);
+	console.log('best fit ergibt: rows',rows,'cols',cols)
+	let [w,h,r,c] = calcRowsColsSizeNew(items.length,rows,cols);
+	console.log('calcRowsColsSize ergibt: rows',r,'cols',c);
+	console.log('N='+items.length,'r='+r,'c='+c,'w='+w,'h='+h)
+
+	
+	//fzPic 2/3 von h
+	//fz min 8px max 20px, idealLongestLabelFit
+}
 
 
 
