@@ -1,3 +1,8 @@
+//#region NEW + DEPRECATED
+
+
+//#endregion
+
 //#region _globals
 var Username,Gamename,Tablename;
 

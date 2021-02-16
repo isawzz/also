@@ -40,7 +40,7 @@ function layoutGrid1(elist, dGrid, containerStyles, { rows, cols, isInline = fal
 	return { w: b.w, h: b.h };
 
 }
-function showItems(items, dParent, options = {}) {
+function showItemsTableWrapper(items, dParent, options = {}) {
 
 	let sz = idealItemSize(items, options);//labels are added!
 

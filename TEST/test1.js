@@ -1,7 +1,84 @@
+function t84_showPics_() {
+
+	mStyleX(document.body, { bg: 'black' });
+	mStyleX(dTable, { w: '100%', h: '80%', layout: 'hcc' });
+
+	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
+	items.map(x => x.label = x.info.S.toUpperCase());
+
+	let szmin = 1.5 * window.innerWidth * 12 / 100;
+
+	let options = {
+		labelBottom: true,
+		picStyles: { fz: '12vw' },
+		labelStyles: { fz: '1.8vw' },
+		outerStyles: { wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'vcc', },
+	};
+
+	let res = showItemsCenterFlex(items, dTable, options);
+
+	setTimeout(() => { items.map(x => x.rect = getRect(x.div)); }, 200);//erst jetzt ist es richtig!!!
+}
+function t85_showPicsCenterFlex_CLEAN() {
+
+	mStyleX(document.body, { bg: 'black' });
+	mStyleX(dTable, { w: '100%', h: '80%', layout: 'hcc' });
+
+	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
+	items.map(x => x.label = x.info.S.toUpperCase());
+
+	let szmin = 1.5 * window.innerWidth * 12 / 100;
+
+	let options = {
+		labelBottom: true,
+		picStyles: { fz: '12vw' },
+		labelStyles: { fz: '1.8vw' },
+		outerStyles: { wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'vcc', },
+	};
+
+	let res = showItemsCenterFlex(items, dTable, options);
+
+	setTimeout(() => { items.map(x => x.rect = getRect(x.div)); }, 200);//erst jetzt ist es richtig!!!
+}
+function t86_showPicsCenterFlex() {
+
+	mStyleX(document.body, { bg: 'black' });
+	mStyleX(dTable, { w: '100%', h: '80%', layout: 'hcc' });
+
+	let items = getItems(4, 'lifePlus');
+	// let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
+	items.map(x => x.label = x.info.S.toUpperCase());
+
+	let w = window.innerWidth;
+	let fz = 1.4 * w / 100;
+	let szmin = 1.5 * window.innerWidth * 12 / 100;
+	//console.log('fz', fz);
+	//return;
+
+	let options = {
+		labelBottom: true,
+		picStyles: { fz: '12vw' },
+		labelStyles: { fz: '1.8vw' },
+		outerStyles: {
+			wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'vcc',
+			//display: 'flex', 'justify-content': 'center', 'align-items': 'center'
+		},
+	};
+
+	let res = showItemsCenterFlex(items, dTable, options);
+	let d = res.dGrid;
+	let sz = res.sz;
+	//d.id = 'd1';
+
+	//mStyleX(d, { bg: 'black' });
+	//centerWrap(d);
+	//console.log('d',d,'sz',sz)
+
+	setTimeout(() => { items.map(x => x.rect = getRect(x.div)); }, 200);//erst jetzt ist es richtig!!!
+}
 
 function t87_showPicsEmptyOptions() {
 
-	
 	mStyleX(document.body, { bg: 'black' });
 	mStyleX(dTable, { w: '100%', h: '80%' });
 
@@ -10,20 +87,19 @@ function t87_showPicsEmptyOptions() {
 
 	let w = window.innerWidth;
 	let fz = 1.4 * w / 100;
-	let szmin=1.5*window.innerWidth*12/100;
+	let szmin = 1.5 * window.innerWidth * 12 / 100;
 	console.log('fz', fz);
-	//return;
 
 	let options = {
 		labelBottom: true,
 		picStyles: { fz: '12vw' },
 		labelStyles: { fz: '1.8vw' },
-		outerStyles: { wmin: szmin,margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast' },
+		outerStyles: { wmin: szmin, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast' },
 	};
 
-	let res = showItems(items, dTable, options);
+	let res = showItemsTableWrapper(items, dTable, options);
 	let d = res.dGrid;
-	let sz = res.sz; 
+	let sz = res.sz;
 	//d.id = 'd1';
 
 	mStyleX(d, { bg: 'black' });
@@ -32,7 +108,7 @@ function t87_showPicsEmptyOptions() {
 
 	setTimeout(() => { items.map(x => x.rect = getRect(x.div)); }, 200);//erst jetzt ist es richtig!!!
 }
-function t88_showPicsClean() {
+function t88_showPics_CLEAN() {
 	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
 	items.map(x => x.label = x.info.S.toUpperCase());
 
@@ -46,7 +122,7 @@ function t88_showPicsClean() {
 		},
 	};
 
-	let d = showItems(items, dTable, options);
+	let d = showItemsTableWrapper(items, dTable, options);
 	d.id = 'd1';
 	setTimeout(() => { items.map(x => x.rect = getRect(x.div)); }, 200);//erst jetzt ist es richtig!!!
 }
@@ -72,7 +148,7 @@ function t89_showPics() {
 		//layout: 'grid1',rows:4,cols:4,
 	};
 
-	let d = showItems(items, dTable, options);
+	let d = showItemsTableWrapper(items, dTable, options);
 	d.id = 'd1';
 	//console.log(items[0]);
 	//console.log(d);
@@ -319,7 +395,7 @@ function t99_showPics() {
 		layout: 'grid1', rows: 4, cols: 4,
 	};
 
-	let d = showItems(items, dTable, options);
+	let d = showItemsTableWrapper(items, dTable, options);
 
 	console.log(items[4]);
 	console.log(d);

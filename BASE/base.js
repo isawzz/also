@@ -5,6 +5,7 @@ function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(
 function mCreate(tag) { return document.createElement(tag); }
 function mDiv(dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); return d; }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', h: gap }); }
+function mLinebreak(d, gap) { mGap(d,gap);}
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
@@ -486,7 +487,7 @@ async function dbLoad(appName, callback) {
 		let sData = await data.json();
 
 		DB = firstCond(sData, x => x.id == appName);
-		console.log('...loaded DB', DB);
+		//console.log('...loaded DB', DB);
 
 		if (isdef(callback)) callback();
 	});

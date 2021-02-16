@@ -117,7 +117,7 @@ function bestFitRowsCols(n,area,wimin=50,wimax=200,himin=50,himax=200){
 	if (nundef(area)) area={w:window.innerWidth,h:window.innerHeight};
 	let wi={w:3,h:2};
 	let res = idealRowsCols(n,1,15,1,n); //area.w/wimin,1,area.h/himin);
-	console.log('N='+n);//res);
+	//console.log('N='+n);//res);
 	area.ratio=area.w/area.h;
 
 	let best,mindiff=1000;
@@ -130,10 +130,10 @@ function bestFitRowsCols(n,area,wimin=50,wimax=200,himin=50,himax=200){
 		//console.log('ratio',ratio)
 		if (rdiff < mindiff){
 			mindiff=rdiff;best=[r.r,r.c];//{rows:r.rows,cols:r.cols};
-			console.log('new best:',rdiff,best)
+			//console.log('new best:',rdiff,best)
 		}
 	}
-	console.log('best',best)
+	//console.log('best',best)
 	return best;
 
 }
@@ -143,23 +143,23 @@ function idealItemSizeFit(items, options) {
 	if (nundef(options.picStyles)) options.picStyles = {}; options.picStyles.family = items[0].info.family;
 	let szPic = getSizeWithStyles(items[0].info.text, options.picStyles);
 
-	console.log('szText=', szText, 'szPic=', szPic);
+	//console.log('szText=', szText, 'szPic=', szPic);
 
 	//calculate w needed
 	let o = options.outerStyles;
 	let [m, wp, hp, b] = isdef(o) ? [o.margin, isdef(o.hpadding) ? o.hpadding : o.padding, isdef(o.vpadding) ? o.vpadding : o.padding, firstNumber(o.border)] : [0, 0, 0];
 	[m, wp, hp, b] = [isdef(m) ? m : 0, isdef(wp) ? wp : 0, isdef(hp) ? hp : 0, isdef(b) ? b : 0];
-	console.log('m=' + m, 'wp=' + wp, 'hp=' + hp, 'b=' + b);
+	//console.log('m=' + m, 'wp=' + wp, 'hp=' + hp, 'b=' + b);
 
 	let wText = szText.w + 2 * (m + wp + b) + 1;
 	let w = lookup(options, ['outerStyles', 'sz']) || lookup(options, ['outerStyles', 'w']) || 0;
 	w = Math.max(wText, w);
-	console.log('w', w);
+	//console.log('w', w);
 	//was ist mit h? szText.h=18+118+8+8=156 und er zeigt an:154
 	let hTotal = szText.h + szPic.h + 2 * b + 1;
 	let h = lookup(options, ['outerStyles', 'sz']) || lookup(options, ['outerStyles', 'h']) || 0;
 	h = Math.max(hTotal, h);
-	console.log('h', h);
+	//console.log('h', h);
 
 	if (isdef(options.outerStyles)) { delete options.outerStyles.w; delete options.outerStyles.sz };
 
@@ -171,23 +171,23 @@ function idealItemSize(items, options) {
 	if (nundef(options.picStyles)) options.picStyles = {}; options.picStyles.family = items[0].info.family;
 	let szPic = getSizeWithStyles(items[0].info.text, options.picStyles);
 
-	console.log('szText=', szText, 'szPic=', szPic);
+	//console.log('szText=', szText, 'szPic=', szPic);
 
 	//calculate w needed
 	let o = options.outerStyles;
 	let [m, wp, hp, b] = isdef(o) ? [o.margin, isdef(o.hpadding) ? o.hpadding : o.padding, isdef(o.vpadding) ? o.vpadding : o.padding, firstNumber(o.border)] : [0, 0, 0];
 	[m, wp, hp, b] = [isdef(m) ? m : 0, isdef(wp) ? wp : 0, isdef(hp) ? hp : 0, isdef(b) ? b : 0];
-	console.log('m=' + m, 'wp=' + wp, 'hp=' + hp, 'b=' + b);
+	//console.log('m=' + m, 'wp=' + wp, 'hp=' + hp, 'b=' + b);
 
 	let wText = szText.w + 2 * (m + wp + b) + 1;
 	let w = lookup(options, ['outerStyles', 'sz']) || lookup(options, ['outerStyles', 'w']) || 0;
 	w = Math.max(wText, w);
-	console.log('w', w);
+	//console.log('w', w);
 	//was ist mit h? szText.h=18+118+8+8=156 und er zeigt an:154
 	let hTotal = szText.h + szPic.h + 2 * b + 1;
 	let h = lookup(options, ['outerStyles', 'sz']) || lookup(options, ['outerStyles', 'h']) || 0;
 	h = Math.max(hTotal, h);
-	console.log('h', h);
+	//console.log('h', h);
 
 	if (isdef(options.outerStyles)) { delete options.outerStyles.w; delete options.outerStyles.sz };
 

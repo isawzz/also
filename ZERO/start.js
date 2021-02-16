@@ -1,6 +1,7 @@
 async function _start() {
-	t87_showPicsEmptyOptions(); //t89_showPics(); //t99_showPics();
-	//t88_showPicsClean();
+	t84_showPics_();//t86_showPicsCenterFlex();
+	//t87_showPicsEmptyOptions(); //t89_showPics(); //t99_showPics();
+	//t88_showPics_CLEAN();
 	//t92_makeText(); //t95_showImages(); //t96_parseEmojiString(); //t98_base(); 
 	//return;
 }
