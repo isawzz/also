@@ -4300,9 +4300,9 @@ function allWordsContainedInKeysAsWord(dict, keywords) {
 //#endregion
 
 //#region ARRAY objects, dictionaries, lists, arrays
-function copyKeys(ofrom, oto, except = {}) {
-
-	for (const k in ofrom) {
+function copyKeys(ofrom, oto, except = {}, only) {
+	let keys=isdef(only)?only:Object.keys(ofrom);
+	for (const k of keys) {
 		if (isdef(except[k])) continue;
 		oto[k] = ofrom[k];
 	}

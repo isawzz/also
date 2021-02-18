@@ -11,23 +11,32 @@
 	align-content: flex-start; /* das ist bei den meisten nicht so gewesen! */
 }
 
-html,body,#rightSide {
+html,body {
 	height: 100%;
 	padding: 0;
 	margin: 0;
 	font: 20px Arial;
-	/* background: dimgray; */
-	/* color: white; */
+	background: deepskyblue; 
+	color: white;
 }
 div {
 	user-select: none;
 }
 
-/* #region left middle right line */
+#table{
+	width:80vw;
+	height: calc( 100vh - 60px );
+	background: skyblue; 
+	margin: auto;
+	border-radius: 1vw;
+}
+/* #region line3 */
 .lineOuter {
 	min-width: 100%;
 	padding: 4px 12px;
 	box-sizing: border-box;
+	height: 30px;
+	/* background-color: blue; */
 }
 .lineOuter >div {
 	position: relative;
@@ -38,10 +47,13 @@ div {
 	top: 0px;
 	left: 0px;
 	min-width: 20px;
+	/* background: orange; */
 }
 .lineMiddle {
 	width: 100%;
+	position: absolute;
 	text-align: center;
+	/* background: red; */
 }
 .lineRight {
 	display: inline-block;
@@ -49,6 +61,7 @@ div {
 	top: 0px;
 	right: 0px;
 	min-width: 20px;
+	/* background: yellow; */
 }
 /* #endregion */
 

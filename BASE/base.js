@@ -3,10 +3,27 @@ function mAppend(d, child) { d.appendChild(child); }
 function mBy(id) { return document.getElementById(id); }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag) { return document.createElement(tag); }
-function mDiv(dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); return d; }
+function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id=id; return d; }
+function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', h: gap }); }
-function mLinebreak(d, gap) { mGap(d,gap);}
+function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
+function mLinebreak(d, gap) { mGap(d, gap); }
+function mLine3(dParent, index, ids, styles) {
+	let html = `<div class="lineOuter">
+		<div>
+			<div id="${ids[0]}" class="lineLeft"> </div>
+			<div id="${ids[1]}" class="lineMiddle"> </div>
+			<div id="${ids[2]}" class="lineRight"> </div>
+		</div>
+	</div>
+	`;
+	let x = createElementFromHTML(html);
+
+	mInsert(dParent, x, index);
+	return [mBy(ids[0]), mBy(ids[1]), mBy(ids[2])];
+}
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
+function mSize(d, w, h, unit = 'px') { mStyleX(d, { width: w, height: h }, unit); }
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
 		align: 'text-align',
@@ -75,25 +92,52 @@ function mStyleX(elem, styles, unit = 'px') {
 			if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
 			if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
 		} else if (k == 'layout') {
-			elem.style.setProperty('display', 'flex');
-			elem.style.setProperty('flex-wrap', 'wrap');
-			let hor, vert;
-			if (val.length == 1) hor = vert = 'center';
-			else {
-				let di = { c: 'center', s: 'start', e: 'end' };
-				hor = di[val[1]];
-				vert = di[val[2]];
+			if (val[0] == 'f') {
+				//console.log('sssssssssssssssssssssssssssssssssssssssssssss')
+				val = val.slice(1);
+				elem.style.setProperty('display', 'flex');
+				elem.style.setProperty('flex-wrap', 'wrap');
+				let hor, vert;
+				if (val.length == 1) hor = vert = 'center';
+				else {
+					let di = { c: 'center', s: 'start', e: 'end' };
+					hor = di[val[1]];
+					vert = di[val[2]];
 
+				}
+				let justStyle = val[0] == 'v' ? vert : hor;
+				let alignStyle = val[0] == 'v' ? hor : vert;
+				elem.style.setProperty('justify-content', justStyle);
+				elem.style.setProperty('align-items', alignStyle);
+				switch (val[0]) {
+					case 'v': elem.style.setProperty('flex-direction', 'column'); break;
+					case 'h': elem.style.setProperty('flex-direction', 'row'); break;
+				}
+			} else if (val[0] == 'g') {
+				//layout:'g_15_240' 15 columns, each col 240 pixels wide
+				//console.log('sssssssssssssssssssssssssssssssssssssssssssss')
+				val = val.slice(1);
+				elem.style.setProperty('display', 'grid');
+				let n = allNumbers(val);
+				let cols = n[0];
+				let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
+				elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
+				elem.style.setProperty('place-content', 'center');
 			}
-			let justStyle = val[0] == 'v' ? vert : hor;
-			let alignStyle = val[0] == 'v' ? hor : vert;
-			elem.style.setProperty('justify-content', justStyle);
-			elem.style.setProperty('align-items', alignStyle);
-			switch (val[0]) {
-				case 'v': elem.style.setProperty('flex-direction', 'column'); break;
-				case 'h': elem.style.setProperty('flex-direction', 'row'); break;
-			}
+		} else if (k == 'layflex') {
+			elem.style.setProperty('display', 'flex');
+			elem.style.setProperty('flex', '0 1 auto');
+			elem.style.setProperty('flex-wrap', 'wrap');
+			if (val == 'v') { elem.style.setProperty('writing-mode', 'vertical-lr'); }
+		} else if (k == 'laygrid') {
+			elem.style.setProperty('display', 'grid');
+			let n = allNumbers(val);
+			let cols = n[0];
+			let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
+			elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
+			elem.style.setProperty('place-content', 'center');
 		}
+
 
 		//console.log(key,val,isNaN(val));if (isNaN(val) && key!='font-size') continue;
 
@@ -429,11 +473,6 @@ function jsonToYaml(o) {
 
 //#endregion
 
-//#region init 
-function initLive() { Live = {}; Daat = {}; }
-
-//#endregion
-
 //#region keys
 function getKeySets() {
 	let ks = localStorage.getItem('KeySets');
@@ -452,6 +491,62 @@ function getKeySets() {
 
 }
 
+//#endregion
+
+//#region layout
+function layoutGrid1(items, dParent, cols, gap) {
+	let dGrid = mDiv(dParent);
+	items.map(x => mAppend(dGrid, lGet(x).div));
+
+	let gridStyles = { display: 'grid', 'grid-template-columns': `repeat(${cols}, auto)` };
+	gridStyles = mergeOverride({ 'place-content': 'center', gap: gap, margin: 4, padding: 4 }, gridStyles);
+	mStyleX(dGrid, gridStyles);
+
+	return dGrid;
+
+}
+function layoutFlex1(items, dParent, or, gap) {
+	let dGrid = mDiv(dParent);
+	items.map(x => mAppend(dGrid, lGet(x).div));
+
+	let gridStyles = { display: 'flex', flex: '0 1 auto', 'flex-wrap': 'wrap' };
+	if (or == 'v') { gridStyles['writing-mode'] = 'vertical-lr'; }
+	gridStyles = mergeOverride({ 'place-content': 'center', gap: gap, margin: 4, padding: 4 }, gridStyles);
+	mStyleX(dGrid, gridStyles);
+
+	return dGrid;
+
+}
+function layoutGrid(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+
+	let dims = calcRowsCols(elist.length, rows, cols);
+	let parentStyle = jsCopy(containerStyles);
+	parentStyle.display = isInline ? 'inline-grid' : 'grid';
+	parentStyle['grid-template-columns'] = `repeat(${dims.cols}, auto)`;
+	parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return b;// { w: b.width, h: b.height };
+}
+function layoutFlex(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+	// console.log(elist, elist.length)
+	// let dims = calcRowsCols(elist.length, rows, cols);
+	// console.log('dims', dims);
+
+	let parentStyle = jsCopy(containerStyles);
+	if (containerStyles.orientation == 'v') {
+		// console.log('vertical!');
+		// parentStyle['flex-flow']='row wrap';
+		parentStyle['writing-mode'] = 'vertical-lr';
+	}
+	parentStyle.display = 'flex';
+	parentStyle.flex = '0 0 auto';
+	parentStyle['flex-wrap'] = 'wrap';
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return b;// { w: b.width, h: b.height };
+
+}
 //#endregion
 
 //#region loading DB, yaml, json, text
@@ -806,6 +901,43 @@ function mergeOverride(base, drueber) { return _deepMerge(base, drueber, { array
 //#endregion
 
 //#region objects (arrays, dictionaries...)
+function addIf(arr, el) {
+	if (!arr.includes(el)) arr.push(el);
+}
+function addIfDict(key, val, dict) {
+	if (!(key in dict)) {
+		dict[key] = [val];
+	} else {
+		addIf_dep(val, dict[key]);
+	}
+}
+function any(arr, cond) {
+	return !isEmpty(arr.filter(cond));
+}
+function anyStartsWith(arr, prefix) {
+	return any(arr, el => startsWith(el, prefix));
+}
+function arrTake(arr, n) { return takeFromStart(arr, n); }
+function arrRotate(arr, count) {
+	// usage:
+	// let arr = [1,2,3,4,5];let arr1=jsCopy(arr); arr2=arrRotate(arr1,2);
+	var unshift = Array.prototype.unshift,
+		splice = Array.prototype.splice;
+	var len = arr.length >>> 0, count = count >> 0;
+
+	let arr1 = jsCopy(arr);
+	unshift.apply(arr1, splice.call(arr1, count % len, len));
+	return arr1;
+}
+function arrChildren(elem) { return [...elem.children]; }
+function arrCreate(n, func) { let res = []; for (let i = 0; i < n; i++) { res.push(func(i)); } return res; }
+function arrFirst(arr) { return arr.length > 0 ? arr[0] : null; }
+function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
+function arrTail(arr) { return arr.slice(1); }
+function arrFromIndex(arr, i) { return arr.slice(i); }
+function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
+function arrWithout(a, b) { return arrMinus(a, b); }
+function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
 function arrMinMax(arr, func) {
 	if (nundef(func)) func = x => x;
 	let min = func(arr[0]), max = func(arr[0]), imin = 0, imax = 0;
@@ -823,6 +955,13 @@ function arrMinMax(arr, func) {
 	}
 
 	return { min: min, imin: imin, max: max, imax: imax };
+}
+function copyKeys(ofrom, oto, except = {}, only) {
+	let keys = isdef(only) ? only : Object.keys(ofrom);
+	for (const k of keys) {
+		if (isdef(except[k])) continue;
+		oto[k] = ofrom[k];
+	}
 }
 function firstCond(arr, func) {
 	//return first elem that fulfills condition
@@ -845,6 +984,7 @@ function firstNCond(n, arr, func) {
 	}
 	return result;
 }
+function loop(n) { return range(1, n); }
 function lookup(dict, keys) {
 	let d = dict;
 	let ilast = keys.length - 1;
@@ -981,6 +1121,33 @@ function lookupRemoveFromList(dict, keys, val, deleteIfEmpty = false) {
 	}
 	return d;
 }
+function range(f, t, st = 1) {
+	if (nundef(t)) {
+		//if only 1 arg, will return numbers 0..f-1 
+		t = f - 1;
+		f = 0;
+	}
+	let arr = [];
+	//console.log(f,t)
+	for (let i = f; i <= t; i += st) {
+		//console.log('dsdsdshallo')
+		arr.push(i);
+	}
+	return arr;
+}
+function takeFromStart(ad, n) {
+	if (isDict(ad)) {
+		let keys = Object.keys(ad);
+		return keys.slice(0, n).map(x => (ad[x]));
+	} else return ad.slice(0, n);
+}
+function takeFromTo(ad, from, to) {
+
+	if (isDict(ad)) {
+		let keys = Object.keys(ad);
+		return keys.slice(from, to).map(x => (ad[x]));
+	} else return ad.slice(from, to);
+}
 //#endregion
 
 //#region random
@@ -1100,16 +1267,6 @@ function toLetterList(s) {
 //#endregion
 
 //#region type checking / checking
-function isdef(x) { return x !== null && x !== undefined; }
-function nundef(x) { return x === null || x === undefined; }
-
-function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
-function isDictOrList(d) { return typeof (d) == 'object'; }
-function isList(arr) { return Array.isArray(arr); }
-function isLiteral(x) { return isString(x) || isNumber(x); }
-function isNumber(x) { return !isNaN(+x); }
-function isString(param) { return typeof param == 'string'; }
-
 //#endregion
 
 //#region misc helpers
@@ -1131,11 +1288,34 @@ function createElementFromHTML(htmlString) {
 	//console.log(div.firstChild)
 	return div.firstChild;
 }
+function hide(elem) {
+	if (isString(elem)) elem = document.getElementById(elem);
+	if (isSvg(elem)) {
+		elem.setAttribute('style', 'visibility:hidden;display:none');
+	} else {
+		elem.style.display = 'none';
+	}
+}
 function isEmpty(arr) {
 	return arr === undefined || !arr
 		|| (isString(arr) && (arr == 'undefined' || arr == ''))
 		|| (Array.isArray(arr) && arr.length == 0)
 		|| Object.entries(arr).length === 0;
+}
+function isdef(x) { return x !== null && x !== undefined; }
+function nundef(x) { return x === null || x === undefined; }
+
+function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
+function isDictOrList(d) { return typeof (d) == 'object'; }
+function isList(arr) { return Array.isArray(arr); }
+function isLiteral(x) { return isString(x) || isNumber(x); }
+function isNumber(x) { return !isNaN(+x); }
+function isString(param) { return typeof param == 'string'; }
+function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
+function isVisible(elem) { // Where el is the DOM element you'd like to test for visibility
+	//console.log(elem)
+	if (isString(elem)) elem = document.getElementById(elem);
+	return (elem.style.display != 'none' || elem.offsetParent !== null);
 }
 function jsCopy(o) {
 	//console.log(o)
@@ -1146,8 +1326,24 @@ function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
 	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
 	return nOrString;
 }
+function show(elem, isInline = false) {
+	if (isString(elem)) elem = document.getElementById(elem);
+	if (isSvg(elem)) {
+		elem.setAttribute('style', 'visibility:visible');
+	} else {
+		elem.style.display = isInline ? 'inline-block' : null;
+	}
+}
 //#endregion
 
+//#region UID helpers
+var UIDCounter = 0;
+function getUID(pref = '') {
+	UIDCounter += 1;
+	return pref + '_' + UIDCounter;
+}
+function resetUIDs() { UIDCounter = 0; }
+//#endregion
 
 
 

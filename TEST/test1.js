@@ -1,10 +1,242 @@
-function t84_showPics_() {
+var X;
+function t79_coolIdsSindVars() {
+	mDiv(dTable, { bg: 'green' }, 'dHallo'); dHallo.innerHTML = 'blue'; //ja, wow das geht!!!
+}
+function t80_tableInCenter() {
 
-	mStyleX(document.body, { bg: 'black' });
-	mStyleX(dTable, { w: '100%', h: '80%', layout: 'hcc' });
+	//initUi
+
+	// let h=window.innerHeight-60;
+	// window.onresize=()=>mSize(table,'80vw',window.innerHeight-60);
+	// table=mDiv(dTable, { margin: 'auto', w: '80vw', h: h, bg: 'skyblue', rounding:'1vw' },'table');
+	// show(dFooter);
+
+
+
+}
+function t81_singleUnicode() {
+	let a = toBase10('1F981', 16);
+	console.log('?????????', a);
+	let emo = '&#' + a.toString() + ';';
+
+
+	let d1 = mDiv100(dTable, { bg: 'green' });
+	let inner = centerWrap(d1);
+	mStyleX(dTable, { w: 80, h: 80, bg: 'red' }, 'vw');
+	let d = mText(emo, d1, { fz: 200, family: 'emoNoto', display: 'inline-block', bg: 'blue' });
+	setTimeout(() => console.log(getRect(d)), 10);
+
+	let sz = getSizeWithStyles(emo, { fz: 100, family: 'emoNoto', display: 'inline-block', bg: 'blue' });
+	console.log(sz);
+}
+function t82_Live() {
+	let items = getItems(chooseRandom(range(1, 50)), 'life'); //getItems(['bee', 'cockroach']);
+
+	//let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
+	for (const item of items) { item.label = item.info.F.toUpperCase(); item.id = lRegister(item); }
+	console.log('Live', X = Live[items[0].id]);
+
+	//darstellung von items in AREA: calculate dims
+	let AREA = { w: 1000, h: 780 }, sz = { w: 150, h: 200 }, szMax = { w: 250, h: 250 };
+	let [rows, cols, szPic] = calcBestEinteilungFlex(items.length, AREA, sz, szMax);
+	console.log('_________N=' + items.length, 'AREA', AREA, 'szPic', sz, '\n==>rows=' + rows, 'cols=' + cols, 'szPic', szPic);
+
+
+	let needFlexGrid = (rows * cols - items.length);
+	if (needFlexGrid > 0) {
+		console.log('UNVOLLSTAENDIGE LETZTE REIHE!!!!!!!!!!!!!!!!!!!!!!', needFlexGrid);
+		let nlast = cols - needFlexGrid;
+
+	}
+
+	//set options
+	let gap = 8;
+	let options = {
+		labelBottom: true,
+		picStyles: { fz: Math.min(szPic.h, szPic.w) * 2 / 3 },
+		labelStyles: { fz: Math.min(22, Math.max(9, szPic.h * 1 / 10)), align: 'center' },
+		outerStyles: { wmin: szPic.w - gap, h: szPic.h - gap, margin: 0, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'fvcc', },
+	};
+
+	let dParent = dTable;
+	mStyleX(dTable, { bg: 'grey', layout: 'fcc', w: AREA.w, h: AREA.h + 10, margin: 'auto', patop: 10 });//, overflow: 'hidden', bg: 'black', border: '10px solid black' });
+
+	//showItemsCenterFlex code:
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+
+		let dOuter = mCreate('div');
+		if (isdef(options.outerStyles)) mStyleX(dOuter, options.outerStyles);
+
+		let dLabel;
+		if (options.labelTop) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		let dPic = mDiv(dOuter, { family: item.info.family });
+		dPic.innerHTML = item.info.text;
+		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
+
+		if (options.labelBottom) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		if (isdef(options.handler)) dOuter.onclick = options.handler;
+
+		lAdd(item, { div: dOuter, dPic: dPic, options: options });
+		if (isdef(dLabel)) lAdd(item, { dLabel: dLabel })
+	}
+
+	let dGrid = needFlexGrid ? layoutFlex1(items, dParent, null, gap) : layoutGrid1(items, dParent, cols, gap);
+	// let dGrid = mDiv(dParent);
+	// items.map(x => mAppend(dGrid, lGet(x).div));
+	// let gridStyles = { gap: gap, margin: 4, padding: 4, 'place-content': 'center' };
+	// if (needFlexGrid) gridStyles.layflex = 'fh'; else gridStyles.laygrid = `g_${cols}`;
+	// mStyleX(dGrid, gridStyles);
+	let b = getRect(dGrid);
+
+	setTimeout(() => { items.map(x => x.rect = getRect(lGet(x).div)); }, 200);//erst jetzt ist es richtig!!!
+
+}
+function t83_showPics_N_area_testNoParent() {
+
+	let items = getItems(3);//, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
+	items.map(x => x.label = x.info.S.toUpperCase());
+
+	let AREA = { w: 800, h: 800 };
+	let N = items.length;
+	console.log('N=' + N, 'AREA', AREA);
+	let dParent = dTable;
+	mStyleX(dTable, { layout: 'fcc', w: AREA.w, h: AREA.h, margin: 'auto', overflow: 'hidden', bg: 'black', border: '10px solid black' });
+	//same as:
+	//mStyleX(dTable, { display: 'flex', 'justify-content': 'center', w: AREA.w, h: AREA.h, margin: 'auto', overflow: 'hidden', bg: 'black', border: '10px solid black' });
+
+	//calc how to arrange n items in area
+	//1. uniform size: need longest label
+	let szmin = 1.5 * window.innerWidth * 12 / 100;
+
+	let options = {
+		labelBottom: true,
+		picStyles: { fz: '12vw' },
+		labelStyles: { fz: '1.8vw' },
+		outerStyles: { wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'fvcc', },
+	};
+
+	//showItemsCenterFlex code:
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		let info = item.info;
+
+		let dOuter = item.div = mDiv(dParent);
+		if (isdef(options.outerStyles)) mStyleX(dOuter, options.outerStyles);
+
+		if (options.labelTop) { item.dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		let dPic = item.dPic = mDiv(dOuter, { family: info.family });
+		dPic.innerHTML = info.text;
+		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
+
+		if (options.labelBottom) { item.dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		if (isdef(options.handler)) dOuter.onclick = options.handler;
+		item.options = options;
+	}
+
+	//presentItems code:
+	// mStyleX(dParent, { display: 'flex', 'justify-content': 'center' });
+
+	let dGrid = mDiv(dParent);
+	items.map(x => mAppend(dGrid, x.div));
+	let [rows, cols] = bestFitRowsCols(items.length);
+	//console.log('best fit ergibt: rows',rows,'cols',cols)
+	let [w, h, r, c] = calcRowsColsSizeNew(items.length, rows, cols);
+	//console.log('calcRowsColsSize ergibt: rows',r,'cols',c);
+	//console.log('N='+items.length,'r='+r,'c='+c,'w='+w,'h='+h)
+
+	//eigentlich kann man erst jetzt die items stylen!
+
+	c = cols;
+	let gridStyles = { display: 'grid', 'grid-template-columns': `repeat(${c}, auto)` }; //${w}px)`};
+	gridStyles = mergeOverride({ 'place-content': 'center', gap: 4, margin: 4, padding: 4 }, gridStyles);
+	mStyleX(dGrid, gridStyles);
+
+	let b = getRect(dGrid);
+
+	setTimeout(() => { items.map(x => x.rect = getRect(x.div)); }, 200);//erst jetzt ist es richtig!!!
+}
+
+function t83_showPics_N_area() {
 
 	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
 	items.map(x => x.label = x.info.S.toUpperCase());
+
+	let AREA = { w: 800, h: 800 };
+	let N = items.length;
+	let dParent = dTable;
+	mStyleX(dTable, { layout: 'fcc', w: AREA.w, h: AREA.h, margin: 'auto', overflow: 'hidden', bg: 'black', border: '10px solid black' });
+	//same as:
+	//mStyleX(dTable, { display: 'flex', 'justify-content': 'center', w: AREA.w, h: AREA.h, margin: 'auto', overflow: 'hidden', bg: 'black', border: '10px solid black' });
+
+	//calc how to arrange n items in area
+	//1. uniform size: need longest label
+	let szmin = 1.5 * window.innerWidth * 12 / 100;
+
+	let options = {
+		labelBottom: true,
+		picStyles: { fz: '12vw' },
+		labelStyles: { fz: '1.8vw' },
+		outerStyles: { wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'fvcc', },
+	};
+
+	//showItemsCenterFlex code:
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		let info = item.info;
+
+		let dOuter = item.div = mDiv(dParent);
+		if (isdef(options.outerStyles)) mStyleX(dOuter, options.outerStyles);
+
+		if (options.labelTop) { item.dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		let dPic = item.dPic = mDiv(dOuter, { family: info.family });
+		dPic.innerHTML = info.text;
+		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
+
+		if (options.labelBottom) { item.dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		if (isdef(options.handler)) dOuter.onclick = options.handler;
+		item.options = options;
+	}
+
+	//presentItems code:
+	// mStyleX(dParent, { display: 'flex', 'justify-content': 'center' });
+
+	let dGrid = mDiv(dParent);
+	items.map(x => mAppend(dGrid, x.div));
+	let [rows, cols] = bestFitRowsCols(items.length);
+	//console.log('best fit ergibt: rows',rows,'cols',cols)
+	let [w, h, r, c] = calcRowsColsSizeNew(items.length, rows, cols);
+	//console.log('calcRowsColsSize ergibt: rows',r,'cols',c);
+	//console.log('N='+items.length,'r='+r,'c='+c,'w='+w,'h='+h)
+
+	//eigentlich kann man erst jetzt die items stylen!
+
+	c = cols;
+	let gridStyles = { display: 'grid', 'grid-template-columns': `repeat(${c}, auto)` }; //${w}px)`};
+	gridStyles = mergeOverride({ 'place-content': 'center', gap: 4, margin: 4, padding: 4 }, gridStyles);
+	mStyleX(dGrid, gridStyles);
+
+	let b = getRect(dGrid);
+
+
+	setTimeout(() => { items.map(x => x.rect = getRect(x.div)); }, 200);//erst jetzt ist es richtig!!!
+}
+function t84_showPics_() {
+
+	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
+	items.map(x => x.label = x.info.S.toUpperCase());
+
+	// mStyleX(document.body, { bg: 'black' });
+	let wwin = window.innerWidth;
+	let hwin = window.innerHeight;
+	// mStyleX(dTable, { w: wwin*.8, h: hwin*.8, margin:'auto', overflow:'hidden', bg:'black', border:'10px solid black' });
+	mStyleX(dTable, { w: 800, h: 800, margin: 'auto', overflow: 'hidden', bg: 'black', border: '10px solid black' });
 
 	let szmin = 1.5 * window.innerWidth * 12 / 100;
 
@@ -12,7 +244,7 @@ function t84_showPics_() {
 		labelBottom: true,
 		picStyles: { fz: '12vw' },
 		labelStyles: { fz: '1.8vw' },
-		outerStyles: { wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'vcc', },
+		outerStyles: { wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'fvcc', },
 	};
 
 	let res = showItemsCenterFlex(items, dTable, options);
@@ -22,7 +254,7 @@ function t84_showPics_() {
 function t85_showPicsCenterFlex_CLEAN() {
 
 	mStyleX(document.body, { bg: 'black' });
-	mStyleX(dTable, { w: '100%', h: '80%', layout: 'hcc' });
+	mStyleX(dTable, { w: '100%', h: '80%', layout: 'fhcc' });
 
 	let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
 	items.map(x => x.label = x.info.S.toUpperCase());
@@ -33,7 +265,7 @@ function t85_showPicsCenterFlex_CLEAN() {
 		labelBottom: true,
 		picStyles: { fz: '12vw' },
 		labelStyles: { fz: '1.8vw' },
-		outerStyles: { wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'vcc', },
+		outerStyles: { wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'fvcc', },
 	};
 
 	let res = showItemsCenterFlex(items, dTable, options);
@@ -43,7 +275,7 @@ function t85_showPicsCenterFlex_CLEAN() {
 function t86_showPicsCenterFlex() {
 
 	mStyleX(document.body, { bg: 'black' });
-	mStyleX(dTable, { w: '100%', h: '80%', layout: 'hcc' });
+	mStyleX(dTable, { w: '100%', h: '80%', layout: 'fhcc' });
 
 	let items = getItems(4, 'lifePlus');
 	// let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
@@ -60,7 +292,7 @@ function t86_showPicsCenterFlex() {
 		picStyles: { fz: '12vw' },
 		labelStyles: { fz: '1.8vw' },
 		outerStyles: {
-			wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'vcc',
+			wmin: szmin, hmin: 300, margin: 4, bg: 'random', rounding: '1vw', fg: 'contrast', layout: 'fvcc',
 			//display: 'flex', 'justify-content': 'center', 'align-items': 'center'
 		},
 	};

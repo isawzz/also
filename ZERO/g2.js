@@ -202,6 +202,15 @@ function idealRowsCols(n, rmin, rmax, cmin, cmax) {
 	}
 	return res;
 }
+function allRowsCols(n, rmin, rmax, cmin, cmax) {
+	let res = [];
+	for (let r = rmin; r <= rmax; r++) {
+		for (let c = cmin; c <= cmax; c++) {
+			if (r*c>=n) res.push({ r: r, c: c });
+		}
+	}
+	return res;
+}
 function infoToItem(x) { return { info: x, key: x.key }; }
 function sizeOfLongestLabel(items, options) {
 	// size of longest label is measured and its size returned: uses options.labelStyles as they are!
