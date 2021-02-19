@@ -15,6 +15,7 @@ const CLEAR_LOCAL_STORAGE = BROADCAST_SETTINGS;
 var C52, Syms, SymKeys, KeySets;
 
 //#region color constants
+var ColorNames; //see base.js colors
 const BLUE = '#4363d8';
 const BLUEGREEN = '#004054';
 const GREEN = '#3cb44b';

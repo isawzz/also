@@ -2,7 +2,7 @@ var X;
 
 async function t73_groups() {
 	let s_info = await route_path_yaml_dict('../assets/s_info.yaml');
-	let all = {}, groups = [], subgroups = [], gdi = {}, gsCount = {}, subgroupEmotion = [];
+	let all = {}, groups = [], subgroups = [], gdi = {}, gsCount = {}, subgroupEmotion = [],byCateg={};
 	for (const k in s_info) {
 
 		// ********* exclusion of keys **************
@@ -10,17 +10,36 @@ async function t73_groups() {
 		if (k.includes('family:') || k.includes('kiss:') || k.includes('holding hands') && k != 'people holding hands'
 			|| k.includes('couple with heart:')) continue;
 
-		let info = s_info[k];
-		if (startsWith(info.subgroup,'person-') && (startsWith(k, 'man') || startsWith(k, 'woman'))
+		let o = s_info[k];
+		if (startsWith(o.subgroup,'person-') && (startsWith(k, 'man') || startsWith(k, 'woman'))
 			//['person-activity','person-role','person-fantasy','person-gesture','person-resting','person-sport'].includes(info.subgroup) && (startsWith(k, 'man') || startsWith(k, 'woman'))
 			|| startsWith(k, 'man:') || startsWith(k, 'woman:')) continue;
 		
 			//only keep one closed book!
-		if (info.group == 'Objects' && info.subgroup == 'book-paper' && includesAnyOf(k,['green','blue','orange'])) continue;
+		if (o.group == 'Objects' && o.subgroup == 'book-paper' && includesAnyOf(k,['green','blue','orange'])) continue;
 
 		// ********* real groups **************
-		
+		//animal
+		let categ='other';
+		if (startsWith(o.subgroup, 'animal') || endsWith(o.subgroup, 'marine')) {
+			//console.log('animal:',k,'.',o.subgroup)
+			//console.log('?',o.subgroup)
+			categ='animal';
+			let no=['front-facing','paws',' face', ' nose'];
+			let no2=['guide dog','service dog','poodle','hatching chick','T-Rex','black ','spiral',' web'];
+			if (includesAnyOf(k,no) || includesAnyOf(k,no2)) categ='animal2';
+		}
+		//face
+		else if (o.group == 'Smileys & Emotion' && o.subgroup.includes('face')){categ='face';}
+		//emotion and shape (von smileys*emotion group)
+		else if (o.group == 'Smileys & Emotion' && o.subgroup=='emotion'){
+			if (endsWith(k,'heart') && isColorName(stringBefore(k,' heart'))) categ='shape';else categ='emotion';
+		}
+		//plants
+
+		lookupAddIfToList(byCateg,[categ],k);
 		//cat: animal,emotion,face,flag,fruit,hand,object,plant,vegetable,role,shape,sport,symbol,time
+		//lets start with animal
 		//group (multiple cats in one):life(animal,plant,fruit,vegetable),people(),nemo
 		//priority: 1 fuer best25,...10 
 		//zu shape soll auch hearts in colors kommen!
@@ -31,20 +50,20 @@ async function t73_groups() {
 
 
 
-		console.assert(isdef(info.group));
+		console.assert(isdef(o.group));
 
-		addIf(groups, info.group);
-		addIf(subgroups, info.subgroup);
-		lookupAddIfToList(gdi, [info.group], info.subgroup);
+		addIf(groups, o.group);
+		addIf(subgroups, o.subgroup);
+		lookupAddIfToList(gdi, [o.group], o.subgroup);
 
-		lookupAddIfToList(all, [info.group, info.subgroup], k);
+		lookupAddIfToList(all, [o.group, o.subgroup], k);
 
 		// let c = lookup(gsCount, [info.group, info.subgroup]);
 		// console.log(c,isdef(c))
 		// if (isdef(c)) lookupSetOverride(gsCount, [info.group, info.subgroup], (c + 1));
 		// else lookupSet(gsCount, [info.group, info.subgroup], 1);
 
-		if (info.subgroup == 'emotion') addIf(subgroupEmotion, k);
+		if (o.subgroup == 'emotion') addIf(subgroupEmotion, k);
 	}
 	console.log('groups', groups);
 	console.log('subgroups', subgroups);
@@ -52,6 +71,13 @@ async function t73_groups() {
 	// console.log('count', gsCount);
 	// console.log('emotion', subgroupEmotion);
 	console.log('all', all);
+
+	for(const c in byCateg){
+		byCateg[c].sort();
+	}
+
+	console.log('by cat',byCateg);
+
 }
 
 async function t73_languagesParse() {

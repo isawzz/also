@@ -1,5 +1,8 @@
 async function _start() {
 
+	let x=endsWith('TOP arrow arrow', 'marine');console.log(x);//return;
+	x=isColorName(stringBefore('beating heart',' heart'));console.log(x);
+	
 	//let x=includesAnyOf('green book',['green','blue','orange']); console.log('x',x);return;
 	t73_groups(); //t72_manTeacher();
 	//t77_singleUnicode();
