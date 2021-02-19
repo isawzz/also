@@ -1,3 +1,18 @@
+.layoutFullScreen{
+	width: 100vw;
+	height: calc( 100vh - 60px );
+	background: skyblue; 
+	margin: auto;
+	border-radius: 1vw;
+}
+.layoutEndlessScreen{
+	width: 100vw;
+	min-height: 100vh;
+	background: powderblue; 
+	margin: auto;
+}
+
+
 /* #region table */
 #dMain{
 	flex: 0 0 auto;

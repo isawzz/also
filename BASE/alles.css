@@ -380,7 +380,7 @@ fieldset div {
 html,
 body,
 #md,
-#rightSide {
+#dTableBackground {
 	height: 100%;
 	padding: 0;
 	margin: 0;
@@ -416,11 +416,11 @@ div {
 	font-size: 40px;
 }
 #md,
-#rightSide {
+#dTableBackground {
 	display: flex;
 	/* overflow:hidden; */
 }
-#sidebar {
+#dSidebar {
 	height: 100%;
 	flex: 0 0 auto;
 	background-color: #ffffff80;
@@ -428,7 +428,7 @@ div {
 	padding: 12px;
 	text-align: center;
 }
-#rightSide {
+#dTableBackground {
 	flex-direction: column;
 	flex-grow: 10;
 	/* background-color: orange; */

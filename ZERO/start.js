@@ -1,7 +1,14 @@
 async function _start() {
 
+	//let x=includesAnyOf('green book',['green','blue','orange']); console.log('x',x);return;
+	t73_groups(); //t72_manTeacher();
+	//t77_singleUnicode();
+	//t73_languagesParse(); 
+	//t73_emoji_testParse();//t74_mCombinedUnicode(); //t74_combinedUnicode(); //t75_singleUnicode();
+	//t80_tableGrowHeight();
+	//t78_rightSidebarBehavior();//t78_sidebarBehavior();
 	//t79_coolIdsSindVars();
-	t80_tableInCenter(); //t81_singleUnicode();//t82_Live(); //t83_showPics_N_area_testNoParent();//t84_showPics_();//t86_showPicsCenterFlex();
+	//t81_singleUnicode();//t82_Live(); //t83_showPics_N_area_testNoParent();//t84_showPics_();//t86_showPicsCenterFlex();
 	//t87_showPicsEmptyOptions(); //t89_showPics(); //t99_showPics();
 	//t88_showPics_CLEAN();
 	//t92_makeText(); //t95_showImages(); //t96_parseEmojiString(); //t98_base(); 

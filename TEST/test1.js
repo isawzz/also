@@ -1,18 +1,270 @@
 var X;
+
+async function t73_groups() {
+	let s_info = await route_path_yaml_dict('../assets/s_info.yaml');
+	let all = {}, groups = [], subgroups = [], gdi = {}, gsCount = {}, subgroupEmotion = [];
+	for (const k in s_info) {
+
+		// ********* exclusion of keys **************
+		if (k.includes('skin tone')) continue;
+		if (k.includes('family:') || k.includes('kiss:') || k.includes('holding hands') && k != 'people holding hands'
+			|| k.includes('couple with heart:')) continue;
+
+		let info = s_info[k];
+		if (startsWith(info.subgroup,'person-') && (startsWith(k, 'man') || startsWith(k, 'woman'))
+			//['person-activity','person-role','person-fantasy','person-gesture','person-resting','person-sport'].includes(info.subgroup) && (startsWith(k, 'man') || startsWith(k, 'woman'))
+			|| startsWith(k, 'man:') || startsWith(k, 'woman:')) continue;
+		
+			//only keep one closed book!
+		if (info.group == 'Objects' && info.subgroup == 'book-paper' && includesAnyOf(k,['green','blue','orange'])) continue;
+
+		// ********* real groups **************
+		
+		//cat: animal,emotion,face,flag,fruit,hand,object,plant,vegetable,role,shape,sport,symbol,time
+		//group (multiple cats in one):life(animal,plant,fruit,vegetable),people(),nemo
+		//priority: 1 fuer best25,...10 
+		//zu shape soll auch hearts in colors kommen!
+		//sport ist: person-sport und activities/sport
+		//person is: person-role,gesture,resting,activity, family
+		//other: person-fantasy,person,body-parts,person-symbol
+		//time ist erst ab Travel & Places, time 7 im array
+
+
+
+		console.assert(isdef(info.group));
+
+		addIf(groups, info.group);
+		addIf(subgroups, info.subgroup);
+		lookupAddIfToList(gdi, [info.group], info.subgroup);
+
+		lookupAddIfToList(all, [info.group, info.subgroup], k);
+
+		// let c = lookup(gsCount, [info.group, info.subgroup]);
+		// console.log(c,isdef(c))
+		// if (isdef(c)) lookupSetOverride(gsCount, [info.group, info.subgroup], (c + 1));
+		// else lookupSet(gsCount, [info.group, info.subgroup], 1);
+
+		if (info.subgroup == 'emotion') addIf(subgroupEmotion, k);
+	}
+	console.log('groups', groups);
+	console.log('subgroups', subgroups);
+	// console.log('dict', gdi);
+	// console.log('count', gsCount);
+	// console.log('emotion', subgroupEmotion);
+	console.log('all', all);
+}
+
+async function t73_languagesParse() {
+	let t = {};
+	for (const l1 of ['C', 'D', 'E', 'F', 'I', 'L', 'R', 'S']) {
+		let fname = '../em1_' + l1 + '.txt';
+
+		let s = await route_path_text(fname);
+
+		//als naechstes split
+		let lines = s.split('\n');
+		console.assert(lines.length == 2071 || lines.length == 2072);
+		t[l1] = { lang: l1, fname: fname, sraw: s, lines: lines };
+
+
+	}
+
+	console.log(t);
+
+	for (let i = 0; i < 2071; i++) {
+		for (const lang in t) {
+			let line = t[lang].lines[i];
+			if (line[0] == '№' || isNumber(line[0])) {
+
+			}
+			//wie soll eine entry ausschauen?
+			//group,subgroup,key (=english key)
+
+			//file1 ist symbols
+			//rename groups and subgroups!
+			//alles nur auf english: key,group,subgroup,
+			//file2 ist dictionary 
+			//ins dictionary kommen fuer jeden key und fuer jedes wort aus tags uebersetzung in alle sprachen
+			//aber wie komm ich von say german to chinese fuer ein wort?
+			//fuer jeden english key kommen alle anderen sprachen, (di[bee]={D:biene,....})
+			//fuer jeden anderen key kommt nur engl entry, di[biene]=bee
+			//dann kann ich di[di[biene]].C ist dann von deutsch zu chinesisch
+			// ich kann ruhig auch kleinere version machen wenn das jetzt zuviel wird!
+
+
+		}
+	}
+
+	return;
+	let txt = await route_path_text('../emoji-test.txt');
+	//console.log('text von dem file ist\n',txt);
+	let lines = txt.split('\n');
+	//let groups=txt.split('# group');
+	//lines.map(x=>console.log('line:',x));
+	let group, subgroup;
+	let NMAX = 100, i = 0;
+	let newSyms = {};
+	for (const line of lines) {
+		if (startsWith(line, '# group')) { group = stringAfter(line, ':').trim(); continue; }
+		if (startsWith(line, '# subgroup')) { subgroup = stringAfter(line, ':').trim(); continue; }
+		if (isEmpty(line)) continue;
+
+		let hex = stringBefore(line, ';').trim();
+		let rest = stringAfter(line, '#');
+		let emo = stringBefore(rest, 'E').trim();
+		let key = stringAfter(rest, '.');
+
+		key = stringAfter(key, ' ').trim();
+
+		let text = unicodeToText(hex);
+
+		let sym = { hex: hex, key: key, emo: emo, group: group, subgroup: subgroup, text: text };
+		if (isdef(Syms[key])) {
+			let info =
+				console.log('key existiert!', key, i);
+			i += 1;
+		} else {
+
+		}
+
+		// console.log('key:' + key + '|');
+		// console.log('code', hex, emo); // ok!
+
+
+
+
+		newSyms[key] = sym;
+		//i += 1; if (i > NMAX) break;
+	}
+	//console.log(newSyms);
+}
+
+async function t73_emoji_testParse() {
+	let txt = await route_path_text('../emoji-test.txt');
+	//console.log('text von dem file ist\n',txt);
+	let lines = txt.split('\n');
+	//let groups=txt.split('# group');
+	//lines.map(x=>console.log('line:',x));
+	let group, subgroup;
+	let NMAX = 100, i = 0;
+	let newSyms = {};
+	for (const line of lines) {
+		if (startsWith(line, '# group')) { group = stringAfter(line, ':').trim(); continue; }
+		if (startsWith(line, '# subgroup')) { subgroup = stringAfter(line, ':').trim(); continue; }
+		if (isEmpty(line)) continue;
+
+
+		let hex = stringBefore(line, ';').trim();
+		let rest = stringAfter(line, '#');
+		let emo = stringBefore(rest, 'E').trim();
+		let key = stringAfter(rest, '.');
+		key = stringAfter(key, ' ').trim();
+
+		if (isdef(newSyms[key]) && hex.length > newSyms[key].hex) continue;
+
+		let q = stringBetween(line, ';', '#').trim();
+		q = (q.includes('fully'));
+
+		let text = unicodeToText(hex);
+
+		let sym = { hex: hex, key: key, emo: emo, group: group, subgroup: subgroup, text: text, q: q };
+		if (isdef(Syms[key])) {
+			let info = Syms[key];
+			sym.info = info;
+			console.log('key existiert!', key, i);
+			i += 1;
+		}
+
+		// console.log('key:' + key + '|');
+		newSyms[key] = sym;
+		//i += 1; if (i > NMAX) break;
+	}
+	downloadAsYaml(newSyms, 'emoInfo');
+	//console.log(newSyms);
+}
+function t72_manTeacher() {
+	//beide genau gleich!
+	let t = unicodeToText('1F468 200D 1F3EB');
+	console.log('teacher text', t)
+	mText(t, dTable, { fz: 150, family: 'emoNoto', display: 'inline-block', bg: 'blue' });
+
+	t = unicodeNormalize('U+1F9D1 U+200D U+1F393');
+	console.log('1F9D1 200D 1F393', t)
+	t = unicodeToText('1F9D1 200D 1F393');
+	mText(t, dTable, { fz: 150, family: 'emoNoto', display: 'inline-block', bg: 'blue' });
+
+	mText(t, dTable, { fz: 150, family: 'emoNoto', display: 'inline-block', bg: 'blue' });
+
+	t = unicodeToText('1F468 1F3FC 200D 1F3EB');
+	mText(t, dTable, { fz: 150, family: 'emoNoto', display: 'inline-block', bg: 'blue' });
+}
+function t72_motorcycle() {
+	//beide genau gleich!
+	let t = unicodeToText('1F3CD');
+	mText(t, dTable, { fz: 150, family: 'emoNoto', display: 'inline-block', bg: 'blue' });
+
+	t = unicodeToText('1F3CD FE0F');
+	mText(t, dTable, { fz: 150, family: 'emoNoto', display: 'inline-block', bg: 'blue' });
+}
+
+
+function t74_mCombinedUnicode() {
+	let hexlist = ['1F635', '200D', '1F4AB'];
+	//let hexlist = ['1F636', '200D', '1F32B', 'FE0F']; //mUnicodeText('1F3CD');
+	let d = mCombinedUnicode(hexlist, dTable, { family: 'emoNoto', fz: 100 });
+}
+function t74_combinedUnicode() {
+	let text = mUnicodeText('1F3CD');
+	text += mUnicodeText('FE0F');
+	let styles = { family: 'emoNoto', fz: 100 };
+	let d = mText(text, dTable, styles);
+}
+function t75_singleUnicode() {
+	for (const s of [1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f']) {
+		for (const s1 of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f']) {
+			// for (const s2 of [0,1,2,3,4,5,6,7,8,9,'a', 'b', 'c', 'd', 'e', 'f']) {
+			let d = mSingleUnicode('1f9' + s + s1, dTable, { fz: 50 });
+			//d.style.alignSelf = chooseRandom(['flex-start', 'flex-end', 'center', 'baseline']);
+		}
+		// }
+	}
+	//d.style.justifySelf='flex-start'
+}
+function t76_singleUnicode() {
+	for (const s of [1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+		let d = mSingleUnicode('1F9' + s + '1', dTable, { fz: 100 });
+		d.style.alignSelf = chooseRandom(['flex-start', 'flex-end', 'center', 'baseline']);
+	}
+	//d.style.justifySelf='flex-start'
+}
+function t77_singleUnicode() {
+	let d = mSingleUnicode('1F981', dTable, { fz: 100 });
+	d.style.alignSelf = 'flex-start';
+	let d1 = mSingleUnicode('1F972', dTable, { fz: 100 });
+}
+
+//geht NICHT! bei fixed size layout soll das auch nicht gehen!
+function t80_tableGrowHeight() {
+	setTimeout(() => mStyleX(dTableBackground, { h: 2000 }), 4000);
+}
+function t78_rightSidebarBehavior() {
+	show(dRightSidebar);
+	dRightSidebar.innerHTML = 'blablablablablablabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwwwwwwwwwwwwwww';//mSize(dSidebar,800,2000);
+	setTimeout(() => { clearElement(dRightSidebar); }, 2000);
+	setTimeout(() => { hide(dRightSidebar); }, 4000);
+	setTimeout(() => { show(dRightSidebar); }, 6000);
+
+}
+function t78_sidebarBehavior() {
+	show(dSidebar);
+	dSidebar.innerHTML = 'blablablablablablabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbwwwwwwwwwwwwwww';//mSize(dSidebar,800,2000);
+	setTimeout(() => { clearElement(dSidebar); }, 2000);
+	setTimeout(() => { hide(dSidebar); }, 4000);
+	setTimeout(() => { show(dSidebar); }, 6000);
+
+}
 function t79_coolIdsSindVars() {
 	mDiv(dTable, { bg: 'green' }, 'dHallo'); dHallo.innerHTML = 'blue'; //ja, wow das geht!!!
-}
-function t80_tableInCenter() {
-
-	//initUi
-
-	// let h=window.innerHeight-60;
-	// window.onresize=()=>mSize(table,'80vw',window.innerHeight-60);
-	// table=mDiv(dTable, { margin: 'auto', w: '80vw', h: h, bg: 'skyblue', rounding:'1vw' },'table');
-	// show(dFooter);
-
-
-
 }
 function t81_singleUnicode() {
 	let a = toBase10('1F981', 16);
@@ -639,3 +891,51 @@ function t99_showPics() {
 		console.log(getRect(mBy('d1')));
 	}, 200);//erst jetzt ist es richtig!!!
 }
+
+//#region helpers unicode
+//new:
+function unicodeNormalize(hexString) {
+	hexString = replaceAllSpecialChars(hexString, 'U+', '');
+	hexString = replaceAll(hexString, '-', ' ');
+	hexString = replaceAll(hexString, '_', ' ');
+	return hexString;
+}
+function unicodeToText(hexString) {
+	let hexlist = hexString.split(' ');
+	let text = '';
+	for (const hex of hexlist) {
+		let a = toBase10(hex, 16);
+		text += '&#' + a.toString() + ';';
+	}
+	return text;
+}
+
+//old:
+function mCombinedUnicodeText(hexlist) {
+	if (isString(hexlist)) hexlist = hexlist.split(' ');
+	let a = toBase10(hex, 16); let text = '&#' + a.toString() + ';'; return text;
+}
+function mUnicodeText(hex) {
+	let a = toBase10(hex, 16); let text = '&#' + a.toString() + ';'; return text;
+}
+function mSingleUnicode(hex, dParent, styles) {
+	let text = mUnicodeText(hex);
+	// let a = toBase10(hex, 16);	let text = '&#' + a.toString() + ';';
+	if (nundef(styles.family)) styles.family = 'emoNoto';
+	return mText(text, dParent, styles);
+}
+function mCombinedUnicode(hexlist, dParent, styles) {
+	let text = '';
+	for (const hex of hexlist) { text += mUnicodeText(hex); }
+	if (nundef(styles.family)) styles.family = 'emoNoto';
+	return mText(text, dParent, styles);
+}
+
+
+
+
+
+
+
+
+

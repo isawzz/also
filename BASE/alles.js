@@ -8515,7 +8515,7 @@ function initTable() {
 	//console.log(dTable,dTitle)
 }
 function initSidebar() {
-	let dParent = mBy('sidebar');
+	let dParent = mBy('dSidebar');
 	clearElement(dParent);
 	dLeiste = mDiv(dParent);
 	mStyleX(dLeiste, { 'min-width':70, 'max-height': '100vh', display: 'flex', 'flex-flow': 'column wrap' });

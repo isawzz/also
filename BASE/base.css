@@ -7,8 +7,8 @@
 	display: flex;
 	flex: 1;
 	flex-wrap: wrap;
-	justify-content: center;
-	align-content: flex-start; /* das ist bei den meisten nicht so gewesen! */
+	justify-content: center; 
+	align-items: center;
 }
 
 html,body {
@@ -16,21 +16,58 @@ html,body {
 	padding: 0;
 	margin: 0;
 	font: 20px Arial;
-	background: deepskyblue; 
+	background: #004054; 
 	color: white;
 }
 div {
 	user-select: none;
 }
 
-#table{
-	width:80vw;
-	height: calc( 100vh - 60px );
-	background: skyblue; 
-	margin: auto;
-	border-radius: 1vw;
+/* #region screen layout: fixed size layout visible screen */
+#dMain{
+	height: calc( 100% - 60px );
 }
-/* #region line3 */
+#dSidebar{
+	background: yellow;
+	height: 100%;
+	min-width: 100px;
+	max-width: 300px;
+	float:left;
+	word-break: break-all;
+	/* flex: 0 0 auto;
+	box-sizing:border-box;
+	padding: 12px;
+	text-align: center; */
+}
+#dRightSidebar{
+	background: yellow;
+	height: 100%;
+	min-width: 100px;
+	max-width: 300px;
+	float:right;
+	word-break: break-all;
+	/* flex: 0 0 auto;
+	box-sizing:border-box;
+	padding: 12px;
+	text-align: center; */
+}
+#dTableBackground{
+	/* background:orange; */
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* display: flex;
+	flex-direction: column;
+	flex-grow: 10; */
+}
+#dTable{
+	height:98%;
+	margin:1vh;
+	background:#ffffff80;
+	border-radius:8px;
+}
+
 .lineOuter {
 	min-width: 100%;
 	padding: 4px 12px;

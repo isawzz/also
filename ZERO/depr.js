@@ -1,11 +1,11 @@
 function mCenterWrapper() {
-	let html = `<table style="width: 100%;height:100%">
+	let html = `<dTable style="width: 100%;height:100%">
   <tr>
      <td style="text-align: center; vertical-align: middle;">
           <div></div>
      </td>
   </tr>
-	</table>`;
+	</dTable>`;
 	let elem = createElementFromHTML(html);
 	let dOuter = mCreate('div');
 	mAppend(dOuter, elem);

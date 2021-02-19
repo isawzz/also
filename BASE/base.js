@@ -3,7 +3,7 @@ function mAppend(d, child) { d.appendChild(child); }
 function mBy(id) { return document.getElementById(id); }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag) { return document.createElement(tag); }
-function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id=id; return d; }
+function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', h: gap }); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
@@ -736,7 +736,7 @@ function calcRowsColsSize(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz 
 	return [sz, dims.rows, dims.cols]; //pictureSize, picsPerLine];
 }
 function calcRowsColsX(num, rows, cols) {
-	const table = {
+	const dTable = {
 		2: { rows: 1, cols: 2 },
 		5: { rows: 2, cols: 3 },
 		7: { rows: 2, cols: 4 },
@@ -744,7 +744,7 @@ function calcRowsColsX(num, rows, cols) {
 		40: { rows: 5, cols: 8 },
 	};
 	if (isdef(rows) || isdef(cols)) return calcRowsCols(num, rows, cols);
-	else if (isdef(table[num])) return table[num];
+	else if (isdef(dTable[num])) return dTable[num];
 	else return calcRowsCols(num, rows, cols);
 }
 function calcRowsCols(num, rows, cols) {
@@ -1218,10 +1218,12 @@ function firstNumber(s) {
 	}
 	return null;
 }
+function includesAnyOf(s, slist) { for (const l of slist) { if (s.includes(l)) return true; } return false; }
 function replaceAll(str, sSub, sBy) {
 	let regex = new RegExp(sSub, 'g');
 	return str.replace(regex, sBy);
 }
+function replaceAllSpecialChars(str, sSub, sBy) { return str.split(sSub).join(sBy); }
 function reverseString(s) {
 	return toLetterList(s).reverse().join('');
 }
