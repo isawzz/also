@@ -1,8 +1,13 @@
 var X;
 
+function t70_showSym() {
+	let k = 'asparagus'; //'artificial-intelligence';
+	let info = Syms[k];
+	mText(info.text, dTable, { fz: 100, family: 'pictoGame', bg: 'red' });
+}
 async function t73_groups() {
 	let s_info = await route_path_yaml_dict('../assets/s_info.yaml');
-	let all = {}, groups = [], subgroups = [], gdi = {}, gsCount = {}, subgroupEmotion = [],byCateg={};
+	let all = {}, groups = [], subgroups = [], gdi = {}, gsCount = {}, subgroupEmotion = [], byCateg = {};
 	for (const k in s_info) {
 
 		// ********* exclusion of keys **************
@@ -11,46 +16,65 @@ async function t73_groups() {
 			|| k.includes('couple with heart:')) continue;
 
 		let o = s_info[k];
-		if (startsWith(o.subgroup,'person-') && (startsWith(k, 'man') || startsWith(k, 'woman'))
+		if (startsWith(o.subgroup, 'person-') && (startsWith(k, 'man') || startsWith(k, 'woman'))
 			//['person-activity','person-role','person-fantasy','person-gesture','person-resting','person-sport'].includes(info.subgroup) && (startsWith(k, 'man') || startsWith(k, 'woman'))
 			|| startsWith(k, 'man:') || startsWith(k, 'woman:')) continue;
-		
-			//only keep one closed book!
-		if (o.group == 'Objects' && o.subgroup == 'book-paper' && includesAnyOf(k,['green','blue','orange'])) continue;
+
+		//only keep one closed book!
+		if (o.group == 'Objects' && o.subgroup == 'book-paper' && includesAnyOf(k, ['green', 'blue', 'orange'])) continue;
 
 		// ********* real groups **************
+		//cat: animal,emotion,face,flag,fruit,hand,object,plant,vegetable,person,shape,sport,time
 		//animal
-		let categ='other';
+		let categ = 'other';
 		if (startsWith(o.subgroup, 'animal') || endsWith(o.subgroup, 'marine')) {
 			//console.log('animal:',k,'.',o.subgroup)
 			//console.log('?',o.subgroup)
-			categ='animal';
-			let no=['front-facing','paws',' face', ' nose'];
-			let no2=['guide dog','service dog','poodle','hatching chick','T-Rex','black ','spiral',' web'];
-			if (includesAnyOf(k,no) || includesAnyOf(k,no2)) categ='animal2';
-		}
+			categ = 'animal';
+			let no = ['front-facing', 'paws', ' face', ' nose'];
+			let no2 = ['guide dog', 'service dog', 'poodle', 'hatching chick', 'T-Rex', 'black ', 'spiral', ' web'];
+			if (includesAnyOf(k, no) || includesAnyOf(k, no2)) categ = 'animal2';
+		} else if (startsWith(o.subgroup, 'plant')) categ = 'plant';
 		//face
-		else if (o.group == 'Smileys & Emotion' && o.subgroup.includes('face')){categ='face';}
+		else if (o.group == 'Smileys & Emotion' && o.subgroup.includes('face')) { categ = 'face'; }
 		//emotion and shape (von smileys*emotion group)
-		else if (o.group == 'Smileys & Emotion' && o.subgroup=='emotion'){
-			if (endsWith(k,'heart') && isColorName(stringBefore(k,' heart'))) categ='shape';else categ='emotion';
+		else if (o.group == 'Smileys & Emotion' && o.subgroup == 'emotion') {
+			if (endsWith(k, 'heart') && isColorName(stringBefore(k, ' heart'))) categ = 'shape'; else categ = 'emotion';
 		}
-		//plants
+		//flag
+		else if (o.group == 'Flags' && o.subgroup == 'country-flag') { categ = 'flag'; }
+		//fruit,vegetable,food,drink
+		else if (startsWith(o.subgroup, 'food')) {
+			if (o.subgroup.includes('fruit')) categ = 'fruit';
+			else if (o.subgroup.includes('vegetable')) categ = 'vegetable';
+			else if (includesAnyOf(o.subgroup, ['asian', 'prepared', 'sweet'])) categ = 'food';
+		}
+		else if (o.subgroup == 'drink') categ = 'drink';
 
-		lookupAddIfToList(byCateg,[categ],k);
-		//cat: animal,emotion,face,flag,fruit,hand,object,plant,vegetable,role,shape,sport,symbol,time
-		//lets start with animal
-		//group (multiple cats in one):life(animal,plant,fruit,vegetable),people(),nemo
-		//priority: 1 fuer best25,...10 
-		//zu shape soll auch hearts in colors kommen!
-		//sport ist: person-sport und activities/sport
-		//person is: person-role,gesture,resting,activity, family
-		//other: person-fantasy,person,body-parts,person-symbol
-		//time ist erst ab Travel & Places, time 7 im array
+		//ueberlege ob food,drink in object gehen soll
 
+		//hand
+		else if (o.group == 'People & Body' && o.subgroup.includes('hand')) categ = 'hand';
 
+		//object
+		if (o.group == 'Food & Drink' && o.subgroup == 'dishware'
+			|| o.group == 'Objects'
+			|| o.group == 'Activities' && o.subgroup != 'sport' && !['performing arts', 'moon viewing ceremony', 'admission tickets'].includes(k)
+			|| o.subgroup == 'hotel'
+			|| o.subgroup == 'time' && !k.includes('o’clock') && !k.includes('-thirty')
+			|| startsWith(o.subgroup, 'transport')
+			|| startsWith(o.subgroup, 'sky') && k.includes(' ') && k != 'tornado'
+		) categ = 'object';
+		else if (startsWith(o.subgroup, 'place')) categ = 'place';
+		else if (o.subgroup == 'time' && (k.includes('o’clock') || k.includes('-thirty'))) categ = 'time';
+		else if (o.subgroup.includes('sport')) categ = 'sport';
+		else if (o.subgroup == 'geometric') categ = 'shape';
 
-		console.assert(isdef(o.group));
+		else if (startsWith(o.subgroup, 'person') && !includesAnyOf(o.subgroup, ['fantasy', 'symbol', 'sport', 'gesture'])) categ = 'person';
+
+		lookupAddIfToList(byCateg, [categ], k.trim().toLowerCase());
+
+		//console.assert(isdef(o.group));
 
 		addIf(groups, o.group);
 		addIf(subgroups, o.subgroup);
@@ -65,22 +89,24 @@ async function t73_groups() {
 
 		if (o.subgroup == 'emotion') addIf(subgroupEmotion, k);
 	}
-	console.log('groups', groups);
-	console.log('subgroups', subgroups);
+
+	//console.log('groups', groups);
+	//console.log('subgroups', subgroups);
 	// console.log('dict', gdi);
 	// console.log('count', gsCount);
 	// console.log('emotion', subgroupEmotion);
-	console.log('all', all);
+	//console.log('all', all);
 
-	for(const c in byCateg){
+	for (const c in byCateg) {
 		byCateg[c].sort();
 	}
 
-	console.log('by cat',byCateg);
-
+	//console.log('by cat', byCateg);
+	return [all, byCateg];
 }
 
 async function t73_languagesParse() {
+	let [gsub, byCateg] = await t73_groups();
 	let t = {};
 	for (const l1 of ['C', 'D', 'E', 'F', 'I', 'L', 'R', 'S']) {
 		let fname = '../em1_' + l1 + '.txt';
@@ -97,12 +123,66 @@ async function t73_languagesParse() {
 
 	console.log(t);
 
+	//als erstes alle keys aus em1_.txt (alle emo types)
+	//danach alle aus syms die nicht drin sind dazunehmen und umformen
+
+
+	let di = { E: {}, C: {}, D: {}, F: {}, I: {}, S: {}, L: {}, R: {} }, ki = {};
+	di.E.water.S = ['agua', 120];
+	di.E.water.key = 'key_for_water';
+	di.S.agua = di.D.wasser = 'water';
+	syms.key_for_water = {
+		hex: 'f3d3d', text: '$&124121;', tags: 'fountain|river',
+		family: 'emoNoto', type: 'emo', w: 144, word: 'water', cats: ['25', 'material']
+	};
+
+	let engl = t.E;
+	let toBeEdited = {};
+	for (let i = 0; i < 2071; i++) {
+		let line = t.E.lines[i];
+		if (!isNumber(line[0])) continue;
+		let parts = line.split(',');
+		let hex = unicodeNormalize(parts[1]);
+		let key = parts[2].trim().toLowerCase();
+		ki[i] = key;
+		let tags = parts[3].trim().toLowerCase();
+		let sym = lookup(Syms, [key]);
+		let o = diEngl[key] = { hex: hex, tags: tags, text: unicodeToText(hex), family: 'emoNoto', type: 'emo' };
+		for (const lang in t) {
+			if (lang == 'E') continue;
+			let l2 = t[lang].lines[i];
+			let parts2 = l2.split(',');
+
+			lookupSet(di, ['E', o.word], )
+		}
+		if (sym && sym.type == 'emo') {
+			//right now take as simple as possible! omit w,h assuming 125,118 for fz=100
+			o.word = sym.E;
+			o.cats = sym.cats;
+			o.w = syms.w; o.h = syms.h;
+			for (l of ['D', 'F', 'S', 'C']) {
+				//o[l] = syms[l];
+				lookupSet(di, ['E', o.word, l], syms[l]);
+				lookupSet(di, [l, syms[l], l], syms[l]);
+
+			}
+		} else {
+			console.log('need to edit word for', key);
+			o.word = key;
+			toBeEdited[key] = key;
+		}
+
+
+		//choice: nur diese oder auch icons?
+	}
 	for (let i = 0; i < 2071; i++) {
 		for (const lang in t) {
 			let line = t[lang].lines[i];
-			if (line[0] == '№' || isNumber(line[0])) {
+			if (!isNumber(line[0])) continue;
 
-			}
+			//habe gsub,byCateg,Syms
+
+
 			//wie soll eine entry ausschauen?
 			//group,subgroup,key (=english key)
 
@@ -924,7 +1004,7 @@ function unicodeNormalize(hexString) {
 	hexString = replaceAllSpecialChars(hexString, 'U+', '');
 	hexString = replaceAll(hexString, '-', ' ');
 	hexString = replaceAll(hexString, '_', ' ');
-	return hexString;
+	return hexString.toLowerCase().trim();
 }
 function unicodeToText(hexString) {
 	let hexlist = hexString.split(' ');
