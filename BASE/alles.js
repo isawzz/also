@@ -5654,7 +5654,7 @@ function isAlphaNumeric(str) {
 		}
 	}
 	return true;
-};
+}
 function isWhiteSpace(ch) { return /\s/.test(ch) }
 function isWhiteSpace1(s) { let white = new RegExp(/^\s$/); return white.test(s.charAt(0)); }
 function isWhiteSpace2(ch) {

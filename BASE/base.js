@@ -291,7 +291,7 @@ function colorRGB(cAny, asObject = false) {
 		return srgb;
 	}
 } //ok
-function ensureColorNames(){
+function ensureColorNames() {
 	if (isdef(ColorNames)) return;
 	ColorNames = {};
 	let names = getColorNames();
@@ -300,7 +300,7 @@ function ensureColorNames(){
 		ColorNames[names[i].toLowerCase()] = '#' + hexes[i];
 	}
 }
-function colorNameToHex(cName) {	let key = cName.toLowerCase();	ensureColorNames();	return key in ColorNames ? ColorNames[key] : randomHexColor();} //ok
+function colorNameToHex(cName) { let key = cName.toLowerCase(); ensureColorNames(); return key in ColorNames ? ColorNames[key] : randomHexColor(); } //ok
 function colorPalShade(color) {
 	//assumes pSBC compatible color format (hex,rgb strings)
 	let res = [];
@@ -1287,6 +1287,17 @@ function copyKeys(ofrom, oto, except = {}, only) {
 		oto[k] = ofrom[k];
 	}
 }
+function fisherYates(array) {
+	var rnd, temp;
+
+	for (var i = array.length - 1; i; i--) {
+		rnd = Math.random() * i | 0;
+		temp = array[i];
+		array[i] = array[rnd];
+		array[rnd] = temp;
+	}
+	return array;
+}
 function firstCond(arr, func) {
 	//return first elem that fulfills condition
 	if (nundef(arr)) return null;
@@ -1307,6 +1318,16 @@ function firstNCond(n, arr, func) {
 
 	}
 	return result;
+}
+function intersection(arr1, arr2) {
+	//each el in result will be unique
+	let res = [];
+	for (const a of arr1) {
+		if (arr2.includes(a)) {
+			addIf(res, a);
+		}
+	}
+	return res;
 }
 function loop(n) { return range(1, n); }
 function lookup(dict, keys) {
@@ -1459,7 +1480,15 @@ function range(f, t, st = 1) {
 	}
 	return arr;
 }
-function takeFromStart(ad, n) {
+function shuffle(arr) { return fisherYates(arr); }
+function shuffleChildren(dParent) {
+	let arr = arrChildren(dParent);
+	console.log(arr);
+	arr.map(x => x.remove());
+	//return;
+	shuffle(arr);
+	for (const elem of arr) { mAppend(dParent, elem) }
+} function takeFromStart(ad, n) {
 	if (isDict(ad)) {
 		let keys = Object.keys(ad);
 		return keys.slice(0, n).map(x => (ad[x]));
@@ -1531,7 +1560,7 @@ function allNumbers(s) {
 	return s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => Number(v));
 	// {console.log(v,typeof v,v[0],v[0]=='-',v[0]=='-'?-(+v):+v,Number(v));return Number(v);});
 }
-function endsWith(s, sSub) { let i = s.indexOf(sSub); return i>=0 && i == s.length - sSub.length; }
+function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
 function firstNumber(s) {
 	// returns first number in string s
 	if (s) {
@@ -1548,7 +1577,7 @@ function replaceAll(str, sSub, sBy) {
 	let regex = new RegExp(sSub, 'g');
 	return str.replace(regex, sBy);
 }
-function replaceAllSpecialChars(str, sSub, sBy) { return str.split(sSub).join(sBy); }  
+function replaceAllSpecialChars(str, sSub, sBy) { return str.split(sSub).join(sBy); }
 function reverseString(s) {
 	return toLetterList(s).reverse().join('');
 }
@@ -1615,6 +1644,7 @@ function createElementFromHTML(htmlString) {
 	//console.log(div.firstChild)
 	return div.firstChild;
 }
+function hasWhiteSpace(s) { return /\s/g.test(s); }
 function hide(elem) {
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (isSvg(elem)) {
@@ -1623,20 +1653,47 @@ function hide(elem) {
 		elem.style.display = 'none';
 	}
 }
+function isAlphaNum(s) {
+	//regex version: Here 
+	// ^ means beginning of string and 
+	// $ means end of string, and [0-9a-z]+ means one or more of character from 0 to 9 OR from a to z.
+	// i means case insensitive
+
+	return /^[a-z0-9_]+$/i.test(s); // only lower case: /^[0-9a-z_]+$/);
+
+	//alternativ: /[a-zA-Z0-9-_ ]/.test(charEntered)
+}
+function isAlphaNumeric(str) {
+	var code, i, len;
+
+	for (i = 0, len = str.length; i < len; i++) {
+		code = str.charCodeAt(i);
+		if (!(code > 47 && code < 58) && // numeric (0-9)
+			!(code > 64 && code < 91) && // upper alpha (A-Z)
+			!(code > 96 && code < 123) && str[i] != '_') { // lower alpha (a-z)
+			return false;
+		}
+	}
+	return true;
+}
+function isCapitalLetter(s) { return /^[A-Z]$/i.test(s); }
+function isCapitalLetterOrDigit(s) { return /^[A-Z0-9ÖÄÜ]$/i.test(s); }
+function isColorName(s) { ensureColorNames(); return (isdef(ColorNames[s.toLowerCase()])); }
+function isdef(x) { return x !== null && x !== undefined; }
+function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
+function isDictOrList(d) { return typeof (d) == 'object'; }
+function isDigit(s) { return /^[0-9]$/i.test(s); }
 function isEmpty(arr) {
 	return arr === undefined || !arr
 		|| (isString(arr) && (arr == 'undefined' || arr == ''))
 		|| (Array.isArray(arr) && arr.length == 0)
 		|| Object.entries(arr).length === 0;
 }
-function isdef(x) { return x !== null && x !== undefined; }
-function nundef(x) { return x === null || x === undefined; }
-function isColorName(s){ensureColorNames(); return (isdef(ColorNames[s.toLowerCase()]));}
-function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
-function isDictOrList(d) { return typeof (d) == 'object'; }
+function isLetter(s) { return /^[a-zA-Z]$/i.test(s); }
 function isList(arr) { return Array.isArray(arr); }
 function isLiteral(x) { return isString(x) || isNumber(x); }
-function isNumber(x) { return !isNaN(+x); }
+function isNumber(x) { return x != ' ' && !isNaN(+x); }
+function isSingleDigit(s) { return /^[0-9]$/i.test(s); }
 function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
 function isVisible(elem) { // Where el is the DOM element you'd like to test for visibility
@@ -1644,6 +1701,8 @@ function isVisible(elem) { // Where el is the DOM element you'd like to test for
 	if (isString(elem)) elem = document.getElementById(elem);
 	return (elem.style.display != 'none' || elem.offsetParent !== null);
 }
+function isWhiteSpace(ch) { return /\s/.test(ch) }
+
 function jsCopy(o) {
 	//console.log(o)
 	return JSON.parse(JSON.stringify(o));
@@ -1653,6 +1712,7 @@ function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
 	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
 	return nOrString;
 }
+function nundef(x) { return x === null || x === undefined; }
 function show(elem, isInline = false) {
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (isSvg(elem)) {

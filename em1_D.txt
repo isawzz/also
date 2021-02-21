@@ -1,22 +1,22 @@
-Smileys & Emotionen
-lächelnd
-№,Code,Stichprobe,CLDR Kurzname,Andere Schlüsselwörter
-1,U + 1F600,😀,grinsendes Gesicht,Gesicht | grinsen | grinsendes Gesicht
-2,U + 1F603,😃,grinsendes Gesicht mit großen Augen,Gesicht | grinsendes Gesicht mit großen Augen Mund | offen | Lächeln
-3,U + 1F604,😄,grinsendes Gesicht mit lächelnden Augen,Auge | Gesicht | grinsendes Gesicht mit lächelnden Augen Mund | offen | Lächeln
-4,U + 1F601,😁,strahlendes Gesicht mit lächelnden Augen,strahlendes Gesicht mit lächelnden Augen Auge | Gesicht | grinsen | Lächeln
-5,U + 1F606,😆,grinsendes schielendes Gesicht,Gesicht | grinsendes schielendes Gesicht lachen | Mund | zufrieden | Lächeln
-6,U + 1F605,😅,grinsendes Gesicht mit Schweiß,kalt | Gesicht | grinsendes Gesicht mit Schweiß offen | lächeln | Schweiß
-7,U + 1F923,🤣,lachend auf dem Boden rollen,Gesicht | Boden | lachen | rofl | rollen | auf dem Boden rollen lachend | rotfl
-8,U + 1F602,😂,Gesicht mit Freudentränen,Gesicht | Gesicht mit Freudentränen Freude | lachen | reißen
-9,U + 1F642,🙂,leicht lächelndes Gesicht,Gesicht | leicht lächelndes Gesicht | Lächeln
-10,U + 1F643,🙃,verkehrtes Gesicht,Gesicht | verkehrt herum
-11,U + 1F609,😉,zwinkert Gesicht,Gesicht | zwinker | zwinkert Gesicht
-12,U + 1F60A,😊,lächelndes Gesicht mit lächelnden Augen,erröten | Auge | Gesicht | lächeln | lächelndes Gesicht mit lächelnden Augen
-13,U + 1F607,😇,lächelndes Gesicht mit Heiligenschein,Engel | Gesicht | Fantasie | Heiligenschein | unschuldig | lächelndes Gesicht mit Heiligenschein
-Gesichts-Zuneigung
-№,Code,Stichprobe,CLDR Kurzname,Andere Schlüsselwörter
-14,U + 1F970,🥰,lächelndes Gesicht mit Herzen,verehren | zerquetschen | Herzen | verliebt | lächelndes Gesicht mit Herzen
+Emoticonos y emoción
+cara sonriente
+№,Código,Muestra,CLDR Nombre corto,Otras Palabras Clave
+1,U + 1F600,😀,cara sonriente,cara | sonrisa | cara sonriente
+2,U + 1F603,😃,cara sonriente con ojos grandes,cara | cara sonriente con ojos grandes | boca | abierto | sonreír
+3,U + 1F604,😄,cara sonriente con ojos sonrientes,ojo | cara | cara sonriente con ojos sonrientes | boca | abierto | sonreír
+4,U + 1F601,😁,rostro radiante con ojos sonrientes,rostro radiante con ojos sonrientes | ojo | cara | sonrisa | sonreír
+5,U + 1F606,😆,sonriendo entrecerrando los ojos,cara | sonriendo entrecerrando los ojos | reír | boca | satisfecho | sonreír
+6,U + 1F605,😅,cara sonriente con sudor,frio | cara | cara sonriente de sudor | abierto | sonrisa | sudor
+7,U + 1F923,🤣,rodando en el piso, riendo,cara | piso | reír | rofl | rodando | rodando por el suelo riendo | rotfl
+8,U + 1F602,😂,cara con lágrimas de alegría,cara | cara con lágrimas de alegría | alegría | reír | lágrima
+9,U + 1F642,🙂,cara ligeramente sonriente,cara | rostro levemente sonriente | sonreír
+10,U + 1F643,🙃,cara al revés,cara | Al revés
+11,U + 1F609,😉,guiñando un ojo,cara | guiño | guiñando un ojo
+12,U + 1F60A,😊,cara sonriente con ojos sonrientes,rubor | ojo | cara | sonrisa | cara sonriente con ojos sonrientes
+13,U + 1F607,😇,cara sonriente con halo,ángel | cara | fantasía | halo | inocente | cara sonriente con halo
+cara-afecto
+№,Código,Muestra,CLDR Nombre corto,Otras Palabras Clave
+14,U + 1F970,🥰,cara sonriente con corazones,adorar | aplastar | corazones | enamorado | cara sonriente con corazones
 15,U + 1F60D,😍,smiling face with heart-eyes,eye | face | love | smile | smiling face with heart-eyes
 16,U+1F929,🤩,star-struck,eyes | face | grinning | star | star-struck | starry-eyed
 17,U+1F618,😘,face blowing a kiss,face | face blowing a kiss | kiss
@@ -2056,16 +2056,16 @@ country-flag
 1803,U+1F1FB U+1F1EE,🇻🇮,flag: U.S. Virgin Islands,flag
 1804,U+1F1FB U+1F1F3,🇻🇳,flag: Vietnam,flag
 1805,U+1F1FB U+1F1FA,🇻🇺,flag: Vanuatu,flag
-1806,U + 1F1FC U + 1F1EB,🇼🇫,Flagge: Wallis & Futuna,Flagge
-1807,U + 1F1FC U + 1F1F8,🇼🇸,Flagge: Samoa,Flagge
-1808,U + 1F1FD U + 1F1F0,🇽🇰,Flagge: Kosovo,Flagge
-1809,U + 1F1FE U + 1F1EA,🇾🇪,Flagge: Jemen,Flagge
-1810,U + 1F1FE U + 1F1F9,🇾🇹,Flagge: Mayotte,Flagge
-1811,U + 1F1FF U + 1F1E6,🇿🇦,Flagge: Südafrika,Flagge
-1812,U + 1F1FF U + 1F1F2,🇿🇲,Flagge: Sambia,Flagge
-1813,U + 1F1FF U + 1F1FC,🇿🇼,Flagge: Simbabwe,Flagge
-Unterteilungsflagge
-№,Code,Stichprobe,CLDR Kurzname,Andere Schlüsselwörter
-1814,U + 1F3F4 U + E0067 U + E0062 U + E0065 U + E006E U + E0067 U + E007F,🏴󠁧󠁢󠁥󠁮󠁧󠁿,Flagge: England,Flagge
-1815,U + 1F3F4 U + E0067 U + E0062 U + E0073 U + E0063 U + E0074 U + E007F,🏴󠁧󠁢󠁳󠁣󠁴󠁿,Flagge: Schottland,Flagge
-1816,U + 1F3F4 U + E0067 U + E0062 U + E0077 U + E006C U + E0073 U + E007F,🏴󠁧󠁢󠁷󠁬󠁳󠁿,Flagge: Wales,Flagge
+1806,U+1F1FC U+1F1EB,🇼🇫,flag: Wallis & Futuna,flag
+1807,U+1F1FC U+1F1F8,🇼🇸,flag: Samoa,flag
+1808,U+1F1FD U+1F1F0,🇽🇰,flag: Kosovo,flag
+1809,U + 1F1FE U + 1F1EA,🇾🇪,bandera: Yemen,bandera
+1810,U + 1F1FE U + 1F1F9,🇾🇹,bandera: Mayotte,bandera
+1811,U + 1F1FF U + 1F1E6,🇿🇦,bandera: Sudáfrica,bandera
+1812,U + 1F1FF U + 1F1F2,🇿🇲,bandera: Zambia,bandera
+1813,U + 1F1FF U + 1F1FC,🇿🇼,bandera: Zimbabwe,bandera
+bandera de subdivisión
+№,Código,Muestra,CLDR Nombre corto,Otras Palabras Clave
+1814,U + 1F3F4 U + E0067 U + E0062 U + E0065 U + E006E U + E0067 U + E007F,🏴󠁧󠁢󠁥󠁮󠁧󠁿,bandera: Inglaterra,bandera
+1815,U + 1F3F4 U + E0067 U + E0062 U + E0073 U + E0063 U + E0074 U + E007F,🏴󠁧󠁢󠁳󠁣󠁴󠁿,bandera: Escocia,bandera
+1816,U + 1F3F4 U + E0067 U + E0062 U + E0077 U + E006C U + E0073 U + E007F,🏴󠁧󠁢󠁷󠁬󠁳󠁿,bandera: Gales,bandera

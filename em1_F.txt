@@ -1,443 +1,443 @@
 Smileys et émotion
 visage souriant
-№,Code,Échantillon,Nom court CLDR,Autres mots-clés
-1,U + 1F600,😀,visage souriant,visage | sourire | visage souriant
-2,U + 1F603,😃,visage souriant avec de grands yeux,visage | visage souriant avec de grands yeux | bouche | ouvert | le sourire
-3,U + 1F604,😄,visage souriant avec des yeux souriants,oeil | visage | visage souriant avec des yeux souriants | bouche | ouvert | le sourire
-4,U + 1F601,😁,visage rayonnant aux yeux souriants,visage rayonnant aux yeux souriants | oeil | visage | sourire | le sourire
-5,U + 1F606,😆,visage souriant plissant les yeux,visage | visage souriant plissant les yeux | rire | bouche | satisfait | le sourire
-6,U + 1F605,😅,visage souriant de sueur,froid | visage | visage souriant de sueur | ouvert | sourire | transpiration
-7,U + 1F923,🤣,roulant sur le sol en riant,visage | étage | rire | rofl | roulant | roulant sur le sol en riant | rotfl
-8,U + 1F602,😂,visage avec des larmes de joie,visage | visage avec des larmes de joie | joie | rire | larme
-9,U + 1F642,🙂,visage légèrement souriant,visage | visage légèrement souriant | le sourire
-dix,U + 1F643,🙃,visage à l'envers,visage | à l'envers
-11,U + 1F609,😉,visage clignotant,visage | clin d'oeil | visage clignotant
-12,U + 1F60A,😊,visage souriant avec des yeux souriants,rougir | oeil | visage | sourire | visage souriant avec des yeux souriants
-13,U + 1F607,😇,visage souriant avec halo,ange | visage | fantaisie | halo | innocent | visage souriant avec halo
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+1, U + 1F600, 😀, visage souriant, visage | sourire | visage souriant
+2, U + 1F603, 😃, visage souriant avec de grands yeux, visage | visage souriant avec de grands yeux | bouche | ouvert | le sourire
+3, U + 1F604, 😄, visage souriant avec yeux souriants, œil | visage | visage souriant avec des yeux souriants | bouche | ouvert | le sourire
+4, U + 1F601, 😁, visage rayonnant aux yeux souriants, visage rayonnant aux yeux souriants | oeil | visage | sourire | le sourire
+5, U + 1F606, 😆, visage souriant, plissant les yeux | visage souriant plissant les yeux | rire | bouche | satisfait | le sourire
+6, U + 1F605, 😅, visage souriant avec sueur, froid | visage | visage souriant de sueur | ouvert | sourire | transpiration
+7, U + 1F923, 🤣, roulant sur le sol en riant, le visage | étage | rire | rofl | roulant | roulant sur le sol en riant | rotfl
+8, U + 1F602, 😂, visage aux larmes de joie, visage | visage avec des larmes de joie | joie | rire | larme
+9, U + 1F642, 🙂, visage, visage légèrement souriant | visage légèrement souriant | le sourire
+10, U + 1F643, 🙃, face à l'envers, face | à l'envers
+11, U + 1F609, 😉, visage clignotant, visage | clin d'oeil | visage clignotant
+12, U + 1F60A, 😊, visage souriant aux yeux souriants, rougir | oeil | visage | sourire | visage souriant avec des yeux souriants
+13, U + 1F607, 😇, visage souriant avec halo, ange | visage | fantaisie | halo | innocent | visage souriant avec halo
 visage-affection
-№,Code,Échantillon,Nom court CLDR,Autres mots-clés
-14,U + 1F970,🥰,visage souriant avec des coeurs,adorer | écraser | coeurs | amoureux | visage souriant avec des coeurs
-15,U + 1F60D,😍,smiling face with heart-eyes,eye | face | love | smile | smiling face with heart-eyes
-16,U+1F929,🤩,star-struck,eyes | face | grinning | star | star-struck | starry-eyed
-17,U+1F618,😘,face blowing a kiss,face | face blowing a kiss | kiss
-18,U+1F617,😗,kissing face,face | kiss | kissing face
-19,U+263A,☺,smiling face,face | outlined | relaxed | smile | smiling face
-20,U+1F61A,😚,kissing face with closed eyes,closed | eye | face | kiss | kissing face with closed eyes
-21,U+1F619,😙,kissing face with smiling eyes,eye | face | kiss | kissing face with smiling eyes | smile
-22,U+1F972,🥲,smiling face with tear,grateful | proud | relieved | smiling | smiling face with tear | tear | touched
-face-tongue
-№,Code,Sample,CLDR Short Name,Other Keywords
-23,U+1F60B,😋,face savoring food,delicious | face | face savoring food | savouring | smile | yum
-24,U+1F61B,😛,face with tongue,face | face with tongue | tongue
-25,U+1F61C,😜,winking face with tongue,eye | face | joke | tongue | wink | winking face with tongue
-26,U+1F92A,🤪,zany face,eye | goofy | large | small | zany face
-27,U+1F61D,😝,squinting face with tongue,eye | face | horrible | squinting face with tongue | taste | tongue
-28,U+1F911,🤑,money-mouth face,face | money | money-mouth face | mouth
-face-hand
-№,Code,Sample,CLDR Short Name,Other Keywords
-29,U+1F917,🤗,hugging face,face | hug | hugging
-30,U+1F92D,🤭,face with hand over mouth,face with hand over mouth | whoops | shock | sudden realization | surprise
-31,U+1F92B,🤫,shushing face,quiet | shush | shushing face
-32,U+1F914,🤔,thinking face,face | thinking
-face-neutral-skeptical
-№,Code,Sample,CLDR Short Name,Other Keywords
-33,U+1F910,🤐,zipper-mouth face,face | mouth | zipper | zipper-mouth face
-34,U+1F928,🤨,face with raised eyebrow,distrust | face with raised eyebrow | skeptic | disapproval | disbelief | mild surprise | scepticism
-35,U+1F610,😐,neutral face,deadpan | face | meh | neutral
-36,U+1F611,😑,expressionless face,expressionless | face | inexpressive | meh | unexpressive
-37,U+1F636,😶,face without mouth,face | face without mouth | mouth | quiet | silent
-38,U+1F636 U+200D U+1F32B U+FE0F,😶‍🌫️,⊛ face in clouds,absentminded | face in clouds | face in the fog | head in clouds
-39,U+1F60F,😏,smirking face,face | smirk | smirking face
-40,U+1F612,😒,unamused face,face | unamused | unhappy
-41,U+1F644,🙄,face with rolling eyes,eyeroll | eyes | face | face with rolling eyes | rolling
-42,U+1F62C,😬,grimacing face,face | grimace | grimacing face
-43,U+1F62E U+200D U+1F4A8,😮‍💨,⊛ face exhaling,exhale | face exhaling | gasp | groan | relief | whisper | whistle
-44,U+1F925,🤥,lying face,face | lie | lying face | pinocchio
-face-sleepy
-№,Code,Sample,CLDR Short Name,Other Keywords
-45,U+1F60C,😌,relieved face,face | relieved
-46,U+1F614,😔,pensive face,dejected | face | pensive
-47,U+1F62A,😪,sleepy face,face | sleep | sleepy face
-48,U+1F924,🤤,drooling face,drooling | face
-49,U+1F634,😴,sleeping face,face | sleep | sleeping face | zzz
-face-unwell
-№,Code,Sample,CLDR Short Name,Other Keywords
-50,U+1F637,😷,face with medical mask,cold | doctor | face | face with medical mask | mask | sick
-51,U+1F912,🤒,face with thermometer,face | face with thermometer | ill | sick | thermometer
-52,U+1F915,🤕,face with head-bandage,bandage | face | face with head-bandage | hurt | injury
-53,U+1F922,🤢,nauseated face,face | nauseated | vomit
-54,U+1F92E,🤮,face vomiting,face vomiting | puke | sick | vomit
-55,U+1F927,🤧,sneezing face,face | gesundheit | sneeze | sneezing face
-56,U+1F975,🥵,hot face,feverish | heat stroke | hot | hot face | red-faced | sweating
-57,U+1F976,🥶,cold face,blue-faced | cold | cold face | freezing | frostbite | icicles
-58,U+1F974,🥴,woozy face,dizzy | intoxicated | tipsy | uneven eyes | wavy mouth | woozy face
-59,U+1F635,😵,knocked-out face,dead | face | knocked out | knocked-out face
-60,U+1F635 U+200D U+1F4AB,😵‍💫,⊛ face with spiral eyes,dizzy | face with spiral eyes | hypnotized | spiral | trouble | whoa
-61,U+1F92F,🤯,exploding head,exploding head | mind blown | shocked
-face-hat
-№,Code,Sample,CLDR Short Name,Other Keywords
-62,U+1F920,🤠,cowboy hat face,cowboy | cowgirl | face | hat
-63,U+1F973,🥳,partying face,celebration | hat | horn | party | partying face
-64,U+1F978,🥸,disguised face,disguise | disguised face | face | glasses | incognito | nose
-face-glasses
-№,Code,Sample,CLDR Short Name,Other Keywords
-65,U+1F60E,😎,smiling face with sunglasses,bright | cool | face | smiling face with sunglasses | sun | sunglasses
-66,U+1F913,🤓,nerd face,face | geek | nerd
-67,U+1F9D0,🧐,face with monocle,face with monocle | stuffy | wealthy
-face-concerned
-№,Code,Sample,CLDR Short Name,Other Keywords
-68,U+1F615,😕,confused face,confused | face | meh
-69,U+1F61F,😟,worried face,face | worried
-70,U+1F641,🙁,slightly frowning face,face | frown | slightly frowning face
-71,U+2639,☹,frowning face,face | frown | frowning face
-72,U+1F62E,😮,face with open mouth,face | face with open mouth | mouth | open | sympathy
-73,U+1F62F,😯,hushed face,face | hushed | stunned | surprised
-74,U+1F632,😲,astonished face,astonished | face | shocked | totally
-75,U+1F633,😳,flushed face,dazed | face | flushed
-76,U+1F97A,🥺,pleading face,begging | mercy | pleading face | puppy eyes
-77,U+1F626,😦,frowning face with open mouth,face | frown | frowning face with open mouth | mouth | open
-78,U+1F627,😧,anguished face,anguished | face
-79,U+1F628,😨,fearful face,face | fear | fearful | scared
-80,U+1F630,😰,anxious face with sweat,anxious face with sweat | blue | cold | face | rushed | sweat
-81,U+1F625,😥,sad but relieved face,disappointed | face | relieved | sad but relieved face | whew
-82,U+1F622,😢,crying face,cry | crying face | face | sad | tear
-83,U+1F62D,😭,loudly crying face,cry | face | loudly crying face | sad | sob | tear
-84,U+1F631,😱,face screaming in fear,face | face screaming in fear | fear | munch | scared | scream
-85,U+1F616,😖,confounded face,confounded | face
-86,U+1F623,😣,persevering face,face | persevere | persevering face
-87,U+1F61E,😞,disappointed face,disappointed | face
-№,Code,Sample,CLDR Short Name,Other Keywords
-88,U+1F613,😓,downcast face with sweat,cold | downcast face with sweat | face | sweat
-89,U+1F629,😩,weary face,face | tired | weary
-90,U+1F62B,😫,tired face,face | tired
-91,U+1F971,🥱,yawning face,bored | tired | yawn | yawning face
-face-negative
-№,Code,Sample,CLDR Short Name,Other Keywords
-92,U+1F624,😤,face with steam from nose,face | face with steam from nose | triumph | won
-93,U+1F621,😡,pouting face,angry | face | mad | pouting | rage | red
-94,U+1F620,😠,angry face,anger | angry | face | mad
-95,U+1F92C,🤬,face with symbols on mouth,face with symbols on mouth | swearing | cursing
-96,U+1F608,😈,smiling face with horns,face | fairy tale | fantasy | horns | smile | smiling face with horns
-97,U+1F47F,👿,angry face with horns,angry face with horns | demon | devil | face | fantasy | imp
-98,U+1F480,💀,skull,death | face | fairy tale | monster | skull
-99,U+2620,☠,skull and crossbones,crossbones | death | face | monster | skull | skull and crossbones
-face-costume
-№,Code,Sample,CLDR Short Name,Other Keywords
-100,U+1F4A9,💩,pile of poo,dung | face | monster | pile of poo | poo | poop
-101,U+1F921,🤡,clown face,clown | face
-102,U+1F479,👹,ogre,creature | face | fairy tale | fantasy | monster | ogre | troll
-103,U+1F47A,👺,goblin,creature | face | fairy tale | fantasy | goblin | monster
-104,U+1F47B,👻,ghost,creature | face | fairy tale | fantasy | ghost | monster
-105,U+1F47D,👽,alien,alien | creature | extraterrestrial | face | fantasy | ufo
-106,U+1F47E,👾,alien monster,alien | creature | extraterrestrial | face | monster | ufo
-107,U+1F916,🤖,robot,face | monster | robot
-cat-face
-№,Code,Sample,CLDR Short Name,Other Keywords
-108,U+1F63A,😺,grinning cat,cat | face | grinning | mouth | open | smile
-109,U+1F638,😸,grinning cat with smiling eyes,cat | eye | face | grin | grinning cat with smiling eyes | smile
-110,U+1F639,😹,cat with tears of joy,cat | cat with tears of joy | face | joy | tear
-111,U+1F63B,😻,smiling cat with heart-eyes,cat | eye | face | heart | love | smile | smiling cat with heart-eyes
-112,U+1F63C,😼,cat with wry smile,cat | cat with wry smile | face | ironic | smile | wry
-113,U+1F63D,😽,kissing cat,cat | eye | face | kiss | kissing cat
-114,U+1F640,🙀,weary cat,cat | face | oh | surprised | weary
-115,U+1F63F,😿,crying cat,cat | cry | crying cat | face | sad | tear
-116,U+1F63E,😾,pouting cat,cat | face | pouting
-monkey-face
-№,Code,Sample,CLDR Short Name,Other Keywords
-117,U+1F648,🙈,see-no-evil monkey,evil | face | forbidden | monkey | see | see-no-evil monkey
-118,U+1F649,🙉,hear-no-evil monkey,evil | face | forbidden | hear | hear-no-evil monkey | monkey
-119,U+1F64A,🙊,speak-no-evil monkey,evil | face | forbidden | monkey | speak | speak-no-evil monkey
-emotion
-№,Code,Sample,CLDR Short Name,Other Keywords
-120,U+1F48B,💋,kiss mark,kiss | kiss mark | lips
-121,U+1F48C,💌,love letter,heart | letter | love | mail
-122,U+1F498,💘,heart with arrow,arrow | cupid | heart with arrow
-123,U+1F49D,💝,heart with ribbon,heart with ribbon | ribbon | valentine
-124,U+1F496,💖,sparkling heart,excited | sparkle | sparkling heart
-125,U+1F497,💗,growing heart,excited | growing | growing heart | nervous | pulse
-126,U+1F493,💓,beating heart,beating | beating heart | heartbeat | pulsating
-127,U+1F49E,💞,revolving hearts,revolving | revolving hearts
-128,U+1F495,💕,two hearts,love | two hearts
-129,U+1F49F,💟,heart decoration,heart | heart decoration
-130,U+2763,❣,heart exclamation,exclamation | heart exclamation | mark | punctuation
-131,U+1F494,💔,broken heart,break | broken | broken heart
-132,U+2764 U+FE0F U+200D U+1F525,❤️‍🔥,⊛ heart on fire,burn | heart | heart on fire | love | lust | sacred heart
-133,U+2764 U+FE0F U+200D U+1FA79,❤️‍🩹,⊛ mending heart,healthier | improving | mending | mending heart | recovering | recuperating | well
-134,U+2764,❤,red heart,heart | red heart
-135,U+1F9E1,🧡,orange heart,orange | orange heart
-136,U+1F49B,💛,yellow heart,yellow | yellow heart
-137,U+1F49A,💚,green heart,green | green heart
-138,U+1F499,💙,blue heart,blue | blue heart
-139,U+1F49C,💜,purple heart,purple | purple heart
-№,Code,Sample,CLDR Short Name,Other Keywords
-140,U+1F90E,🤎,brown heart,brown | heart
-141,U+1F5A4,🖤,black heart,black | black heart | evil | wicked
-142,U+1F90D,🤍,white heart,heart | white
-143,U+1F4AF,💯,hundred points,100 | full | hundred | hundred points | score
-144,U+1F4A2,💢,anger symbol,anger symbol | angry | comic | mad
-145,U+1F4A5,💥,collision,boom | collision | comic
-146,U+1F4AB,💫,dizzy,comic | dizzy | star
-147,U+1F4A6,💦,sweat droplets,comic | splashing | sweat | sweat droplets
-148,U+1F4A8,💨,dashing away,comic | dash | dashing away | running
-149,U+1F573,🕳,hole,hole
-150,U+1F4A3,💣,bomb,bomb | comic
-151,U+1F4AC,💬,speech balloon,balloon | bubble | comic | dialog | speech
-152,U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F,👁️‍🗨️,eye in speech bubble,eye | eye in speech bubble | speech bubble | witness
-153,U+1F5E8,🗨,left speech bubble,dialog | left speech bubble | speech
-154,U+1F5EF,🗯,right anger bubble,angry | balloon | bubble | mad | right anger bubble
-155,U+1F4AD,💭,thought balloon,balloon | bubble | comic | thought
-156,U+1F4A4,💤,zzz,comic | sleep | zzz
-People & Body
-hand-fingers-open
-№,Code,Sample,CLDR Short Name,Other Keywords
-157,U+1F44B,👋,waving hand,hand | wave | waving
-158,U+1F91A,🤚,raised back of hand,backhand | raised | raised back of hand
-159,U+1F590,🖐,hand with fingers splayed,finger | hand | hand with fingers splayed | splayed
-160,U+270B,✋,raised hand,hand | high 5 | high five | raised hand
-161,U+1F596,🖖,vulcan salute,finger | hand | spock | vulcan | vulcan salute
-hand-fingers-partial
-№,Code,Sample,CLDR Short Name,Other Keywords
-162,U+1F44C,👌,OK hand,hand | OK
-163,U+1F90C,🤌,pinched fingers,fingers | hand gesture | interrogation | pinched | sarcastic
-164,U+1F90F,🤏,pinching hand,pinching hand | small amount
-165,U+270C,✌,victory hand,hand | v | victory
-166,U+1F91E,🤞,crossed fingers,cross | crossed fingers | finger | hand | luck
-167,U+1F91F,🤟,love-you gesture,hand | ILY | love-you gesture
-168,U+1F918,🤘,sign of the horns,finger | hand | horns | rock-on | sign of the horns
-169,U+1F919,🤙,call me hand,call | call me hand | hand
-hand-single-finger
-№,Code,Sample,CLDR Short Name,Other Keywords
-170,U+1F448,👈,backhand index pointing left,backhand | backhand index pointing left | finger | hand | index | point
-171,U+1F449,👉,backhand index pointing right,backhand | backhand index pointing right | finger | hand | index | point
-172,U+1F446,👆,backhand index pointing up,backhand | backhand index pointing up | finger | hand | point | up
-173,U+1F595,🖕,middle finger,finger | hand | middle finger
-174,U+1F447,👇,backhand index pointing down,backhand | backhand index pointing down | down | finger | hand | point
-175,U+261D,☝,index pointing up,finger | hand | index | index pointing up | point | up
-hand-fingers-closed
-№,Code,Sample,CLDR Short Name,Other Keywords
-176,U+1F44D,👍,thumbs up,+1 | hand | thumb | thumbs up | up
-177,U+1F44E,👎,thumbs down,-1 | down | hand | thumb | thumbs down
-178,U+270A,✊,raised fist,clenched | fist | hand | punch | raised fist
-179,U+1F44A,👊,oncoming fist,clenched | fist | hand | oncoming fist | punch
-180,U+1F91B,🤛,left-facing fist,fist | left-facing fist | leftwards
-181,U+1F91C,🤜,right-facing fist,fist | right-facing fist | rightwards
-hands
-№,Code,Sample,CLDR Short Name,Other Keywords
-182,U+1F44F,👏,clapping hands,clap | clapping hands | hand
-183,U+1F64C,🙌,raising hands,celebration | gesture | hand | hooray | raised | raising hands
-184,U+1F450,👐,open hands,hand | open | open hands
-185,U+1F932,🤲,palms up together,palms up together | prayer | cupped hands
-186,U+1F91D,🤝,handshake,agreement | hand | handshake | meeting | shake
-187,U+1F64F,🙏,folded hands,ask | folded hands | hand | high 5 | high five | please | pray | thanks
-hand-prop
-№,Code,Sample,CLDR Short Name,Other Keywords
-188,U+270D,✍,writing hand,hand | write | writing hand
-189,U+1F485,💅,nail polish,care | cosmetics | manicure | nail | polish
-190,U+1F933,🤳,selfie,camera | phone | selfie
-body-parts
-№,Code,Sample,CLDR Short Name,Other Keywords
-191,U+1F4AA,💪,flexed biceps,biceps | comic | flex | flexed biceps | muscle
-192,U+1F9BE,🦾,mechanical arm,accessibility | mechanical arm | prosthetic
-193,U+1F9BF,🦿,mechanical leg,accessibility | mechanical leg | prosthetic
-194,U+1F9B5,🦵,leg,kick | leg | limb
-195,U+1F9B6,🦶,foot,foot | kick | stomp
-196,U+1F442,👂,ear,body | ear
-197,U+1F9BB,🦻,ear with hearing aid,accessibility | ear with hearing aid | hard of hearing
-198,U+1F443,👃,nose,body | nose
-199,U+1F9E0,🧠,brain,brain | intelligent
-200,U+1FAC0,🫀,anatomical heart,anatomical | cardiology | heart | organ | pulse
-201,U+1FAC1,🫁,lungs,breath | exhalation | inhalation | lungs | organ | respiration
-202,U+1F9B7,🦷,tooth,dentist | tooth
-203,U+1F9B4,🦴,bone,bone | skeleton
-204,U+1F440,👀,eyes,eye | eyes | face
-205,U+1F441,👁,eye,body | eye
-206,U+1F445,👅,tongue,body | tongue
-207,U+1F444,👄,mouth,lips | mouth
-person
-№,Code,Sample,CLDR Short Name,Other Keywords
-208,U+1F476,👶,baby,baby | young
-209,U+1F9D2,🧒,child,child | gender-neutral | unspecified gender | young
-210,U+1F466,👦,boy,boy | young
-211,U+1F467,👧,girl,girl | Virgo | young | zodiac
-212,U+1F9D1,🧑,person,adult | gender-neutral | person | unspecified gender
-213,U+1F471,👱,person: blond hair,blond | blond-haired person | hair | person: blond hair
-214,U+1F468,👨,man,adult | man
-215,U+1F9D4,🧔,person: beard,beard | person | person: beard | bewhiskered
-216,U+1F9D4 U+200D U+2642 U+FE0F,🧔‍♂️,⊛ man: beard,beard | man | man: beard
-217,U+1F9D4 U+200D U+2640 U+FE0F,🧔‍♀️,⊛ woman: beard,beard | woman | woman: beard
-218,U+1F468 U+200D U+1F9B0,👨‍🦰,man: red hair,adult | man | red hair
-219,U+1F468 U+200D U+1F9B1,👨‍🦱,man: curly hair,adult | curly hair | man
-220,U+1F468 U+200D U+1F9B3,👨‍🦳,man: white hair,adult | man | white hair
-221,U+1F468 U+200D U+1F9B2,👨‍🦲,man: bald,adult | bald | man
-222,U+1F469,👩,woman,adult | woman
-223,U+1F469 U+200D U+1F9B0,👩‍🦰,woman: red hair,adult | red hair | woman
-224,U+1F9D1 U+200D U+1F9B0,🧑‍🦰,person: red hair,adult | gender-neutral | person | red hair | unspecified gender
-225,U+1F469 U+200D U+1F9B1,👩‍🦱,woman: curly hair,adult | curly hair | woman
-226,U+1F9D1 U+200D U+1F9B1,🧑‍🦱,person: curly hair,adult | curly hair | gender-neutral | person | unspecified gender
-227,U+1F469 U+200D U+1F9B3,👩‍🦳,woman: white hair,adult | white hair | woman
-№,Code,Sample,CLDR Short Name,Other Keywords
-228,U+1F9D1 U+200D U+1F9B3,🧑‍🦳,person: white hair,adult | gender-neutral | person | unspecified gender | white hair
-229,U+1F469 U+200D U+1F9B2,👩‍🦲,woman: bald,adult | bald | woman
-230,U+1F9D1 U+200D U+1F9B2,🧑‍🦲,person: bald,adult | bald | gender-neutral | person | unspecified gender
-231,U+1F471 U+200D U+2640 U+FE0F,👱‍♀️,woman: blond hair,blond-haired woman | blonde | hair | woman | woman: blond hair
-232,U+1F471 U+200D U+2642 U+FE0F,👱‍♂️,man: blond hair,blond | blond-haired man | hair | man | man: blond hair
-233,U+1F9D3,🧓,older person,adult | gender-neutral | old | older person | unspecified gender
-234,U+1F474,👴,old man,adult | man | old
-235,U+1F475,👵,old woman,adult | old | woman
-person-gesture
-№,Code,Sample,CLDR Short Name,Other Keywords
-236,U+1F64D,🙍,person frowning,frown | gesture | person frowning
-237,U+1F64D U+200D U+2642 U+FE0F,🙍‍♂️,man frowning,frowning | gesture | man
-238,U+1F64D U+200D U+2640 U+FE0F,🙍‍♀️,woman frowning,frowning | gesture | woman
-239,U+1F64E,🙎,person pouting,gesture | person pouting | pouting
-240,U+1F64E U+200D U+2642 U+FE0F,🙎‍♂️,man pouting,gesture | man | pouting
-241,U+1F64E U+200D U+2640 U+FE0F,🙎‍♀️,woman pouting,gesture | pouting | woman
-242,U+1F645,🙅,person gesturing NO,forbidden | gesture | hand | person gesturing NO | prohibited
-243,U+1F645 U+200D U+2642 U+FE0F,🙅‍♂️,man gesturing NO,forbidden | gesture | hand | man | man gesturing NO | prohibited
-244,U+1F645 U+200D U+2640 U+FE0F,🙅‍♀️,woman gesturing NO,forbidden | gesture | hand | prohibited | woman | woman gesturing NO
-245,U+1F646,🙆,person gesturing OK,gesture | hand | OK | person gesturing OK
-246,U+1F646 U+200D U+2642 U+FE0F,🙆‍♂️,man gesturing OK,gesture | hand | man | man gesturing OK | OK
-247,U+1F646 U+200D U+2640 U+FE0F,🙆‍♀️,woman gesturing OK,gesture | hand | OK | woman | woman gesturing OK
-248,U+1F481,💁,person tipping hand,hand | help | information | person tipping hand | sassy | tipping
-249,U+1F481 U+200D U+2642 U+FE0F,💁‍♂️,man tipping hand,man | man tipping hand | sassy | tipping hand
-250,U+1F481 U+200D U+2640 U+FE0F,💁‍♀️,woman tipping hand,sassy | tipping hand | woman | woman tipping hand
-251,U+1F64B,🙋,person raising hand,gesture | hand | happy | person raising hand | raised
-252,U+1F64B U+200D U+2642 U+FE0F,🙋‍♂️,man raising hand,gesture | man | man raising hand | raising hand
-253,U+1F64B U+200D U+2640 U+FE0F,🙋‍♀️,woman raising hand,gesture | raising hand | woman | woman raising hand
-254,U+1F9CF,🧏,deaf person,accessibility | deaf | deaf person | ear | hear
-255,U+1F9CF U+200D U+2642 U+FE0F,🧏‍♂️,deaf man,deaf | man
-№,Code,Sample,CLDR Short Name,Other Keywords
-256,U+1F9CF U+200D U+2640 U+FE0F,🧏‍♀️,deaf woman,deaf | woman
-257,U+1F647,🙇,person bowing,apology | bow | gesture | person bowing | sorry
-258,U+1F647 U+200D U+2642 U+FE0F,🙇‍♂️,man bowing,apology | bowing | favor | gesture | man | sorry
-259,U+1F647 U+200D U+2640 U+FE0F,🙇‍♀️,woman bowing,apology | bowing | favor | gesture | sorry | woman
-260,U+1F926,🤦,person facepalming,disbelief | exasperation | face | palm | person facepalming
-261,U+1F926 U+200D U+2642 U+FE0F,🤦‍♂️,man facepalming,disbelief | exasperation | facepalm | man | man facepalming
-262,U+1F926 U+200D U+2640 U+FE0F,🤦‍♀️,woman facepalming,disbelief | exasperation | facepalm | woman | woman facepalming
-263,U+1F937,🤷,person shrugging,doubt | ignorance | indifference | person shrugging | shrug
-264,U+1F937 U+200D U+2642 U+FE0F,🤷‍♂️,man shrugging,doubt | ignorance | indifference | man | man shrugging | shrug
-265,U+1F937 U+200D U+2640 U+FE0F,🤷‍♀️,woman shrugging,doubt | ignorance | indifference | shrug | woman | woman shrugging
-person-role
-№,Code,Sample,CLDR Short Name,Other Keywords
-266,U+1F9D1 U+200D U+2695 U+FE0F,🧑‍⚕️,health worker,doctor | health worker | healthcare | nurse | therapist
-267,U+1F468 U+200D U+2695 U+FE0F,👨‍⚕️,man health worker,doctor | healthcare | man | man health worker | nurse | therapist
-268,U+1F469 U+200D U+2695 U+FE0F,👩‍⚕️,woman health worker,doctor | healthcare | nurse | therapist | woman | woman health worker
-269,U+1F9D1 U+200D U+1F393,🧑‍🎓,student,graduate | student
-270,U+1F468 U+200D U+1F393,👨‍🎓,man student,graduate | man | student
-271,U+1F469 U+200D U+1F393,👩‍🎓,woman student,graduate | student | woman
-272,U+1F9D1 U+200D U+1F3EB,🧑‍🏫,teacher,instructor | professor | teacher
-273,U+1F468 U+200D U+1F3EB,👨‍🏫,man teacher,instructor | man | professor | teacher
-274,U+1F469 U+200D U+1F3EB,👩‍🏫,woman teacher,instructor | professor | teacher | woman
-275,U+1F9D1 U+200D U+2696 U+FE0F,🧑‍⚖️,judge,judge | justice | scales
-276,U+1F468 U+200D U+2696 U+FE0F,👨‍⚖️,man judge,judge | justice | man | scales
-277,U+1F469 U+200D U+2696 U+FE0F,👩‍⚖️,woman judge,judge | justice | scales | woman
-278,U+1F9D1 U+200D U+1F33E,🧑‍🌾,farmer,farmer | gardener | rancher
-279,U+1F468 U+200D U+1F33E,👨‍🌾,man farmer,farmer | gardener | man | rancher
-280,U+1F469 U+200D U+1F33E,👩‍🌾,woman farmer,farmer | gardener | rancher | woman
-281,U+1F9D1 U+200D U+1F373,🧑‍🍳,cook,chef | cook
-282,U+1F468 U+200D U+1F373,👨‍🍳,man cook,chef | cook | man
-283,U+1F469 U+200D U+1F373,👩‍🍳,woman cook,chef | cook | woman
-284,U+1F9D1 U+200D U+1F527,🧑‍🔧,mechanic,electrician | mechanic | plumber | tradesperson
-285,U+1F468 U+200D U+1F527,👨‍🔧,man mechanic,electrician | man | mechanic | plumber | tradesperson
-№,Code,Sample,CLDR Short Name,Other Keywords
-286,U+1F469 U+200D U+1F527,👩‍🔧,woman mechanic,electrician | mechanic | plumber | tradesperson | woman
-287,U+1F9D1 U+200D U+1F3ED,🧑‍🏭,factory worker,assembly | factory | industrial | worker
-288,U+1F468 U+200D U+1F3ED,👨‍🏭,man factory worker,assembly | factory | industrial | man | worker
-289,U+1F469 U+200D U+1F3ED,👩‍🏭,woman factory worker,assembly | factory | industrial | woman | worker
-290,U+1F9D1 U+200D U+1F4BC,🧑‍💼,office worker,architect | business | manager | office worker | white-collar
-291,U+1F468 U+200D U+1F4BC,👨‍💼,man office worker,architect | business | man | man office worker | manager | white-collar
-292,U+1F469 U+200D U+1F4BC,👩‍💼,woman office worker,architect | business | manager | white-collar | woman | woman office worker
-293,U+1F9D1 U+200D U+1F52C,🧑‍🔬,scientist,biologist | chemist | engineer | physicist | scientist
-294,U+1F468 U+200D U+1F52C,👨‍🔬,man scientist,biologist | chemist | engineer | man | physicist | scientist
-295,U+1F469 U+200D U+1F52C,👩‍🔬,woman scientist,biologist | chemist | engineer | physicist | scientist | woman
-296,U+1F9D1 U+200D U+1F4BB,🧑‍💻,technologist,coder | developer | inventor | software | technologist
-297,U+1F468 U+200D U+1F4BB,👨‍💻,man technologist,coder | developer | inventor | man | software | technologist
-298,U+1F469 U+200D U+1F4BB,👩‍💻,woman technologist,coder | developer | inventor | software | technologist | woman
-299,U+1F9D1 U+200D U+1F3A4,🧑‍🎤,singer,actor | entertainer | rock | singer | star
-300,U+1F468 U+200D U+1F3A4,👨‍🎤,man singer,actor | entertainer | man | rock | singer | star
-301,U+1F469 U+200D U+1F3A4,👩‍🎤,woman singer,actor | entertainer | rock | singer | star | woman
-302,U+1F9D1 U+200D U+1F3A8,🧑‍🎨,artist,artist | palette
-303,U+1F468 U+200D U+1F3A8,👨‍🎨,man artist,artist | man | palette
-304,U+1F469 U+200D U+1F3A8,👩‍🎨,woman artist,artist | palette | woman
-305,U+1F9D1 U+200D U+2708 U+FE0F,🧑‍✈️,pilot,pilot | plane
-№,Code,Sample,CLDR Short Name,Other Keywords
-306,U+1F468 U+200D U+2708 U+FE0F,👨‍✈️,man pilot,man | pilot | plane
-307,U+1F469 U+200D U+2708 U+FE0F,👩‍✈️,woman pilot,pilot | plane | woman
-308,U+1F9D1 U+200D U+1F680,🧑‍🚀,astronaut,astronaut | rocket
-309,U+1F468 U+200D U+1F680,👨‍🚀,man astronaut,astronaut | man | rocket
-310,U+1F469 U+200D U+1F680,👩‍🚀,woman astronaut,astronaut | rocket | woman
-311,U+1F9D1 U+200D U+1F692,🧑‍🚒,firefighter,firefighter | firetruck
-312,U+1F468 U+200D U+1F692,👨‍🚒,man firefighter,firefighter | firetruck | man
-313,U+1F469 U+200D U+1F692,👩‍🚒,woman firefighter,firefighter | firetruck | woman
-314,U+1F46E,👮,police officer,cop | officer | police
-315,U+1F46E U+200D U+2642 U+FE0F,👮‍♂️,man police officer,cop | man | officer | police
-316,U+1F46E U+200D U+2640 U+FE0F,👮‍♀️,woman police officer,cop | officer | police | woman
-317,U+1F575,🕵,detective,detective | sleuth | spy
-318,U+1F575 U+FE0F U+200D U+2642 U+FE0F,🕵️‍♂️,man detective,detective | man | sleuth | spy
-319,U+1F575 U+FE0F U+200D U+2640 U+FE0F,🕵️‍♀️,woman detective,detective | sleuth | spy | woman
-320,U+1F482,💂,guard,guard
-321,U+1F482 U+200D U+2642 U+FE0F,💂‍♂️,man guard,guard | man
-322,U+1F482 U+200D U+2640 U+FE0F,💂‍♀️,woman guard,guard | woman
-323,U+1F977,🥷,ninja,fighter | hidden | ninja | stealth
-324,U+1F477,👷,construction worker,construction | hat | worker
-325,U+1F477 U+200D U+2642 U+FE0F,👷‍♂️,man construction worker,construction | man | worker
-№,Code,Sample,CLDR Short Name,Other Keywords
-326,U+1F477 U+200D U+2640 U+FE0F,👷‍♀️,woman construction worker,construction | woman | worker
-327,U+1F934,🤴,prince,prince
-328,U+1F478,👸,princess,fairy tale | fantasy | princess
-329,U+1F473,👳,person wearing turban,person wearing turban | turban
-330,U+1F473 U+200D U+2642 U+FE0F,👳‍♂️,man wearing turban,man | man wearing turban | turban
-331,U+1F473 U+200D U+2640 U+FE0F,👳‍♀️,woman wearing turban,turban | woman | woman wearing turban
-332,U+1F472,👲,person with skullcap,cap | gua pi mao | hat | person | person with skullcap | skullcap
-333,U+1F9D5,🧕,woman with headscarf,headscarf | hijab | mantilla | tichel | woman with headscarf | bandana | head kerchief
-334,U+1F935,🤵,person in tuxedo,groom | person | person in tuxedo | tuxedo
-335,U+1F935 U+200D U+2642 U+FE0F,🤵‍♂️,man in tuxedo,man | man in tuxedo | tuxedo
-336,U+1F935 U+200D U+2640 U+FE0F,🤵‍♀️,woman in tuxedo,tuxedo | woman | woman in tuxedo
-337,U+1F470,👰,person with veil,bride | person | person with veil | veil | wedding
-338,U+1F470 U+200D U+2642 U+FE0F,👰‍♂️,man with veil,man | man with veil | veil
-339,U+1F470 U+200D U+2640 U+FE0F,👰‍♀️,woman with veil,veil | woman | woman with veil
-340,U+1F930,🤰,pregnant woman,pregnant | woman
-341,U+1F931,🤱,breast-feeding,baby | breast | breast-feeding | nursing
-342,U+1F469 U+200D U+1F37C,👩‍🍼,woman feeding baby,baby | feeding | nursing | woman
-343,U+1F468 U+200D U+1F37C,👨‍🍼,man feeding baby,baby | feeding | man | nursing
-344,U+1F9D1 U+200D U+1F37C,🧑‍🍼,person feeding baby,baby | feeding | nursing | person
-person-fantasy
-№,Code,Sample,CLDR Short Name,Other Keywords
-345,U+1F47C,👼,baby angel,angel | baby | face | fairy tale | fantasy
-346,U+1F385,🎅,Santa Claus,celebration | Christmas | claus | father | santa | Santa Claus
-347,U+1F936,🤶,Mrs. Claus,celebration | Christmas | claus | mother | Mrs. | Mrs. Claus
-348,U+1F9D1 U+200D U+1F384,🧑‍🎄,mx claus,Claus, christmas | mx claus
-349,U+1F9B8,🦸,superhero,good | hero | heroine | superhero | superpower
-350,U+1F9B8 U+200D U+2642 U+FE0F,🦸‍♂️,man superhero,good | hero | man | man superhero | superpower
-351,U+1F9B8 U+200D U+2640 U+FE0F,🦸‍♀️,woman superhero,good | hero | heroine | superpower | woman | woman superhero
-352,U+1F9B9,🦹,supervillain,criminal | evil | superpower | supervillain | villain
-353,U+1F9B9 U+200D U+2642 U+FE0F,🦹‍♂️,man supervillain,criminal | evil | man | man supervillain | superpower | villain
-354,U+1F9B9 U+200D U+2640 U+FE0F,🦹‍♀️,woman supervillain,criminal | evil | superpower | villain | woman | woman supervillain
-355,U+1F9D9,🧙,mage,mage | sorcerer | sorceress | witch | wizard
-356,U+1F9D9 U+200D U+2642 U+FE0F,🧙‍♂️,man mage,man mage | sorcerer | wizard
-357,U+1F9D9 U+200D U+2640 U+FE0F,🧙‍♀️,woman mage,sorceress | witch | woman mage
-358,U+1F9DA,🧚,fairy,fairy | Oberon | Puck | Titania
-359,U+1F9DA U+200D U+2642 U+FE0F,🧚‍♂️,man fairy,man fairy | Oberon | Puck
-360,U+1F9DA U+200D U+2640 U+FE0F,🧚‍♀️,woman fairy,Titania | woman fairy
-361,U+1F9DB,🧛,vampire,Dracula | undead | vampire
-362,U+1F9DB U+200D U+2642 U+FE0F,🧛‍♂️,man vampire,Dracula | man vampire | undead
-363,U+1F9DB U+200D U+2640 U+FE0F,🧛‍♀️,woman vampire,undead | woman vampire
-364,U+1F9DC,🧜,merperson,mermaid | merman | merperson | merwoman
-№,Code,Sample,CLDR Short Name,Other Keywords
-365,U+1F9DC U+200D U+2642 U+FE0F,🧜‍♂️,merman,merman | Triton
-366,U+1F9DC U+200D U+2640 U+FE0F,🧜‍♀️,mermaid,mermaid | merwoman
-367,U+1F9DD,🧝,elf,elf | magical | LOTR style
-368,U+1F9DD U+200D U+2642 U+FE0F,🧝‍♂️,man elf,magical | man elf
-369,U+1F9DD U+200D U+2640 U+FE0F,🧝‍♀️,woman elf,magical | woman elf
-370,U+1F9DE,🧞,genie,djinn | genie | (non-human color)
-371,U+1F9DE U+200D U+2642 U+FE0F,🧞‍♂️,man genie,djinn | man genie
-372,U+1F9DE U+200D U+2640 U+FE0F,🧞‍♀️,woman genie,djinn | woman genie
-373,U+1F9DF,🧟,zombie,undead | walking dead | zombie | (non-human color)
-374,U+1F9DF U+200D U+2642 U+FE0F,🧟‍♂️,man zombie,man zombie | undead | walking dead
-375,U+1F9DF U+200D U+2640 U+FE0F,🧟‍♀️,woman zombie,undead | walking dead | woman zombie
-person-activity
-№,Code,Sample,CLDR Short Name,Other Keywords
-376,U+1F486,💆,person getting massage,face | massage | person getting massage | salon
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+14, U + 1F970, 🥰, visage souriant avec des coeurs, adore | écraser | coeurs | amoureux | visage souriant avec des coeurs
+15, U + 1F60D, 😍, visage souriant avec yeux de cœur, yeux | visage | l'amour | sourire | visage souriant avec des yeux de cœur
+16, U + 1F929, 🤩, étoilé, yeux | visage | sourire | star | frappé d'étoiles | aux yeux étoilés
+17, U + 1F618, 😘, visage qui souffle un baiser, visage | visage soufflant un baiser | embrasser
+18, U + 1F617, 😗, visage qui s'embrasse, visage | baiser | visage de baiser
+19, U + 263A, ☺, visage souriant, visage | esquissé | détendu | sourire | visage souriant
+20, U + 1F61A, 😚, visage qui embrasse les yeux fermés, fermé | oeil | visage | baiser | baiser le visage avec les yeux fermés
+21, U + 1F619, 😙, baiser le visage avec des yeux souriants, des yeux | visage | baiser | visage embrassant avec des yeux souriants | le sourire
+22, U + 1F972, 🥲, visage souriant avec larme, reconnaissant | fier | soulagé | souriant | visage souriant avec larme | larme | touché
+visage-langue
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+23, U + 1F60B, 😋, savourer le visage, délicieux | visage | visage savourer de la nourriture | savourer | sourire | Miam
+24, U + 1F61B, 😛, visage avec langue, visage | visage avec la langue | langue
+25, U + 1F61C, 😜, visage clignotant avec langue, œil | visage | blague | langue | clin d'oeil | visage clignotant avec la langue
+26, U + 1F92A, 🤪, visage loufoque, yeux | maladroit | grand | petit | visage loufoque
+27, U + 1F61D, 😝, plissement du visage avec langue, yeux | visage | horrible | visage plissant avec la langue | goût | langue
+28, U + 1F911, 🤑, visage argent-bouche, visage | argent | visage argent-bouche | bouche
+visage-main
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+29, U + 1F917, 🤗, visage serré, visage | câlin | étreindre
+30, U + 1F92D, 🤭, le visage avec la main sur la bouche, le visage avec la main sur la bouche | oups | choc | réalisation soudaine | surprendre
+31, U + 1F92B, 🤫, visage étouffant, calme | chut | visage étouffant
+32, U + 1F914, 🤔, visage pensant, visage | pensée
+face-neutre-sceptique
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+33, U + 1F910, 🤐, visage à fermeture éclair, visage | bouche | fermeture éclair | visage à fermeture éclair
+34, U + 1F928, 🤨, visage avec un sourcil levé, méfiance | visage avec un sourcil levé | sceptique | désapprobation | incrédulité | douce surprise | scepticisme
+35, U + 1F610, 😐, face neutre, impasse | visage | meh | neutre
+36, U + 1F611, 😑, visage sans expression, sans expression | visage | inexpressif | meh | peu expressif
+37, U + 1F636, 😶, visage sans bouche, visage | visage sans bouche | bouche | calme | silencieux
+38, U + 1F636 U + 200D U + 1F32B U + FE0F, 😶‍🌫️, ⊛ visage dans les nuages, distrait | visage dans les nuages ​​| visage dans le brouillard | la tête dans les nuages
+39, U + 1F60F, 😏, visage souriant, visage | sourire narquois | visage souriant
+40, U + 1F612, 😒, visage, visage non amusé | non amusé | malheureux
+41, U + 1F644, 🙄, visage aux yeux qui roulent, eyeroll | yeux | visage | visage aux yeux roulants | roulant
+42, U + 1F62C, 😬, visage grimaçant, visage | grimace | visage grimaçant
+43, U + 1F62E U + 200D U + 1F4A8, 😮‍💨, ⊛ visage expirant, expirez | visage expirant | halètement | gémir | relief | chuchoter | siffler
+44, U + 1F925, 🤥, visage couché, visage | mensonge | visage couché | Pinocchio
+visage endormi
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+45, U + 1F60C, 😌, visage, visage dégagé | soulagé
+46, U + 1F614, 😔, visage pensif, abattu | visage | pensif
+47, U + 1F62A, 😪, visage endormi, visage | dormir | visage endormi
+48, U + 1F924, 🤤, visage qui bave, bave | visage
+49, U + 1F634, 😴, visage endormi, visage | dormir | visage endormi | zzz
+visage malade
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+50, U + 1F637, 😷, visage avec masque médical, froid | docteur | visage | visage avec masque médical | masque | malade
+51, U + 1F912, 🤒, face avec thermomètre, face | visage avec thermomètre | malade | malade | thermomètre
+52, U + 1F915, 🤕, visage avec bandeau, bandage | visage | visage avec bandeau | blessé | blessure
+53, U + 1F922, 🤢, visage, visage nauséeux | nauséeux | vomir
+54, U + 1F92E, 🤮, vomissements du visage, vomissements du visage | vomir | malade | vomir
+55, U + 1F927, 🤧, visage qui éternue, visage | gesundheit | éternuer | visage qui éternue
+56, U + 1F975, 🥵, visage chaud, fiévreux | coup de chaleur | chaud | visage chaud | à face rouge | transpiration
+57, U + 1F976, 🥶, face froide, face bleue | froid | visage froid | congélation | engelures | glaçons
+58, U + 1F974, 🥴, visage étourdi, étourdi | intoxiqué | éméché | yeux inégaux | bouche ondulée | visage étourdi
+59, U + 1F635, 😵, visage assommé, mort | visage | assommé | visage assommé
+60, U + 1F635 U + 200D U + 1F4AB, 😵‍💫, ⊛ visage aux yeux en spirale, étourdi | visage aux yeux en spirale | hypnotisé | spirale | trouble | whoa
+61, U + 1F92F, 🤯, tête explosive, tête explosive | l'esprit soufflé | sous le choc
+visage-chapeau
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+62, U + 1F920, 🤠, visage de chapeau de cowboy, cowboy | cowgirl | visage | chapeau
+63, U + 1F973, 🥳, visage de fête, fête | chapeau | corne | fête | visage de fête
+64, U + 1F978, 🥸, visage déguisé, déguisement | visage déguisé | visage | lunettes | incognito | nez
+lunettes de vue
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+65, U + 1F60E, 😎, visage souriant avec des lunettes de soleil, brillant | cool | visage | visage souriant avec des lunettes de soleil | soleil | des lunettes de soleil
+66, U + 1F913, 🤓, visage de nerd, visage | geek | intello
+67, U + 1F9D0, 🧐, face avec monocle, face avec monocle | étouffant | riche
+concerné par le visage
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+68, U + 1F615, 😕, visage confus, confus | visage | meh
+69, U + 1F61F, 😟, visage, visage inquiet | préoccupé
+70, U + 1F641, 🙁, visage légèrement renfrogné, visage | froncer les sourcils | visage légèrement froncé
+71, U + 2639, ☹, froncement de sourcils, visage | froncer les sourcils | visage froncé
+72, U + 1F62E, 😮, visage avec bouche ouverte, visage | visage avec la bouche ouverte | bouche | ouvert | la sympathie
+73, U + 1F62F, 😯, visage silencieux, visage | silencieux | stupéfait | surpris
+74, U + 1F632, 😲, visage étonné, étonné | visage | choqué | totalement
+75, U + 1F633, 😳, visage rincé, étourdi | visage | rincé
+76, U + 1F97A, 🥺, plaider le visage, mendier | miséricorde | visage suppliant | yeux de chiots
+77, U + 1F626, 😦, visage fronçant les sourcils avec bouche ouverte, visage | froncer les sourcils | visage fronçant les sourcils avec la bouche ouverte | bouche | ouvert
+78, U + 1F627, 😧, visage angoissé, angoissé | visage
+79, U + 1F628, 😨, visage effrayé, visage | peur | craintif | effrayé
+80, U + 1F630, 😰, visage anxieux avec sueur, visage anxieux avec sueur | bleu | froid | visage | précipité | transpiration
+81, U + 1F625, 😥, visage triste mais soulagé, déçu | visage | soulagé | visage triste mais soulagé | ouf
+82, U + 1F622, 😢, visage qui pleure, pleure | visage qui pleure | visage | triste | larme
+83, U + 1F62D, 😭, visage qui pleure bruyamment, pleure | visage | visage qui pleure bruyamment | triste | sanglot | larme
+84, U + 1F631, 😱, le visage hurlant de peur, le visage | visage hurlant de peur | peur | munch | peur | crier
+85, U + 1F616, 😖, visage confus, confondu | visage
+86, U + 1F623, 😣, visage, visage persévérant | persévérer | visage persévérant
+87, U + 1F61E, 😞, visage déçu, déçu | visage
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+88, U + 1F613, 😓, visage abattu de sueur, froid | visage abattu de sueur | visage | transpiration
+89, U + 1F629, 😩, visage fatigué, visage | fatigué | fatigué
+90, U + 1F62B, 😫, visage fatigué, visage | fatigué
+91, U + 1F971, 🥱, visage béant, s'ennuie | fatigué | bâiller | visage béant
+visage négatif
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+92, U + 1F624, 😤, visage avec vapeur du nez, visage | visage avec de la vapeur du nez | triomphe | a gagné
+93, U + 1F621, 😡, visage boudeur, en colère | visage | fou | faire la moue | rage | rouge
+94, U + 1F620, 😠, visage en colère, colère | en colère | visage | furieux
+95, U + 1F92C, 🤬, visage avec symboles sur la bouche, visage avec symboles sur la bouche | jurant | maudire
+96, U + 1F608, 😈, visage souriant avec cornes, visage | conte de fées | fantaisie | cornes | sourire | visage souriant avec des cornes
+97, U + 1F47F, 👿, visage en colère avec des cornes, visage en colère avec des cornes | démon | diable | visage | fantaisie | lutin
+98, U + 1F480, 💀, crâne, mort | visage | conte de fées | monstre | le crâne
+99, U + 2620, ☠, crâne et os croisés, os croisés | mort | visage | monstre | crâne | crâne et os croisés
+visage-costume
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+100, U + 1F4A9, 💩, tas de caca, bouse | visage | monstre | tas de caca | caca | caca
+101, U + 1F921, 🤡, visage de clown, clown | visage
+102, U + 1F479, 👹, ogre, créature | visage | conte de fées | fantaisie | monstre | ogre | troll
+103, U + 1F47A, 👺, gobelin, créature | visage | conte de fées | fantaisie | gobelin | monstre
+104, U + 1F47B, 👻, fantôme, créature | visage | conte de fées | fantaisie | fantôme | monstre
+105, U + 1F47D, 👽, extraterrestre, extraterrestre | créature | extraterrestre | visage | fantaisie | OVNI
+106, U + 1F47E, 👾, monstre extraterrestre, extraterrestre | créature | extraterrestre | visage | monstre | OVNI
+107, U + 1F916, 🤖, robot, visage | monstre | robot
+tête de chat
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+108, U + 1F63A, 😺, chat souriant, chat | visage | sourire | bouche | ouvert | le sourire
+109, U + 1F638, 😸, chat souriant aux yeux souriants, chat | oeil | visage | sourire | chat souriant aux yeux souriants | le sourire
+110, U + 1F639, 😹, chat avec des larmes de joie, chat | chat avec des larmes de joie | visage | joie | larme
+111, U + 1F63B, 😻, chat souriant aux yeux de cœur, chat | oeil | visage | coeur | l'amour | sourire | chat souriant avec des yeux de coeur
+112, U + 1F63C, 😼, chat au sourire ironique, chat | chat avec un sourire ironique | visage | ironique | sourire | tordu
+113, U + 1F63D, 😽, baiser chat, chat | oeil | visage | baiser | chat embrassant
+114, U + 1F640, 🙀, chat fatigué, chat | visage | oh | surpris | fatigué
+115, U + 1F63F, 😿, chat qui pleure, chat | pleurer | chat qui pleure | visage | triste | larme
+116, U + 1F63E, 😾, chat qui fait la moue, chat | visage | bouder
+visage de singe
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+117, U + 1F648, 🙈, singe ne voit pas le mal, mal | visage | interdit | singe | voir | singe ne voit pas le mal
+118, U + 1F649, 🙉, singe n'entends pas le mal, mal | visage | interdit | entendre | singe n'entends pas le mal | singe
+119, U + 1F64A, 🙊, singe ne parle pas mal, mal | visage | interdit | singe | parler | singe ne parle pas mal
+émotion
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+120, U + 1F48B, 💋, marque de baiser, baiser | marque de baiser | lèvres
+121, U + 1F48C, 💌, lettre d'amour, coeur | lettre | l'amour | courrier
+122, U + 1F498, 💘, coeur avec flèche, flèche | cupidon | coeur avec flèche
+123, U + 1F49D, 💝, coeur avec ruban, coeur avec ruban | ruban | Valentin
+124, U + 1F496, 💖, cœur pétillant, excité | éclat | coeur pétillant
+125, U + 1F497, 💗, cœur grandissant, excité | croissant | coeur grandissant | nerveux | impulsion
+126, U + 1F493, 💓, battements de cœur, battements | coeur battant | battement de coeur | palpitant
+127, U + 1F49E, 💞, cœurs tournants, tournants | cœurs tournants
+128, U + 1F495, 💕, deux coeurs, amour | deux coeurs
+129, U + 1F49F, 💟, décoration cœur, cœur | décoration de coeur
+130, U + 2763, ❣, exclamation du cœur, exclamation | exclamation du cœur | marque | ponctuation
+131, U + 1F494, 💔, cœur brisé, rupture | cassé | coeur brisé
+132, U + 2764 U + FE0F U + 200D U + 1F525, ❤️‍🔥, ⊛ coeur en feu, brûler | coeur | coeur en feu | l'amour | luxure | sacre Coeur
+133, U + 2764 U + FE0F U + 200D U + 1FA79, ❤️‍🩹, ⊛ réparer le cœur, en meilleure santé | amélioration | raccommodage | réparer le coeur | récupérer | récupérer | bien
+134, U + 2764, ❤, coeur rouge, coeur | coeur rouge
+135, U + 1F9E1, 🧡, cœur orange, orange | coeur orange
+136, U + 1F49B, 💛, cœur jaune, jaune | coeur jaune
+137, U + 1F49A, 💚, cœur vert, vert | coeur vert
+138, U + 1F499, 💙, cœur bleu, bleu | coeur bleu
+139, U + 1F49C, 💜, coeur violet, violet | cœur violet
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+140, U + 1F90E, 🤎, cœur marron, marron | cœur
+141, U + 1F5A4, 🖤, cœur noir, noir | coeur noir | mal | méchant
+142, U + 1F90D, 🤍, coeur blanc, coeur | blanc
+143, U + 1F4AF, 💯, cent points, 100 | plein | cent | cent points | But
+144, U + 1F4A2, 💢, symbole de colère, symbole de colère | en colère | bande dessinée | furieux
+145, U + 1F4A5, 💥, collision, flèche | collision | bande dessinée
+146, U + 1F4AB, 💫, étourdi, bande dessinée | étourdi | Star
+147, U + 1F4A6, 💦, gouttelettes de sueur, bande dessinée | éclaboussures | sueur | gouttelettes de sueur
+148, U + 1F4A8, 💨, en courant, bande dessinée | dash | se précipiter | fonctionnement
+149, U + 1F573, 🕳, trou, trou
+150, U + 1F4A3, 💣, bombe, bombe | bande dessinée
+151, U + 1F4AC, 💬, bulle, ballon | bulle | bande dessinée | dialogue | discours
+152, U + 1F441 U + FE0F U + 200D U + 1F5E8 U + FE0F, 👁️‍🗨️, œil dans la bulle, œil | oeil dans la bulle de dialogue | bulle de dialogue | témoin
+153, U + 1F5E8, 🗨, bulle gauche, dialogue | bulle de dialogue gauche | discours
+154, U + 1F5EF, 🗯, bulle de colère droite, en colère | ballon | bulle | fou | bulle de colère droite
+155, U + 1F4AD, 💭, ballon de réflexion, ballon | bulle | bande dessinée | pensée
+156, U + 1F4A4, 💤, zzz, bande dessinée | dormir | zzz
+Personnes et corps
+main-doigts-ouverts
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+157, U + 1F44B, 👋, agitant la main, la main | vague | agitant
+158, U + 1F91A, 🤚, dos de la main levée, revers | soulevé | main levée
+159, U + 1F590, 🖐, main avec les doigts écartés, doigt | main | main avec les doigts écartés | évasé
+160, U + 270B, ✋, main levée, main | haut 5 | haut cinq | main levée
+161, U + 1F596, 🖖, salut vulcain, doigt | main | spock | vulcan | salut vulcain
+main-doigts-partiel
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+162, U + 1F44C, 👌, OK main, main | d'accord
+163, U + 1F90C, 🤌, doigts pincés, doigts | geste de la main | interrogatoire | pincé | sarcastique
+164, U + 1F90F, 🤏, pincement de la main, pincement de la main | petite quantité
+165, U + 270C, ✌, main de victoire, main | v | la victoire
+166, U + 1F91E, 🤞, croiser les doigts, croiser | doigts croisés | doigt | main | la chance
+167, U + 1F91F, 🤟, geste d'amour, main | ILY | geste d'amour
+168, U + 1F918, 🤘, signe des cornes, doigt | main | cornes | rock-on | signe des cornes
+169, U + 1F919, 🤙, appelez-moi, appelez | appelez-moi la main | main
+main-un-doigt
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+170, U + 1F448, 👈, index du revers pointant vers la gauche, revers | index du revers pointant vers la gauche | doigt | main | index | point
+171, U + 1F449, 👉, index du revers pointant vers la droite, revers | index du revers pointant vers la droite | doigt | main | index | point
+172, U + 1F446, 👆, index du revers vers le haut, revers | index du revers pointant vers le haut | doigt | main | point | en haut
+173, U + 1F595, 🖕, majeur, doigt | main | majeur
+174, U + 1F447, 👇, index du revers pointant vers le bas, revers | index du revers pointant vers le bas | vers le bas | doigt | main | point
+175, U + 261D, ☝, index pointé vers le haut, doigt | main | index | index pointant vers le haut | point | en haut
+main-doigts-fermés
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+176, U + 1F44D, 👍, bravo, + 1 | main | pouce | bravo | en haut
+177, U + 1F44E, 👎, pouces vers le bas, -1 | vers le bas | main | pouce | pouces vers le bas
+178, U + 270A, ✊, poing levé, serré | poing | main | poinçon | poing levé
+179, U + 1F44A, 👊, poing venant en sens inverse, serré | poing | main | poing venant en sens inverse | coup de poing
+180, U + 1F91B, 🤛, poing tourné vers la gauche, poing | poing tourné vers la gauche | vers la gauche
+181, U + 1F91C, 🤜, poing à droite, poing | poing de droite | vers la droite
+mains
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+182, U + 1F44F, 👏, applaudissements, applaudissements | applaudissements | main
+183, U + 1F64C, 🙌, lever la main, célébration | geste | main | hourra | soulevé | lever les mains
+184, U + 1F450, 👐, mains ouvertes, main | ouvert | mains ouvertes
+185, U + 1F932, 🤲, paumes vers le haut, paumes vers le haut | prière | mains en coupe
+186, U + 1F91D, 🤝, poignée de main, accord | main | poignée de main | réunion | secouer
+187, U + 1F64F, 🙏, mains jointes, demander | mains jointes | main | haut 5 | haut cinq | s'il vous plaît | prier | Merci
+main-accessoire
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+188, U + 270D, ✍, écriture main, main | écrire | écrit à la main
+189, U + 1F485, 💅, vernis à ongles, entretien | cosmétiques | manucure | clou | polonais
+190, U + 1F933, 🤳, selfie, appareil photo | téléphone | selfie
+parties du corps
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+191, U + 1F4AA, 💪, biceps fléchis, biceps | bande dessinée | flex | biceps fléchis | muscle
+192, U + 1F9BE, 🦾, bras mécanique, accessibilité | bras mécanique | prothétique
+193, U + 1F9BF, 🦿, pied mécanique, accessibilité | jambe mécanique | prothétique
+194, U + 1F9B5, 🦵, jambe, coup de pied | jambe | membre
+195, U + 1F9B6, 🦶, pied, pied | coup de pied | piétiner
+196, U + 1F442, 👂, oreille, corps | oreille
+197, U + 1F9BB, 🦻, oreille avec prothèse auditive, accessibilité | oreille avec prothèse auditive | malentendant
+198, U + 1F443, 👃, nez, corps | nez
+199, U + 1F9E0, 🧠, cerveau, cerveau | intelligente
+200, U + 1FAC0, 🫀, cœur anatomique, anatomique | cardiologie | coeur | orgue | impulsion
+201, U + 1FAC1, 🫁, poumons, souffle | expiration | inhalation | poumons | orgue | respiration
+202, U + 1F9B7, 🦷, dent, dentiste | dent
+203, U + 1F9B4, 🦴, os, os | squelette
+204, U + 1F440, 👀, yeux, yeux | yeux | visage
+205, U + 1F441, 👁, yeux, corps | œil
+206, U + 1F445, 👅, langue, corps | langue
+207, U + 1F444, 👄, bouche, lèvres | bouche
+la personne
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+208, U + 1F476, 👶, bébé, bébé | Jeune
+209, U + 1F9D2, 🧒, enfant, enfant | sans distinction de sexe | sexe non spécifié | Jeune
+210, U + 1F466, 👦, garçon, garçon | Jeune
+211, U + 1F467, 👧, fille, fille | Vierge | jeune | zodiaque
+212, U + 1F9D1, 🧑, personne, adulte | sans distinction de sexe | personne | sexe non spécifié
+213, U + 1F471, 👱, personne: cheveux blonds, blonds | personne aux cheveux blonds | cheveux | personne: cheveux blonds
+214, U + 1F468, 👨, homme, adulte | homme
+215, U + 1F9D4, 🧔, personne: barbe, barbe | personne | personne: barbe | barbu
+216, U + 1F9D4 U + 200D U + 2642 U + FE0F, 🧔‍♂️, ⊛ homme: barbe, barbe | homme | homme: barbe
+217, U + 1F9D4 U + 200D U + 2640 U + FE0F, 🧔‍♀️, ⊛ femme: barbe, barbe | femme | femme: barbe
+218, U + 1F468 U + 200D U + 1F9B0, 👨‍🦰, homme: cheveux roux, adulte | homme | cheveux roux
+219, U + 1F468 U + 200D U + 1F9B1, 👨‍🦱, homme: cheveux bouclés, adulte | cheveux bouclés | homme
+220, U + 1F468 U + 200D U + 1F9B3, 👨‍🦳, homme: cheveux blancs, adulte | homme | cheveux blancs
+221, U + 1F468 U + 200D U + 1F9B2, 👨‍🦲, homme: chauve, adulte | chauve | homme
+222, U + 1F469, 👩, femme, adulte | femme
+223, U + 1F469 U + 200D U + 1F9B0, 👩‍🦰, femme: cheveux roux, adulte | cheveux roux | femme
+224, U + 1F9D1 U + 200D U + 1F9B0, 🧑‍🦰, personne: cheveux roux, adulte | sans distinction de sexe | personne | cheveux roux | sexe non spécifié
+225, U + 1F469 U + 200D U + 1F9B1, 👩‍🦱, femme: cheveux bouclés, adulte | cheveux bouclés | femme
+226, U + 1F9D1 U + 200D U + 1F9B1, 🧑‍🦱, personne: cheveux bouclés, adulte | cheveux bouclés | sans distinction de sexe | personne | sexe non spécifié
+227, U + 1F469 U + 200D U + 1F9B3, 👩‍🦳, femme: cheveux blancs, adulte | cheveux blancs | femme
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+228, U + 1F9D1 U + 200D U + 1F9B3, 🧑‍🦳, personne: cheveux blancs, adulte | sans distinction de sexe | personne | sexe non spécifié | cheveux blancs
+229, U + 1F469 U + 200D U + 1F9B2, 👩‍🦲, femme: chauve, adulte | chauve | femme
+230, U + 1F9D1 U + 200D U + 1F9B2, 🧑‍🦲, personne: chauve, adulte | chauve | sans distinction de sexe | personne | sexe non spécifié
+231, U + 1F471 U + 200D U + 2640 U + FE0F, 👱‍♀️, femme: cheveux blonds, femme blonde | blonde | cheveux | femme | femme: cheveux blonds
+232, U + 1F471 U + 200D U + 2642 U + FE0F, 👱‍♂️, homme: cheveux blonds, blond | homme aux cheveux blonds | cheveux | homme | homme: cheveux blonds
+233, U + 1F9D3, 🧓, personne âgée, adulte | sans distinction de sexe | vieux | personne âgée | sexe non spécifié
+234, U + 1F474, 👴, vieil homme, adulte | homme | vieille
+235, U + 1F475, 👵, vieille femme, adulte | vieux | femme
+geste-personne
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+236, U + 1F64D, 🙍, personne fronce les sourcils, fronce les sourcils | geste | personne fronçant les sourcils
+237, U + 1F64D U + 200D U + 2642 U + FE0F, 🙍‍♂️, homme fronçant les sourcils, fronçant les sourcils | geste | homme
+238, U + 1F64D U + 200D U + 2640 U + FE0F, 🙍‍♀️, femme fronçant les sourcils, fronçant les sourcils | geste | femme
+239, U + 1F64E, 🙎, personne faisant la moue, geste | personne faisant la moue | bouder
+240, U + 1F64E U + 200D U + 2642 U + FE0F, 🙎‍♂️, homme faisant la moue, geste | homme | bouder
+241, U + 1F64E U + 200D U + 2640 U + FE0F, 🙎‍♀️, femme faisant la moue, geste | faire la moue | femme
+242, U + 1F645, 🙅, personne faisant signe NON, interdit | geste | main | personne faisant signe NON | interdit
+243, U + 1F645 U + 200D U + 2642 U + FE0F, 🙅‍♂️, homme faisant signe NON, interdit | geste | main | homme | homme faisant signe NON | interdit
+244, U + 1F645 U + 200D U + 2640 U + FE0F, 🙅‍♀️, femme faisant signe NON, interdit | geste | main | interdit | femme | femme gestes non
+245, U + 1F646, 🙆, personne faisant un geste OK, geste | main | OK | personne faisant un geste OK
+246, U + 1F646 U + 200D U + 2642 U + FE0F, 🙆‍♂️, homme faisant un geste OK, geste | main | homme | homme faisant des gestes OK | d'accord
+247, U + 1F646 U + 200D U + 2640 U + FE0F, 🙆‍♀️, femme faisant un geste OK, geste | main | OK | femme | femme faisant des gestes OK
+248, U + 1F481, 💁, personne qui bascule la main, la main | aide | informations | personne qui bascule la main | impertinent | pourboire
+249, U + 1F481 U + 200D U + 2642 U + FE0F, 💁‍♂️, homme à la main, homme | homme à la main | impertinent | basculer la main
+250, U + 1F481 U + 200D U + 2640 U + FE0F, 💁‍♀️, femme à la main, impertinent | la main de basculement | femme | femme, bascule main
+251, U + 1F64B, 🙋, personne lève la main, geste | main | heureux | personne levant la main | soulevé
+252, U + 1F64B U + 200D U + 2642 U + FE0F, 🙋‍♂️, homme levant la main, geste | homme | homme levant la main | main levée
+253, U + 1F64B U + 200D U + 2640 U + FE0F, 🙋‍♀️, femme levant la main, geste | main levée | femme | femme levant la main
+254, U + 1F9CF, 🧏, personne sourde, accessibilité | sourd | personne sourde | oreille | écouter
+255, U + 1F9CF U + 200D U + 2642 U + FE0F, 🧏‍♂️, sourd, sourd | homme
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+256, U + 1F9CF U + 200D U + 2640 U + FE0F, 🧏‍♀️, sourde, sourde | femme
+257, U + 1F647, 🙇, personne s'inclinant, excuses | arc | geste | personne s'inclinant | Pardon
+258, U + 1F647 U + 200D U + 2642 U + FE0F, 🙇‍♂️, homme s'inclinant, excuses | s'incliner | faveur | geste | homme | Pardon
+259, U + 1F647 U + 200D U + 2640 U + FE0F, 🙇‍♀️, femme s'inclinant, excuses | s'incliner | faveur | geste | désolé | femme
+260, U + 1F926, 🤦, personne facepalming, incrédulité | exaspération | visage | palm | personne facepalming
+261, U + 1F926 U + 200D U + 2642 U + FE0F, 🤦‍♂️, homme facepalming, incrédulité | exaspération | facepalm | homme | homme facepalming
+262, U + 1F926 U + 200D U + 2640 U + FE0F, 🤦‍♀️, femme facepalming, incrédulité | exaspération | facepalm | femme | visage de femme
+263, U + 1F937, 🤷, personne haussant les épaules, doute | ignorance | indifférence | personne haussant les épaules | hausser les épaules
+264, U + 1F937 U + 200D U + 2642 U + FE0F, 🤷‍♂️, homme haussant les épaules, doute | ignorance | indifférence | homme | homme haussant les épaules | hausser les épaules
+265, U + 1F937 U + 200D U + 2640 U + FE0F, 🤷‍♀️, femme haussant les épaules, doute | ignorance | indifférence | hausser les épaules | femme | femme haussant les épaules
+rôle-personne
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+266, U + 1F9D1 U + 200D U + 2695 U + FE0F, 🧑‍⚕️, agent de santé, médecin | agent de santé | soins de santé | infirmière | thérapeute
+267, U + 1F468 U + 200D U + 2695 U + FE0F, 👨‍⚕️, agent de santé, médecin | soins de santé | homme | homme agent de santé | infirmière | thérapeute
+268, U + 1F469 U + 200D U + 2695 U + FE0F, 👩‍⚕️, agent de santé, médecin | soins de santé | infirmière | thérapeute | femme | femme agent de santé
+269, U + 1F9D1 U + 200D U + 1F393, 🧑‍🎓, étudiant, diplômé | étudiant
+270, U + 1F468 U + 200D U + 1F393, 👨‍🎓, étudiant, diplômé | homme | étudiant
+271, U + 1F469 U + 200D U + 1F393, 👩‍🎓, étudiante diplômée | étudiant | femme
+272, U + 1F9D1 U + 200D U + 1F3EB, 🧑‍🏫, enseignant, instructeur | professeur | professeur
+273, U + 1F468 U + 200D U + 1F3EB, 👨‍🏫, homme enseignant, instructeur | homme | professeur | professeur
+274, U + 1F469 U + 200D U + 1F3EB, 👩‍🏫, enseignante, instructeur | professeur | enseignant | femme
+275, U + 1F9D1 U + 200D U + 2696 U + FE0F, 🧑‍⚖️, juge, juge | justice | Balance
+276, U + 1F468 U + 200D U + 2696 U + FE0F, 👨‍⚖️, juge, juge | justice | homme | Balance
+277, U + 1F469 U + 200D U + 2696 U + FE0F, 👩‍⚖️, femme juge, juge | justice | échelles | femme
+278, U + 1F9D1 U + 200D U + 1F33E, 🧑‍🌾, agriculteur, agriculteur | jardinier | propriétaire de ranch
+279, U + 1F468 U + 200D U + 1F33E, 👨‍🌾, agriculteur, agriculteur | jardinier | homme | propriétaire de ranch
+280, U + 1F469 U + 200D U + 1F33E, 👩‍🌾, agricultrice, agricultrice | jardinier | éleveur | femme
+281, U + 1F9D1 U + 200D U + 1F373, 🧑‍🍳, cuisinier, chef | cuisiner
+282, U + 1F468 U + 200D U + 1F373, 👨‍🍳, cuisinier, chef | cuisinier | homme
+283, U + 1F469 U + 200D U + 1F373, 👩‍🍳, cuisinière, chef | cuisinier | femme
+284, U + 1F9D1 U + 200D U + 1F527, 🧑‍🔧, mécanicien, électricien | mécanicien | plombier | homme de métier
+285, U + 1F468 U + 200D U + 1F527, 👨‍🔧, mécanicien, électricien | homme | mécanicien | plombier | homme de métier
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+286, U + 1F469 U + 200D U + 1F527, 👩‍🔧, femme mécanicienne, électricienne | mécanicien | plombier | artisan | femme
+287, U + 1F9D1 U + 200D U + 1F3ED, 🧑‍🏭, ouvrier d'usine, assemblage | usine | industriel | ouvrier
+288, U + 1F468 U + 200D U + 1F3ED, 👨‍🏭, homme ouvrier d'usine, assemblage | usine | industriel | homme | ouvrier
+289, U + 1F469 U + 200D U + 1F3ED, 👩‍🏭, ouvrière d'usine, montage | usine | industriel | femme | ouvrier
+290, U + 1F9D1 U + 200D U + 1F4BC, 🧑‍💼, employé de bureau, architecte | entreprise | directeur | employé de bureau | col blanc
+291, U + 1F468 U + 200D U + 1F4BC, 👨‍💼, employé de bureau, architecte | entreprise | homme | employé de bureau homme | directeur | col blanc
+292, U + 1F469 U + 200D U + 1F4BC, 👩‍💼, employée de bureau, architecte | entreprise | directeur | cols blancs | femme | femme employée de bureau
+293, U + 1F9D1 U + 200D U + 1F52C, 🧑‍🔬, scientifique, biologiste | chimiste | ingénieur | physicien | scientifique
+294, U + 1F468 U + 200D U + 1F52C, 👨‍🔬, homme scientifique, biologiste | chimiste | ingénieur | homme | physicien | scientifique
+295, U + 1F469 U + 200D U + 1F52C, 👩‍🔬, femme scientifique, biologiste | chimiste | ingénieur | physicien | scientifique | femme
+296, U + 1F9D1 U + 200D U + 1F4BB, 🧑‍💻, technologue, codeur | développeur | inventeur | logiciel | technologue
+297, U + 1F468 U + 200D U + 1F4BB, 👨‍💻, technologue, codeur | développeur | inventeur | homme | logiciel | technologue
+298, U + 1F469 U + 200D U + 1F4BB, 👩‍💻, technologue, codeur | développeur | inventeur | logiciel | technologue | femme
+299, U + 1F9D1 U + 200D U + 1F3A4, 🧑‍🎤, chanteur, acteur | artiste | rock | chanteur | Star
+300, U + 1F468 U + 200D U + 1F3A4, 👨‍🎤, chanteur, acteur | artiste | homme | rock | chanteur | Star
+301, U + 1F469 U + 200D U + 1F3A4, 👩‍🎤, chanteuse, comédienne | artiste | rock | chanteur | star | femme
+302, U + 1F9D1 U + 200D U + 1F3A8, 🧑‍🎨, artiste, artiste | palette
+303, U + 1F468 U + 200D U + 1F3A8, 👨‍🎨, homme artiste, artiste | homme | palette
+304, U + 1F469 U + 200D U + 1F3A8, 👩‍🎨, femme artiste, artiste | palette | femme
+305, U + 1F9D1 U + 200D U + 2708 U + FE0F, 🧑‍✈️, pilote, pilote | avion
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+306, U + 1F468 U + 200D U + 2708 U + FE0F, 👨‍✈️, homme pilote, homme | pilote | avion
+307, U + 1F469 U + 200D U + 2708 U + FE0F, 👩‍✈️, femme pilote, pilote | avion | femme
+308, U + 1F9D1 U + 200D U + 1F680, 🧑‍🚀, astronaute, astronaute | fusée
+309, U + 1F468 U + 200D U + 1F680, 👨‍🚀, homme astronaute, astronaute | homme | fusée
+310, U + 1F469 U + 200D U + 1F680, 👩‍🚀, astronaute, astronaute | fusée | femme
+311, U + 1F9D1 U + 200D U + 1F692, 🧑‍🚒, pompier, pompier | camion de pompier
+312, U + 1F468 U + 200D U + 1F692, 👨‍🚒, pompier, pompier | firetruck | homme
+313, U + 1F469 U + 200D U + 1F692, 👩‍🚒, pompier, pompier | firetruck | femme
+314, U + 1F46E, 👮, policier, flic | officier | police
+315, U + 1F46E U + 200D U + 2642 U + FE0F, 👮‍♂️, policier, flic | homme | officier | police
+316, U + 1F46E U + 200D U + 2640 U + FE0F, 👮‍♀️, policière, flic | officier | police | femme
+317, U + 1F575, 🕵, détective, détective | détective | espionner
+318, U + 1F575 U + FE0F U + 200D U + 2642 U + FE0F, 🕵️‍♂️, détective, détective | homme | détective | espionner
+319, U + 1F575 U + FE0F U + 200D U + 2640 U + FE0F, 🕵️‍♀️, détective, détective | détective | espion | femme
+320, U + 1F482, 💂, garde, garde
+321, U + 1F482 U + 200D U + 2642 U + FE0F, 💂‍♂️, garde d'homme, garde | homme
+322, U + 1F482 U + 200D U + 2640 U + FE0F, 💂‍♀️, garde femme, garde | femme
+323, U + 1F977, 🥷, ninja, combattant | caché | ninja | furtif
+324, U + 1F477, 👷, ouvrier du batiment | chapeau | ouvrier
+325, U + 1F477 U + 200D U + 2642 U + FE0F, 👷‍♂️, homme ouvrier du bâtiment, construction | homme | ouvrier
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+326, U + 1F477 U + 200D U + 2640 U + FE0F, 👷‍♀️, ouvrière du bâtiment | femme | ouvrier
+327, U + 1F934, 🤴, prince, prince
+328, U + 1F478, 👸, princesse, conte de fées | fantaisie | Princesse
+329, U + 1F473, 👳, personne en turban, personne en turban | turban
+330, U + 1F473 U + 200D U + 2642 U + FE0F, 👳‍♂️, homme en turban, homme | homme vêtu d'un turban | turban
+331, U + 1F473 U + 200D U + 2640 U + FE0F, 👳‍♀️, femme portant turban, turban | femme | femme portant turban
+332, U + 1F472, 👲, personne avec calotte, casquette | gua pi mao | chapeau | personne | personne avec calotte | calotte
+333, U + 1F9D5, 🧕, femme avec foulard, foulard | hijab | mantilla | tichel | femme avec foulard | bandana | mouchoir de tête
+334, U + 1F935, 🤵, personne en smoking, marié | personne | personne en smoking | smoking
+335, U + 1F935 U + 200D U + 2642 U + FE0F, 🤵‍♂️, homme en smoking, homme | homme en smoking | smoking
+336, U + 1F935 U + 200D U + 2640 U + FE0F, 🤵‍♀️, femme en smoking, smoking | femme | femme en smoking
+337, U + 1F470, 👰, personne voilée, mariée | personne | personne avec voile | voile | mariage
+338, U + 1F470 U + 200D U + 2642 U + FE0F, 👰‍♂️, homme avec voile, homme | homme avec voile | voile
+339, U + 1F470 U + 200D U + 2640 U + FE0F, 👰‍♀️, femme avec voile, voile | femme | femme avec voile
+340, U + 1F930, 🤰, femme enceinte, enceinte | femme
+341, U + 1F931, 🤱, allaitement, bébé | sein | allaitement | allaitement
+342, U + 1F469 U + 200D U + 1F37C, 👩‍🍼, femme allaitant bébé, bébé | alimentation | soins infirmiers | femme
+343, U + 1F468 U + 200D U + 1F37C, 👨‍🍼, homme allaitant bébé, bébé | alimentation | homme | allaitement
+344, U + 1F9D1 U + 200D U + 1F37C, 🧑‍🍼, personne qui nourrit bébé, bébé | alimentation | soins infirmiers | la personne
+personne-fantaisie
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+345, U + 1F47C, 👼, bébé ange, ange | bébé | visage | conte de fées | fantaisie
+346, U + 1F385, 🎅, Père Noël, fête | Noël | claus | père | santa | père Noël
+347, U + 1F936, 🤶, Mme. Claus, fête | Noël | claus | mère | Mme | Mme Claus
+348, U + 1F9D1 U + 200D U + 1F384, 🧑‍🎄, mx claus, Claus, noël | mx claus
+349, U + 1F9B8, 🦸, super-héros, bien | héros | héroïne | super-héros | superpuissance
+350, U + 1F9B8 U + 200D U + 2642 U + FE0F, 🦸‍♂️, super-héros homme, bon | héros | homme | homme super-héros | superpuissance
+351, U + 1F9B8 U + 200D U + 2640 U + FE0F, 🦸‍♀️, femme super-héros, bien | héros | héroïne | superpuissance | femme | femme super-héros
+352, U + 1F9B9, 🦹, supervillain, criminel | mal | superpuissance | supervillain | scélérat
+353, U + 1F9B9 U + 200D U + 2642 U + FE0F, 🦹‍♂️, homme supervillain, criminel | mal | homme | homme supervillain | superpuissance | scélérat
+354, U + 1F9B9 U + 200D U + 2640 U + FE0F, 🦹‍♀️, femme supervillain, criminelle | mal | superpuissance | méchant | femme | femme supervillain
+355, U + 1F9D9, 🧙, mage, mage | sorcier | sorcière | sorcière | magicien
+356, U + 1F9D9 U + 200D U + 2642 U + FE0F, 🧙‍♂️, homme mage, homme mage | sorcier | magicien
+357, U + 1F9D9 U + 200D U + 2640 U + FE0F, 🧙‍♀️, femme mage, sorcière | sorcière | femme mage
+358, U + 1F9DA, 🧚, fée, fée | Oberon | Puck | Titania
+359, U + 1F9DA U + 200D U + 2642 U + FE0F, 🧚‍♂️, homme fée, homme fée | Oberon | Palet
+360, U + 1F9DA U + 200D U + 2640 U + FE0F, 🧚‍♀️, femme fée, Titania | femme fée
+361, U + 1F9DB, 🧛, vampire, Dracula | morts-vivants | vampire
+362, U + 1F9DB U + 200D U + 2642 U + FE0F, 🧛‍♂️, homme vampire, Dracula | homme vampire | Mort-vivant
+363, U + 1F9DB U + 200D U + 2640 U + FE0F, 🧛‍♀️, femme vampire, mort-vivant | femme vampire
+364, U + 1F9DC, 🧜, merperson, sirène | merman | merperson | merwoman
+№, Code, Exemple, Nom abrégé CLDR, Autres mots clés
+365, U + 1F9DC U + 200D U + 2642 U + FE0F, 🧜‍♂️, merman, merman | Triton
+366, U + 1F9DC U + 200D U + 2640 U + FE0F, 🧜‍♀️, sirène, sirène | merwoman
+367, U + 1F9DD, 🧝, elfe, elfe | magique | Style LOTR
+368, U + 1F9DD U + 200D U + 2642 U + FE0F, 🧝‍♂️, homme elfe, magique | homme elfe
+369, U + 1F9DD U + 200D U + 2640 U + FE0F, 🧝‍♀️, femme elfe, magique | femme elfe
+370, U + 1F9DE, 🧞, génie, djinn | génie | (couleur non humaine)
+371, U + 1F9DE U + 200D U + 2642 U + FE0F, 🧞‍♂️, man genie, djinn | homme génie
+372, U + 1F9DE U + 200D U + 2640 U + FE0F, 🧞‍♀️, femme génie, djinn | femme génie
+373, U + 1F9DF, 🧟, zombie, mort-vivant | marchant mort | zombie | (couleur non humaine)
+374, U + 1F9DF U + 200D U + 2642 U + FE0F, 🧟‍♂️, homme zombie, homme zombie | morts-vivants | les morts ambulants
+375, U + 1F9DF U + 200D U + 2640 U + FE0F, 🧟‍♀️, femme zombie, mort-vivant | marchant mort | femme zombie
+activité-personne
+№, code, échantillon, nom abrégé CLDR, autres mots clés
+376, U + 1F486, 💆, personne se faisant masser, visage | massage | person getting massage | salon
 377,U+1F486 U+200D U+2642 U+FE0F,💆‍♂️,man getting massage,face | man | man getting massage | massage
 378,U+1F486 U+200D U+2640 U+FE0F,💆‍♀️,woman getting massage,face | massage | woman | woman getting massage
 379,U+1F487,💇,person getting haircut,barber | beauty | haircut | parlor | person getting haircut
@@ -462,8 +462,8 @@ person-activity
 397,U+1F9D1 U+200D U+1F9BD,🧑‍🦽,person in manual wheelchair,accessibility | person in manual wheelchair | wheelchair
 398,U+1F468 U+200D U+1F9BD,👨‍🦽,man in manual wheelchair,accessibility | man | man in manual wheelchair | wheelchair
 399,U+1F469 U+200D U+1F9BD,👩‍🦽,woman in manual wheelchair,accessibility | wheelchair | woman | woman in manual wheelchair
-400,U+1F3C3,🏃,person running,marathon | person running | running
-401,U+1F3C3 U+200D U+2642 U+FE0F,🏃‍♂️,man running,man | marathon | racing | running
+400,U+1F3C3,🏃,person running,marathon | person running | fonctionnement
+401,U+1F3C3 U+200D U+2642 U+FE0F,🏃‍♂️,man running,man | marathon | racing | fonctionnement
 402,U+1F3C3 U+200D U+2640 U+FE0F,🏃‍♀️,woman running,marathon | racing | running | woman
 403,U+1F483,💃,woman dancing,dance | dancing | woman
 404,U+1F57A,🕺,man dancing,dance | dancing | man
@@ -480,7 +480,7 @@ person-activity
 person-sport
 №,Code,Sample,CLDR Short Name,Other Keywords
 415,U+1F93A,🤺,person fencing,fencer | fencing | person fencing | sword
-416,U+1F3C7,🏇,horse racing,horse | jockey | racehorse | racing
+416,U+1F3C7,🏇,horse racing,horse | jockey | racehorse | courses
 417,U+26F7,⛷,skier,ski | skier | snow
 418,U+1F3C2,🏂,snowboarder,ski | snow | snowboard | snowboarder
 419,U+1F3CC,🏌,person golfing,ball | golf | person golfing
@@ -498,7 +498,7 @@ person-sport
 431,U+26F9,⛹,person bouncing ball,ball | person bouncing ball
 432,U+26F9 U+FE0F U+200D U+2642 U+FE0F,⛹️‍♂️,man bouncing ball,ball | man | man bouncing ball
 433,U+26F9 U+FE0F U+200D U+2640 U+FE0F,⛹️‍♀️,woman bouncing ball,ball | woman | woman bouncing ball
-434,U+1F3CB,🏋,person lifting weights,lifter | person lifting weights | weight
+434,U+1F3CB,🏋,person lifting weights,lifter | person lifting weights | poids
 №,Code,Sample,CLDR Short Name,Other Keywords
 435,U+1F3CB U+FE0F U+200D U+2642 U+FE0F,🏋️‍♂️,man lifting weights,man | man lifting weights | weight lifter
 436,U+1F3CB U+FE0F U+200D U+2640 U+FE0F,🏋️‍♀️,woman lifting weights,weight lifter | woman | woman lifting weights
@@ -531,7 +531,7 @@ person-resting
 460,U+1F9D8 U+200D U+2640 U+FE0F,🧘‍♀️,woman in lotus position,meditation | woman in lotus position | yoga
 461,U+1F6C0,🛀,person taking bath,bath | bathtub | person taking bath
 462,U+1F6CC,🛌,person in bed,hotel | person in bed | sleep
-family
+famille
 №,Code,Sample,CLDR Short Name,Other Keywords
 463,U+1F9D1 U+200D U+1F91D U+200D U+1F9D1,🧑‍🤝‍🧑,people holding hands,couple | hand | hold | holding hands | people holding hands | person
 464,U+1F46D,👭,women holding hands,couple | hand | holding hands | women | women holding hands
@@ -541,7 +541,7 @@ family
 468,U+1F469 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F468,👩‍❤️‍💋‍👨,kiss: woman, man,couple | kiss | man | woman
 469,U+1F468 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F468,👨‍❤️‍💋‍👨,kiss: man, man,couple | kiss | man
 470,U+1F469 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F469,👩‍❤️‍💋‍👩,kiss: woman, woman,couple | kiss | woman
-471,U+1F491,💑,couple with heart,couple | couple with heart | love
+471,U+1F491,💑,couple with heart,couple | couple with heart | aimer
 472,U+1F469 U+200D U+2764 U+FE0F U+200D U+1F468,👩‍❤️‍👨,couple with heart: woman, man,couple | couple with heart | love | man | woman
 473,U+1F468 U+200D U+2764 U+FE0F U+200D U+1F468,👨‍❤️‍👨,couple with heart: man, man,couple | couple with heart | love | man
 474,U+1F469 U+200D U+2764 U+FE0F U+200D U+1F469,👩‍❤️‍👩,couple with heart: woman, woman,couple | couple with heart | love | woman
@@ -610,7 +610,7 @@ animal-mammal
 528,U+1F406,🐆,leopard,leopard
 529,U+1F434,🐴,horse face,face | horse
 №,Code,Sample,CLDR Short Name,Other Keywords
-530,U+1F40E,🐎,horse,equestrian | horse | racehorse | racing
+530,U+1F40E,🐎,horse,equestrian | horse | racehorse | courses
 531,U+1F984,🦄,unicorn,face | unicorn
 532,U+1F993,🦓,zebra,stripe | zebra
 533,U+1F98C,🦌,deer,deer
@@ -624,7 +624,7 @@ animal-mammal
 541,U+1F417,🐗,boar,boar | pig
 542,U+1F43D,🐽,pig nose,face | nose | pig
 543,U+1F40F,🐏,ram,Aries | male | ram | sheep | zodiac
-544,U+1F411,🐑,ewe,ewe | female | sheep
+544,U+1F411,🐑,ewe,ewe | female | mouton
 545,U+1F410,🐐,goat,Capricorn | goat | zodiac
 546,U+1F42A,🐪,camel,camel | dromedary | hump
 547,U+1F42B,🐫,two-hump camel,bactrian | camel | hump | two-hump camel
@@ -671,7 +671,7 @@ animal-bird
 584,U+1F986,🦆,duck,bird | duck
 585,U+1F9A2,🦢,swan,bird | cygnet | swan | ugly duckling
 586,U+1F989,🦉,owl,bird | owl | wise
-587,U+1F9A4,🦤,dodo,dodo | extinction | large | Mauritius
+587,U+1F9A4,🦤,dodo,dodo | extinction | large | Ile Maurice
 588,U+1FAB6,🪶,feather,bird | feather | flight | light | plumage
 589,U+1F9A9,🦩,flamingo,flamboyant | flamingo | tropical
 590,U+1F99A,🦚,peacock,bird | ostentatious | peacock | peahen | proud
@@ -712,7 +712,7 @@ animal-bug
 617,U+1F41E,🐞,lady beetle,beetle | insect | lady beetle | ladybird | ladybug
 618,U+1F997,🦗,cricket,cricket | grasshopper | Orthoptera
 619,U+1FAB3,🪳,cockroach,cockroach | insect | pest | roach
-620,U+1F577,🕷,spider,insect | spider
+620,U+1F577,🕷,spider,insect | araignée
 621,U+1F578,🕸,spider web,spider | web
 622,U+1F982,🦂,scorpion,scorpio | Scorpio | scorpion | zodiac
 623,U+1F99F,🦟,mosquito,disease | fever | malaria | mosquito | pest | virus
@@ -745,7 +745,7 @@ plant-other
 646,U+1F340,🍀,four leaf clover,4 | clover | four | four-leaf clover | leaf
 647,U+1F341,🍁,maple leaf,falling | leaf | maple
 648,U+1F342,🍂,fallen leaf,fallen leaf | falling | leaf
-649,U+1F343,🍃,leaf fluttering in wind,blow | flutter | leaf | leaf fluttering in wind | wind
+649,U+1F343,🍃,leaf fluttering in wind,blow | flutter | leaf | leaf fluttering in wind | vent
 Food & Drink
 food-fruit
 №,Code,Sample,CLDR Short Name,Other Keywords
@@ -757,11 +757,11 @@ food-fruit
 655,U+1F34C,🍌,banana,banana | fruit
 656,U+1F34D,🍍,pineapple,fruit | pineapple
 657,U+1F96D,🥭,mango,fruit | mango | tropical
-658,U+1F34E,🍎,red apple,apple | fruit | red
+658,U+1F34E,🍎,red apple,apple | fruit | rouge
 659,U+1F34F,🍏,green apple,apple | fruit | green
 660,U+1F350,🍐,pear,fruit | pear
 661,U+1F351,🍑,peach,fruit | peach
-662,U+1F352,🍒,cherries,berries | cherries | cherry | fruit | red
+662,U+1F352,🍒,cherries,berries | cherries | cherry | fruit | rouge
 663,U+1F353,🍓,strawberry,berry | fruit | strawberry
 664,U+1FAD0,🫐,blueberries,berry | bilberry | blue | blueberries | blueberry
 665,U+1F95D,🥝,kiwi fruit,food | fruit | kiwi
@@ -924,8 +924,8 @@ place-building
 800,U+1FAB5,🪵,wood,log | lumber | timber | wood
 801,U+1F6D6,🛖,hut,house | hut | roundhouse | yurt
 802,U+1F3D8,🏘,houses,houses
-803,U+1F3DA,🏚,derelict house,derelict | house
-804,U+1F3E0,🏠,house,home | house
+803,U+1F3DA,🏚,derelict house,derelict | loger
+804,U+1F3E0,🏠,house,home | loger
 805,U+1F3E1,🏡,house with garden,garden | home | house | house with garden
 806,U+1F3E2,🏢,office building,building | office building
 807,U+1F3E3,🏣,Japanese post office,Japanese | Japanese post office | post
@@ -933,13 +933,13 @@ place-building
 809,U+1F3E5,🏥,hospital,doctor | hospital | medicine
 810,U+1F3E6,🏦,bank,bank | building
 811,U+1F3E8,🏨,hotel,building | hotel
-812,U+1F3E9,🏩,love hotel,hotel | love
-813,U+1F3EA,🏪,convenience store,convenience | store
+812,U+1F3E9,🏩,love hotel,hotel | aimer
+813,U+1F3EA,🏪,convenience store,convenience | boutique
 814,U+1F3EB,🏫,school,building | school
 №,Code,Sample,CLDR Short Name,Other Keywords
-815,U+1F3EC,🏬,department store,department | store
+815,U+1F3EC,🏬,department store,department | boutique
 816,U+1F3ED,🏭,factory,building | factory
-817,U+1F3EF,🏯,Japanese castle,castle | Japanese
+817,U+1F3EF,🏯,Japanese castle,castle | Japonais
 818,U+1F3F0,🏰,castle,castle | European
 819,U+1F492,💒,wedding,chapel | romance | wedding
 820,U+1F5FC,🗼,Tokyo tower,Tokyo | tower
@@ -963,7 +963,7 @@ place-other
 834,U+1F305,🌅,sunrise,morning | sun | sunrise
 835,U+1F306,🌆,cityscape at dusk,city | cityscape at dusk | dusk | evening | landscape | sunset
 836,U+1F307,🌇,sunset,dusk | sun | sunset
-837,U+1F309,🌉,bridge at night,bridge | bridge at night | night
+837,U+1F309,🌉,bridge at night,bridge | bridge at night | nuit
 838,U+2668,♨,hot springs,hot | hotsprings | springs | steaming
 839,U+1F3A0,🎠,carousel horse,carousel | horse
 840,U+1F3A1,🎡,ferris wheel,amusement park | ferris | wheel
@@ -1002,8 +1002,8 @@ transport-ground
 870,U+1F69A,🚚,delivery truck,delivery | truck
 871,U+1F69B,🚛,articulated lorry,articulated lorry | lorry | semi | truck
 872,U+1F69C,🚜,tractor,tractor | vehicle
-873,U+1F3CE,🏎,racing car,car | racing
-874,U+1F3CD,🏍,motorcycle,motorcycle | racing
+873,U+1F3CE,🏎,racing car,car | courses
+874,U+1F3CD,🏍,motorcycle,motorcycle | courses
 875,U+1F6F5,🛵,motor scooter,motor | scooter
 876,U+1F9BD,🦽,manual wheelchair,accessibility | manual wheelchair
 877,U+1F9BC,🦼,motorized wheelchair,accessibility | motorized wheelchair
@@ -1025,7 +1025,7 @@ transport-ground
 892,U+1F6A7,🚧,construction,barrier | construction
 transport-water
 №,Code,Sample,CLDR Short Name,Other Keywords
-893,U+2693,⚓,anchor,anchor | ship | tool
+893,U+2693,⚓,anchor,anchor | ship | outil
 894,U+26F5,⛵,sailboat,boat | resort | sailboat | sea | yacht
 895,U+1F6F6,🛶,canoe,boat | canoe
 896,U+1F6A4,🚤,speedboat,boat | speedboat
@@ -1052,7 +1052,7 @@ hotel
 №,Code,Sample,CLDR Short Name,Other Keywords
 914,U+1F6CE,🛎,bellhop bell,bell | bellhop | hotel
 915,U+1F9F3,🧳,luggage,luggage | packing | travel
-time
+temps
 №,Code,Sample,CLDR Short Name,Other Keywords
 916,U+231B,⌛,hourglass done,hourglass done | sand | timer
 917,U+23F3,⏳,hourglass not done,hourglass | hourglass not done | sand | timer
@@ -1065,9 +1065,9 @@ time
 924,U+1F567,🕧,twelve-thirty,12 | 12:30 | clock | thirty | twelve | twelve-thirty
 925,U+1F550,🕐,one o’clock,00 | 1 | 1:00 | clock | o’clock | one
 926,U+1F55C,🕜,one-thirty,1 | 1:30 | clock | one | one-thirty | thirty
-927,U+1F551,🕑,two o’clock,00 | 2 | 2:00 | clock | o’clock | two
+927,U+1F551,🕑,two o’clock,00 | 2 | 2:00 | clock | o’clock | deux
 928,U+1F55D,🕝,two-thirty,2 | 2:30 | clock | thirty | two | two-thirty
-929,U+1F552,🕒,three o’clock,00 | 3 | 3:00 | clock | o’clock | three
+929,U+1F552,🕒,three o’clock,00 | 3 | 3:00 | clock | o’clock | Trois
 930,U+1F55E,🕞,three-thirty,3 | 3:30 | clock | thirty | three | three-thirty
 931,U+1F553,🕓,four o’clock,00 | 4 | 4:00 | clock | four | o’clock
 932,U+1F55F,🕟,four-thirty,4 | 4:30 | clock | four | four-thirty | thirty
@@ -1090,17 +1090,17 @@ sky & weather
 №,Code,Sample,CLDR Short Name,Other Keywords
 947,U+1F311,🌑,new moon,dark | moon | new moon
 948,U+1F312,🌒,waxing crescent moon,crescent | moon | waxing
-949,U+1F313,🌓,first quarter moon,first quarter moon | moon | quarter
+949,U+1F313,🌓,first quarter moon,first quarter moon | moon | trimestre
 950,U+1F314,🌔,waxing gibbous moon,gibbous | moon | waxing
 951,U+1F315,🌕,full moon,full | moon
 952,U+1F316,🌖,waning gibbous moon,gibbous | moon | waning
-953,U+1F317,🌗,last quarter moon,last quarter moon | moon | quarter
+953,U+1F317,🌗,last quarter moon,last quarter moon | moon | trimestre
 954,U+1F318,🌘,waning crescent moon,crescent | moon | waning
 955,U+1F319,🌙,crescent moon,crescent | moon
 956,U+1F31A,🌚,new moon face,face | moon | new moon face
-957,U+1F31B,🌛,first quarter moon face,face | first quarter moon face | moon | quarter
-958,U+1F31C,🌜,last quarter moon face,face | last quarter moon face | moon | quarter
-959,U+1F321,🌡,thermometer,thermometer | weather
+957,U+1F31B,🌛,first quarter moon face,face | first quarter moon face | moon | trimestre
+958,U+1F31C,🌜,last quarter moon face,face | last quarter moon face | moon | trimestre
+959,U+1F321,🌡,thermometer,thermometer | conditions météorologiques
 960,U+2600,☀,sun,bright | rays | sun | sunny
 961,U+1F31D,🌝,full moon face,bright | face | full | moon
 962,U+1F31E,🌞,sun with face,bright | face | sun | sun with face
@@ -1110,18 +1110,18 @@ sky & weather
 966,U+1F320,🌠,shooting star,falling | shooting | star
 №,Code,Sample,CLDR Short Name,Other Keywords
 967,U+1F30C,🌌,milky way,milky way | space
-968,U+2601,☁,cloud,cloud | weather
+968,U+2601,☁,cloud,cloud | conditions météorologiques
 969,U+26C5,⛅,sun behind cloud,cloud | sun | sun behind cloud
 970,U+26C8,⛈,cloud with lightning and rain,cloud | cloud with lightning and rain | rain | thunder
 971,U+1F324,🌤,sun behind small cloud,cloud | sun | sun behind small cloud
 972,U+1F325,🌥,sun behind large cloud,cloud | sun | sun behind large cloud
 973,U+1F326,🌦,sun behind rain cloud,cloud | rain | sun | sun behind rain cloud
-974,U+1F327,🌧,cloud with rain,cloud | cloud with rain | rain
+974,U+1F327,🌧,cloud with rain,cloud | cloud with rain | pluie
 975,U+1F328,🌨,cloud with snow,cloud | cloud with snow | cold | snow
 976,U+1F329,🌩,cloud with lightning,cloud | cloud with lightning | lightning
 977,U+1F32A,🌪,tornado,cloud | tornado | whirlwind
 978,U+1F32B,🌫,fog,cloud | fog
-979,U+1F32C,🌬,wind face,blow | cloud | face | wind
+979,U+1F32C,🌬,wind face,blow | cloud | face | vent
 980,U+1F300,🌀,cyclone,cyclone | dizzy | hurricane | twister | typhoon
 981,U+1F308,🌈,rainbow,rain | rainbow
 982,U+1F302,🌂,closed umbrella,closed umbrella | clothing | rain | umbrella
@@ -1134,7 +1134,7 @@ sky & weather
 988,U+2603,☃,snowman,cold | snow | snowman
 989,U+26C4,⛄,snowman without snow,cold | snow | snowman | snowman without snow
 990,U+2604,☄,comet,comet | space
-991,U+1F525,🔥,fire,fire | flame | tool
+991,U+1F525,🔥,fire,fire | flame | outil
 992,U+1F4A7,💧,droplet,cold | comic | drop | droplet | sweat
 993,U+1F30A,🌊,water wave,ocean | water | wave
 Activities
@@ -1153,7 +1153,7 @@ event
 1004,U+1F38D,🎍,pine decoration,bamboo | celebration | Japanese | pine | pine decoration
 1005,U+1F38E,🎎,Japanese dolls,celebration | doll | festival | Japanese | Japanese dolls
 1006,U+1F38F,🎏,carp streamer,carp | celebration | streamer
-1007,U+1F390,🎐,wind chime,bell | celebration | chime | wind
+1007,U+1F390,🎐,wind chime,bell | celebration | chime | vent
 1008,U+1F391,🎑,moon viewing ceremony,celebration | ceremony | moon | moon viewing ceremony
 1009,U+1F9E7,🧧,red envelope,gift | good luck | hóngbāo | lai see | money | red envelope
 1010,U+1F380,🎀,ribbon,celebration | ribbon
@@ -1172,12 +1172,12 @@ award-medal
 1020,U+1F949,🥉,3rd place medal,3rd place medal | bronze | medal | third
 sport
 №,Code,Sample,CLDR Short Name,Other Keywords
-1021,U+26BD,⚽,soccer ball,ball | football | soccer
+1021,U+26BD,⚽,soccer ball,ball | football | le football
 1022,U+26BE,⚾,baseball,ball | baseball
 1023,U+1F94E,🥎,softball,ball | glove | softball | underarm
 1024,U+1F3C0,🏀,basketball,ball | basketball | hoop
 1025,U+1F3D0,🏐,volleyball,ball | game | volleyball
-1026,U+1F3C8,🏈,american football,american | ball | football
+1026,U+1F3C8,🏈,american football,american | ball | Football
 1027,U+1F3C9,🏉,rugby football,ball | football | rugby
 1028,U+1F3BE,🎾,tennis,ball | racquet | tennis
 1029,U+1F94F,🥏,flying disc,flying disc | ultimate
@@ -1202,11 +1202,11 @@ sport
 1047,U+1F94C,🥌,curling stone,curling stone | game | rock
 game
 №,Code,Sample,CLDR Short Name,Other Keywords
-1048,U+1F3AF,🎯,bullseye,bullseye | dart | direct hit | game | hit | target
+1048,U+1F3AF,🎯,bullseye,bullseye | dart | direct hit | game | hit | cibler
 1049,U+1FA80,🪀,yo-yo,fluctuate | toy | yo-yo
 1050,U+1FA81,🪁,kite,fly | kite | soar
 1051,U+1F3B1,🎱,pool 8 ball,8 | ball | billiard | eight | game | pool 8 ball
-1052,U+1F52E,🔮,crystal ball,ball | crystal | fairy tale | fantasy | fortune | tool
+1052,U+1F52E,🔮,crystal ball,ball | crystal | fairy tale | fantasy | fortune | outil
 1053,U+1FA84,🪄,magic wand,magic | magic wand | witch | wizard
 1054,U+1F9FF,🧿,nazar amulet,bead | charm | evil-eye | nazar | nazar amulet | talisman
 1055,U+1F3AE,🎮,video game,controller | game | video game
@@ -1214,7 +1214,7 @@ game
 1057,U+1F3B0,🎰,slot machine,game | slot | slot machine
 1058,U+1F3B2,🎲,game die,dice | die | game
 1059,U+1F9E9,🧩,puzzle piece,clue | interlocking | jigsaw | piece | puzzle
-1060,U+1F9F8,🧸,teddy bear,plaything | plush | stuffed | teddy bear | toy
+1060,U+1F9F8,🧸,teddy bear,plaything | plush | stuffed | teddy bear | jouet
 1061,U+1FA85,🪅,piñata,celebration | party | piñata
 1062,U+1FA86,🪆,nesting dolls,doll | nesting | nesting dolls | russia
 1063,U+2660,♠,spade suit,card | game | spade suit
@@ -1223,13 +1223,13 @@ game
 1066,U+2663,♣,club suit,card | club suit | game
 1067,U+265F,♟,chess pawn,chess | chess pawn | dupe | expendable
 №,Code,Sample,CLDR Short Name,Other Keywords
-1068,U+1F0CF,🃏,joker,card | game | joker | wildcard
-1069,U+1F004,🀄,mahjong red dragon,game | mahjong | mahjong red dragon | red
+1068,U+1F0CF,🃏,joker,card | game | joker | joker
+1069,U+1F004,🀄,mahjong red dragon,game | mahjong | mahjong red dragon | rouge
 1070,U+1F3B4,🎴,flower playing cards,card | flower | flower playing cards | game | Japanese | playing
 arts & crafts
 №,Code,Sample,CLDR Short Name,Other Keywords
 1071,U+1F3AD,🎭,performing arts,art | mask | performing | performing arts | theater | theatre
-1072,U+1F5BC,🖼,framed picture,art | frame | framed picture | museum | painting | picture
+1072,U+1F5BC,🖼,framed picture,art | frame | framed picture | museum | painting | image
 1073,U+1F3A8,🎨,artist palette,art | artist palette | museum | painting | palette
 1074,U+1F9F5,🧵,thread,needle | sewing | spool | string | thread
 1075,U+1FAA1,🪡,sewing needle,embroidery | needle | sewing | stitches | sutures | tailoring
@@ -1247,7 +1247,7 @@ clothing
 1084,U+1F455,👕,t-shirt,clothing | shirt | t-shirt | tshirt
 1085,U+1F456,👖,jeans,clothing | jeans | pants | trousers
 1086,U+1F9E3,🧣,scarf,neck | scarf
-1087,U+1F9E4,🧤,gloves,gloves | hand
+1087,U+1F9E4,🧤,gloves,gloves | main
 1088,U+1F9E5,🧥,coat,coat | jacket
 1089,U+1F9E6,🧦,socks,socks | stocking
 1090,U+1F457,👗,dress,clothing | dress
@@ -1296,27 +1296,27 @@ sound
 1129,U+1F4EF,📯,postal horn,horn | post | postal
 1130,U+1F514,🔔,bell,bell
 1131,U+1F515,🔕,bell with slash,bell | bell with slash | forbidden | mute | quiet | silent
-music
+musique
 №,Code,Sample,CLDR Short Name,Other Keywords
 1132,U+1F3BC,🎼,musical score,music | musical score | score
 1133,U+1F3B5,🎵,musical note,music | musical note | note
 1134,U+1F3B6,🎶,musical notes,music | musical notes | note | notes
 1135,U+1F399,🎙,studio microphone,mic | microphone | music | studio
 1136,U+1F39A,🎚,level slider,level | music | slider
-1137,U+1F39B,🎛,control knobs,control | knobs | music
+1137,U+1F39B,🎛,control knobs,control | knobs | musique
 1138,U+1F3A4,🎤,microphone,karaoke | mic | microphone
-1139,U+1F3A7,🎧,headphone,earbud | headphone
-1140,U+1F4FB,📻,radio,radio | video
+1139,U+1F3A7,🎧,headphone,earbud | casque de musique
+1140,U+1F4FB,📻,radio,radio | vidéo
 musical-instrument
 №,Code,Sample,CLDR Short Name,Other Keywords
 1141,U+1F3B7,🎷,saxophone,instrument | music | sax | saxophone
 1142,U+1FA97,🪗,accordion,accordian | accordion | concertina | squeeze box
-1143,U+1F3B8,🎸,guitar,guitar | instrument | music
+1143,U+1F3B8,🎸,guitar,guitar | instrument | musique
 1144,U+1F3B9,🎹,musical keyboard,instrument | keyboard | music | musical keyboard | piano
 1145,U+1F3BA,🎺,trumpet,instrument | music | trumpet
 1146,U+1F3BB,🎻,violin,instrument | music | violin
 1147,U+1FA95,🪕,banjo,banjo | music | stringed
-1148,U+1F941,🥁,drum,drum | drumsticks | music
+1148,U+1F941,🥁,drum,drum | drumsticks | musique
 1149,U+1FA98,🪘,long drum,beat | conga | drum | long drum | rhythm
 phone
 №,Code,Sample,CLDR Short Name,Other Keywords
@@ -1333,7 +1333,7 @@ computer
 1158,U+1F4BB,💻,laptop,computer | laptop | pc | personal
 1159,U+1F5A5,🖥,desktop computer,computer | desktop
 1160,U+1F5A8,🖨,printer,computer | printer
-1161,U+2328,⌨,keyboard,computer | keyboard
+1161,U+2328,⌨,keyboard,computer | clavier
 1162,U+1F5B1,🖱,computer mouse,computer | computer mouse
 1163,U+1F5B2,🖲,trackball,computer | trackball
 1164,U+1F4BD,💽,computer disk,computer | disk | minidisk | optical
@@ -1343,17 +1343,17 @@ computer
 1168,U+1F9EE,🧮,abacus,abacus | calculation
 light & video
 №,Code,Sample,CLDR Short Name,Other Keywords
-1169,U+1F3A5,🎥,movie camera,camera | cinema | movie
-1170,U+1F39E,🎞,film frames,cinema | film | frames | movie
-1171,U+1F4FD,📽,film projector,cinema | film | movie | projector | video
-1172,U+1F3AC,🎬,clapper board,clapper | clapper board | movie
-1173,U+1F4FA,📺,television,television | tv | video
-1174,U+1F4F7,📷,camera,camera | video
-1175,U+1F4F8,📸,camera with flash,camera | camera with flash | flash | video
-1176,U+1F4F9,📹,video camera,camera | video
+1169,U+1F3A5,🎥,movie camera,camera | cinema | film
+1170,U+1F39E,🎞,film frames,cinema | film | frames | film
+1171,U+1F4FD,📽,film projector,cinema | film | movie | projector | vidéo
+1172,U+1F3AC,🎬,clapper board,clapper | clapper board | film
+1173,U+1F4FA,📺,television,television | tv | vidéo
+1174,U+1F4F7,📷,camera,camera | vidéo
+1175,U+1F4F8,📸,camera with flash,camera | camera with flash | flash | vidéo
+1176,U+1F4F9,📹,video camera,camera | vidéo
 1177,U+1F4FC,📼,videocassette,tape | vhs | video | videocassette
-1178,U+1F50D,🔍,magnifying glass tilted left,glass | magnifying | magnifying glass tilted left | search | tool
-1179,U+1F50E,🔎,magnifying glass tilted right,glass | magnifying | magnifying glass tilted right | search | tool
+1178,U+1F50D,🔍,magnifying glass tilted left,glass | magnifying | magnifying glass tilted left | search | outil
+1179,U+1F50E,🔎,magnifying glass tilted right,glass | magnifying | magnifying glass tilted right | search | outil
 1180,U+1F56F,🕯,candle,candle | light
 1181,U+1F4A1,💡,light bulb,bulb | comic | electric | idea | light
 1182,U+1F526,🔦,flashlight,electric | flashlight | light | tool | torch
@@ -1363,11 +1363,11 @@ book-paper
 №,Code,Sample,CLDR Short Name,Other Keywords
 1185,U+1F4D4,📔,notebook with decorative cover,book | cover | decorated | notebook | notebook with decorative cover
 1186,U+1F4D5,📕,closed book,book | closed
-1187,U+1F4D6,📖,open book,book | open
+1187,U+1F4D6,📖,open book,book | ouvert
 1188,U+1F4D7,📗,green book,book | green
 1189,U+1F4D8,📘,blue book,blue | book
 1190,U+1F4D9,📙,orange book,book | orange
-1191,U+1F4DA,📚,books,book | books
+1191,U+1F4DA,📚,books,book | livres
 1192,U+1F4D3,📓,notebook,notebook
 1193,U+1F4D2,📒,ledger,ledger | notebook
 1194,U+1F4C3,📃,page with curl,curl | document | page | page with curl
@@ -1395,7 +1395,7 @@ mail
 1212,U+2709,✉,envelope,email | envelope | letter
 1213,U+1F4E7,📧,e-mail,e-mail | email | letter | mail
 1214,U+1F4E8,📨,incoming envelope,e-mail | email | envelope | incoming | letter | receive
-1215,U+1F4E9,📩,envelope with arrow,arrow | e-mail | email | envelope | envelope with arrow | outgoing
+1215,U+1F4E9,📩,envelope with arrow,arrow | e-mail | email | envelope | envelope with arrow | sortant
 1216,U+1F4E4,📤,outbox tray,box | letter | mail | outbox | sent | tray
 1217,U+1F4E5,📥,inbox tray,box | inbox | letter | mail | receive | tray
 1218,U+1F4E6,📦,package,box | package | parcel
@@ -1418,9 +1418,9 @@ office
 №,Code,Sample,CLDR Short Name,Other Keywords
 1232,U+1F4BC,💼,briefcase,briefcase
 1233,U+1F4C1,📁,file folder,file | folder
-1234,U+1F4C2,📂,open file folder,file | folder | open
+1234,U+1F4C2,📂,open file folder,file | folder | ouvert
 1235,U+1F5C2,🗂,card index dividers,card | dividers | index
-1236,U+1F4C5,📅,calendar,calendar | date
+1236,U+1F4C5,📅,calendar,calendar | Date
 1237,U+1F4C6,📆,tear-off calendar,calendar | tear-off calendar
 1238,U+1F5D2,🗒,spiral notepad,note | pad | spiral | spiral notepad
 1239,U+1F5D3,🗓,spiral calendar,calendar | pad | spiral
@@ -1435,10 +1435,10 @@ office
 1248,U+1F587,🖇,linked paperclips,link | linked paperclips | paperclip
 1249,U+1F4CF,📏,straight ruler,ruler | straight edge | straight ruler
 1250,U+1F4D0,📐,triangular ruler,ruler | set | triangle | triangular ruler
-1251,U+2702,✂,scissors,cutting | scissors | tool
+1251,U+2702,✂,scissors,cutting | scissors | outil
 №,Code,Sample,CLDR Short Name,Other Keywords
-1252,U+1F5C3,🗃,card file box,box | card | file
-1253,U+1F5C4,🗄,file cabinet,cabinet | file | filing
+1252,U+1F5C3,🗃,card file box,box | card | déposer
+1253,U+1F5C4,🗄,file cabinet,cabinet | file | dépôt
 1254,U+1F5D1,🗑,wastebasket,wastebasket
 lock
 №,Code,Sample,CLDR Short Name,Other Keywords
@@ -1448,12 +1448,12 @@ lock
 1258,U+1F510,🔐,locked with key,closed | key | lock | locked with key | secure
 1259,U+1F511,🔑,key,key | lock | password
 1260,U+1F5DD,🗝,old key,clue | key | lock | old
-tool
+outil
 №,Code,Sample,CLDR Short Name,Other Keywords
-1261,U+1F528,🔨,hammer,hammer | tool
+1261,U+1F528,🔨,hammer,hammer | outil
 1262,U+1FA93,🪓,axe,axe | chop | hatchet | split | wood
-1263,U+26CF,⛏,pick,mining | pick | tool
-1264,U+2692,⚒,hammer and pick,hammer | hammer and pick | pick | tool
+1263,U+26CF,⛏,pick,mining | pick | outil
+1264,U+2692,⚒,hammer and pick,hammer | hammer and pick | pick | outil
 1265,U+1F6E0,🛠,hammer and wrench,hammer | hammer and wrench | spanner | tool | wrench
 1266,U+1F5E1,🗡,dagger,dagger | knife | weapon
 1267,U+2694,⚔,crossed swords,crossed | swords | weapon
@@ -1461,11 +1461,11 @@ tool
 1269,U+1FA83,🪃,boomerang,australia | boomerang | rebound | repercussion
 1270,U+1F3F9,🏹,bow and arrow,archer | arrow | bow | bow and arrow | Sagittarius | zodiac
 1271,U+1F6E1,🛡,shield,shield | weapon
-1272,U+1FA9A,🪚,carpentry saw,carpenter | carpentry saw | lumber | saw | tool
+1272,U+1FA9A,🪚,carpentry saw,carpenter | carpentry saw | lumber | saw | outil
 1273,U+1F527,🔧,wrench,spanner | tool | wrench
-1274,U+1FA9B,🪛,screwdriver,screw | screwdriver | tool
-1275,U+1F529,🔩,nut and bolt,bolt | nut | nut and bolt | tool
-1276,U+2699,⚙,gear,cog | cogwheel | gear | tool
+1274,U+1FA9B,🪛,screwdriver,screw | screwdriver | outil
+1275,U+1F529,🔩,nut and bolt,bolt | nut | nut and bolt | outil
+1276,U+2699,⚙,gear,cog | cogwheel | gear | outil
 1277,U+1F5DC,🗜,clamp,clamp | compress | tool | vice
 1278,U+2696,⚖,balance scale,balance | justice | Libra | scale | zodiac
 1279,U+1F9AF,🦯,white cane,accessibility | blind | white cane
@@ -1478,14 +1478,14 @@ tool
 1285,U+1FA9C,🪜,ladder,climb | ladder | rung | step
 science
 №,Code,Sample,CLDR Short Name,Other Keywords
-1286,U+2697,⚗,alembic,alembic | chemistry | tool
+1286,U+2697,⚗,alembic,alembic | chemistry | outil
 1287,U+1F9EA,🧪,test tube,chemist | chemistry | experiment | lab | science | test tube
 1288,U+1F9EB,🧫,petri dish,bacteria | biologist | biology | culture | lab | petri dish
 1289,U+1F9EC,🧬,dna,biologist | dna | evolution | gene | genetics | life
-1290,U+1F52C,🔬,microscope,microscope | science | tool
-1291,U+1F52D,🔭,telescope,science | telescope | tool
+1290,U+1F52C,🔬,microscope,microscope | science | outil
+1291,U+1F52D,🔭,telescope,science | telescope | outil
 1292,U+1F4E1,📡,satellite antenna,antenna | dish | satellite
-medical
+médical
 №,Code,Sample,CLDR Short Name,Other Keywords
 1293,U+1F489,💉,syringe,medicine | needle | shot | sick | syringe
 1294,U+1FA78,🩸,drop of blood,bleed | blood donation | drop of blood | injury | medicine | menstruation
@@ -1625,13 +1625,13 @@ av-symbol
 1409,U+23EE,⏮,last track button,arrow | last track button | previous scene | previous track | triangle
 1410,U+1F53C,🔼,upwards button,arrow | button | red | upwards button
 1411,U+23EB,⏫,fast up button,arrow | double | fast up button
-1412,U+1F53D,🔽,downwards button,arrow | button | down | downwards button | red
+1412,U+1F53D,🔽,downwards button,arrow | button | down | downwards button | rouge
 1413,U+23EC,⏬,fast down button,arrow | double | down | fast down button
 1414,U+23F8,⏸,pause button,bar | double | pause | pause button | vertical
 1415,U+23F9,⏹,stop button,square | stop | stop button
 1416,U+23FA,⏺,record button,circle | record | record button
 1417,U+23CF,⏏,eject button,eject | eject button
-1418,U+1F3A6,🎦,cinema,camera | cinema | film | movie
+1418,U+1F3A6,🎦,cinema,camera | cinema | film | film
 1419,U+1F505,🔅,dim button,brightness | dim | dim button | low
 №,Code,Sample,CLDR Short Name,Other Keywords
 1420,U+1F506,🔆,bright button,bright | bright button | brightness
@@ -1645,7 +1645,7 @@ gender
 1426,U+26A7,⚧,transgender symbol,transgender | transgender symbol
 math
 №,Code,Sample,CLDR Short Name,Other Keywords
-1427,U+2716,✖,multiply,× | cancel | multiplication | multiply | sign | x
+1427,U+2716,✖,multiply,× | cancel | multiplication | multiply | sign | X
 1428,U+2795,➕,plus,+ | math | plus | sign
 1429,U+2796,➖,minus,- | − | math | minus | sign
 1430,U+2797,➗,divide,÷ | divide | division | math | sign
@@ -1659,7 +1659,7 @@ punctuation
 1436,U+2755,❕,white exclamation mark,! | exclamation | mark | outlined | punctuation | white exclamation mark
 1437,U+2757,❗,red exclamation mark,! | exclamation | mark | punctuation | red exclamation mark
 1438,U+3030,〰,wavy dash,dash | punctuation | wavy
-currency
+devise
 №,Code,Sample,CLDR Short Name,Other Keywords
 1439,U+1F4B1,💱,currency exchange,bank | currency | exchange | money
 1440,U+1F4B2,💲,heavy dollar sign,currency | dollar | heavy dollar sign | money
@@ -1671,19 +1671,19 @@ other-symbol
 1444,U+1F531,🔱,trident emblem,anchor | emblem | ship | tool | trident
 1445,U+1F4DB,📛,name badge,badge | name
 1446,U+1F530,🔰,Japanese symbol for beginner,beginner | chevron | Japanese | Japanese symbol for beginner | leaf
-1447,U+2B55,⭕,hollow red circle,circle | hollow red circle | large | o | red
+1447,U+2B55,⭕,hollow red circle,circle | hollow red circle | large | o | rouge
 1448,U+2705,✅,check mark button,✓ | button | check | mark
 1449,U+2611,☑,check box with check,✓ | box | check | check box with check
 1450,U+2714,✔,check mark,✓ | check | mark
-1451,U+274C,❌,cross mark,× | cancel | cross | mark | multiplication | multiply | x
-1452,U+274E,❎,cross mark button,× | cross mark button | mark | square | x
+1451,U+274C,❌,cross mark,× | cancel | cross | mark | multiplication | multiply | X
+1452,U+274E,❎,cross mark button,× | cross mark button | mark | square | X
 1453,U+27B0,➰,curly loop,curl | curly loop | loop
 1454,U+27BF,➿,double curly loop,curl | double | double curly loop | loop
 1455,U+303D,〽,part alternation mark,mark | part | part alternation mark
 1456,U+2733,✳,eight-spoked asterisk,* | asterisk | eight-spoked asterisk
 1457,U+2734,✴,eight-pointed star,* | eight-pointed star | star
 1458,U+2747,❇,sparkle,* | sparkle
-1459,U+00A9,©,copyright,c | copyright
+1459,U+00A9,©,copyright,c | droits d'auteur
 1460,U+00AE,®,registered,r | registered
 №,Code,Sample,CLDR Short Name,Other Keywords
 1461,U+2122,™,trade mark,mark | tm | trade mark | trademark
@@ -1706,7 +1706,7 @@ alphanum
 №,Code,Sample,CLDR Short Name,Other Keywords
 1475,U+1F520,🔠,input latin uppercase,ABCD | input | latin | letters | uppercase
 1476,U+1F521,🔡,input latin lowercase,abcd | input | latin | letters | lowercase
-1477,U+1F522,🔢,input numbers,1234 | input | numbers
+1477,U+1F522,🔢,input numbers,1234 | input | Nombres
 1478,U+1F523,🔣,input symbols,〒♪&% | input | input symbols
 1479,U+1F524,🔤,input latin letters,abc | alphabet | input | latin | letters
 1480,U+1F170,🅰,A button (blood type),a | A button (blood type) | blood type
@@ -1725,7 +1725,7 @@ alphanum
 1493,U+1F17F,🅿,P button,P button | parking
 1494,U+1F198,🆘,SOS button,help | sos | SOS button
 №,Code,Sample,CLDR Short Name,Other Keywords
-1495,U+1F199,🆙,UP! button,mark | up | UP! button
+1495,U+1F199,🆙,UP! button,mark | up | UP! bouton
 1496,U+1F19A,🆚,VS button,versus | vs | VS button
 1497,U+1F201,🈁,Japanese “here” button,“here” | Japanese | Japanese “here” button | katakana | ココ
 1498,U+1F202,🈂,Japanese “service charge” button,“service charge” | Japanese | Japanese “service charge” button | katakana | サ
@@ -1746,7 +1746,7 @@ alphanum
 1513,U+1F235,🈵,Japanese “no vacancy” button,“no vacancy” | ideograph | Japanese | Japanese “no vacancy” button | 満
 geometric
 №,Code,Sample,CLDR Short Name,Other Keywords
-1514,U+1F534,🔴,red circle,circle | geometric | red
+1514,U+1F534,🔴,red circle,circle | geometric | rouge
 1515,U+1F7E0,🟠,orange circle,circle | orange
 1516,U+1F7E1,🟡,yellow circle,circle | yellow
 1517,U+1F7E2,🟢,green circle,circle | green
@@ -1777,16 +1777,16 @@ geometric
 1541,U+1F539,🔹,small blue diamond,blue | diamond | geometric | small blue diamond
 1542,U+1F53A,🔺,red triangle pointed up,geometric | red | red triangle pointed up
 1543,U+1F53B,🔻,red triangle pointed down,down | geometric | red | red triangle pointed down
-1544,U+1F4A0,💠,diamond with a dot,comic | diamond | diamond with a dot | geometric | inside
+1544,U+1F4A0,💠,diamond with a dot,comic | diamond | diamond with a dot | geometric | à l'intérieur
 1545,U+1F518,🔘,radio button,button | geometric | radio
 1546,U+1F533,🔳,white square button,button | geometric | outlined | square | white square button
 1547,U+1F532,🔲,black square button,black square button | button | geometric | square
 Flags
 flag
 №,Code,Sample,CLDR Short Name,Other Keywords
-1548,U+1F3C1,🏁,chequered flag,checkered | chequered | chequered flag | racing
+1548,U+1F3C1,🏁,chequered flag,checkered | chequered | chequered flag | courses
 1549,U+1F6A9,🚩,triangular flag,post | triangular flag
-1550,U+1F38C,🎌,crossed flags,celebration | cross | crossed | crossed flags | Japanese
+1550,U+1F38C,🎌,crossed flags,celebration | cross | crossed | crossed flags | Japonais
 1551,U+1F3F4,🏴,black flag,black flag | waving
 1552,U+1F3F3,🏳,white flag,waving | white flag
 1553,U+1F3F3 U+FE0F U+200D U+1F308,🏳️‍🌈,rainbow flag,pride | rainbow | rainbow flag
@@ -2059,13 +2059,13 @@ country-flag
 1806,U+1F1FC U+1F1EB,🇼🇫,flag: Wallis & Futuna,flag
 1807,U+1F1FC U+1F1F8,🇼🇸,flag: Samoa,flag
 1808,U+1F1FD U+1F1F0,🇽🇰,flag: Kosovo,flag
-1809,U + 1F1FE U + 1F1EA,🇾🇪,drapeau: Yémen,drapeau
-1810,U + 1F1FE U + 1F1F9,🇾🇹,drapeau: Mayotte,drapeau
-1811,U + 1F1FF U + 1F1E6,🇿🇦,drapeau: Afrique du Sud,drapeau
-1812,U + 1F1FF U + 1F1F2,🇿🇲,drapeau: Zambie,drapeau
-1813,U + 1F1FF U + 1F1FC,🇿🇼,drapeau: Zimbabwe,drapeau
-drapeau de subdivision
-№,Code,Échantillon,Nom court CLDR,Autres mots-clés
-1814,U + 1F3F4 U + E0067 U + E0062 U + E0065 U + E006E U + E0067 U + E007F,🏴󠁧󠁢󠁥󠁮󠁧󠁿,drapeau: Angleterre,drapeau
-1815,U + 1F3F4 U + E0067 U + E0062 U + E0073 U + E0063 U + E0074 U + E007F,🏴󠁧󠁢󠁳󠁣󠁴󠁿,drapeau: Ecosse,drapeau
-1816,U + 1F3F4 U + E0067 U + E0062 U + E0077 U + E006C U + E0073 U + E007F,🏴󠁧󠁢󠁷󠁬󠁳󠁿,drapeau: Pays de Galles,drapeau
+1809,U+1F1FE U+1F1EA,🇾🇪,flag: Yemen,flag
+1810,U+1F1FE U+1F1F9,🇾🇹,flag: Mayotte,flag
+1811,U+1F1FF U+1F1E6,🇿🇦,flag: South Africa,flag
+1812,U+1F1FF U+1F1F2,🇿🇲,flag: Zambia,flag
+1813,U+1F1FF U+1F1FC,🇿🇼,flag: Zimbabwe,flag
+subdivision-flag
+№,Code,Sample,CLDR Short Name,Other Keywords
+1814,U+1F3F4 U+E0067 U+E0062 U+E0065 U+E006E U+E0067 U+E007F,🏴󠁧󠁢󠁥󠁮󠁧󠁿,flag: England,flag
+1815,U+1F3F4 U+E0067 U+E0062 U+E0073 U+E0063 U+E0074 U+E007F,🏴󠁧󠁢󠁳󠁣󠁴󠁿,flag: Scotland,flag
+1816,U+1F3F4 U+E0067 U+E0062 U+E0077 U+E006C U+E0073 U+E007F,🏴󠁧󠁢󠁷󠁬󠁳󠁿,flag: Wales,flag

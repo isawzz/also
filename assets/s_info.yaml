@@ -34491,9 +34491,9 @@ mantelpiece clock:
       - nemo
       - object
       - objectPlus
-twelve o’clock:
+twelve o'clock:
   hex: 1F55B
-  key: twelve o’clock
+  key: twelve o'clock
   emo: "\U0001F55B"
   group: Travel & Places
   subgroup: time
@@ -34524,9 +34524,9 @@ twelve-thirty:
     C: 十二點三十分
     cats:
       - huge
-one o’clock:
+one o'clock:
   hex: 1F550
-  key: one o’clock
+  key: one o'clock
   emo: "\U0001F550"
   group: Travel & Places
   subgroup: time
@@ -34557,9 +34557,9 @@ one-thirty:
     C: 三十分之一
     cats:
       - huge
-two o’clock:
+two o'clock:
   hex: 1F551
-  key: two o’clock
+  key: two o'clock
   emo: "\U0001F551"
   group: Travel & Places
   subgroup: time
@@ -34590,9 +34590,9 @@ two-thirty:
     C: 二三十
     cats:
       - huge
-three o’clock:
+three o'clock:
   hex: 1F552
-  key: three o’clock
+  key: three o'clock
   emo: "\U0001F552"
   group: Travel & Places
   subgroup: time
@@ -34623,9 +34623,9 @@ three-thirty:
     C: 三點半
     cats:
       - huge
-four o’clock:
+four o'clock:
   hex: 1F553
-  key: four o’clock
+  key: four o'clock
   emo: "\U0001F553"
   group: Travel & Places
   subgroup: time
@@ -34656,9 +34656,9 @@ four-thirty:
     C: 四點三十分
     cats:
       - huge
-five o’clock:
+five o'clock:
   hex: 1F554
-  key: five o’clock
+  key: five o'clock
   emo: "\U0001F554"
   group: Travel & Places
   subgroup: time
@@ -34689,9 +34689,9 @@ five-thirty:
     C: 五點半
     cats:
       - huge
-six o’clock:
+six o'clock:
   hex: 1F555
-  key: six o’clock
+  key: six o'clock
   emo: "\U0001F555"
   group: Travel & Places
   subgroup: time
@@ -34722,9 +34722,9 @@ six-thirty:
     C: 六點半
     cats:
       - huge
-seven o’clock:
+seven o'clock:
   hex: 1F556
-  key: seven o’clock
+  key: seven o'clock
   emo: "\U0001F556"
   group: Travel & Places
   subgroup: time
@@ -34755,9 +34755,9 @@ seven-thirty:
     C: 七點半
     cats:
       - huge
-eight o’clock:
+eight o'clock:
   hex: 1F557
-  key: eight o’clock
+  key: eight o'clock
   emo: "\U0001F557"
   group: Travel & Places
   subgroup: time
@@ -34788,9 +34788,9 @@ eight-thirty:
     C: 八點半
     cats:
       - huge
-nine o’clock:
+nine o'clock:
   hex: 1F558
-  key: nine o’clock
+  key: nine o'clock
   emo: "\U0001F558"
   group: Travel & Places
   subgroup: time
@@ -34821,9 +34821,9 @@ nine-thirty:
     C: 9 30
     cats:
       - huge
-ten o’clock:
+ten o'clock:
   hex: 1F559
-  key: ten o’clock
+  key: ten o'clock
   emo: "\U0001F559"
   group: Travel & Places
   subgroup: time
@@ -34854,9 +34854,9 @@ ten-thirty:
     C: 十點半
     cats:
       - huge
-eleven o’clock:
+eleven o'clock:
   hex: 1F55A
-  key: eleven o’clock
+  key: eleven o'clock
   emo: "\U0001F55A"
   group: Travel & Places
   subgroup: time
