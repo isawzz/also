@@ -9,7 +9,7 @@ async function checkText3(){
 	console.log('stage0_31',lAll);
 
 	let lines = lAll.filter(x=>!isEmpty(x.trim()));
-	console.log('stage0_31 lines',li
+	//console.log('stage0_31 lines',li
 
 
 
