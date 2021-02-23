@@ -1,6 +1,8 @@
 async function _start() {
 
-	let d=await makeWordList();
+	console.log('next reassemble chunks into 1 big file!')
+	checkText3();
+	//let d=await makeWordList();
 	//let d=await makeDictionary();
 
 	//t70_showSym(); return;

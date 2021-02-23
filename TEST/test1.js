@@ -309,7 +309,7 @@ async function loadGroupsAndCategories() {
 async function loadLanguageFiles() {
 	let em1 = {};
 	for (const l1 of ['C', 'D', 'E', 'F', 'I', 'L', 'R', 'S']) {
-		let fname = '../em1_' + l1 + '.txt';
+		let fname = '../DATA/em1_' + l1 + '.txt';
 		let s = await route_path_text(fname);
 		//als naechstes split
 		let lines = s.split('\n');
@@ -331,7 +331,7 @@ async function loadAllSymbolInfoFiles(verbose = false) {
 }
 
 async function downloadEmojiTestPlusSymsEmo() {
-	let txt = await route_path_text('../emoji-test.txt');
+	let txt = await route_path_text('../DATA/emoji-test.txt');
 	//console.log('text von dem file ist\n',txt);
 	let lines = txt.split('\n');
 	//let groups=txt.split('# group');
