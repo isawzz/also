@@ -5,7 +5,7 @@ function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(
 function mCreate(tag) { return document.createElement(tag); }
 function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
-function mGap(d, gap) { mText('_', d, { fg: 'transparent', h: gap }); }
+function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
 function mLinebreak(d, gap) { mGap(d, gap); }
 function mLine3(dParent, index, ids, styles) {
@@ -29,6 +29,8 @@ function mStyleX(elem, styles, unit = 'px') {
 		align: 'text-align',
 		bg: 'background-color',
 		fg: 'color',
+		hgap: 'column-gap',
+		vgap: 'row-gap',
 		matop: 'margin-top',
 		maleft: 'margin-left',
 		mabottom: 'margin-bottom',
@@ -817,62 +819,6 @@ function getKeySets() {
 
 //#endregion
 
-//#region layout
-function layoutGrid1(items, dParent, cols, gap) {
-	let dGrid = mDiv(dParent);
-	items.map(x => mAppend(dGrid, lGet(x).div));
-
-	let gridStyles = { display: 'grid', 'grid-template-columns': `repeat(${cols}, auto)` };
-	gridStyles = mergeOverride({ 'place-content': 'center', gap: gap, margin: 4, padding: 4 }, gridStyles);
-	mStyleX(dGrid, gridStyles);
-
-	return dGrid;
-
-}
-function layoutFlex1(items, dParent, or, gap) {
-	let dGrid = mDiv(dParent);
-	items.map(x => mAppend(dGrid, lGet(x).div));
-
-	let gridStyles = { display: 'flex', flex: '0 1 auto', 'flex-wrap': 'wrap' };
-	if (or == 'v') { gridStyles['writing-mode'] = 'vertical-lr'; }
-	gridStyles = mergeOverride({ 'place-content': 'center', gap: gap, margin: 4, padding: 4 }, gridStyles);
-	mStyleX(dGrid, gridStyles);
-
-	return dGrid;
-
-}
-function layoutGrid(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
-
-	let dims = calcRowsCols(elist.length, rows, cols);
-	let parentStyle = jsCopy(containerStyles);
-	parentStyle.display = isInline ? 'inline-grid' : 'grid';
-	parentStyle['grid-template-columns'] = `repeat(${dims.cols}, auto)`;
-	parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
-	mStyleX(dGrid, parentStyle);
-	let b = getRect(dGrid);
-	return b;// { w: b.width, h: b.height };
-}
-function layoutFlex(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
-	// console.log(elist, elist.length)
-	// let dims = calcRowsCols(elist.length, rows, cols);
-	// console.log('dims', dims);
-
-	let parentStyle = jsCopy(containerStyles);
-	if (containerStyles.orientation == 'v') {
-		// console.log('vertical!');
-		// parentStyle['flex-flow']='row wrap';
-		parentStyle['writing-mode'] = 'vertical-lr';
-	}
-	parentStyle.display = 'flex';
-	parentStyle.flex = '0 0 auto';
-	parentStyle['flex-wrap'] = 'wrap';
-	mStyleX(dGrid, parentStyle);
-	let b = getRect(dGrid);
-	return b;// { w: b.width, h: b.height };
-
-}
-//#endregion
-
 //#region loading DB, yaml, json, text
 async function dbInit(appName, dir = '../DATA/') {
 	let users = await route_path_yaml_dict(dir + '_users.yaml');
@@ -963,148 +909,6 @@ async function localOrRoute(key, url) {
 //#endregion
 
 //#region measure size and pos
-function calcRowsColsSizeNew(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
-	//berechne outer dims
-	let ww, wh, hpercent, wpercent;
-	if (isdef(dParent)) {
-		let b = getBounds(dParent);
-		ww = b.width;
-		wh = b.height;
-		hpercent = .9;
-		wpercent = .9;
-	} else if (isdef(wmax) && isdef(hmax)) {
-		ww = wmax;
-		wh = hmax;
-		hpercent = .9;
-		wpercent = .9;
-	} else {
-		ww = window.innerWidth;
-		wh = window.innerHeight;
-		hpercent = .9;
-		wpercent = .9;
-	}
-	let dims = calcRowsColsX(n, rows, cols);
-	if (dims.rows < dims.cols && ww < wh) { let h = dims.rows; dims.rows = dims.cols; dims.cols = h; }
-	let hpic = wh * hpercent / dims.rows;
-	let wpic = ww * wpercent / dims.cols;
-	hpic = Math.max(minsz, Math.min(hpic, maxsz));
-	wpic = Math.max(minsz, Math.min(wpic, maxsz));
-	return [wpic, hpic, dims.rows, dims.cols];
-}
-function calcRowsColsSizeNew(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
-
-	//berechne outer dims
-	let ww, wh, hpercent, wpercent;
-	if (isdef(dParent)) {
-		let b = getBounds(dParent);
-		ww = b.width;
-		wh = b.height;
-		hpercent = .9;
-		wpercent = .9;
-	} else if (isdef(wmax) && isdef(hmax)) {
-		ww = wmax;
-		wh = hmax;
-		hpercent = .9;
-		wpercent = .9;
-	} else {
-		ww = window.innerWidth;
-		wh = window.innerHeight;
-		hpercent = .9;
-		wpercent = .9;
-	}
-	let dims = calcRowsColsX(n, rows, cols);
-	if (dims.rows < dims.cols && ww < wh) { let h = dims.rows; dims.rows = dims.cols; dims.cols = h; }
-	let hpic = wh * hpercent / dims.rows;
-	let wpic = ww * wpercent / dims.cols;
-	hpic = Math.max(minsz, Math.min(hpic, maxsz));
-	wpic = Math.max(minsz, Math.min(wpic, maxsz));
-	return [wpic, hpic, dims.rows, dims.cols];
-}
-function calcRowsColsSize(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
-
-	//berechne outer dims
-	let ww, wh, hpercent, wpercent;
-	if (isdef(dParent)) {
-		let b = getBounds(dParent);
-		ww = b.width;
-		wh = b.height;
-		hpercent = .9;
-		wpercent = .9;
-	} else if (isdef(wmax) && isdef(hmax)) {
-		ww = wmax;
-		wh = hmax;
-		hpercent = .9;
-		wpercent = .9;
-	} else {
-		ww = window.innerWidth;
-		wh = window.innerHeight;
-		hpercent = .56;
-		wpercent = .64;
-	}
-
-	//console.log(ww,wh)
-	let sz;//, picsPerLine;
-	//if (lines <= 1) lines = undefined;
-
-	//console.log('===>vor calcRowsColsX: rows='+rows,'cols'+cols);
-	let dims = calcRowsColsX(n, rows, cols);
-	//console.log('===>nach calcRowsColsX: rows='+rows,'cols'+cols);
-
-	let hpic = wh * hpercent / dims.rows;
-	let wpic = ww * wpercent / dims.cols;
-
-	//console.log('hpic', hpic, 'wpic', wpic, ww, window.innerWidth, wh, window.innerHeight);
-	sz = Math.min(hpic, wpic);
-	//picsPerLine = dims.cols;
-	sz = Math.max(minsz, Math.min(sz, maxsz)); //Math.max(50, Math.min(sz, 200));
-	return [sz, dims.rows, dims.cols]; //pictureSize, picsPerLine];
-}
-function calcRowsColsX(num, rows, cols) {
-	const dTable = {
-		2: { rows: 1, cols: 2 },
-		5: { rows: 2, cols: 3 },
-		7: { rows: 2, cols: 4 },
-		11: { rows: 3, cols: 4 },
-		40: { rows: 5, cols: 8 },
-	};
-	if (isdef(rows) || isdef(cols)) return calcRowsCols(num, rows, cols);
-	else if (isdef(dTable[num])) return dTable[num];
-	else return calcRowsCols(num, rows, cols);
-}
-function calcRowsCols(num, rows, cols) {
-	//=> code from RSG testFactory arrangeChildrenAsQuad(n, R);
-	//console.log(num, rows, cols);
-	let shape = 'rect';
-	if (isdef(rows) && isdef(cols)) {
-		//do nothing!
-	} else if (isdef(rows)) {
-		cols = Math.ceil(num / rows);
-	} else if (isdef(cols)) {
-		rows = Math.ceil(num / cols);
-	} else if (num == 2) {
-		rows = 1; cols = 2;
-	} else if ([4, 6, 9, 12, 16, 20, 25, 30, 36, 42, 49, 56, 64].includes(num)) {
-		rows = Math.floor(Math.sqrt(num));
-		cols = Math.ceil(Math.sqrt(num));
-	} else if ([3, 8, 15, 24, 35, 48, 63].includes(num)) {
-		let lower = Math.floor(Math.sqrt(num));
-		console.assert(num == lower * (lower + 2), 'RECHNUNG FALSCH IN calcRowsCols');
-		rows = lower;
-		cols = lower + 2;
-	} else if (num > 1 && num < 10) {
-		shape = 'circle';
-	} else if (num > 16 && 0 == num % 4) {
-		rows = 4; cols = num / 4;
-	} else if (num > 9 && 0 == num % 3) {
-		rows = 3; cols = num / 3;
-	} else if (0 == num % 2) {
-		rows = 2; cols = num / 2;
-	} else {
-		rows = 1; cols = num;
-	}
-	//console.log(rows, cols, shape);
-	return { rows: rows, cols: cols, recommendedShape: shape };
-}
 function getRect(elem, relto) {
 
 	if (isString(elem)) elem = document.getElementById(elem);
@@ -1260,6 +1064,7 @@ function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
 function arrTail(arr) { return arr.slice(1); }
 function arrFromIndex(arr, i) { return arr.slice(i); }
 function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
+function arrPlus(a, b) { let res = a.concat(b); return res; }
 function arrWithout(a, b) { return arrMinus(a, b); }
 function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
 function arrMinMax(arr, func) {
@@ -1557,7 +1362,8 @@ function randomNumber(min = 0, max = 100) {
 //#region string functions
 function allNumbers(s) {
 	//returns array of all numbers within string s
-	return s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => Number(v));
+	let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
+	if (m) return m.map(v => Number(v)); else return null;
 	// {console.log(v,typeof v,v[0],v[0]=='-',v[0]=='-'?-(+v):+v,Number(v));return Number(v);});
 }
 function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
@@ -1721,6 +1527,7 @@ function show(elem, isInline = false) {
 		elem.style.display = isInline ? 'inline-block' : null;
 	}
 }
+function valf(val, def) { return isdef(val) ? val : def; }
 //#endregion
 
 //#region UID helpers

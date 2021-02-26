@@ -1,3 +1,49 @@
+function layoutFlex1(items, dParent, or, gap) {
+	let dGrid = mDiv(dParent);
+	items.map(x => mAppend(dGrid, lGet(x).div));
+
+	let gridStyles = { display: 'flex', flex: '0 1 auto', 'flex-wrap': 'wrap' };
+
+	//nop: this line DOES NOT WORK AS EXPECTED!!!!!!
+	if (or == 'v') { gridStyles['flex-flow']= 'column wrap';}// gridStyles['writing-mode'] = 'vertical-lr'; }
+	gridStyles = mergeOverride({ 'place-content': 'center', gap: gap, margin: 4, padding: 4 }, gridStyles);
+	mStyleX(dGrid, gridStyles);
+
+	return dGrid;
+
+}
+function layoutGrid(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+
+	let dims = calcRowsCols(elist.length, rows, cols);
+	let parentStyle = jsCopy(containerStyles);
+	parentStyle.display = isInline ? 'inline-grid' : 'grid';
+	parentStyle['grid-template-columns'] = `repeat(${dims.cols}, auto)`;
+	parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return b;// { w: b.width, h: b.height };
+}
+function layoutFlex(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+	// console.log(elist, elist.length)
+	// let dims = calcRowsCols(elist.length, rows, cols);
+	// console.log('dims', dims);
+
+	let parentStyle = jsCopy(containerStyles);
+	if (containerStyles.orientation == 'v') {
+		// console.log('vertical!');
+		// parentStyle['flex-flow']='row wrap';
+		parentStyle['writing-mode'] = 'vertical-lr';
+	}
+	parentStyle.display = 'flex';
+	parentStyle.flex = '0 0 auto';
+	parentStyle['flex-wrap'] = 'wrap';
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return b;// { w: b.width, h: b.height };
+
+}
+
+
 function layoutGrid(elist, dGrid, containerStyles, { rows, cols, sz, isInline = false } = {}) {
 	console.log(elist.length,rows,cols,sz);rows=undefined;
 	let [r,c,s] = calcRowsColsSize(elist.length, rows, cols);
@@ -23,7 +69,7 @@ function presentItems1(items, dParent, rows) {
 
 	return { dGrid: dGrid, sz: gridSize };
 }
-function layoutGrid1(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+function layoutGrid(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
 	//console.log(elist, elist.length)
 	let dims = calcRowsCols(elist.length, rows, cols);
 	//console.log('dims', dims);

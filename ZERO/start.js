@@ -1,7 +1,7 @@
 async function _start() {
 
 	console.log('next reassemble chunks into 1 big file!')
-	checkText3();
+	//checkText3();
 	//let d=await makeWordList();
 	//let d=await makeDictionary();
 
@@ -13,11 +13,13 @@ async function _start() {
 	// loadGroupsAndCategories(); //t72_manTeacher();
 	//t77_singleUnicode();
 	//rebuildSyms(); 
-	//downloadEmojiTestPlusSymsEmo();//t74_mCombinedUnicode(); //t74_combinedUnicode(); //t75_singleUnicode();
+	//downloadEmojiTestPlusSymsEmo();
+	//t74_mCombinedUnicode(); //t74_combinedUnicode(); //t75_singleUnicode();
 	//t80_tableGrowHeight();
 	//t78_rightSidebarBehavior();//t78_sidebarBehavior();
 	//t79_coolIdsSindVars();
-	//t81_singleUnicode();//t82_Live(); //t83_showPics_N_area_testNoParent();//t84_showPics_();//t86_showPicsCenterFlex();
+	//t81_singleUnicode();
+	//t82_Live(); 	//t83_showPics_N_area_testNoParent();	//t84_showPics_();	//t86_showPicsCenterFlex();
 	//t87_showPicsEmptyOptions(); //t89_showPics(); //t99_showPics();
 	//t88_showPics_CLEAN();
 	//t92_makeText(); //t95_showImages(); //t96_parseEmojiString(); //t98_base(); 

@@ -53,7 +53,7 @@ function calcBestEinteilungPerfectFit(n, area, szPic, szMax) {
 
 	return [bestRows, bestCols, { w: wPic, h: hPic }];
 }
-function calcBestEinteilungFlex(n, area, szPic, szMax) {
+function getRowsColsSize(n, area, szPic, szMax) {
 	//call this function if n might not fit into a perfect grid!
 	let res = allRowsCols(n, 1, 15, 1, n);
 	console.log('possible row/col', res);
@@ -71,7 +71,7 @@ function calcBestEinteilungFlex(n, area, szPic, szMax) {
 		}
 	}
 
-	if (bestRows*bestCols != n) bestRows+=1;
+	if (bestRows*bestCols < n) bestRows+=1;
 
 	let maxWPic = area.w / bestCols;
 	let maxHPic = area.h / bestRows;
