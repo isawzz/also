@@ -1070,16 +1070,16 @@ function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from
 function arrMinMax(arr, func) {
 	if (nundef(func)) func = x => x;
 	let min = func(arr[0]), max = func(arr[0]), imin = 0, imax = 0;
-	console.log('arr', arr, '\nmin', min, 'max', max)
+	//console.log('arr', arr, '\nmin', min, 'max', max)
 
 	for (let i = 1, len = arr.length; i < len; i++) {
 		let v = func(arr[i]);
 		if (v < min) {
 			min = v; imin = i;
-			console.log('new min!', '\nv', v, 'min', min, 'i', i);
+			//console.log('new min!', '\nv', v, 'min', min, 'i', i);
 		} else if (v > max) {
 			max = v; imax = i;
-			console.log('new max!', '\nv', v, 'max', max, 'i', i);
+			//console.log('new max!', '\nv', v, 'max', max, 'i', i);
 		}
 	}
 

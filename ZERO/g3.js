@@ -8,6 +8,7 @@ function presentItems(items, dParent, options={}) {
 	let [w,h,r,c] = calcRowsColsSizeNew(items.length,rows,cols);
 	//console.log('calcRowsColsSize ergibt: rows',r,'cols',c);
 	//console.log('N='+items.length,'r='+r,'c='+c,'w='+w,'h='+h)
+	console.log('N='+items.length);
 
 	//eigentlich kann man erst jetzt die items stylen!
 
