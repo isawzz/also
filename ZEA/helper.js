@@ -18,7 +18,7 @@ function getRowsColsSize(n, area, szPicIdeal, szPicMax) {
 	let szPicDefined = isdef(szPicIdeal);
 	let szPicMaxDefined = isdef(szPicMax);
 	if (nundef(szPicIdeal)) szPicIdeal = { w: 100, h: 100 };
-	if (nundef(szPicMax)) szPicMax = { w: 200, h: 200 };
+	if (nundef(szPicMax)) szPicMax = { w: 500, h: 500 };
 	//console.log('possible row/col', res,'A',area,'szIdeal',szPicIdeal);
 	let restminmax = -100000; let bestRows, bestCols;
 	for (const res1 of res) {
@@ -52,8 +52,10 @@ function getRowsColsSize(n, area, szPicIdeal, szPicMax) {
 		wPic = unit * szPicIdeal.w;
 		hPic = unit * szPicIdeal.h;
 	} else {
+
 		wPic = maxWPic;
 		hPic = maxHPic;
+		console.log('not defined',wPic,hPic)
 	}
 
 

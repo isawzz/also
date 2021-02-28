@@ -53,11 +53,13 @@ function layoutFlex(items, dParent, cols, gap) {
 	for (const item of items) {
 		let ui = lGet(item).div;
 		mAppend(dGrid, ui); //lGet(item).div);
-		ui.style.flexGrow = 1;
+		//ui.style.flexGrow = 1;
 		//i += 1; if (0 == i % cols) { mLinebreak(dGrid, 0); }
 	}
-	let gridStyles = { display: 'flex', flex: '0 1 auto', 'flex-wrap': 'wrap', 'justify-content': 'space-between' };
-	gridStyles = mergeOverride({ 'place-content': 'center', hgap: gap, vgap: gap / 2, margin: 4, padding: 4 }, gridStyles);
+	let gridStyles = { display: 'flex', flex: '0 1 auto', 'flex-wrap': 'wrap' };//, gap:gap,'place-content': 'space-between'};//, 'justify-content': 'space-between' };
+	// gridStyles = mergeOverride({ 'place-content': 'center', hgap: gap, vgap: gap / 2, margin: 4, padding: 4 }, gridStyles);
+	gridStyles = mergeOverride({ 'place-content': 'center', gap: gap, margin: 4, padding: 4 }, gridStyles);
+	//gridStyles = mergeOverride({ 'place-content': 'stretch', gap:gap, margin: 4, padding: 4 }, gridStyles);
 	mStyleX(dGrid, gridStyles);
 	return dGrid;
 }
