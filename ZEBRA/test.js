@@ -1,5 +1,7 @@
 function t68_pictures() {
 	//return;
+	show(dSidebar);show(dRightSidebar);dSidebar.innerHTML=dRightSidebar.innerHTML='hallo';
+
 	let items = getItems(chooseRandom([64]), 'life'); //getItems(chooseRandom(range(1, 50)), 'life'); //getItems(['bee', 'cockroach']);// getItems(13, 'life'); 
 	items[0] = getItems(['spider web'])[0];
 	for (const item of items) { item.label = item.info.D.toUpperCase(); item.id = lRegister(item); }
@@ -10,8 +12,8 @@ function t68_pictures() {
 	let wmin=longestLabel*fzMin/2;
 	console.log('longest label is',longestLabel);
 
-	presentItems(items, dTable, { labelTop: true, fzMin: fzMin, wArea: 800, w: wmin, h: 100, bg: 'random', 
-	rounding: '1vw', fg: 'contrast', layout: 'grid' });
+	presentItems1(items, dTable, { labelTop: true, fzMin: fzMin, wArea: 400, w: wmin, h: 100, bg: 'random', 
+	rounding: '1vw', fg: 'contrast', layout: 'flex' });
 }
 function t69_Live() {
 	//return;

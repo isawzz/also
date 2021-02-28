@@ -4,6 +4,7 @@ function mBy(id) { return document.getElementById(id); }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag) { return document.createElement(tag); }
 function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
+function mDivid(id,dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
@@ -23,6 +24,7 @@ function mLine3(dParent, index, ids, styles) {
 	return [mBy(ids[0]), mBy(ids[1]), mBy(ids[2])];
 }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
+function mReveal(d){d.style.opacity=1;}
 function mSize(d, w, h, unit = 'px') { mStyleX(d, { width: w, height: h }, unit); }
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {

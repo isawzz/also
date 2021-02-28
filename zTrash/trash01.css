@@ -1,3 +1,14 @@
+#dMain1 {
+	position: relative;
+	min-height: 110vh;
+	min-width: 320px;
+	/* height: 120%; */
+	/* overflow: hidden; */
+}
+
+
+
+
 .layoutFullScreen{
 	width: 100vw;
 	height: calc( 100vh - 60px );

@@ -211,7 +211,7 @@ function t83_showPics_N_area_testNoParent() {
 		item.options = options;
 	}
 
-	//presentItems code:
+	//presentItems1 code:
 	// mStyleX(dParent, { display: 'flex', 'justify-content': 'center' });
 
 	let dGrid = mDiv(dParent);
@@ -277,7 +277,7 @@ function t83_showPics_N_area() {
 		item.options = options;
 	}
 
-	//presentItems code:
+	//presentItems1 code:
 	// mStyleX(dParent, { display: 'flex', 'justify-content': 'center' });
 
 	let dGrid = mDiv(dParent);

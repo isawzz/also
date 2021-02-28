@@ -74,7 +74,7 @@ function showItems1(items, dParent, options = {}) {
 		item.options = options;
 	}
 
-	presentItems(items, dParent, rows);
+	presentItems1(items, dParent, rows);
 	return dParent;
 }
 

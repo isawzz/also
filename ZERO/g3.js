@@ -1,4 +1,4 @@
-function presentItems(items, dParent, options={}) {
+function presentItems1(items, dParent, options={}) {
 	mStyleX(dParent, { display: 'flex', 'justify-content': 'center' });
 
 	let dGrid = mDiv(dParent);

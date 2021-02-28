@@ -22,7 +22,7 @@ function showItemsCenterFlex(items, dParent, options = {}) {
 	}
 
 
-	return presentItems(items, dParent, options);
+	return presentItems1(items, dParent, options);
 }
 
 

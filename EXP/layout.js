@@ -10,6 +10,8 @@ function allRowsCols(n, rmin, rmax, cmin, cmax) {
 function getRowsColsSize(n, area, szPicIdeal, szPicMax) {
 	//call this function if n might not fit into a perfect grid!
 	let res = allRowsCols(n, 1, 15, 1, n);
+	if (nundef(szPicIdeal)) szPicIdeal={w:100,h:100};
+	if (nundef(szPicMax)) szPicMax={w:200,h:200};
 	//console.log('possible row/col', res,'A',area,'szIdeal',szPicIdeal);
 	let restminmax = -100000; let bestRows, bestCols;
 	for (const res1 of res) {
@@ -69,13 +71,15 @@ function layoutGrid(items, dParent, cols, gap) {
 
 	return dGrid;
 }
-function presentItems(items, dParent, options) {
+
+//#region v2
+function presentItems2(items, dParent, options, callback) {
 
 	//set options
 	//darstellung von items in AREA: calculate dims
-	let rect = getRect(dTableBackground); //console.log(rect);
+	let rect = getRect(dParent); //console.log(rect);
 	let AREA = { w: valf(options.wArea, rect.w), h: valf(options.hArea, rect.h) };
-	//console.log('rect dTableBackground',rect.w,rect.h, 'area',AREA);
+	console.log('rect dMiddle', rect.w, rect.h, 'area', AREA);
 	// let AREA = { w: god(options, wArea, 800), h: god(options, hArea, 600) };
 	let sz = { w: valf(options.w, 160), h: valf(options.h, 200) }
 	let szMax = { w: 250, h: 250 };
@@ -133,22 +137,139 @@ function presentItems(items, dParent, options) {
 		if (isdef(dLabel)) lAdd(item, { dLabel: dLabel })
 	}
 
-	// mStyleX(dParent, { layout: 'fcc', flex: '0 0 auto', w: AREA.w, h: AREA.h + 10, margin: 'auto', patop: 10 });//, overflow: 'hidden', bg: 'black', border: '10px solid black' });
-
-	console.log(options.layout)
-	//console.log('rows', rows, 'cols', cols);
+	console.log(options.layout, 'rows', rows, 'cols', cols);
 	let needFlexGrid = options.layout == 'flex' || nundef(options.layout) && (rows * cols - items.length);
-	//let dGrid = layoutGrid(items, dParent, cols, gap);
-	mStyleX(dParent, { layout: 'fcc', flex: '0 0 auto', w: needFlexGrid ? AREA.w : 'auto', h: needFlexGrid ? 'auto' : AREA.h, margin: 'auto', patop: 10 });//, overflow: 'hidden', bg: 'black', border: '10px solid black' });
+
+	mStyleX(dParent, {
+		layout: 'fcc', flex: '0 0 auto',
+		w: AREA.w, // needFlexGrid ? AREA.w : 'auto',
+		h: AREA.h, // needFlexGrid ? 'auto' : AREA.h,
+		//overflow: 'hidden', bg: 'black', border: '10px solid black',
+		margin: 'auto', patop: 10
+	});
 
 	console.log('rows', rows, 'cols', cols)
 	let dGrid = needFlexGrid ? layoutFlex(items, dParent, cols, gap) : layoutGrid(items, dParent, cols, gap);
 	//let b = getRect(dGrid);console.log('grid size:',b,'AREA',AREA)
 
-	setTimeout(presentationComplete, 100, items);
+	setTimeout(presentationComplete2, 100, items, callback);
 	return dGrid;
 }
-function presentationComplete(items) {
+function presentationComplete2(items, callback) {
+	items.map(x => x.rect = getRect(lGet(x).div));
+	let sample = lGet(items[0]);
+	if (isdef(sample.dLabel)) {
+		let fz = sample.options.labelStyles.fz;
+		//let dGrid = sample.div.parentNode;
+		//console.log('fz is', fz)
+
+		for (const item of items) {
+			let ui = lGet(item);
+			let w = item.rect.w;
+			let wText = getRect(ui.dLabel).w;
+			//console.log('w',w,'wText',wText);
+
+			if (wText > w - 4) {
+				//adjust div sizes: gut wenn opacity 0 war
+				mStyleX(ui.div, { wmin: wText + 8 });
+
+				//adjust font sizes:
+				// mStyleX(ui.div,{w:w});
+				// mStyleX(ui.dLabel,{fz:fz-1})
+
+			}
+		}
+
+	}
+	if (isdef(callback)) callback();
+
+}
+
+
+//#region v1
+function presentItems1(items, dParent, options) {
+
+	//set options
+	//darstellung von items in AREA: calculate dims
+	let rect = getRect(dParent); //console.log(rect);
+	let AREA = { w: valf(options.wArea, rect.w), h: valf(options.hArea, rect.h) };
+	console.log('rect dMiddle', rect.w, rect.h, 'area', AREA);
+	// let AREA = { w: god(options, wArea, 800), h: god(options, hArea, 600) };
+	let sz = { w: valf(options.w, 160), h: valf(options.h, 200) }
+	let szMax = { w: 250, h: 250 };
+	let [rows, cols, szPic] = getRowsColsSize(items.length, AREA, sz, szMax);
+	//console.log('_________N=' + items.length, 'AREA', AREA, 'szPic', sz, '\n==>rows=' + rows, 'cols=' + cols, 'szPic', szPic);
+	//console.log('N=' + items.length);
+
+	//let longestLabel = arrMinMax(items,x=>x.label.length).max;
+
+	let gap = 12;
+	let wCorrect = Math.round((1 + 1 / (cols > 2 ? cols - 2 : cols)) * gap);
+	let hCorrect = Math.round((1 + 1 / (rows > 2 ? rows - 2 : rows)) * gap);
+	let wOuter = szPic.w - wCorrect;
+	let hOuter = szPic.h - hCorrect;
+
+	let factorPic = (options.labelBottom == true || options.labelTop == true) ? 2 / 3 : 3 / 4;
+	let fzPic = Math.min(wOuter, hOuter) * factorPic;
+	let fzTextMin = valf(options.fzMin, 9);
+	let fzText = Math.min(22, Math.max(fzTextMin, hOuter * 1 / 9));
+	fzPic = Math.min(fzPic, hOuter - fzText - 16);
+	//console.log(fzPic);
+
+	defOptions = {
+		// labelBottom: valf(options.labelBottom, true),
+		// labelTop: valf(options.labelTop, false),
+		picStyles: { fz: fzPic },
+		labelStyles: { fz: fzText, align: 'center' },
+		outerStyles: {
+			wmin: wOuter, h: hOuter, margin: valf(options.margin, 0),
+			bg: valf(options.bg, 'random'), fg: valf(options.fg, 'contrast'),
+			rounding: valf(options.rounding, '1vw'),
+			layout: 'fvcc',
+		},
+	};
+	options = mergeOverride(defOptions, options);
+	//item div production:
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+
+		let dOuter = mCreate('div');
+		if (isdef(options.outerStyles)) mStyleX(dOuter, options.outerStyles);
+
+		let dLabel;
+		if (options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		let dPic = mDiv(dOuter, { family: item.info.family });
+		dPic.innerHTML = item.info.text;
+		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
+
+		if (options.labelBottom == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		if (isdef(options.handler)) dOuter.onclick = options.handler;
+
+		lAdd(item, { div: dOuter, dPic: dPic, options: options });
+		if (isdef(dLabel)) lAdd(item, { dLabel: dLabel })
+	}
+
+	console.log(options.layout, 'rows', rows, 'cols', cols);
+	let needFlexGrid = options.layout == 'flex' || nundef(options.layout) && (rows * cols - items.length);
+
+	mStyleX(dParent, {
+		layout: 'fcc', flex: '0 0 auto',
+		w: AREA.w, // needFlexGrid ? AREA.w : 'auto',
+		h: AREA.h, // needFlexGrid ? 'auto' : AREA.h,
+		overflow: 'hidden', bg: 'black', border: '10px solid black',
+		margin: 'auto', patop: 10
+	});
+
+	console.log('rows', rows, 'cols', cols)
+	let dGrid = needFlexGrid ? layoutFlex(items, dParent, cols, gap) : layoutGrid(items, dParent, cols, gap);
+	//let b = getRect(dGrid);console.log('grid size:',b,'AREA',AREA)
+
+	setTimeout(presentationComplete1, 100, items);
+	return dGrid;
+}
+function presentationComplete1(items) {
 	items.map(x => x.rect = getRect(lGet(x).div));
 	let sample = lGet(items[0]);
 	if (nundef(sample.dLabel)) {
@@ -177,6 +298,106 @@ function presentationComplete(items) {
 	}
 
 	dTable.style.opacity = 1;
+
+}
+
+//#region v0
+function presentItems0(items, dParent, options) {
+
+	//set options
+	//darstellung von items in AREA: calculate dims
+	let rect = getRect(dTableBackground); console.log(rect);
+	let AREA = { w: valf(options.wArea, rect.w), h: valf(options.hArea, rect.h) };
+	// let AREA = { w: god(options, wArea, 800), h: god(options, hArea, 600) };
+	let sz = { w: valf(options.w, 160), h: valf(options.h, 200) }
+	let szMax = { w: 250, h: 250 };
+	let [rows, cols, szPic] = getRowsColsSize(items.length, AREA, sz, szMax);
+	//console.log('_________N=' + items.length, 'AREA', AREA, 'szPic', sz, '\n==>rows=' + rows, 'cols=' + cols, 'szPic', szPic);
+
+	//let longestLabel = arrMinMax(items,x=>x.label.length).max;
+
+	let gap = 12;
+	let wCorrect = Math.round((1 + 1 / (cols > 2 ? cols - 2 : cols)) * gap);
+	let hCorrect = Math.round((1 + 1 / (rows > 2 ? rows - 2 : rows)) * gap);
+	let wPic = szPic.w - wCorrect;
+	let hPic = szPic.h - hCorrect;
+	options = {
+		labelBottom: true,
+		picStyles: { fz: Math.min(wPic, hPic) * 2 / 3 },
+		labelStyles: { fz: Math.min(22, Math.max(9, hPic * 1 / 9)), align: 'center' },
+		outerStyles: {
+			wmin: wPic, h: hPic, margin: valf(options.margin, 0),
+			bg: valf(options.bg, 'random'), fg: valf(options.fg, 'contrast'),
+			rounding: valf(options.rounding, '1vw'),
+			layout: 'fvcc',
+		},
+	};
+	//item div production:
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+
+		let dOuter = mCreate('div');
+		if (isdef(options.outerStyles)) mStyleX(dOuter, options.outerStyles);
+
+		let dLabel;
+		if (options.labelTop) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		let dPic = mDiv(dOuter, { family: item.info.family });
+		dPic.innerHTML = item.info.text;
+		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
+
+		if (options.labelBottom) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		if (isdef(options.handler)) dOuter.onclick = options.handler;
+
+		lAdd(item, { div: dOuter, dPic: dPic, options: options });
+		if (isdef(dLabel)) lAdd(item, { dLabel: dLabel })
+	}
+
+	mStyleX(dParent, { layout: 'fcc', flex: '0 0 auto', w: AREA.w, h: AREA.h + 10, margin: 'auto', patop: 10 });//, overflow: 'hidden', bg: 'black', border: '10px solid black' });
+
+	let needFlexGrid = options.layout == 'flex' && (rows * cols - items.length);
+
+	//let dGrid = layoutGrid(items, dParent, cols, gap);
+	let dGrid = needFlexGrid ? layoutFlex(items, dParent, cols, gap) : layoutGrid(items, dParent, cols, gap);
+	//let b = getRect(dGrid);console.log('grid size:',b,'AREA',AREA)
+
+	setTimeout(presentationComplete0, 100, items);
+
+	// setTimeout(() => { items.map(x => x.rect = getRect(lGet(x).div)); }, 200);//erst jetzt ist es richtig!!!
+}
+function presentationComplete0(items) {
+	items.map(x => x.rect = getRect(lGet(x).div));
+	let sample = lGet(items[0]);
+	let fz = sample.options.labelStyles.fz;
+	let dGrid = sample.div.parentNode;
+	console.log('fz is', fz)
+
+	for (const item of items) {
+		let ui = lGet(item);
+		let w = item.rect.w;
+		let wText = getRect(ui.dLabel).w;
+		//console.log('w',w,'wText',wText);
+
+		if (wText > w - 4) {
+			//adjust div sizes: gut wenn opacity 0 war
+			mStyleX(ui.div, { w: w + 8 });
+
+			//adjust font sizes:
+			// mStyleX(ui.div,{w:w});
+			// mStyleX(ui.dLabel,{fz:fz-1})
+
+		}
+	}
+
+	dTable.style.opacity = 1;
+	//setTimeout(()=>dTable.style.opacity=1,1000);
+	// let tbc=items.filter(x=>x.label.length == longestLabel);
+	// console.log('tbc',tbc)
+	// for(const item of tbc){
+	// 	console.log(lGet(item).dLabel)
+	// 	lGet(item).dLabel.style.fontSize = options.labelStyles.fz-2+'px';
+	// }
 
 }
 
