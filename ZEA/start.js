@@ -1,6 +1,6 @@
 async function _start() {
 
-	mReveal(dMain);
+	//mReveal(dMain);
 
 	let dRightSide = mDiv(dMain);
 	mStyleX(dRightSide, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
@@ -14,21 +14,32 @@ async function _start() {
 
 	clearElement(dTable);
 
-	let area = getArea2(dTable, { w: 500, hmin: 500, layout: 'hcc', bg:'violet' });
-	let items = getItems1(chooseRandom([3,4,15,56]));
-	let [rows, cols, szPic] = getRowsColsSize(items.length, getRect(area));
+	let area = { w: 500, h: 500 };
+	let dArea = getArea2(dTable, { wmin: area.w, hmin: area.h, layout: 'hcc', bg: 'violet' });
+	let items = getItems1(chooseRandom([56, 64]));
+	let [rows, cols, szPic] = getRowsColsSize(items.length, area);
 
-	let options = correctOptions({labelBottom: true}, rows, cols, szPic);
+	//3 ways to layout:
+	//a) canGrow: true
+	//b) canGrow: false, reduceFont: true
+	//c) canGrow: false, .truncate ellipsis
 
-	makeItemDivs(items,options)	;
 
-	let dGrid=layoutItems(items,area,options);
-	mStyleX(dGrid,{bg:'yellow'});
+	let options = correctOptions({ labelBottom: true, reduceFont: true }, rows, cols, szPic);
+
+	makeItemDivs(items, options);
+
+	console.log('options',options)
+	let dGrid = layoutItems(items, dArea, options);
+	mStyleX(dGrid, { bg: 'yellow', padding:8 });
 
 	// presentItems3(items, area, {
 	// 	labelTop: true, fzMin: 8, wArea: 400, hArea: 400, w: 100, h: 100, bg: 'random',
 	// 	rounding: '1vw', fg: 'contrast', layout: 'grid'
 	// }, revealMain);
+
+	setTimeout(nachkorrigieren, 100, items, revealMain, options);
+
 
 	return;
 

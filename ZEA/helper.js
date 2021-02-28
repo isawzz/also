@@ -55,7 +55,7 @@ function getRowsColsSize(n, area, szPicIdeal, szPicMax) {
 
 		wPic = maxWPic;
 		hPic = maxHPic;
-		console.log('not defined',wPic,hPic)
+		console.log('not defined', wPic, hPic)
 	}
 
 
@@ -66,9 +66,9 @@ function getRowsColsSize(n, area, szPicIdeal, szPicMax) {
 }
 
 function correctOptions(options, rows, cols, szPic) {
-	let gap = 12;
-	let wCorrect = Math.round((1 + 1 / (cols > 2 ? cols - 2 : cols)) * gap);
-	let hCorrect = Math.round((1 + 1 / (rows > 2 ? rows - 2 : rows)) * gap);
+	let gap = 8;
+	let wCorrect = gap * (cols - 1) / cols; // gap*(cols+1); // Math.round((1 + 1 / (cols > 1 ? cols : cols+1)) * gap);
+	let hCorrect = gap * (rows - 1) / rows; // Math.round((1 + 1 / (rows > 1 ? rows : rows+1)) * gap);
 	let wOuter = szPic.w - wCorrect;
 	let hOuter = szPic.h - hCorrect;
 
@@ -79,13 +79,14 @@ function correctOptions(options, rows, cols, szPic) {
 	fzPic = Math.min(fzPic, hOuter - fzText - 16);
 	//console.log(fzPic);
 
+	szProps = options.canGrow ? { w: 'wmin', h: 'hmin' } : { w: 'w', h: 'h' };
 	defOptions = {
 		// labelBottom: valf(options.labelBottom, true),
 		// labelTop: valf(options.labelTop, false),
 		picStyles: { fz: fzPic },
 		labelStyles: { fz: fzText, align: 'center' },
 		outerStyles: {
-			wmin: wOuter, h: hOuter, margin: valf(options.margin, 0),
+			margin: valf(options.margin, 0),
 			bg: valf(options.bg, 'random'), fg: valf(options.fg, 'contrast'),
 			rounding: valf(options.rounding, '1vw'),
 			layout: 'fvcc',
@@ -94,6 +95,8 @@ function correctOptions(options, rows, cols, szPic) {
 		cols: cols,
 		gap: gap,
 	};
+	defOptions.outerStyles[szProps.w] = wOuter;
+	defOptions.outerStyles[szProps.h] = hOuter;
 	options = mergeOverride(defOptions, options);
 	return options;
 }
@@ -123,20 +126,58 @@ function makeItemDivs(items, options) {
 function layoutItems(items, dParent, options) {
 	let [rows, cols, gap] = [options.rows, options.cols, options.gap];
 	let AREA = getRect(dParent);
+
 	console.log(options.layout, 'rows', rows, 'cols', cols);
 	let needFlexGrid = options.layout == 'flex' || nundef(options.layout) && (rows * cols - items.length);
 
 	mStyleX(dParent, {
-		layout: 'fcc', flex: '0 0 auto',
-		//w: AREA.w, // needFlexGrid ? AREA.w : 'auto',
-		//h: AREA.h, // needFlexGrid ? 'auto' : AREA.h,
+		layout: 'fcc', //flex: '1 1 auto',
+		//wmin: AREA.w, // needFlexGrid ? AREA.w : 'auto', //
+		//h: needFlexGrid ? 'auto' : AREA.h, //AREA.h, // 
 		//overflow: 'hidden', bg: 'black', border: '10px solid black',
 		margin: 'auto',
 	});
 
-	console.log('rows', rows, 'cols', cols)
 	let dGrid = needFlexGrid ? layoutFlex(items, dParent, cols, gap) : layoutGrid(items, dParent, cols, gap);
 	return dGrid;
+}
+function nachkorrigieren(items, callback,options) {
+	items.map(x => x.rect = getRect(lGet(x).div));
+	let sample = lGet(items[0]);
+	if (isdef(sample.dLabel)) {
+		let fz = sample.options.labelStyles.fz;
+		//let dGrid = sample.div.parentNode;
+		//console.log('fz is', fz)
+
+		for (const item of items) {
+			let ui = lGet(item);
+			let w = item.rect.w;
+			let wText = getRect(ui.dLabel).w;
+			//console.log('w',w,'wText',wText);
+
+			if (wText > w - 4) {
+				if (options.canGrow==true) {
+					//adjust div sizes: gut wenn opacity 0 war
+					mStyleX(ui.div, { wmin: wText + 8 });
+
+					//adjust font sizes:
+					// mStyleX(ui.div,{w:w});
+					// mStyleX(ui.dLabel,{fz:fz-1})
+				} else if (options.reduceFont==true) {
+					//wie find ich einen font der da rein passt?
+					//
+					//let fzNew = 
+					mStyleX(ui.dLabel, { fz: fz*.75 });
+				} else {
+					mStyleX(ui.dLabel, { 'text-overflow': 'ellipsis' });
+				}
+
+			}
+		}
+
+	}
+	if (isdef(callback)) callback();
+
 }
 
 
