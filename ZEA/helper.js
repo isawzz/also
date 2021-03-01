@@ -17,10 +17,38 @@ function getArea(dParent, styles, id) {
 
 	return d;
 }
+
+
+
 function getSizeAndOptions(items, dParent, options = {}) {
+
+	let N=items.length;
+	let areaAvailable = valf(options.area,getRect(dParent));
+
+	//area ratio w/h, pic ratio wPic/hPic, ratio cols/rows
+	//each ratio could be square,portrait,landscape
+	
+	//area ratio is given!
+	let raArea=areaAvailable.w/areaAvailable.h;
+
+	//fuer pic ratio brauch ich: wunsch
+	let raPic=100/70;
+
+	//cols vs rows kann ich von den 2 vorhergehenden ausrechnen
+	//eg 
+
+
+	//zuerst ausrechnen wieviel ich MINDESTENS brauch pro pic
+
+	let [r, c, sz] = getRowsColsSize(items.length,options.area);
+	console.log('__________',r,c,sz)
+
+
 	let minmax = arrMinMax(items, x => x.label.length);
 	let longest = minmax.max;
 	let avg = (minmax.max + minmax.min) / 2;
+
+	//die ratio depends on ob ueberhaupt das longestLabel in gefahr ist!
 	let ratio = avg / longest;
 	let rParent = getRect(dParent);
 	let wAvailable = valf(options.wArea, rParent.w);
@@ -45,12 +73,12 @@ function getSizeAndOptions(items, dParent, options = {}) {
 	// canLabelFontShrink (for individual items if do not fit!)
 	//#endregion
 
-	let wTry, lay;
-	lay = valf(options.layout, undefined);
-	//let [wTry,lay]=[wTryFit,'grid'];
-	let [wTry, lay] = [wTryFit + diff / 2, 'flex'];
-	console.log('available', wAvailable, 'useToFit', wTry, 'layout', lay);
-	let newOptions = { area: { w: wTry, h: options.hArea }, wAreaMax: wAvailable };
+	//let wTry, lay;
+	//lay = valf(options.layout, undefined);
+	let [wTry,lay]=[wTryFit,'grid'];
+	//let [wTry, lay] = [wTryFit + diff / 2, 'flex'];
+	console.log('available', wAvailable, 'useToFit', wTry, 'h',options.hArea, 'layout', lay);
+	let newOptions = { area: { w: wTry, h: options.area.h }, wAreaMax: wAvailable, layout:lay };
 	options = mergeOverride(options, newOptions);
 
 	//auf der table mach ich jetzt eine area in der die items ewew presented werden sollen
@@ -288,6 +316,63 @@ function nachkorrigieren(items, callback, options) {
 
 
 //#region old
+function getSizeAndOptions1(items, dParent, options = {}) {
+
+	
+	let [r, c, sz] = getRowsColsSize(items.length,options.area);
+	console.log('__________',r,c,sz)
+
+
+	let minmax = arrMinMax(items, x => x.label.length);
+	let longest = minmax.max;
+	let avg = (minmax.max + minmax.min) / 2;
+
+	//die ratio depends on ob ueberhaupt das longestLabel in gefahr ist!
+	let ratio = avg / longest;
+	let rParent = getRect(dParent);
+	let wAvailable = valf(options.wArea, rParent.w);
+	let wTryFit = Math.ceil(wAvailable * ratio);
+	let diff = wAvailable - wTryFit;
+	//let wItemMax = getSizeWithStyles(longestLabel,)
+
+	//#region testing
+	// let options = {
+	// 	wItem:100,hItem:100,fz:32,
+	// 	//wItem:{min:50,ideal:100,max:300},	hItem:{min:50,ideal:120,max:250},	fz:{min:8,ideal:32,max:40},
+	// 	area:getRect(dArea),
+
+	// }
+	// maxItemSize,maxFontSize
+	// idealItemSize,idealFontSize
+	// minItemSize,minFontSize 
+	// canItemWidthGrow
+	// canItemHeighGrow
+	// canAreaWidthGrow
+	// canAreaHeightGrow
+	// canLabelFontShrink (for individual items if do not fit!)
+	//#endregion
+
+	//let wTry, lay;
+	//lay = valf(options.layout, undefined);
+	let [wTry,lay]=[wTryFit,'grid'];
+	//let [wTry, lay] = [wTryFit + diff / 2, 'flex'];
+	console.log('available', wAvailable, 'useToFit', wTry, 'h',options.hArea, 'layout', lay);
+	let newOptions = { area: { w: wTry, h: options.area.h }, wAreaMax: wAvailable, layout:lay };
+	options = mergeOverride(options, newOptions);
+
+	//auf der table mach ich jetzt eine area in der die items ewew presented werden sollen
+	//der genaue size der gebraucht wird ist schwer zu ermitteln
+	//wuesste ich allerdings den genauen size, dann koennte ich 
+
+	// let dArea = getArea(dTable, { wmin: options.area.w, hmin: options.area.h, layout: 'hcc', bg: 'violet' });
+
+	//have items and options, can calculate sizes,row,cols
+
+	let [rows, cols, szPic] = getRowsColsSize(items.length, options.area);
+	options = correctOptions(options, rows, cols, szPic);
+	return options;
+}
+
 function layoutItems_messy(items, dParent, options) {
 	let [rows, cols, gap] = [options.rows, options.cols, options.gap];
 	let AREA = getRect(dParent);

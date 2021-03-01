@@ -1006,7 +1006,7 @@ function _mergeObject(target, source, optionsArgument) {
 			//console.log('das sollte bei data triggern!',key,source[key])
 			destination[key] = _cloneIfNecessary(source[key], optionsArgument)
 		} else {
-			destination[key] = deepmerge(target[key], source[key], optionsArgument)
+			destination[key] = _deepMerge(target[key], source[key], optionsArgument)
 		}
 	})
 	return destination;

@@ -10,13 +10,13 @@ async function _start() {
 
 	clearElement(dTable);
 
-	let items = getItems1(chooseRandom([37]));
+	let items = getItems1(chooseRandom([42]));
 	for (const item of items) { item.label = item.info.S.toUpperCase(); item.id = lRegister(item); }
 
 	//hier suche ich die options aus:
-	let options = { labelTop: true, wArea: window.innerWidth - 40, hArea: window.innerHeight - 80, canGrow: true };
+	let options = { labelTop: true, area:{w: window.innerWidth - 40, h: window.innerHeight - 80}, canGrow: true };
 
-	let dArea = getArea(dTable, { w: options.wArea, h: options.hArea, layout: 'hcc', bg: 'violet' });
+	let dArea = getArea(dTable, { w: options.area.w, h: options.area.h, layout: 'hcc', bg: 'violet' });
 
 	options = getSizeAndOptions(items,dArea,options);
 
