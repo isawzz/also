@@ -1,12 +1,8 @@
 async function _start() {
 
-	//mReveal(dMain);
+	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
 
-	let dRightSide = mDiv(dMain);
-	mStyleX(dRightSide, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
-
-	let table = mDiv(dRightSide);
-	mStyleX(table, {}, 'table');
+	let table = mDiv(dRightSide, {}, 'table');
 
 	let ltop = get3ColLine(table, 'dLeft', 'dMiddle', 'dRight');//,{bg:'red'});
 	let ltitle = get3ColLine(table, 'dTitleLeft', 'dTitleMiddle', 'dTitleRight');//,{bg:'green'});
@@ -14,34 +10,35 @@ async function _start() {
 
 	clearElement(dTable);
 
-	let area = { w: 500, h: 500 };
-	let dArea = getArea2(dTable, { wmin: area.w, hmin: area.h, layout: 'hcc', bg: 'violet' });
-	let items = getItems1(chooseRandom([56, 64]));
-	let [rows, cols, szPic] = getRowsColsSize(items.length, area);
+	let items = getItems1(chooseRandom([37]));
+	for (const item of items) { item.label = item.info.S.toUpperCase(); item.id = lRegister(item); }
 
-	//3 ways to layout:
-	//a) canGrow: true
-	//b) canGrow: false, reduceFont: true
-	//c) canGrow: false, .truncate ellipsis
+	//hier suche ich die options aus:
+	let options = { labelTop: true, wArea: window.innerWidth - 40, hArea: window.innerHeight - 80, canGrow: true };
 
+	let dArea = getArea(dTable, { w: options.wArea, h: options.hArea, layout: 'hcc', bg: 'violet' });
 
-	let options = correctOptions({ labelBottom: true, reduceFont: true }, rows, cols, szPic);
+	options = getSizeAndOptions(items,dArea,options);
 
 	makeItemDivs(items, options);
 
-	console.log('options',options)
-	let dGrid = layoutItems(items, dArea, options);
-	mStyleX(dGrid, { bg: 'yellow', padding:8 });
+	console.log('options', options)
 
-	// presentItems3(items, area, {
-	// 	labelTop: true, fzMin: 8, wArea: 400, hArea: 400, w: 100, h: 100, bg: 'random',
-	// 	rounding: '1vw', fg: 'contrast', layout: 'grid'
-	// }, revealMain);
+	let dGrid = layoutItems(items, dArea, options);
+	//mStyleX(dGrid, { bg: 'yellow', padding: 8 });
 
 	setTimeout(nachkorrigieren, 100, items, revealMain, options);
+}
 
 
-	return;
+
+
+
+
+
+
+
+function _start01() {
 
 	getTable2(dMain, { bg: 'green' }, 'dTable')
 	let d1 = getArea2(dTable, { w: 400, h: 400, bg: 'violet', margin: 10 }, 'd1');
