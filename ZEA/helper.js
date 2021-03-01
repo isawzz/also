@@ -18,7 +18,16 @@ function getArea(dParent, styles, id) {
 	return d;
 }
 
+function getDivisors(n){
+	let x=Math.floor(Math.sqrt(n));
+	
+	let res=[];
+	for (let i=0;i<x;i++){
+		let q=n/x;
+		if (q == Math.round(q)) res.push(x);
+	}
 
+}
 
 function getSizeAndOptions(items, dParent, options = {}) {
 
@@ -29,14 +38,27 @@ function getSizeAndOptions(items, dParent, options = {}) {
 	//each ratio could be square,portrait,landscape
 	
 	//area ratio is given!
-	let raArea=areaAvailable.w/areaAvailable.h;
+	let raArea=areaAvailable.w/areaAvailable.h; //3
 
 	//fuer pic ratio brauch ich: wunsch
-	let raPic=100/70;
+	let raPic=1; //100/70; //1
 
 	//cols vs rows kann ich von den 2 vorhergehenden ausrechnen
-	//eg 
+	let cols = N * raPic/raArea; //1/3 * 12 = 4
+	let rows = Math.ceil(N / cols);
 
+	let genaueTeiler = getDivisors(N); //nur relevant wenn grid will!
+	console.log('______ teiler',genaueTeiler);
+	console.log('area',areaAvailable,rows,cols);
+
+	let szPic = 
+	console.log()
+
+	options = correctOptions(options, rows, cols, szPic);
+	return options;
+}
+
+function getSizeAndOptions2(items, dParent, options = {}) {
 
 	//zuerst ausrechnen wieviel ich MINDESTENS brauch pro pic
 
