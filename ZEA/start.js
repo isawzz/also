@@ -2,23 +2,74 @@ async function _start() {
 
 	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
 
-	let table = mDiv(dRightSide, {}, 'table');
+	let table = mDiv(dRightSide, { bg: 'green' }, 'table'); //table.innerHTML='hallo';
 
-	let ltop = get3ColLine(table, 'dLeft', 'dMiddle', 'dRight');//,{bg:'red'});
-	let ltitle = get3ColLine(table, 'dTitleLeft', 'dTitleMiddle', 'dTitleRight');//,{bg:'green'});
-	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight');//,{bg:'violet',h:'auto'});
+	let ltop = get3ColLine(table, 'dLeft', 'dMiddle', 'dRight', { bg: 'red' });
+	let ltitle = get3ColLine(table, 'dTitleLeft', 'dTitleMiddle', 'dTitleRight', { bg: 'green' });
+
+	let hTable = percentVh(100) - 60 - 30; //die 10 sind abstand von footer, die 30 sind footer
+	let wTable = percentVw(100) - 20; //die 20 sind padding (je 10) von get3ColLine
+	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight', { bg: 'dimgray', w: wTable, h: hTable });
+	mSize(dTable.parentNode, '100%', '100%');
+
+	let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
+	dFooterMiddle.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
 
 	clearElement(dTable);
+	mSize(dTable, '100%', '100%'); let rect = getRect(dTable); 
+	//console.log('dTable rect', rect);
 
-	let items = getItems1(chooseRandom([42]));
+	let items = getItems(chooseRandom([200]));
 	for (const item of items) { item.label = item.info.S.toUpperCase(); item.id = lRegister(item); }
 
-	//hier suche ich die options aus:
-	let options = { labelTop: true, area:{w: window.innerWidth - 40, h: window.innerHeight - 80}, canGrow: true };
+	let aTable = percentOf(dTable, 80, 60); //getRect(dTable);
 
-	let dArea = getArea(dTable, { w: options.area.w, h: options.area.h, layout: 'hcc', bg: 'violet' });
+	let options = { area: aTable };
 
-	options = getSizeAndOptions(items,dArea,options);
+	let dArea = getArea(dTable, { w: options.area.w, h: options.area.h, layout: 'hcc', bg: 'grey', padding: 4, rounding:6 });
+
+
+
+
+	revealMain(); return;
+
+}
+
+
+
+
+
+
+async function _start02(){
+	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
+
+	let table = mDiv(dRightSide, { bg: 'green' }, 'table'); //table.innerHTML='hallo';
+
+	let ltop = get3ColLine(table, 'dLeft', 'dMiddle', 'dRight', { bg: 'red' });
+	let ltitle = get3ColLine(table, 'dTitleLeft', 'dTitleMiddle', 'dTitleRight', { bg: 'green' });
+
+	let hTable = percentVh(100) - 60 - 30; //die 10 sind abstand von footer, die 30 sind footer
+	let wTable = percentVw(100) - 20; //die 20 sind padding (je 10) von get3ColLine
+	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight', { bg: 'violet', w: wTable, h: hTable });
+	mSize(dTable.parentNode, '100%', '100%');
+
+	let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
+	dFooterMiddle.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
+
+	clearElement(dTable);
+	mSize(dTable, '100%', '100%'); let rect = getRect(dTable); 
+	//console.log('dTable rect', rect);
+
+	let items = getItems(chooseRandom([200]));
+	for (const item of items) { item.label = item.info.S.toUpperCase(); item.id = lRegister(item); }
+
+	let aTable = percentOf(dTable, 80, 50); //getRect(dTable);
+
+	let options = { area: aTable };
+
+	let dArea = getArea(dTable, { w: options.area.w, h: options.area.h, layout: 'hcc', bg: 'yellow', padding: 4 });
+
+	options = getSizeAndOptions1(items, dArea, options);
 
 	makeItemDivs(items, options);
 
@@ -29,15 +80,6 @@ async function _start() {
 
 	setTimeout(nachkorrigieren, 100, items, revealMain, options);
 }
-
-
-
-
-
-
-
-
-
 function _start01() {
 
 	getTable2(dMain, { bg: 'green' }, 'dTable')

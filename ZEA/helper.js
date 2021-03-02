@@ -1,6 +1,6 @@
 function get3ColLine(dParent, idleft, idmiddle, idright, styles = {}) {
 	let dOuter = mDiv(dParent);
-	mStyleX(dOuter, { wmin: '100%', vpadding: 4, hpadding: 12, box: true, h: 30 });
+	mStyleX(dOuter, { wmin: '100%', vpadding: 4, hpadding: 10, box: true, h: 30 });
 	let dInner = mDiv(dOuter, { position: 'relative' });
 
 	let l = mDiv(dInner, { display: 'inline-block', position: 'absolute', wmin: 20 }, idleft)
@@ -18,41 +18,40 @@ function getArea(dParent, styles, id) {
 	return d;
 }
 
-function getDivisors(n){
-	let x=Math.floor(Math.sqrt(n));
-	
-	let res=[];
-	for (let i=0;i<x;i++){
-		let q=n/x;
-		if (q == Math.round(q)) res.push(x);
-	}
+function getDivisors(n) {
+	let x = Math.ceil(Math.sqrt(n));
 
+	let res = [];
+	for (let i = 2; i <= x; i++) {
+		let q = n / i;
+		if (q == Math.round(q)) res.push(i);
+	}
+	return res;
 }
 
 function getSizeAndOptions(items, dParent, options = {}) {
 
-	let N=items.length;
-	let areaAvailable = valf(options.area,getRect(dParent));
+	let N = items.length;
+	let areaAvailable = valf(options.area, getRect(dParent));
 
 	//area ratio w/h, pic ratio wPic/hPic, ratio cols/rows
 	//each ratio could be square,portrait,landscape
-	
+
 	//area ratio is given!
-	let raArea=areaAvailable.w/areaAvailable.h; //3
+	let raArea = areaAvailable.w / areaAvailable.h; //3
 
 	//fuer pic ratio brauch ich: wunsch
-	let raPic=1; //100/70; //1
+	let raPic = 1; //100/70; //1
 
 	//cols vs rows kann ich von den 2 vorhergehenden ausrechnen
-	let cols = N * raPic/raArea; //1/3 * 12 = 4
+	let cols = N * raPic / raArea; //1/3 * 12 = 4
 	let rows = Math.ceil(N / cols);
 
 	let genaueTeiler = getDivisors(N); //nur relevant wenn grid will!
-	console.log('______ teiler',genaueTeiler);
-	console.log('area',areaAvailable,rows,cols);
+	let szPic = { w: areaAvailable.w / cols, h: areaAvailable.h / rows };
+	console.log('______ teiler von', N, genaueTeiler);
+	console.log('area', areaAvailable, 'rows', rows, 'cols', cols, szPic);
 
-	let szPic = 
-	console.log()
 
 	options = correctOptions(options, rows, cols, szPic);
 	return options;
@@ -62,8 +61,8 @@ function getSizeAndOptions2(items, dParent, options = {}) {
 
 	//zuerst ausrechnen wieviel ich MINDESTENS brauch pro pic
 
-	let [r, c, sz] = getRowsColsSize(items.length,options.area);
-	console.log('__________',r,c,sz)
+	let [r, c, sz] = getRowsColsSize(items.length, options.area);
+	console.log('__________', r, c, sz)
 
 
 	let minmax = arrMinMax(items, x => x.label.length);
@@ -97,10 +96,10 @@ function getSizeAndOptions2(items, dParent, options = {}) {
 
 	//let wTry, lay;
 	//lay = valf(options.layout, undefined);
-	let [wTry,lay]=[wTryFit,'grid'];
+	let [wTry, lay] = [wTryFit, 'grid'];
 	//let [wTry, lay] = [wTryFit + diff / 2, 'flex'];
-	console.log('available', wAvailable, 'useToFit', wTry, 'h',options.hArea, 'layout', lay);
-	let newOptions = { area: { w: wTry, h: options.area.h }, wAreaMax: wAvailable, layout:lay };
+	console.log('available', wAvailable, 'useToFit', wTry, 'h', options.hArea, 'layout', lay);
+	let newOptions = { area: { w: wTry, h: options.area.h }, wAreaMax: wAvailable, layout: lay };
 	options = mergeOverride(options, newOptions);
 
 	//auf der table mach ich jetzt eine area in der die items ewew presented werden sollen
@@ -340,9 +339,9 @@ function nachkorrigieren(items, callback, options) {
 //#region old
 function getSizeAndOptions1(items, dParent, options = {}) {
 
-	
-	let [r, c, sz] = getRowsColsSize(items.length,options.area);
-	console.log('__________',r,c,sz)
+
+	let [r, c, sz] = getRowsColsSize(items.length, options.area);
+	console.log('__________', r, c, sz)
 
 
 	let minmax = arrMinMax(items, x => x.label.length);
@@ -376,10 +375,10 @@ function getSizeAndOptions1(items, dParent, options = {}) {
 
 	//let wTry, lay;
 	//lay = valf(options.layout, undefined);
-	let [wTry,lay]=[wTryFit,'grid'];
+	let [wTry, lay] = [wTryFit, 'grid'];
 	//let [wTry, lay] = [wTryFit + diff / 2, 'flex'];
-	console.log('available', wAvailable, 'useToFit', wTry, 'h',options.hArea, 'layout', lay);
-	let newOptions = { area: { w: wTry, h: options.area.h }, wAreaMax: wAvailable, layout:lay };
+	console.log('available', wAvailable, 'useToFit', wTry, 'h', options.hArea, 'layout', lay);
+	let newOptions = { area: { w: wTry, h: options.area.h }, wAreaMax: wAvailable, layout: lay };
 	options = mergeOverride(options, newOptions);
 
 	//auf der table mach ich jetzt eine area in der die items ewew presented werden sollen

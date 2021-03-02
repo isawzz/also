@@ -947,6 +947,30 @@ function getSizeWithStyles(text, styles) {
 	d.parentNode.removeChild(d);
 	return { w: Math.round(width), h: Math.round(height) };
 }
+function percentOf(elem,percentW,percentH){
+	if (nundef(percentH)) percentH=percentW;
+	if (nundef(percentW)) percentW=percentH=100;
+	let r=getRect(elem);
+	return {w:r.w*percentW/100,h:r.h*percentH/100};
+}
+function percentVh(percent) {return percent*document.documentElement.clientHeight/100;}
+function percentVw(percent) {return percent*document.documentElement.clientWidth/100;}
+function percentVMin(percent) {return Math.min(percentVh(percent),percentVw(percent));}
+function percentVMax(percent) {return Math.max(percentVh(percent),percentVw(percent));}
+function percentVhIncludingScrollbar(percent) {
+  var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+  return (percent * h) / 100;
+}
+function percentVwIncludingScrollbar(percent) {
+  var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  return (percent * w) / 100;
+}
+function percentVMinIncludingScrollbar(percent) {
+  return Math.min(percentVhIncludingScrollbar(percent), percentVwIncludingScrollbar(percent));
+}
+function percentVMaxIncludingScrollbar(percent) {
+  return Math.max(percentVhIncludingScrollbar(percent), percentVwIncludingScrollbar(percent));
+}
 function toBase10(s, base = 16) {
 	//console.log(s);
 	let s1 = reverseString(s.toLowerCase());
