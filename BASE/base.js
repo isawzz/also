@@ -4,7 +4,7 @@ function mBy(id) { return document.getElementById(id); }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag) { return document.createElement(tag); }
 function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
-function mDivid(id,dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
+function mDivid(id, dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
@@ -24,7 +24,7 @@ function mLine3(dParent, index, ids, styles) {
 	return [mBy(ids[0]), mBy(ids[1]), mBy(ids[2])];
 }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
-function mReveal(d){d.style.opacity=1;}
+function mReveal(d) { d.style.opacity = 1; }
 function mSize(d, w, h, unit = 'px') { mStyleX(d, { width: w, height: h }, unit); }
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
@@ -947,29 +947,29 @@ function getSizeWithStyles(text, styles) {
 	d.parentNode.removeChild(d);
 	return { w: Math.round(width), h: Math.round(height) };
 }
-function percentOf(elem,percentW,percentH){
-	if (nundef(percentH)) percentH=percentW;
-	if (nundef(percentW)) percentW=percentH=100;
-	let r=getRect(elem);
-	return {w:r.w*percentW/100,h:r.h*percentH/100};
+function percentOf(elem, percentW, percentH) {
+	if (nundef(percentH)) percentH = percentW;
+	if (nundef(percentW)) percentW = percentH = 100;
+	let r = getRect(elem);
+	return { w: r.w * percentW / 100, h: r.h * percentH / 100 };
 }
-function percentVh(percent) {return percent*document.documentElement.clientHeight/100;}
-function percentVw(percent) {return percent*document.documentElement.clientWidth/100;}
-function percentVMin(percent) {return Math.min(percentVh(percent),percentVw(percent));}
-function percentVMax(percent) {return Math.max(percentVh(percent),percentVw(percent));}
+function percentVh(percent) { return percent * document.documentElement.clientHeight / 100; }
+function percentVw(percent) { return percent * document.documentElement.clientWidth / 100; }
+function percentVMin(percent) { return Math.min(percentVh(percent), percentVw(percent)); }
+function percentVMax(percent) { return Math.max(percentVh(percent), percentVw(percent)); }
 function percentVhIncludingScrollbar(percent) {
-  var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-  return (percent * h) / 100;
+	var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+	return (percent * h) / 100;
 }
 function percentVwIncludingScrollbar(percent) {
-  var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-  return (percent * w) / 100;
+	var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	return (percent * w) / 100;
 }
 function percentVMinIncludingScrollbar(percent) {
-  return Math.min(percentVhIncludingScrollbar(percent), percentVwIncludingScrollbar(percent));
+	return Math.min(percentVhIncludingScrollbar(percent), percentVwIncludingScrollbar(percent));
 }
 function percentVMaxIncludingScrollbar(percent) {
-  return Math.max(percentVhIncludingScrollbar(percent), percentVwIncludingScrollbar(percent));
+	return Math.max(percentVhIncludingScrollbar(percent), percentVwIncludingScrollbar(percent));
 }
 function toBase10(s, base = 16) {
 	//console.log(s);
@@ -1392,6 +1392,10 @@ function allNumbers(s) {
 	if (m) return m.map(v => Number(v)); else return null;
 	// {console.log(v,typeof v,v[0],v[0]=='-',v[0]=='-'?-(+v):+v,Number(v));return Number(v);});
 }
+function capitalize(s) {
+	if (typeof s !== 'string') return '';
+	return s.charAt(0).toUpperCase() + s.slice(1);
+}
 function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
 function firstNumber(s) {
 	// returns first number in string s
@@ -1451,7 +1455,7 @@ function stringBetweenLast(sFull, sStart, sEnd) {
 function toLetterList(s) {
 	return [...s];
 }
-
+function toNoun(s) { return capitalize(s.toLowerCase()); }
 //#endregion
 
 //#region type checking / checking

@@ -54121,9 +54121,9 @@ pick:
   w: 125
   h: 133
   E: pick
-  D: wählen
-  F: choisir
-  S: recoger
+  D: axt
+  F: pioche
+  S: pico
   C: 挑
   cats:
     - huge
@@ -68992,7 +68992,7 @@ straight ruler:
   w: 125
   h: 133
   E: ruler
-  D: herrscher
+  D: lineal
   F: règle
   S: regla
   C: 統治者
@@ -74119,7 +74119,7 @@ triangular ruler:
   w: 125
   h: 133
   E: ruler
-  D: herrscher
+  D: lineal
   F: règle
   S: regla
   C: 統治者

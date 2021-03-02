@@ -17,7 +17,6 @@ function getArea(dParent, styles, id) {
 
 	return d;
 }
-
 function getDivisors(n) {
 	let x = Math.ceil(Math.sqrt(n));
 
@@ -28,6 +27,37 @@ function getDivisors(n) {
 	}
 	return res;
 }
+function makeItemDivs(items, options) {
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+
+		let dOuter = mCreate('div');
+		if (isdef(options.outerStyles)) mStyleX(dOuter, options.outerStyles);
+
+		let dLabel;
+		if (options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		let dPic = mDiv(dOuter, { family: item.info.family });
+		dPic.innerHTML = item.info.text;
+		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
+
+		if (options.labelBottom == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		if (isdef(options.handler)) dOuter.onclick = options.handler;
+
+		lAdd(item, { div: dOuter, dPic: dPic, options: options });
+		if (isdef(dLabel)) lAdd(item, { dLabel: dLabel })
+	}
+
+}
+
+
+
+
+
+
+
+//#region nein wieder nix:3
 
 function getSizeAndOptions(items, dParent, options = {}) {
 
@@ -206,7 +236,7 @@ function correctOptions(options, rows, cols, szPic) {
 	options = mergeOverride(defOptions, options);
 	return options;
 }
-function makeItemDivs(items, options) {
+function makeItemDivs3(items, options) {
 	for (let i = 0; i < items.length; i++) {
 		let item = items[i];
 

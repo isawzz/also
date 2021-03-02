@@ -16,19 +16,63 @@ async function _start() {
 	dFooterMiddle.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
 
 	clearElement(dTable);
-	mSize(dTable, '100%', '100%'); let rect = getRect(dTable); 
+	mSize(dTable, '100%', '100%'); let rect = getRect(dTable);
 	//console.log('dTable rect', rect);
 
-	let items = getItems(chooseRandom([200]));
-	for (const item of items) { item.label = item.info.S.toUpperCase(); item.id = lRegister(item); }
+	// only take items with label of max length 10?
+	let items = getItems(chooseRandom([200]), x => x.D.length < 11); // cond is on Syms object!!!
+	for (const item of items) { item.label = toNoun(item.info.D); item.id = lRegister(item); }
 
 	let aTable = percentOf(dTable, 80, 60); //getRect(dTable);
 
-	let options = { area: aTable };
+	let options = { area: aTable, labelTop: true };
 
-	let dArea = getArea(dTable, { w: options.area.w, h: options.area.h, layout: 'hcc', bg: 'grey', padding: 4, rounding:6 });
+	let dArea = getArea(dTable, { w: options.area.w, h: options.area.h, layout: 'hcc', bg: 'grey', padding: 4, rounding: 6 });
 
 
+	//i have the items
+	//i could calc for each item the text measure for font 20
+	//or i could see what the longest label is and so what would be the minimum width for each item for fontsize 20
+	//or i could do nothing else than just adding all the items to a flex box filling area
+	//using a pleasant font for both pic and text
+	let fzPic = 50;
+	let fzText = 16;
+	//now make the item divs with these sizes
+	lookupSet(options, ['picStyles', 'fz'], fzPic);
+	lookupSet(options, ['labelStyles', 'fz'], fzText);
+	options.outerStyles = { bg: 'random', display: 'inline-block', padding: 2, rounding: 6 }
+	makeItemDivs(items, options);
+
+	let dGrid = mDiv100(dArea);
+	items.map(x => mAppend(dGrid, lGet(x).div));
+
+	//find largest item
+	items.map(x => x.rect = getRect(lGet(x).div));
+
+	let minMaxWidth = arrMinMax(items, x => x.rect.w);
+	console.log('min and max width:', minMaxWidth);
+	//how long is the label?
+
+	//next, each item should be resized to max size
+	items.map(x => { x.rect.w = minMaxWidth.max; mStyleX(lGet(x).div, { w: minMaxWidth.max }) });
+
+	items.map(x => x.rect = getRect(lGet(x).div)); //muss rect adjusten!!!
+
+	//next, measure how much space remains to be distributed for margins;
+	// if margins < minmargin, opfer ein ganzes item width noch dazu!
+	//calc min top
+	let minMaxTop = arrMinMax(items, x => x.rect.y);
+	console.log('min and max top:', minMaxTop);
+	let cols = items.filter(x => x.rect.y == minMaxTop.min).length;
+	// console.log(items.map(x=>x.rect));
+	let rows = Math.ceil(items.length / cols);
+	console.log('cols', cols, 'rows', rows);
+
+
+
+	//mStyleX(dGrid, { display: 'flex', 'flex-wrap': 'wrap', 'align-items':'center'});
+	//mStyleX(dArea,{display:'grid',gap:10});
+	//mStyleX(dArea,{layout:'fhcc',gap:10});
 
 
 	revealMain(); return;
@@ -40,7 +84,7 @@ async function _start() {
 
 
 
-async function _start02(){
+async function _start02() {
 	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
 
 	let table = mDiv(dRightSide, { bg: 'green' }, 'table'); //table.innerHTML='hallo';
@@ -57,7 +101,7 @@ async function _start02(){
 	dFooterMiddle.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
 
 	clearElement(dTable);
-	mSize(dTable, '100%', '100%'); let rect = getRect(dTable); 
+	mSize(dTable, '100%', '100%'); let rect = getRect(dTable);
 	//console.log('dTable rect', rect);
 
 	let items = getItems(chooseRandom([200]));
