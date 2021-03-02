@@ -1,5 +1,6 @@
 async function _start() {
 
+	//#region page aufbau
 	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
 
 	let table = mDiv(dRightSide, { bg: 'green' }, 'table'); //table.innerHTML='hallo';
@@ -14,21 +15,27 @@ async function _start() {
 
 	let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
 	dFooterMiddle.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
+	//#endregion
 
+	//#region table preparation
 	clearElement(dTable);
 	mSize(dTable, '100%', '100%'); let rect = getRect(dTable);
 	//console.log('dTable rect', rect);
+	//#endregion
 
+	//#region item preparation
 	// only take items with label of max length 10?
 	let items = getItems(chooseRandom([200]), x => x.D.length < 11); // cond is on Syms object!!!
 	for (const item of items) { item.label = toNoun(item.info.D); item.id = lRegister(item); }
+	//#endregion
 
+	//#region area: dArea
 	let aTable = percentOf(dTable, 80, 60); //getRect(dTable);
+	let dArea = getArea(dTable, { w: aTable.w, h: aTable.h, layout: 'hcc', bg: 'grey', });
+	//#endregion
 
+	//#region options
 	let options = { area: aTable, labelTop: true };
-
-	let dArea = getArea(dTable, { w: options.area.w, h: options.area.h, layout: 'hcc', bg: 'grey', padding: 4, rounding: 6 });
-
 
 	//i have the items
 	//i could calc for each item the text measure for font 20
@@ -40,11 +47,14 @@ async function _start() {
 	//now make the item divs with these sizes
 	lookupSet(options, ['picStyles', 'fz'], fzPic);
 	lookupSet(options, ['labelStyles', 'fz'], fzText);
-	options.outerStyles = { bg: 'random', display: 'inline-block', padding: 2, rounding: 6 }
+	options.outerStyles = { bg: 'random', display: 'inline-block', padding: 0 };
 	makeItemDivs(items, options);
+	//#endregion
 
+	//#region create grid div and append items
 	let dGrid = mDiv100(dArea);
 	items.map(x => mAppend(dGrid, lGet(x).div));
+	//#endregion
 
 	//find largest item
 	items.map(x => x.rect = getRect(lGet(x).div));
@@ -61,7 +71,7 @@ async function _start() {
 
 	//next, measure how much space remains to be distributed for margins;
 	// if margins < minmargin, opfer ein ganzes item width noch dazu!
-	//calc min top
+	//calc cols and rows
 	let minMaxTop = arrMinMax(items, x => x.rect.y);
 	console.log('min and max top:', minMaxTop);
 	let cols = items.filter(x => x.rect.y == minMaxTop.min).length;
@@ -69,10 +79,11 @@ async function _start() {
 	let rows = Math.ceil(items.length / cols);
 	console.log('cols', cols, 'rows', rows);
 
-	let extraSpace = area.w-cols*wItem;
-	let gap = Math.floor(extraSpace/(cols+1));
+	let extraSpace = options.area.w - cols * (wItem);
+	let gap = Math.floor(extraSpace / (cols + 2));
 
-	
+	console.log('w items', cols * wItem, 'area', options.area, 'extraSpace', extraSpace, 'gap', gap, 'wItem', wItem)
+	//items.map(x=>mStyleX(lGet(x).div,{margin:gap/2}));
 
 
 
