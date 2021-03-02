@@ -50,6 +50,7 @@ async function _start() {
 	items.map(x => x.rect = getRect(lGet(x).div));
 
 	let minMaxWidth = arrMinMax(items, x => x.rect.w);
+	let wItem = minMaxWidth.max;
 	console.log('min and max width:', minMaxWidth);
 	//how long is the label?
 
@@ -67,6 +68,11 @@ async function _start() {
 	// console.log(items.map(x=>x.rect));
 	let rows = Math.ceil(items.length / cols);
 	console.log('cols', cols, 'rows', rows);
+
+	let extraSpace = area.w-cols*wItem;
+	let gap = Math.floor(extraSpace/(cols+1));
+
+	
 
 
 
