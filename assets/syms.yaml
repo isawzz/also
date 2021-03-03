@@ -7662,7 +7662,7 @@ billed cap:
   w: 125
   h: 133
   E: cap
-  D: deckel
+  D: kappe
   F: casquette
   S: gorra
   C: 帽
@@ -57368,10 +57368,10 @@ racing car:
   isDuplicate: false
   w: 125
   h: 133
-  E: car
-  D: auto
-  F: voiture
-  S: coche
+  E: racing car
+  D: rennwagen
+  F: voiture de course
+  S: coche de carreras
   C: 汽車
   cats:
     - huge
@@ -72102,10 +72102,10 @@ thong sandal:
   family: emoNoto
   w: 125
   h: 118
-  E: thong sandal
-  D: tangasandale
-  F: sandale string
-  S: sandalia de tanga
+  E: sandal
+  D: sandale
+  F: sandale
+  S: sandalia
   C: 涼鞋
   cats:
     - huge
