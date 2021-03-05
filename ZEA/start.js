@@ -1,9 +1,9 @@
 async function _start() {
 	//test60_pageVisibleArea(chooseRandom([20,32,36,40,56,64]));
-	test60_1_clean(chooseRandom(range(1,100))); //12,32,56,100]));
+	test60_2();//chooseRandom(range(1,100)),{maxlen:8}); //chooseRandom(range(1,100))); //12,32,56,100]));
 	//test64_multi(test60_alt1,[12,32,144],[18]);
 	//test60_pageVisibleArea();
-	revealMain();
+	//revealMain();
 }
 
 function test64_multi(fTest, ns = [4, 12, 20], lens = [8, 14], wpers = [50, 90], hpers = [50, 90]) {

@@ -1,3 +1,58 @@
+function getStandardOptions(dArea, szPic, fzPic, lang, fzText, luc, labelPos = 'bottom', minPadding=0, minGap=1, uniform=true) {
+	let options = { area: getRect(dArea) };
+	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
+	if (isdef(fzText)) {
+		//labels are present!
+		options.showLabels = true;
+		if (labelPos == 'bottom') options.labelBottom = true; else options.labelTop = true;
+		options.labelStyles = { fz: fzText };
+		if (nundef(fzPic)) fzPic = Math.floor(fzText * 4 * (luc == 'u' ? .7 : .6)); //taking 4 as min word length
+	} else if (nundef(fzPic)) fzPic = 30;
+	options.picStyles = { fz: fzPic };
+	options.outerStyles = {
+		bg: 'random', display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
+		padding: 0, box: true
+	};
+
+	//infer szPic if not given!
+	if (nundef(szPic)){
+		if (isdef(fzText)) {
+			//dann hab ich auch fzPic!!!
+			let h=fzText*1.14+fzPic*1.15+minPadding*2;
+			//let w=
+
+		}
+	}
+	options.szRatio=szPic.w/szPic.h;
+
+	return options;
+}
+function getFittings(items, options) {
+	let res = getRegularFits(items.length);
+
+	let szu = options.szUniform;
+
+	let fitting = [];
+	let area = options.area;
+	for (const r of res) {
+		//calc max label for each column, then sum them up to get grid width!
+		//this only makes sense for landscape!
+		//if this is landscape, will take rows=r.s, cols=r.l
+		let [wCols, wGrid] = maxSumColumns(items.map(x => x.rect.w), r.s, r.l);
+		//console.log('for',r.l,'columns, grid width would be',wGrid);
+		let wExtraN = area.w - wGrid;
+		let wExtraL = area.w - r.l * szu.w;
+		let hExtraL = area.w - r.s * szu.h;
+		let wExtraP = area.w - r.s * szu.w;
+		let hExtraP = area.w - r.l * szu.h;
+		if (wExtraN >= 0 && hExtraL >= 0) { fitting.push({ type: 'N', wCols:wCols, rows: r.s, cols: r.l, wExtra: wExtraN, hExtra: hExtraL }) }
+		if (wExtraL >= 0 && hExtraL >= 0) { fitting.push({ type: 'L', rows: r.s, cols: r.l, wExtra: wExtraL, hExtra: hExtraL }) }
+		if (wExtraP >= 0 && hExtraP >= 0) { fitting.push({ type: 'P', rows: r.l, cols: r.s, wExtra: wExtraP, hExtra: hExtraP }) }
+	}
+	return fitting;
+}
+
+
 function calcRowsColsSizeNew(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
 
 	//berechne outer dims

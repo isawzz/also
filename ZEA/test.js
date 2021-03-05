@@ -1,3 +1,64 @@
+function test60_2(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labelPos, lang, minPadding, minGap, uniform } = {}) {
+	//#region page and items 
+	//console.log('_________',n,len,'w',wper,'h',hper)
+	let tableRect = pageVisibleArea();
+	//let dArea = getMainAreaPadding(dTable, 2, 'silver');
+	let dArea = getMainAreaPercent(dTable, 'silver', wper, hper);
+
+	let options = getStandardOptions(dArea, arguments[1]);
+	console.log(options);
+
+	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
+	//#endregion
+
+	let f=getFitting(items,options);
+
+	console.log('fitting',f);
+
+	//welche passt am besten?
+	//berechne standard pic size wenn es nicht gegeben ist!
+
+	makeItemDivs(items, options);
+	let dGrid = mDiv100(dArea);
+	console.log('....',options.cols)
+	mStyleX(dGrid, { display: 'grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap });
+	for (const it of items) mAppend(dGrid, lDiv(it));
+	revealMain();
+	return;
+
+	//revealMain();	return;
+
+	options.szUniform = getLargestItemSize(items); //hier wird rect zu items gegeben! =>ist aber NICHT uniform size sondern min size!!!
+
+	let fitting = getBestFitting(items, options);
+	//console.log(items)
+	console.log(fitting)
+	console.log(options)
+
+	if (options.fits && options.isUniform) { layoutRegularUniformGrid(items, dGrid, options); }
+	else if (options.fits) {
+
+		//non uniform fit but regular!
+
+		//erstmal: haben die items jetzt schon einen size?
+		console.log(lDiv(items[0]), items[0].rect);
+
+		//can choose to 
+		// 1. overflow
+		// 2. irregular fit
+		//when?
+		// 3. regular fit that is NOT uniform sized!
+		// 4. reduce font if fontSize can be reduced or to 
+		// 5. display ellipsis for oversized items!
+	}
+
+	let rg = getRect(dGrid);
+	//console.log('grid rect vor scale',rg)
+
+	scaleFonts(items, options);
+	setTimeout(correctGap, 10, dGrid, items, options);
+
+}
 function test60_1_clean(n = 144, len = 14, wper = 80, hper = 80, fzText = 8, fzPic) {
 	//console.log('_________',n,len,'w',wper,'h',hper)
 	let tableRect = pageVisibleArea();
@@ -16,47 +77,12 @@ function test60_1_clean(n = 144, len = 14, wper = 80, hper = 80, fzText = 8, fzP
 	let dGrid = mDiv100(dArea);
 	items.map(x => mAppend(dGrid, lDiv(x)));
 
-	let szu = options.szUniform = getLargestItemSize(items); //hier wird rect zu items gegeben! =>ist aber NICHT uniform size sondern min size!!!
+	options.szUniform = getLargestItemSize(items); //hier wird rect zu items gegeben! =>ist aber NICHT uniform size sondern min size!!!
 
-	//ich koennte hier auch ALLE fits nehmen und dann das beste auswaehlen!
-	
-
-	fittings = getSimpleFit(items, options);
-	if (isEmpty(fittings)) {
-		let res = getOverFits(items.length);
-		let aRatio = options.containerShape == 'L' ? options.area.h / options.area.w : options.area.w / options.area.h;
-		let rmin = 20000, best;
-		for (const r of res) { let rnew = Math.abs(aRatio - r.s / r.l); if (rnew < rmin) { rmin = rnew; best = r; } }
-		let rows, cols;
-		if (options.containerShape == 'L') { rows = best.l; cols = best.s; } else { rows = best.s; cols = best.l; }
-		options.hasRegularFittings = false;
-		let [wCols, wGrid] = maxSumColumns(items.map(x => x.rect.w), rows, cols);
-		let wExtra = area.w - wGrid;
-		let hExtra = area.h - rows * szu.h;
-		let fitting = { type: rows > cols ? 'P' : 'L', rows: rows, cols: cols, wExtra: wExtra, hExtra: hExtra, wCols: wCols };
-		fittings.push(fitting);
-	} else options.hasRegularFittings = true;
-
-	console.log('fittings: N='+items.length); fittings.map(x => console.log(x));
-	options.fittings = fittings;
-
-	let bestFitting = getFittingMaximizeMinimalExtraSpace(fittings);
-	console.log('best max min extra', bestFitting);
-
-	bestFitting = getFittingPreferLandscape(fittings); //nicht gut wenn lange worte und uniform sizing!
-	console.log('best landscape', bestFitting);
-
-	[options.rows, options.cols] = [bestFitting.rows, bestFitting.cols];
-	options.fits = true;
-	options.fitting = options.bestFitting = bestFitting;
-
-	options.isUniform = bestFitting.type != 'N';
-	if (!options.isUniform) {
-		let wCols = bestFitting.wCols;
-		let wmm = arrMinMax(wCols); // hier gibt es ein PROBLEM!!! wenns kein wCols gibt!
-		options.minColWidth = wmm.min;
-		options.maxColWidth = wmm.max;
-	}
+	let fitting = getBestFitting(items, options);
+	//console.log(items)
+	console.log(fitting)
+	console.log(options)
 
 	if (options.fits && options.isUniform) { layoutRegularUniformGrid(items, dGrid, options); }
 	else if (options.fits) {
@@ -74,7 +100,34 @@ function test60_1_clean(n = 144, len = 14, wper = 80, hper = 80, fzText = 8, fzP
 		// 4. reduce font if fontSize can be reduced or to 
 		// 5. display ellipsis for oversized items!
 	}
+
+	let rg = getRect(dGrid);
+	//console.log('grid rect vor scale',rg)
+
 	scaleFonts(items, options);
+	setTimeout(correctGap, 10, dGrid, items, options);
+
+}
+function correctGap(dGrid, items, options) {
+	console.log('ITEM RECT', items[0].rect)
+	let rg = getRect(dGrid); console.log('grid rect NACH scale', rg)
+	let rect = getRect(lDiv(items[0]));
+	//console.log('...new size of items:', rect);
+	let oldGap = firstNumber(dGrid.style.gap);
+	options.szUniform = { w: rect.w, h: rect.h };
+	let gap = computeGap(options);
+	//console.log('oldGap',oldGap,'new gap',gap);
+
+	dGrid.style.gridGap = '' + gap + 'px';
+	setTimeout(correct2, 10, dGrid);
+	options.gridGap = gap;
+	options.dGrid = dGrid;
+	items.map(x => x.rect = getRect(lDiv(x)));
+	console.log('>ITEM RECT', items[0].rect)
+}
+function correct2(dGrid) {
+	rg = getRect(dGrid); console.log('grid rect NACH gap correction', rg)
+	revealMain();
 }
 function test60_alt1(n = 144, len = 14, wper = 80, hper = 80, fzText = 8, fzPic) {
 	//console.log('_________',n,len,'w',wper,'h',hper)

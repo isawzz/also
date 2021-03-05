@@ -45,15 +45,41 @@ function getDivisors(n) {
 	}
 	return res;
 }
-function getStandardOptions(dArea, fzPic, fzText, labelPos = 'bottom') {
-	let options = { area: getRect(dArea) };
-	if (isdef(fzText)) {
+function getStandardOptions(dArea, options) {
+	defOptions = { maxlen: 14, wper: 80, hper: 80, fzText: 8, luc: 'c', labelPos: 'bottom', lang: 'E', minPadding: 0, minGap: 1, uniform: true };
+	options = isdef(options) ? mergeOverride(defOptions, options) : defOptions;
+	console.log('options', options);
+	options.area = getRect(dArea);
+	options.aRatio = options.area.w/options.area.h;
+	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
+	if (isdef(options.fzText)) {
 		//labels are present!
-		if (labelPos == 'bottom') options.labelBottom = true; else options.labelTop = true;
-		options.labelStyles = { fz: fzText };
+		options.showLabels = true;
+		if (options.labelPos == 'bottom') options.labelBottom = true; else options.labelTop = true;
+		options.labelStyles = { fz: options.fzText };
+		if (nundef(options.fzPic)) options.fzPic = Math.floor(options.fzText * 4 * (options.luc == 'u' ? .7 : .6)); //taking 4 as min word length
+	} else if (nundef(options.fzPic)) options.fzPic = 30;
+	options.picStyles = { fz: options.fzPic };
+	options.outerStyles = {
+		bg: 'random', display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
+		padding: 0, box: true
+	};
+
+	//infer szPic if not given!
+	if (nundef(options.szPic)) {
+		if (isdef(options.fzText)) {
+			//dann hab ich auch fzPic!!!
+			let h = options.fzText * 1.14 + options.fzPic * 1.15 + options.minPadding * 2;
+			let w = options.fzText * options.maxlen * (options.luc == 'u' ? .7 : .6) + options.minPadding * 2;
+			options.szPic = {w:w,h:h};
+		}else{
+			let h = options.fzPic * 1.15 + options.minPadding * 2;
+			let w = options.fzPic * 1.25 + options.minPadding * 2;
+			options.szPic = {w:w,h:h};
+		}
 	}
-	options.picStyles = { fz: fzPic };
-	options.outerStyles = { bg: 'random', display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center', padding: 0, box: true };
+	options.szRatio = options.szPic.w / options.szPic.h;
+
 	return options;
 }
 function getLargestItemSize(items) {
@@ -85,7 +111,6 @@ function getMinUniformSize(items, options) {
 	}
 	return szMax;
 }
-function getRegularFits(n) { let fs = getDivisors(n); return fs.map(x => ({ l: n / x, s: x })); }
 function getFittingMaximizeMinimalExtraSpace(fittings) {
 	let maxmin = 0, fitting;
 	for (const f of fittings) {
@@ -118,46 +143,36 @@ function maxSumColumns(ws, rows, cols) {
 	//console.log('===>arr',arr,'sum',sum);
 	return [arr, sum];
 }
-function getFittings(items, options) {
-	let res = getRegularFits(items.length);
-
-	let szu = options.szUniform;
-
-	let fitting = [];
-	let area = options.area;
-	for (const r of res) {
-		//calc max label for each column, then sum them up to get grid width!
-		//this only makes sense for landscape!
-		//if this is landscape, will take rows=r.s, cols=r.l
-		let [wCols, wGrid] = maxSumColumns(items.map(x => x.rect.w), r.s, r.l);
-		//console.log('for',r.l,'columns, grid width would be',wGrid);
-		let wExtraN = area.w - wGrid;
-		let wExtraL = area.w - r.l * szu.w;
-		let hExtraL = area.w - r.s * szu.h;
-		let wExtraP = area.w - r.s * szu.w;
-		let hExtraP = area.w - r.l * szu.h;
-		if (wExtraN >= 0 && hExtraL >= 0) { fitting.push({ type: 'N', wCols:wCols, rows: r.s, cols: r.l, wExtra: wExtraN, hExtra: hExtraL }) }
-		if (wExtraL >= 0 && hExtraL >= 0) { fitting.push({ type: 'L', rows: r.s, cols: r.l, wExtra: wExtraL, hExtra: hExtraL }) }
-		if (wExtraP >= 0 && hExtraP >= 0) { fitting.push({ type: 'P', rows: r.l, cols: r.s, wExtra: wExtraP, hExtra: hExtraP }) }
-	}
-	return fitting;
-}
-function getOverFits(n){
-	let sq=Math.ceil(Math.sqrt(n));
-	let res=[];
-	for(let i=2;i<=sq;i++){
-		let s=i;
-		let l=Math.ceil(n/s);
-		if (s<=l && s*l>n)	res.push({s:s,l:l});
+function getSLCombis(n) {
+	let sq = Math.ceil(Math.sqrt(n));
+	let res = [];
+	for (let i = 2; i <= sq; i++) {
+		let s = i;
+		let l = Math.ceil(n / s);
+		if (s <= l && s * l >= n) res.push({ s: s, l: l });
 	}
 	//teste die 2 letzten ob sie gleich sind!
 
 	return res;
 }
+
+function getOverFits(n) {
+	let sq = Math.ceil(Math.sqrt(n));
+	let res = [];
+	for (let i = 2; i <= sq; i++) {
+		let s = i;
+		let l = Math.ceil(n / s);
+		if (s <= l && s * l > n) res.push({ s: s, l: l });
+	}
+	//teste die 2 letzten ob sie gleich sind!
+
+	return res;
+}
+function getRegularFits(n) { let fs = getDivisors(n); return fs.map(x => ({ l: n / x, s: x })); }
 function getSimpleFit(items, options) {
 	let res = getRegularFits(items.length);
 
-	if (isEmpty(res)) {options.isPrime=true;return [];}
+	if (isEmpty(res)) { options.isPrime = true; return []; }
 
 	let szu = options.szUniform;
 
@@ -174,7 +189,7 @@ function getSimpleFit(items, options) {
 		let hExtraL = area.w - r.s * szu.h;
 		let wExtraP = area.w - r.s * szu.w;
 		let hExtraP = area.w - r.l * szu.h;
-		if (wExtraN >= 0 && hExtraL >= 0) { fittings.push({ type: 'N', rows: r.s, cols: r.l, wExtra: wExtraN, hExtra: hExtraL }) }
+		if (wExtraN >= 0 && hExtraL >= 0) { fittings.push({ type: 'N', wCols: wCols, rows: r.s, cols: r.l, wExtra: wExtraN, hExtra: hExtraL }) }
 		if (wExtraL >= 0 && hExtraL >= 0) { fittings.push({ type: 'L', rows: r.s, cols: r.l, wExtra: wExtraL, hExtra: hExtraL }) }
 		if (wExtraP >= 0 && hExtraP >= 0) { fittings.push({ type: 'P', rows: r.l, cols: r.s, wExtra: wExtraP, hExtra: hExtraP }) }
 	}
@@ -236,15 +251,17 @@ function getBestUniformRegularFit(items, options) {
 	if (nundef(best)) return [bestNoFit[0], bestNoFit[1], false];
 	else return [best[0], best[1], foundFit];
 }
-function layoutRegularUniformGrid(items, dGrid, options) {
-	clearElement(dGrid);
+function computeGap(options) {
 	let gap = Math.min((options.area.w - options.cols * options.szUniform.w) / (options.cols),
 		(options.area.h - options.rows * options.szUniform.h) / (options.rows));
-	if (gap > 12) gap = 16; else if (gap < 1) gap = 1;
-	options.gap = gap;
-	mStyleX(dGrid, { display: 'grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: gap });
+	if (gap > 12) gap = 12; else if (gap < 1) gap = 1;
+	return gap;
+}
+function layoutRegularUniformGrid(items, dGrid, options) {
+	clearElement(dGrid);
+	options.gap = computeGap(options);
+	mStyleX(dGrid, { display: 'grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap });
 	for (const it of items) mAppend(dGrid, lDiv(it));
-
 }
 function scaleFonts(items, options) {
 	//how big do the items end up being?
@@ -254,20 +271,22 @@ function scaleFonts(items, options) {
 	let wExtra = wNet / options.szUniform.w;
 	let hExtra = hNet / options.szUniform.h;
 	let minFact = Math.min(wExtra, hExtra);
-	console.log('scaleFonts: wExtra', wExtra, 'hExtra', hExtra)
+	//console.log('scaleFonts: wExtra', wExtra, 'hExtra', hExtra)
 	if (minFact > 1.1) {
 		minFact = 1 + (minFact - 1) * 3 / 4;
 		console.log('MOD:::', minFact, wExtra, hExtra, wNet, hNet)
 		let fzTextNew, fzPicNew;
 		let oldfPic = options.picStyles.fz;
-		fzPicNew = Math.min(wNet*.7,hNet*2/3);
-		if (fzPicNew > oldfPic){
-			items.map(x=>lGet(x).dPic.style.fontSize=''+fzPicNew+'px');
+		fzPicNew = Math.min(wNet * .7, hNet * 2 / 3);
+		if (fzPicNew > oldfPic) {
+			items.map(x => lGet(x).dPic.style.fontSize = '' + fzPicNew + 'px');
 		}
-		items.map(x => { fzTextNew = scaleLabelFont(x, minFact, options); });//fzPicNew = scalePicFont(x, minFact, options); });
-		console.log('old fText',options.labelStyles.fz,'=>',fzTextNew,'old fPic',options.picStyles.fz,'=>',fzPicNew);
-		options.labelStyles.fz = fzTextNew;
 		options.picStyles.fz = fzPicNew;
+
+		if (nundef(options.showLabels)) return;
+		items.map(x => { fzTextNew = scaleLabelFont(x, minFact, options); });//fzPicNew = scalePicFont(x, minFact, options); });
+		//console.log('old fText',options.labelStyles.fz,'=>',fzTextNew,'old fPic',options.picStyles.fz,'=>',fzPicNew);
+		options.labelStyles.fz = fzTextNew;
 
 		// } else if (minFact < .99){
 		// 	console.log('MOD:::', minFact, wExtra, hExtra, wNet, hNet)
@@ -278,7 +297,7 @@ function scaleFonts(items, options) {
 
 	} else if (hExtra > 1.2) {
 		//only scale pictures
-		let fzTextNew, fzPicNew;
+		let fzPicNew;
 		items.map(x => { fzPicNew = scalePicFont(x, hExtra, options); });
 		//options.labelStyles.fz = fzTextNew;
 		options.picStyles.fz = fzPicNew;
