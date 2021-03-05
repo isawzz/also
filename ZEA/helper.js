@@ -48,7 +48,7 @@ function getDivisors(n) {
 function getStandardOptions(dArea, options) {
 	defOptions = { maxlen: 14, wper: 80, hper: 80, fzText: 8, luc: 'c', labelPos: 'bottom', lang: 'E', minPadding: 0, minGap: 1, uniform: true };
 	options = isdef(options) ? mergeOverride(defOptions, options) : defOptions;
-	console.log('options', options);
+	//console.log('options', options);
 	options.area = getRect(dArea);
 	options.aRatio = options.area.w/options.area.h;
 	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
@@ -65,20 +65,6 @@ function getStandardOptions(dArea, options) {
 		padding: 0, box: true
 	};
 
-	//infer szPic if not given!
-	if (nundef(options.szPic)) {
-		if (isdef(options.fzText)) {
-			//dann hab ich auch fzPic!!!
-			let h = options.fzText * 1.14 + options.fzPic * 1.15 + options.minPadding * 2;
-			let w = options.fzText * options.maxlen * (options.luc == 'u' ? .7 : .6) + options.minPadding * 2;
-			options.szPic = {w:w,h:h};
-		}else{
-			let h = options.fzPic * 1.15 + options.minPadding * 2;
-			let w = options.fzPic * 1.25 + options.minPadding * 2;
-			options.szPic = {w:w,h:h};
-		}
-	}
-	options.szRatio = options.szPic.w / options.szPic.h;
 
 	return options;
 }

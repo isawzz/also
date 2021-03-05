@@ -5,22 +5,24 @@ function test60_2(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labe
 	//let dArea = getMainAreaPadding(dTable, 2, 'silver');
 	let dArea = getMainAreaPercent(dTable, 'silver', wper, hper);
 
+	//szPic = {w:100,h:200};
 	let options = getStandardOptions(dArea, arguments[1]);
-	console.log(options);
+	//console.log(options);
 
 	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
 	//#endregion
 
+	options.szPic={w:100,h:200}
 	let f=getFitting(items,options);
 
-	console.log('fitting',f);
+	//console.log('fitting',f);
 
 	//welche passt am besten?
 	//berechne standard pic size wenn es nicht gegeben ist!
 
 	makeItemDivs(items, options);
 	let dGrid = mDiv100(dArea);
-	console.log('....',options.cols)
+	//console.log('....',options.cols)
 	mStyleX(dGrid, { display: 'grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap });
 	for (const it of items) mAppend(dGrid, lDiv(it));
 	revealMain();

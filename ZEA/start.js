@@ -1,6 +1,6 @@
 async function _start() {
 	//test60_pageVisibleArea(chooseRandom([20,32,36,40,56,64]));
-	test60_2();//chooseRandom(range(1,100)),{maxlen:8}); //chooseRandom(range(1,100))); //12,32,56,100]));
+	test60_2(chooseRandom(range(1, 50)), { maxlen: 18,luc:'u' }); //chooseRandom(range(1,100))); //12,32,56,100]));
 	//test64_multi(test60_alt1,[12,32,144],[18]);
 	//test60_pageVisibleArea();
 	//revealMain();
@@ -111,7 +111,7 @@ function revealMain() { mReveal(dMain); }
 function getItems1(n) {
 	let items = getItems(n, 'life'); //getItems(chooseRandom(range(1, 50)), 'life'); //getItems(['bee', 'cockroach']);// getItems(13, 'life'); 
 	items[0] = getItems(['spider web'])[0];
-	for (const item of items) { item.label = item.info.D.toUpperCase();  }
+	for (const item of items) { item.label = item.info.D.toUpperCase(); }
 	//console.log('Live', X = Live[items[0].id]);
 
 	let longestLabel = arrMinMax(items, x => x.label.length).max;
