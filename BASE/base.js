@@ -1111,6 +1111,7 @@ function arrMinMax(arr, func) {
 
 	return { min: min, imin: imin, max: max, imax: imax };
 }
+function arrSum(arr, props) { if (!isList(props)) props=[props]; return arr.reduce((a, b) => a + (lookup(b,props) || 0), 0); }
 function copyKeys(ofrom, oto, except = {}, only) {
 	let keys = isdef(only) ? only : Object.keys(ofrom);
 	for (const k of keys) {

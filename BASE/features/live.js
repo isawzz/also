@@ -9,6 +9,7 @@ function lAdd(item, uis, other) {
 	for (const k in uis) { l[k]=uis[k]; l.addUi(uis[k]); }
 }
 function lGet(item) { let id = isString(item) ? item : item.id; return Live[id]; }
+function lDiv(item) { let id = isString(item) ? item : item.id; return Live[id].div; }
 
 class LiveObject {
 	constructor(o) { //a live object represents some other object (eg.,'serverData' object, picture,...) and gets a UID at birth

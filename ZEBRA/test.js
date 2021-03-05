@@ -4,7 +4,7 @@ function t68_pictures() {
 
 	let items = getItems(chooseRandom([64]), 'life'); //getItems(chooseRandom(range(1, 50)), 'life'); //getItems(['bee', 'cockroach']);// getItems(13, 'life'); 
 	items[0] = getItems(['spider web'])[0];
-	for (const item of items) { item.label = item.info.D.toUpperCase(); item.id = lRegister(item); }
+	for (const item of items) { item.label = item.info.D.toUpperCase(); }
 	//console.log('Live', X = Live[items[0].id]);
 
 	let longestLabel = arrMinMax(items, x => x.label.length).max;
@@ -19,7 +19,7 @@ function t69_Live() {
 	//return;
 	let items = getItems(chooseRandom([48, 64]), 'life'); //getItems(chooseRandom(range(1, 50)), 'life'); //getItems(['bee', 'cockroach']);// getItems(13, 'life'); 
 	items[0] = getItems(['spider web'])[0];
-	for (const item of items) { item.label = item.info.D.toUpperCase(); item.id = lRegister(item); }
+	for (const item of items) { item.label = item.info.D.toUpperCase(); }
 	//console.log('Live', X = Live[items[0].id]);
 
 	//set options

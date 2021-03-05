@@ -1,6 +1,31 @@
 async function _start() {
-	test62_fitRect();	//test63_widthOfW();	//test64_multi();
+	//test60_pageVisibleArea(chooseRandom([20,32,36,40,56,64]));
+	test60_1_clean(chooseRandom(range(1,100))); //12,32,56,100]));
+	//test64_multi(test60_alt1,[12,32,144],[18]);
+	//test60_pageVisibleArea();
+	revealMain();
+}
 
+function test64_multi(fTest, ns = [4, 12, 20], lens = [8, 14], wpers = [50, 90], hpers = [50, 90]) {
+	Daat.tests = [];
+	for (const n of ns) {
+		for (const len of lens) {
+			for (const wPercent of wpers) {
+				for (const hPercent of hpers) {
+					Daat.tests.push({ n: n, wPercent: wPercent, hPercent: hPercent, len: len });
+				}
+			}
+		}
+	}
+	Daat.iTest = 0;
+	onclick = () => test64_present(fTest);
+	test64_present(fTest);
+}
+function test64_present(fTest) {
+	let t = Daat.tests[Daat.iTest];
+	fTest(t.n, t.len, t.wPercent, t.hPercent);
+	Daat.iTest = (Daat.iTest + 1) % Daat.tests.length;
+	//console.log(Daat.iTest);
 }
 
 
@@ -29,7 +54,7 @@ async function _start02() {
 	//console.log('dTable rect', rect);
 
 	let items = getItems(chooseRandom([200]));
-	for (const item of items) { item.label = item.info.S.toUpperCase(); item.id = lRegister(item); }
+	for (const item of items) { item.label = item.info.S.toUpperCase(); }
 
 	let aTable = percentOf(dTable, 80, 50); //getRect(dTable);
 
@@ -86,7 +111,7 @@ function revealMain() { mReveal(dMain); }
 function getItems1(n) {
 	let items = getItems(n, 'life'); //getItems(chooseRandom(range(1, 50)), 'life'); //getItems(['bee', 'cockroach']);// getItems(13, 'life'); 
 	items[0] = getItems(['spider web'])[0];
-	for (const item of items) { item.label = item.info.D.toUpperCase(); item.id = lRegister(item); }
+	for (const item of items) { item.label = item.info.D.toUpperCase();  }
 	//console.log('Live', X = Live[items[0].id]);
 
 	let longestLabel = arrMinMax(items, x => x.label.length).max;

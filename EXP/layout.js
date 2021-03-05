@@ -1,3 +1,29 @@
+//#region page aufbau
+function pageVisibleArea(){
+	clearElement(dMain)
+	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
+
+	let table = mDiv(dRightSide, { bg: 'green' }, 'table'); //table.innerHTML='hallo';
+
+	let ltop = get3ColLine(table, 'dLeft', 'dMiddle', 'dRight', { bg: 'red' });
+	let ltitle = get3ColLine(table, 'dTitleLeft', 'dTitleMiddle', 'dTitleRight', { bg: 'green' });
+
+	let hTable = percentVh(100) - 60 - 30; //die 10 sind abstand von footer, die 30 sind footer
+	let wTable = percentVw(100) - 20; //die 20 sind padding (je 10) von get3ColLine
+	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight', { bg: 'dimgray', w: wTable, h: hTable });
+	mStyleX(ltable,{vpadding: 0, hpadding: 0, h: hTable});
+	mSize(dTable.parentNode, '100%', '100%');
+	mSize(dTable, '100%', '100%'); 
+
+	let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
+	dFooterMiddle.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
+
+	let rect = getRect(dTable);
+	return rect;
+}
+//#endregion
+
+
 function allRowsCols(n, rmin, rmax, cmin, cmax) {
 	let res = [];
 	for (let r = rmin; r <= rmax; r++) {

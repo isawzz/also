@@ -185,3 +185,114 @@ function showItemsTableWrapper(items, dParent, options = {}) {
 
 	return presentItems1(items, dParent, options);
 }
+
+function getBestUniformRegularFit1(items, options) {
+	let fs = getDivisors(items.length); //nur relevant wenn grid will!
+	let szMin = options.szUniform;
+	//console.log('all regular fit candidates:',fs);
+
+	let res = [];
+	for (const f of fs) {
+		res.push({ c: items.length / f, r: f });
+	}
+	let area = options.area;
+	let aratio = area.w / area.h;
+	let pratio = szMin.w / szMin.h;
+	let best, mindiff = 1000, foundFit = false;
+	for (const r of res) {
+		//console.log(r);
+		//console.log(r,wi);
+		let ratio = r.c / r.r;//r.c*wi.w/(r.r*wi.h);
+		//console.log('ratio',ratio)
+		rdiff = Math.abs(aratio - ratio);
+		//console.log('ratio',ratio)
+		if (rdiff < mindiff) {
+
+			let fits = r.r * szMin.h <= area.h && r.c * szMin.w <= area.w;
+			if (fits) {
+				mindiff = rdiff;
+				best = [r.r, r.c]; foundFit = true;
+				//console.log('fitting:', best, fits);
+			}
+		}
+	}
+	return [best[0], best[1], foundFit];
+}
+function getBestUniformRegularFitTotalerBloedsinn(items, options) {
+	let fs = getDivisors(items.length); //nur relevant wenn grid will!
+	let szMin = options.szUniform;
+	//console.log('all regular fit candidates:',fs);
+
+	let res = [];
+	for (const f of fs) {
+		res.push({ c: items.length / f, r: f });
+	}
+	let area = options.area;
+	let aratio = area.w / area.h;
+	let pratio = szMin.w / szMin.h;
+	let best, nofitBest, fitmindiff = 1000, mindiff = 1000, foundFit = false;
+	for (const r of res) {
+		//console.log(r);
+		//console.log(r,wi);
+		let ratio = r.c / r.r;//r.c*wi.w/(r.r*wi.h);
+		//console.log('ratio',ratio)
+		rdiff = Math.abs(aratio - ratio);
+		//console.log('ratio',ratio)
+		if (rdiff < fitmindiff) {
+
+			let fits = r.r * szMin.h <= area.h && r.c * szMin.w <= area.w;
+			if (fits) {
+				mindiff = fitmindiff = rdiff;
+				best = [r.r, r.c]; foundFit = true;
+				//console.log('fitting:', best, fits);
+			} else {
+				mindiff = rdiff;
+				nofitbest = [r.r, r.c];
+				//console.log('non-fitting:', nofitbest, false);
+			}
+
+			//
+			//console.log('new best:',rdiff,best)
+		}
+	}
+	return [best[0], best[1], foundFit];
+}
+function getBestUniformRegularFitJustLandscape(items, options) {
+	let fs = getDivisors(items.length); //nur relevant wenn grid will!
+	let szMin = options.szUniform;
+	//console.log('all regular fit candidates:',fs);
+
+	let res = [];
+	for (const f of fs) {
+		res.push({ c: items.length / f, r: f });
+	}
+	let area = options.area;
+	let aratio = area.w / area.h;
+	let pratio = szMin.w / szMin.h;
+	let best, bestNoFit, minDiffFits = 100000, minDiffNoFit = 100000, foundFit = false;
+	for (const r of res) {
+		//console.log(r);
+		//console.log(r,wi);
+		let ratio = r.c / r.r;//r.c*wi.w/(r.r*wi.h);
+		//console.log('ratio',ratio)
+		rdiff = Math.abs(aratio - ratio);
+		//console.log('ratio',ratio)
+		let fits = false;
+		if (rdiff < minDiffFits) {
+
+			fits = r.r * szMin.h <= area.h && r.c * szMin.w <= area.w;
+			if (fits) {
+				console.log('FOUND A FIT!!!!!!!!!!!!')
+				minDiffFits = rdiff;
+				best = [r.r, r.c]; foundFit = true;
+				//console.log('fitting:', best, fits);
+			}
+		}
+		if (!fits && rdiff < minDiffNoFit) {
+			minDiffNoFit = rdiff;
+			bestNoFit = [r.r, r.c];
+		}
+	}
+	if (nundef(best)) return [bestNoFit[0], bestNoFit[1], false];
+	else return [best[0], best[1], foundFit];
+}

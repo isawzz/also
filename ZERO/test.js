@@ -106,7 +106,7 @@ function t82_Live() {
 	let items = getItems(chooseRandom(range(1, 50)), 'life'); //getItems(['bee', 'cockroach']);
 
 	//let items = getItems(chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 25, 30, 35, 36, 40, 42, 48]), 'life'); //getItems(['bee', 'cockroach']);
-	for (const item of items) { item.label = item.info.F.toUpperCase(); item.id = lRegister(item); }
+	for (const item of items) { item.label = item.info.F.toUpperCase();  }
 	console.log('Live', X = Live[items[0].id]);
 
 	//darstellung von items in AREA: calculate dims
