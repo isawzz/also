@@ -62,7 +62,7 @@ function getStandardOptions(dArea, options) {
 	options.picStyles = { fz: options.fzPic };
 	options.outerStyles = {
 		bg: 'random', display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
-		padding: 0, box: true
+		padding: 0, box: true, rounding:6,
 	};
 
 

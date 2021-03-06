@@ -1,7 +1,175 @@
+function makeGridGrid(items, options, dGrid) {
+	//code grid layout:
+	mStyleX(dGrid, { display: 'grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap });
+}
+function makeFlexGrid(items, options, dGrid) {
+	//code flex layout
+	mStyleX(dGrid, {
+		display: 'flex', 'justify-content': 'space-between', 'align-content': 'stretch',
+		'flex-flow': 'row wrap', gap: options.gap
+	});
+	for (const it of items) { mStyleX(lDiv(it), { flex: '1' }); }
+}
+function makeNoneGrid(items, options, dGrid) {
+	for (const it of items) { mStyleX(lDiv(it), { margin: options.gap / 2, padding: options.gap / 2 }); }
+
+	let ov = getVerticalOverflow(dGrid);
+	if (ov > 0) {
+		console.log('overflow!', ov)
+		options.fzPic = options.picStyles.fz = options.fzPic * .9;//*fact;
+		for (const it of items) { mStyleX(lGet(it).dPic, { fz: options.fzPic }); }
+		ov = getVerticalOverflow(dGrid);
+		if (ov > 0) {
+			let pad = Math.max(ov / (options.rows * 2 + 1), options.gap / 4);
+			let newGap = Math.max(1, options.gap / 2 - pad);
+			console.log('gap', options.gap / 2, 'newGap', newGap)
+			for (const it of items) {
+				mStyleX(lDiv(it), { margin: newGap, padding: newGap / 2 });
+			}
+		}
+	}
+	// console.log('overflow',isOverflown(dGrid));
+	// if (isOverflown(dGrid)){
+	// 	for (const it of items) { mStyleX(lDiv(it), { margin: options.gap/2, padding: 1 }); }
+	// }
+}
+function test60_2_clean(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labelPos, lang, minPadding, minGap, uniform } = {}) {
+	let tableRect = createPageDivsFullVisibleArea({ top: 30, title: 30 }, { footer: 30 }); //table is above footer
+	let dArea = getMainAreaPercent(dTable, 'silver', wper, hper); //getMainAreaPadding(dTable, 2, 'silver');
+	let options = getStandardOptions(dArea, arguments[1]);
+	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
+	let f = getFitting1(items, options);
+
+	makeItemDivs(items, options);
+	let dGrid = mDiv100(dArea);
+
+	for (const it of items) { mAppend(dGrid, lDiv(it)); }
+	console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
+	if (options.isRegular) makeGridGrid(items, options, dGrid); //best if have reg option
+	else if (coin()) makeNoneGrid(items, options, dGrid); //best if not regular
+	else makeFlexGrid(items, options, dGrid);
+	console.log(dGrid);
+
+	console.assert(!isOverflown(dGrid),'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+}
+function getVerticalOverflow(element) {
+	return element.scrollHeight - element.clientHeight;
+}
+function isOverflown(element) {
+	return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}
+function correctJA(items, options) {
+	//console.log('rect ist', getRect(lDiv(items[0])));
+	console.log('sz', options.szPic)
+	// let sz = { w: options.szPic.h, h: options.szPic.h };// getRect(lDiv(items[0]));
+	let mx = options.szPic.h;
+
+	console.log('fzPic', options.fzPic, 'fzText', options.fzText);
+	let area = options.area;
+	//berechne ungefaehr wieviel con area gecovered ist!
+	let aa = area.w * area.h;
+	// let ai = mx*mx * items.length;
+	//the rest space will be a full rectangle on bottom of area
+	// let diff=aa-ai;
+	// let sq=Math.sqrt(aa - ai);
+
+	//let mp = Math.sqrt(Math.sqrt(aa - ai));
+	//let sp=Math.min(sq/items.length,Math.min(sz.w,sz.h)/10);
+	//let sp1=Math.log(Math.log((Math.min(sz.w,sz.h)/10)));
+	// sp1=Math.log((Math.min(sz.w,sz.h)));
+	sp1 = mx * .05;// Math.sqrt(mx); // - 3;
+	sp1 = Math.ceil(sp1);
+
+	if (sp1 > options.gap) {
+		console.log('N', items.length, 'sp1', sp1);
+
+		// let abb={2:2,3:3,4:4,5:5,6:7,7:7,8:8,9:9,10:14,11:16,12:17,13:18,14:20,15:22};
+		// sp1=sp1<=2?2:sp1<=15?abb[sp1]:20;
+		// console.log('   =>sp1',sp1);
+
+		//console.log('--------aa',aa,'new',(sz.w+2*sp1)*(sz.h+2*sp1),'sp1',sp1)
+		while (sp1 > 1 && aa < (items.length) * (mx + sp1) * (mx + sp1)) {
+			sp1 -= 1;
+			console.log('--------aa', aa, 'new', (items.length) * (mx + sp1) * (mx + sp1), 'sp1', sp1)
+		}
+		console.log('   =>sp1', sp1);
+	} else sp1 = options.gap;
+
+	//sp1=getBaseLog(Math.pow(ai,3),2);
+	//console.log('A', aa, 'cov', ai, 'per item:', sq / items.length,'1%',Math.min(sz.w,sz.h)/10, '=>sp',sp1);
+	for (const it of items) { mStyleX(lDiv(it), { margin: sp1, padding: sp1 }); }
+}
+function test60_2_v1(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labelPos, lang, minPadding, minGap, uniform } = {}) {
+	let tableRect = createPageDivsFullVisibleArea({ top: 30, title: 30 }, { footer: 30 }); //table is above footer
+	let dArea = getMainAreaPercent(dTable, 'silver', wper, hper); //getMainAreaPadding(dTable, 2, 'silver');
+	let options = getStandardOptions(dArea, arguments[1]);
+	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
+	let f = getFitting(items, options);
+
+	makeItemDivs(items, options);
+	let dGrid = mDiv100(dArea);
+
+	//code grid layout:
+	//mStyleX(dGrid, { display: 'grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap });
+
+	//code flex layout
+	// mStyleX(dGrid, {
+	// 	display: 'flex', 'justify-content': 'space-between', 'align-content': 'stretch',
+	// 	'flex-flow': 'row wrap', gap: options.gap
+	// });
+	// for (const it of items) { mStyleX(lDiv(it), { flex: '1' }); }
+
+	//code no layout
+	//for (const it of items) { mStyleX(lDiv(it), { margin: 4, padding:4 }); }
+
+	for (const it of items) { mAppend(dGrid, lDiv(it)); }
+	console.log('rect ist', getRect(lDiv(items[0])));
+	setTimeout(() => correct00(items, options), 10)
+
+}
+function correct00(items, options) {
+	console.log('rect ist', getRect(lDiv(items[0])));
+	let sz = getRect(lDiv(items[0]));
+	let area = options.area;
+	//berechne ungefaehr wieviel con area gecovered ist!
+	let aa = area.w * area.h;
+	let ai = sz.w * sz.h * items.length;
+	//the rest space will be a full rectangle on bottom of area
+	let diff = aa - ai;
+	let sq = Math.sqrt(aa - ai);
+
+	//let mp = Math.sqrt(Math.sqrt(aa - ai));
+	//let sp=Math.min(sq/items.length,Math.min(sz.w,sz.h)/10);
+	//let sp1=Math.log(Math.log((Math.min(sz.w,sz.h)/10)));
+	// sp1=Math.log((Math.min(sz.w,sz.h)));
+	sp1 = Math.sqrt((Math.min(sz.w, sz.h))) - 3;
+	sp1 = Math.ceil(sp1);
+
+	console.log('N', items.length, 'sp1', sp1);
+
+	let abb = { 2: 2, 3: 3, 4: 4, 5: 6, 6: 8, 7: 8, 8: 10, 9: 12, 10: 20 };
+	sp1 = sp1 <= 2 ? 2 : sp1 <= 10 ? abb[sp1] : 20;
+
+	console.log('   =>sp1', sp1);
+
+	//console.log('--------aa',aa,'new',(sz.w+2*sp1)*(sz.h+2*sp1),'sp1',sp1)
+	let mx = Math.max(sz.w, sz.h);
+	while (sp1 > 1 && aa < (items.length + 2) * (mx + 4 * sp1) * (mx + 4 * sp1)) {
+		sp1 -= 1;
+		//console.log('--------aa',aa,'new',(sz.w+2*sp1)*(sz.h+2*sp1),'sp1',sp1)
+	}
+
+	//sp1=getBaseLog(Math.pow(ai,3),2);
+	//console.log('A', aa, 'cov', ai, 'per item:', sq / items.length,'1%',Math.min(sz.w,sz.h)/10, '=>sp',sp1);
+	for (const it of items) { mStyleX(lDiv(it), { margin: sp1, padding: sp1 }); }
+}
+function getBaseLog(x, b) {
+	return Math.log(x) / Math.log(b);
+}
 function test60_2(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labelPos, lang, minPadding, minGap, uniform } = {}) {
 	//#region page and items 
 	//console.log('_________',n,len,'w',wper,'h',hper)
-	let tableRect = pageVisibleArea();
+	let tableRect = createPageDivsFullVisibleArea();
 	//let dArea = getMainAreaPadding(dTable, 2, 'silver');
 	let dArea = getMainAreaPercent(dTable, 'silver', wper, hper);
 
@@ -12,8 +180,7 @@ function test60_2(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labe
 	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
 	//#endregion
 
-	options.szPic={w:100,h:200}
-	let f=getFitting(items,options);
+	let f = getFitting(items, options);
 
 	//console.log('fitting',f);
 
@@ -25,45 +192,12 @@ function test60_2(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labe
 	//console.log('....',options.cols)
 	mStyleX(dGrid, { display: 'grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap });
 	for (const it of items) mAppend(dGrid, lDiv(it));
-	revealMain();
-	return;
 
-	//revealMain();	return;
-
-	options.szUniform = getLargestItemSize(items); //hier wird rect zu items gegeben! =>ist aber NICHT uniform size sondern min size!!!
-
-	let fitting = getBestFitting(items, options);
-	//console.log(items)
-	console.log(fitting)
-	console.log(options)
-
-	if (options.fits && options.isUniform) { layoutRegularUniformGrid(items, dGrid, options); }
-	else if (options.fits) {
-
-		//non uniform fit but regular!
-
-		//erstmal: haben die items jetzt schon einen size?
-		console.log(lDiv(items[0]), items[0].rect);
-
-		//can choose to 
-		// 1. overflow
-		// 2. irregular fit
-		//when?
-		// 3. regular fit that is NOT uniform sized!
-		// 4. reduce font if fontSize can be reduced or to 
-		// 5. display ellipsis for oversized items!
-	}
-
-	let rg = getRect(dGrid);
-	//console.log('grid rect vor scale',rg)
-
-	scaleFonts(items, options);
-	setTimeout(correctGap, 10, dGrid, items, options);
 
 }
 function test60_1_clean(n = 144, len = 14, wper = 80, hper = 80, fzText = 8, fzPic) {
 	//console.log('_________',n,len,'w',wper,'h',hper)
-	let tableRect = pageVisibleArea();
+	let tableRect = createPageDivsFullVisibleArea();
 	//let dArea = getMainAreaPadding(dTable, 2, 'silver');
 	let dArea = getMainAreaPercent(dTable, 'silver', wper, hper);
 
@@ -133,7 +267,7 @@ function correct2(dGrid) {
 }
 function test60_alt1(n = 144, len = 14, wper = 80, hper = 80, fzText = 8, fzPic) {
 	//console.log('_________',n,len,'w',wper,'h',hper)
-	let tableRect = pageVisibleArea();
+	let tableRect = createPageDivsFullVisibleArea();
 	//let dArea = getMainAreaPadding(dTable, 2, 'silver');
 	let dArea = getMainAreaPercent(dTable, 'silver', wper, hper);
 
@@ -291,7 +425,7 @@ function test60_alt1(n = 144, len = 14, wper = 80, hper = 80, fzText = 8, fzPic)
 }
 function test60_pageVisibleArea(n = 20, len = 8, wper = 80, hper = 80) {
 	//console.log('_________',n,len,'w',wper,'h',hper)
-	let tableRect = pageVisibleArea();
+	let tableRect = createPageDivsFullVisibleArea();
 	//let dArea = getMainAreaPadding(dTable, 2, 'silver');
 	let dArea = getMainAreaPercent(dTable, 'yellow', wper, hper);
 

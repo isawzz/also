@@ -1,5 +1,5 @@
 //#region page aufbau
-function pageVisibleArea(){
+function createPageDivsFullVisibleArea(){
 	clearElement(dMain)
 	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
 
