@@ -1,15 +1,20 @@
 async function _start() {
-	test60_2_clean(chooseRandom(range(3,100)), { wper:chooseRandom([25,50,75,90]),
-		hper:chooseRandom([25,50,75,90]),maxlen: 18, luc: 'c', szPic: { w: 100, h: 100 } }); //chooseRandom(range(1,100))); //12,32,56,100]));
+	test60_2_clean(chooseRandom(range(3, 100)), { wper: chooseRandom([25, 50, 75, 90]), hper: chooseRandom([25, 50, 75, 90]), 
+		maxlen: 18, lang:chooseRandom(['E','D','F','S']), luc: 'c', szPic: { w: 100, h: 100 } }); //chooseRandom(range(1,100))); //12,32,56,100]));
+	//test59(97,25,25);
+	//test59(7,75,90);
+	//test59(43,25,50);
+	revealMain();
+}
+function test59(n,wper,hper,lang='E'){
+	test60_2_clean(n, { wper: wper, hper: hper, lang:lang, maxlen: 18, luc: 'c', szPic: { w: 100, h: 100 } }); //chooseRandom(range(1,100))); //12,32,56,100]));
 	//test60_2_clean(240, { maxlen: 18, luc: 'c', szPic: { w: 100, h: 100 } }); //chooseRandom(range(1,100))); //12,32,56,100]));
 	//test60_2_clean(chooseRandom([2,300]), { maxlen: 18, luc: 'c', szPic: { w: 100, h: 100 } }); //chooseRandom(range(1,100))); //12,32,56,100]));
 	// test60_2_clean(chooseRandom(range(1, 150)), { maxlen: 18, luc: 'c', szPic: { w: 100, h: 100 } }); //chooseRandom(range(1,100))); //12,32,56,100]));
 	//test60_pageVisibleArea(chooseRandom([20,32,36,40,56,64]));
 	//test64_multi(test60_alt1,[12,32,144],[18]);
 	//test60_pageVisibleArea();
-	revealMain();
 }
-
 function test64_multi(fTest, ns = [4, 12, 20], lens = [8, 14], wpers = [50, 90], hpers = [50, 90]) {
 	Daat.tests = [];
 	for (const n of ns) {

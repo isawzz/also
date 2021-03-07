@@ -8,6 +8,7 @@ function addLabels(items, lang = 'E', lowerUpperCap = 'c') {
 	return max;
 }
 function getAllItems(cond, baseSet = 'all') { return getItems(10000, cond, baseSet); }
+function getItem(k) { return infoToItem(Syms[k]); }
 function getItems(n, cond, baseSet = 'all') {
 	//n ... number, key list, info list or item list
 	//cond ... undefined, string(KeySet or search SymKeys) or function(filter SymKeys)
@@ -29,7 +30,6 @@ function getItemsMaxWordLength(n, len, baseSet = 'all', lang = 'E', lowerUpperCa
 	addLabels(items,lang,lowerUpperCap);
 	return items;
 }
-function getItem(k) { return infoToItem(Syms[k]); }
 function infoToItem(x) { let item = { info: x, key: x.key }; item.id = lRegister(item); return item; }
 function makeItemDivs(items, options) {
 	for (let i = 0; i < items.length; i++) {

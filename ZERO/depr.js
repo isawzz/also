@@ -1,4 +1,54 @@
-function getStandardOptions(dArea, szPic, fzPic, lang, fzText, luc, labelPos = 'bottom', minPadding=0, minGap=1, uniform=true) {
+function makeNoneGrid_0(items, options, dGrid) {
+	for (const it of items) { mStyleX(lDiv(it), { margin: options.gap / 2, padding: options.gap / 2 }); }
+
+	let ov = getVerticalOverflow(dGrid);
+	if (ov > 0) {
+		console.log('overflow!', ov)
+		options.fzPic = options.picStyles.fz = options.fzPic * .9;//*fact;
+		for (const it of items) { mStyleX(lGet(it).dPic, { fz: options.fzPic }); }
+		ov = getVerticalOverflow(dGrid);
+		if (ov > 0) {
+			let pad = Math.max(ov / (options.rows * 2 + 1), options.gap / 4);
+			let newGap = Math.max(1, options.gap / 2 - pad);
+			console.log('gap', options.gap / 2, 'newGap', newGap)
+			for (const it of items) {
+				mStyleX(lDiv(it), { margin: newGap, padding: newGap / 2 });
+			}
+		}
+	}
+	// console.log('overflow',isOverflown(dGrid));
+	// if (isOverflown(dGrid)){
+	// 	for (const it of items) { mStyleX(lDiv(it), { margin: options.gap/2, padding: 1 }); }
+	// }
+}
+function correctFlexGrid_0(items, options, dGrid) {
+	for (const item of items) item.rect = getRect(lDiv(item));
+	let r1 = items[options.itemWithLongestLabelIndex].rect;
+	let r2 = items[items.length - 1].rect;
+	console.log('correctFlexGrid: rects', r1, r2)
+	if (r2.w > r1.w * 3) {
+		let iLastRow = getObjectsWithSame(items, ['rect', 'y'], items[items.length - 1], false);
+		if (iLastRow.length > 2) return;
+		let iFirstRow = getObjectsWithSame(items, ['rect', 'y'], items[0]);
+		if (iFirstRow.length + 3 < iLastRow.length) return;
+		let others = arrWithout(items, iLastRow);
+		console.log('iLastRow', iLastRow.map(x => x.label));
+		let rest = (options.area.w / r2.w) * (r2.w - r1.w);
+		let p = rest / (others.length / 2);
+		let half = choose(others, Math.floor(others.length / 2));
+		for (const it of half) { mStyleX(lDiv(it), { wmin: it.rect.w + p }); }
+		// for (const it of others) {
+		// 	if (coin()) continue;
+		// 	// for (const it of others) {
+		// 	// for (const it of arrTake(others, Math.floor(items.length / 2))) {
+		// 	// for (const it of arrTake(items, Math.floor(items.length / 2))) {
+		// 	let d = lDiv(it);
+		// 	let r = getRect(d);
+		// 	mStyleX(lDiv(it), { wmin: r.w + p });
+		// }
+		console.log('correctur!!!', p)
+	}
+}function getStandardOptions(dArea, szPic, fzPic, lang, fzText, luc, labelPos = 'bottom', minPadding=0, minGap=1, uniform=true) {
 	let options = { area: getRect(dArea) };
 	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
 	if (isdef(fzText)) {

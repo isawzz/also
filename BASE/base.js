@@ -24,6 +24,7 @@ function mLine3(dParent, index, ids, styles) {
 	return [mBy(ids[0]), mBy(ids[1]), mBy(ids[2])];
 }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
+function mRemoveStyle(d, styles) { for (const k of styles) d.style[k] = null; }
 function mReveal(d) { d.style.opacity = 1; }
 function mSize(d, w, h, unit = 'px') { mStyleX(d, { width: w, height: h }, unit); }
 function mStyleX(elem, styles, unit = 'px') {
@@ -1111,7 +1112,7 @@ function arrMinMax(arr, func) {
 
 	return { min: min, imin: imin, max: max, imax: imax };
 }
-function arrSum(arr, props) { if (!isList(props)) props=[props]; return arr.reduce((a, b) => a + (lookup(b,props) || 0), 0); }
+function arrSum(arr, props) { if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0); }
 function copyKeys(ofrom, oto, except = {}, only) {
 	let keys = isdef(only) ? only : Object.keys(ofrom);
 	for (const k of keys) {
@@ -1150,6 +1151,25 @@ function firstNCond(n, arr, func) {
 
 	}
 	return result;
+}
+function getObjectsWithSame(olist, props, o, up = true, breakWhenDifferent = true) {
+	let res = [];
+	let val = lookup(o, props);
+	//console.log('==>', val)
+	if (up) {
+		for (let i = 0; i <= olist.length - 1; i++) {
+			let val1 = lookup(olist[i], props);
+			if (val1 == val) res.push(olist[i]); else if (breakWhenDifferent) return res;
+		}
+	} else {
+		for (let i = olist.length - 1; i >= 0; i--) {
+			let val1 = lookup(olist[i], props);
+			//console.log('val1', val1)
+			if (val1 == val) res.push(olist[i]); else if (breakWhenDifferent) return res;
+		}
+	}
+	//console.log('res', res)
+	return res;
 }
 function intersection(arr1, arr2) {
 	//each el in result will be unique
@@ -1490,6 +1510,18 @@ function hide(elem) {
 		elem.style.display = 'none';
 	}
 }
+function getBaseLog(x, b) { return Math.log(x) / Math.log(b); }
+function getDivisors(n) {
+	let x = Math.floor(Math.sqrt(n));
+
+	let res = [];
+	for (let i = 2; i <= x; i++) {
+		let q = n / i;
+		if (q == Math.round(q)) res.push(i);
+	}
+	return res;
+}
+function getVerticalOverflow(element) { return element.scrollHeight - element.clientHeight; }
 function isAlphaNum(s) {
 	//regex version: Here 
 	// ^ means beginning of string and 
@@ -1539,6 +1571,9 @@ function isVisible(elem) { // Where el is the DOM element you'd like to test for
 	return (elem.style.display != 'none' || elem.offsetParent !== null);
 }
 function isWhiteSpace(ch) { return /\s/.test(ch) }
+function isOverflown(element) {
+	return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}
 
 function jsCopy(o) {
 	//console.log(o)

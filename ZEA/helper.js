@@ -1,54 +1,7 @@
-function get3ColLine(dParent, idleft, idmiddle, idright, styles = {}) {
-	let dOuter = mDiv(dParent);
-	mStyleX(dOuter, { wmin: '100%', vpadding: 4, hpadding: 10, box: true, h: 30 });
-	let dInner = mDiv(dOuter, { position: 'relative' });
 
-	let l = mDiv(dInner, { display: 'inline-block', position: 'absolute', wmin: 20 }, idleft)
-	let r = mDiv(dInner, { w: '100%', align: 'center' }, idmiddle);
-	let m = mDiv(dInner, { display: 'inline-block', position: 'absolute', wmin: 20 }, idright)
-
-	mStyleX(dOuter, styles);
-	return dOuter;
-}
-function getArea(dParent, styles, id) {
-	let defStyles = { display: 'inline-block' };
-	styles = mergeOverride(defStyles, styles);
-	let d = mDiv(dParent, styles, id);
-
-	return d;
-}
-function getMainAreaPadding(dParent, padding = 10, bg = 'grey', styles = {}) {
-	let aTable = percentOf(dParent, 100, 100);
-	//console.log('in getMainAreaPadding',aTable);
-	//let defAreaStyles = { w: aTable.w - padding, h: aTable.h - padding/2, bg: bg, layout: 'hcc',  };
-	let defAreaStyles = { margin: padding, w: aTable.w - 2 * padding, h: aTable.h - 2 * padding, bg: bg, layout: 'hcc', };
-	clearElement(dParent);
-	let dArea = getArea(dParent, mergeOverride(defAreaStyles, styles));
-	return dArea;
-
-}
-function getMainAreaPercent(dParent, bg = 'grey', wPercent = 94, hPercent = 96) {
-
-	clearElement(dParent);
-	let aTable = percentOf(dParent, wPercent, hPercent); //getRect(dTable);
-	let dArea = getArea(dParent, { w: aTable.w, h: aTable.h, layout: 'hcc', bg: bg, });
-	return dArea;
-
-}
-function getDivisors(n) {
-	let x = Math.floor(Math.sqrt(n));
-
-	let res = [];
-	for (let i = 2; i <= x; i++) {
-		let q = n / i;
-		if (q == Math.round(q)) res.push(i);
-	}
-	return res;
-}
 function getStandardOptions(dArea, options) {
 	defOptions = { maxlen: 14, wper: 80, hper: 80, fzText: 8, luc: 'c', labelPos: 'bottom', lang: 'E', minPadding: 0, minGap: 1, uniform: true };
 	options = isdef(options) ? mergeOverride(defOptions, options) : defOptions;
-	//console.log('options', options);
 	options.area = getRect(dArea);
 	options.aRatio = options.area.w/options.area.h;
 	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
@@ -128,18 +81,6 @@ function maxSumColumns(ws, rows, cols) {
 	let sum = arr.reduce((a, b) => a + b, 0);
 	//console.log('===>arr',arr,'sum',sum);
 	return [arr, sum];
-}
-function getSLCombis(n) {
-	let sq = Math.ceil(Math.sqrt(n));
-	let res = [];
-	for (let i = 2; i <= sq; i++) {
-		let s = i;
-		let l = Math.ceil(n / s);
-		if (s <= l && s * l >= n) res.push({ s: s, l: l });
-	}
-	//teste die 2 letzten ob sie gleich sind!
-
-	return res;
 }
 
 function getOverFits(n) {
@@ -305,30 +246,6 @@ function scaleFont(item, scaleFactor, options, prop, ui) {
 	mStyleX(lGet(item)[ui], { fz: fz });
 	return fz;
 }
-function makeItemDivs(items, options) {
-	for (let i = 0; i < items.length; i++) {
-		let item = items[i];
-
-		let dOuter = mCreate('div');
-		if (isdef(options.outerStyles)) mStyleX(dOuter, options.outerStyles);
-
-		let dLabel;
-		if (options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
-
-		let dPic = mDiv(dOuter, { family: item.info.family });
-		dPic.innerHTML = item.info.text;
-		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
-
-		if (options.labelBottom == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
-
-		if (isdef(options.handler)) dOuter.onclick = options.handler;
-
-		lAdd(item, { div: dOuter, dPic: dPic, options: options });
-		if (isdef(dLabel)) lAdd(item, { dLabel: dLabel })
-	}
-
-}
-
 
 
 
