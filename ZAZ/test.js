@@ -1,19 +1,30 @@
-function zazTest06_idealPicSize_Regular_WrapHorizontally() {
+function zazTest06_maxPicSize() {
 	let n = chooseRandom(range(2,200,4));//[2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
 	dTitle.innerHTML = 'N='+n;
 
 	let dArea = getMainAreaPercent(dTable, null, 100, 100);
 	dArea.id = 'dArea';
 
-	defOptions = {
-		szPic: { w: 100, h: 100 },
-		showLabels: true, maxlen: 14, wper: 80, hper: 80, minPadding: 0, minGap: 1, uniform: true,
-		fzText: 8, luc: 'c', labelPos: 'bottom', lang: 'E',
-	};
-	if (nundef(options.fzPic)) options.fzPic = Math.floor(options.fzText * 4 * (options.luc == 'u' ? .7 : .6)); //taking 4 as min word length
+	let options = getOptionsFillContainer(dArea, arguments[1]);
 
-	let options = _extendOptions(dArea, options, defOptions);	
+	console.log(options)
 
+	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
+	let f = getFitting(items, options);
+
+	makeItemDivs(items, options);
+	let dGrid = mDiv100(dArea); dGrid.id = 'dGrid'; mStyleX(dGrid, { fz: 2 })
+
+	for (const it of items) { mAppend(dGrid, lDiv(it)); }
+	//console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
+	if (options.isRegular) makeGridGrid(items, options, dGrid); //best if have reg option
+	else if (coin()) makeNoneGrid(items, options, dGrid); //best if not regular
+	else makeFlexGrid(items, options, dGrid);
+	//console.log(dGrid);
+
+	console.log('options', options)
+
+	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 }
 function zazTest05() {
 	let n = chooseRandom(range(2,200,4));//[2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
