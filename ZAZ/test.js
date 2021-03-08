@@ -1,5 +1,5 @@
 function zazTest06_maxPicSize() {
-	let n = chooseRandom(range(2,200,4));//[2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
+	let n = chooseRandom(range(2,4));//[2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
 	dTitle.innerHTML = 'N='+n;
 
 	let dArea = getMainAreaPercent(dTable, null, 100, 100);
@@ -12,8 +12,12 @@ function zazTest06_maxPicSize() {
 	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
 	let f = getFitting(items, options);
 
+	options.outerStyles.wmax=200;
+	options.outerStyles.hmax=200;
+
 	makeItemDivs(items, options);
-	let dGrid = mDiv100(dArea); dGrid.id = 'dGrid'; mStyleX(dGrid, { fz: 2 })
+	let dGrid = mDiv(dArea); dGrid.id = 'dGrid'; 
+	mStyleX(dGrid, { fz: 2 })
 
 	for (const it of items) { mAppend(dGrid, lDiv(it)); }
 	//console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
