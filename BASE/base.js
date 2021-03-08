@@ -267,6 +267,29 @@ function anyColorToStandardString(cAny, a, allowHsl = false) {
 		}
 	}
 } //ok
+function alphaToHex(zero1) {
+	zero1 = Math.round(zero1 * 100) / 100;
+	var alpha = Math.round(zero1 * 255);
+	var hex = (alpha + 0x10000)
+		.toString(16)
+		.substr(-2)
+		.toUpperCase();
+	var perc = Math.round(zero1 * 100);
+	//console.log('alpha from', zero1, 'to', hex);
+	return hex;
+} //ok
+function colorBlend(zero1, c0, c1, log = true) {
+	c0 = anyColorToStandardString(c0);
+	c1 = anyColorToStandardString(c1);
+	return pSBC(zero1, c0, c1, log);
+} //ok
+function colorShade(plusMinus1, color, log = true) {
+	let c = anyColorToStandardString(color);
+	return pSBC(plusMinus1, c, undefined, !log);
+} //ok
+function colorTrans(cAny, alpha = 0.5) {
+	return anyColorToStandardString(cAny, alpha);
+}
 function colorIdealText(bg, grayPreferred = false) {
 	let rgb = colorRGB(bg, true);
 	//jetzt ist bg rgb object

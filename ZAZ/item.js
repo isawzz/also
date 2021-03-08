@@ -39,13 +39,13 @@ function makeItemDivs(items, options) {
 		if (isdef(options.outerStyles)) mStyleX(dOuter, options.outerStyles);
 
 		let dLabel;
-		if (options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+		if (options.showLabels && options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
 
 		let dPic = mDiv(dOuter, { family: item.info.family });
 		dPic.innerHTML = item.info.text;
 		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
 
-		if (options.labelBottom == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+		if (options.showLabels && options.labelBottom == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
 
 		if (isdef(options.handler)) dOuter.onclick = options.handler;
 

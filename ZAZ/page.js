@@ -1,38 +1,54 @@
 //#region page aufbau
-function createPageDivsFullVisibleArea() {
+function createPageDivsFullVisibleArea(above, tableStyles, below, defs={bg:'random',fg:'contrast'}) {
+	//console.log('defs',defs)
 	clearElement(dMain);
 	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
 
-	let table = mDiv(dRightSide, { bg: 'green' }, 'table'); //table.innerHTML='hallo';
+	let table = mDiv(dRightSide, {}, 'table'); //table.innerHTML='hallo';
 
-	let ltop = get3ColLine(table, 'dLeft', 'dMiddle', 'dRight', { bg: 'red' });
-	let ltitle = get3ColLine(table, 'dTitleLeft', 'dTitleMiddle', 'dTitleRight', { bg: 'green' });
+	for (const k in above) {
+		let name = 'd' + capitalize(k);
+		let ltop = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs,above[k]));
+	}
 
-	let hTable = percentVh(100) - 60 - 30; //die 10 sind abstand von footer, die 30 sind footer
+	//sum up total heights of above,below
+	let vals = Object.values(above);
+	vals = vals.concat(Object.values(below));
+	//console.log('vals', vals)
+	let sum = arrSum(vals, 'h');
+	// console.log('total height of lines is',sum)
+	let hTable = percentVh(100) - sum; //die 10 sind abstand von footer, die 30 sind footer
 	let wTable = percentVw(100) - 20; //die 20 sind padding (je 10) von get3ColLine
-
-	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight', { bg: 'dimgray', w: wTable, h: hTable });
+	if (nundef(tableStyles)) tableStyles = {};
+	tableStyles = mergeOverride({ bg: 'dimgray', w: wTable, h: hTable, vpadding: 0, hpadding: 0 }, tableStyles);
+	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight', tableStyles);
 	ltable.id = 'lTable';
-	mStyleX(ltable, { vpadding: 0, hpadding: 0, h: hTable });
 	mSize(dTable.parentNode, '100%', '100%');
 	mSize(dTable, '100%', '100%');
 
-	let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
-	dFooterMiddle.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
+	for (const k in below) {
+		let name = 'd' + capitalize(k);
+		let lbottom = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs,below[k]));
+	}
+	// let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
+	dFooter.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
 
 	let rect = getRect(dTable);
 	return rect;
 }
 function get3ColLine(dParent, idleft, idmiddle, idright, styles = {}) {
 	let dOuter = mDiv(dParent);
-	mStyleX(dOuter, { wmin: '100%', vpadding: 4, hpadding: 10, box: true, h: 30 });
+
+	styles = mergeOverride({ wmin: '100%', vpadding: 4, hpadding: 10, box: true, h: 30 }, styles);
+	mStyleX(dOuter, styles);
+	// mStyleX(dOuter, { wmin: '100%', vpadding: 4, hpadding: 10, box: true, h: 30 });
+
 	let dInner = mDiv(dOuter, { position: 'relative' });
 
 	let l = mDiv(dInner, { display: 'inline-block', position: 'absolute', wmin: 20 }, idleft)
 	let r = mDiv(dInner, { w: '100%', align: 'center' }, idmiddle);
 	let m = mDiv(dInner, { display: 'inline-block', position: 'absolute', wmin: 20 }, idright)
 
-	mStyleX(dOuter, styles);
 	return dOuter;
 }
 function getArea(dParent, styles, id) {
@@ -61,5 +77,18 @@ function getMainAreaPercent(dParent, bg = 'grey', wPercent = 94, hPercent = 96) 
 
 }
 
+//#prefabs
+function createSubtitledPage(bg='silver',title='Aristocracy',subtitle='a game by F. Ludos',footer='enjoy!'){
+	baseColor=bg;
+	mStyleX(dMain,{bg:baseColor});
+	createPageDivsFullVisibleArea({
+		title: { h: 50, family: 'AlgerianRegular', fz: 40 },
+		subtitle: { h: 30, fz: 16 },
+		titleLine: { h: 5, bg: '#00000080' },
+	}, { bg: '#00000050' }, { footer: { h: 30 } }, {}); //table is above footer
+	dTitle.innerHTML = title;
+	dSubtitle.innerHTML = subtitle;
+	dFooter.innerHTML = footer;
 
+}
 

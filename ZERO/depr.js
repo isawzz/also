@@ -1,3 +1,111 @@
+function zazTest03_newSample() {
+
+	let n = chooseRandom([36]); //2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42]);
+
+	let dArea = getMainAreaPercent(dTable, null, 100, 100);
+	dArea.id = 'dArea';
+
+	options = getOptionsFixedPicSize(dArea, {
+		N: n,
+		maxlen: 12,
+		keyset: 'lifePlus',
+		lang: chooseRandom(['C', 'S']),
+		luc: 'l',
+		szPic: { w: 100, h: 100 },
+		percentGap: 10,
+		isRegular: true,
+		showLabels: true,
+	});
+	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
+
+	options.w = options.area.w;
+	console.log('width is', options.w, options);
+	let [wpic, hpic, rows, cols] = calcRowsColsSize(n, options.area.w, options.area.h);
+	options.rows=rows;
+	options.cols=cols;
+	options.szPic.w=wpic;
+	options.outerStyles.w=options.szPic.w;
+	options.outerStyles.h=options.szPic.h;
+
+	// console.log('gap', options.gap)
+	makeItemDivs(items, options);
+	let dGrid = mDiv(dArea, { border: '5px solid yellow', box: true, fz: 2 }, 'dGrid');
+
+	mStyleX(dGrid, {
+		display: 'inline-grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap,
+		'justify-items': 'center', wmax: options.w, overflow: 'hidden', padding: options.gap,
+	});
+
+	for (const it of items) { mAppend(dGrid, lDiv(it)); }
+
+}
+
+
+function bestRowsColsWFit_canOverflowHeight(n = 24, options) {// { w = 800, h = 500, szPic = { w: 100, h: 100 }, szMax = { w: 200, h: 200 }, isUniform = true, isRegular = true, keepRatio = true, rowRange=[2,4] } = {}) {
+	//uniformSize, regularLayout,
+	let combis = getSLCombis(n, true); //TODO: da sollt es schon so eine variant geben die nur regulars returned!
+	combis.map(x => console.log(x));
+
+	//how many fit in width?
+	defOptions = { percentGap: 5, szPic: { w: 100, h: 100 }, w: 800 };
+	options = mergeOverride(defOptions, options);
+
+	//console.log(options);
+
+	let gpix = Math.round(options.szPic.w * options.percentGap / 100);
+	options.gap = gpix;
+	let wb = options.szPic.w + gpix;
+	let hb = options.szPic.h + gpix;
+
+	let maxcols = Math.floor(options.w / wb);
+
+	console.log('maxcols', maxcols, options.w, wb, gpix)
+	let lCombis = combis.filter(x => x.l <= maxcols);
+
+	console.log('landscape:'); lCombis.map(x => console.log(x));
+
+	if (!isEmpty(lCombis)) { let c = arrLast(lCombis); return [c.s, c.l, 'L']; }
+	let pCombis = combis.filter(x => x.s <= maxcols);
+
+	console.log('portrait:'); pCombis.map(x => console.log(x));
+
+	if (!isEmpty(pCombis)) { let c = arrLast(pCombis); return [c.s, c.l, 'L']; }
+
+}
+function getStandardOptions_SizingPriority(dArea, options) {
+	// if (nundef(options.sizingPriority)) {
+	// 	let fzp = valf(options.fzPic, null), fzt = valf(options.fzText, null), szp = valf(options.szPic, null);
+	// 	if (szp || !fzt && !fzp) { options.sizingPriority = 'size'; }
+	// 	else {
+	// 		options.sizingPriority = 'font';
+	// 		//if (!fzt) { options.fzText = fzp / 3; } else if (!fzp) { options.fzPic = 2 * options.fzText; }
+	// 	}
+	// }
+	//by now I have 
+
+	defOptions = { szPic: { w: 100, h: 100 }, showLabels: true, maxlen: 14, wper: 80, hper: 80, fzText: 8, luc: 'c', labelPos: 'bottom', lang: 'E', minPadding: 0, minGap: 1, uniform: true };
+	options = isdef(options) ? mergeOverride(defOptions, options) : defOptions;
+	options.area = getRect(dArea);
+	options.aRatio = options.area.w / options.area.h;
+	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
+	if (isdef(options.fzText)) {
+		//labels are present!
+		if (options.labelPos == 'bottom') options.labelBottom = true; else options.labelTop = true;
+		options.labelStyles = { fz: options.fzText };
+		if (nundef(options.fzPic)) options.fzPic = Math.floor(options.fzText * 4 * (options.luc == 'u' ? .7 : .6)); //taking 4 as min word length
+		//console.log('hab den pic font inferred:', options.fzPic, 'fzText', options.fzText)
+	} else if (nundef(options.fzPic)) options.fzPic = 30;
+
+	//console.log('fzText', options.fzText, 'fzPic', options.fzPic, 'szPic', options.szPic);
+
+	options.picStyles = { fz: options.fzPic };
+	options.outerStyles = {
+		bg: 'random', display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
+		padding: 0, box: true, rounding: 6,
+	};
+
+	return options;
+}
 function makeNoneGrid_0(items, options, dGrid) {
 	for (const it of items) { mStyleX(lDiv(it), { margin: options.gap / 2, padding: options.gap / 2 }); }
 
@@ -48,7 +156,7 @@ function correctFlexGrid_0(items, options, dGrid) {
 		// }
 		console.log('correctur!!!', p)
 	}
-}function getStandardOptions(dArea, szPic, fzPic, lang, fzText, luc, labelPos = 'bottom', minPadding=0, minGap=1, uniform=true) {
+}function getOptionsFillContainer(dArea, szPic, fzPic, lang, fzText, luc, labelPos = 'bottom', minPadding=0, minGap=1, uniform=true) {
 	let options = { area: getRect(dArea) };
 	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
 	if (isdef(fzText)) {
@@ -132,7 +240,7 @@ function calcRowsColsSizeNew(n, rows, cols, dParent, wmax, hmax, minsz = 50, max
 	wpic = Math.max(minsz, Math.min(wpic, maxsz));
 	return [wpic, hpic, dims.rows, dims.cols];
 }
-function calcRowsColsSize(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
+function calcRowsColsSize_0(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz = 200) {
 
 	//berechne outer dims
 	let ww, wh, hpercent, wpercent;
@@ -183,7 +291,7 @@ function calcRowsColsX(num, rows, cols) {
 	else if (isdef(tableOfDims[num])) return tableOfDims[num];
 	else return calcRowsCols(num, rows, cols);
 }
-function calcRowsCols(num, rows, cols) {
+function calcRowsCols_0(num, rows, cols) {
 	//=> code from RSG testFactory arrangeChildrenAsQuad(n, R);
 	//console.log(num, rows, cols);
 	let shape = 'rect';

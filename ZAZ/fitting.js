@@ -3,9 +3,10 @@ function getFitting(items, options) {
 	let mimi = arrMinMax(items, x => x.label.length);
 	let longestLabel = options.longestLabel = mimi.max;
 	options.itemWithLongestLabelIndex = mimi.imax;
-	detectPicSize(items, options); //console.log('item size (just for ratio!):',options.szPic);
-	let n = items.length; let res = n > 3 ? getSLCombis(n) : [{ s: 1, l: n }]; mText('N=' + n, dTitleMiddle);
-	let best = bestCombi(items, options, res);
+
+	let n = items.length; let res = n > 3 ? getSLCombis(n) : [{ s: 1, l: n }]; 
+	let best = bestRowsColsCombinedRatio(items, options, res); //must use options.sizingPriority!!!
+
 	let cols = options.cols = best.cols;
 	let rows = options.rows = best.rows;
 	//console.log('best combi',best);
@@ -22,6 +23,9 @@ function getFitting(items, options) {
 	else fzText1 = 0;
 
 	fzPic1 = Math.min(wb / 1.3, (hb - fzText1 * 1.2) / 1.3);
+
+	if (fzPic1 < fzText1 * 2) { fzText1 = Math.floor(hb / 4); fzPic1 = fzText1 * 2; }
+
 	options.fzText = options.labelStyles.fz = Math.min(36, fzText1);
 	options.fzPic = options.picStyles.fz = Math.min(160, fzPic1);
 	options.szPic = { w: wb, h: hb };
@@ -30,65 +34,132 @@ function getFitting(items, options) {
 	options.isCrowded = options.gap < 3;
 	return fitting;
 }
-function detectPicSize(items, options) {
-	//infer szPic if not given!
-	//console.log(options.szPic)
-	if (nundef(options.szPic)) {
-		console.log('should NOT get in here!!!')
-		if (isdef(options.fzText)) {
-			//dann hab ich auch fzPic!!!
-			let h = options.fzText * 1.14 + options.fzPic * 1.15 + options.minPadding * 2;
-			//let w = options.fzText * options.maxlen * (options.luc == 'u' ? .7 : .6) + options.minPadding * 2;
-			let w = options.fzText * longestLabel * (options.luc == 'u' ? .7 : .6) + options.minPadding * 2;
-			options.szPic = { w: w, h: h };
-		} else {
-			let h = options.fzPic * 1.15 + options.minPadding * 2;
-			let w = options.fzPic * 1.25 + options.minPadding * 2;
-			options.szPic = { w: w, h: h };
-		}
-	}
-	options.szRatio = options.szPic.w / options.szPic.h;
-}
-function bestCombi(items, options, res) {
+function bestRowsColsCombinedRatio(items, options, res) {
 	let wa = options.area.w, ha = options.area.h, wp = options.szPic.w, hp = options.szPic.h;
+	// console.log('wp',wp,'hp',hp)
+	// if (options.sizingPriority == 'font') {
+	// 	wp = Math.max(options.fzText * .75 * options.maxlen, options.fzPic * 1.25) + 2 * options.minPadding;
+	// 	hp = (options.fzText + options.fzPic) * 1.1 + 2 * options.minPadding;
+	// }
+	// console.log('DANACH: wp',wp,'hp',hp)
 	let aRatio;
-
-	//wa/wp ist wieviele pics haben in 1 row platz (=cols)
-
 	let rows, cols;
 	cols = wa / wp;
 	rows = ha / hp;
 	//console.log('====>', rows, cols)
 	aRatio = cols < rows ? cols / rows : rows / cols;
 	options.or = cols < rows ? 'P' : 'L';
-	//console.log('aRatio', aRatio)
 	//console.log('options.or', options.or);
-
 	let rmin = 20000, best;
 	for (const r of res) {
 		let rnew = Math.abs(aRatio - r.s / r.l);
-		//console.log('rnew', rnew, r.s, r.l);
-		if (rnew < rmin) {
-			//console.log('rnew', rnew, r.s, r.l);
-			rmin = rnew; best = r;
-		}
+		if (rnew < rmin) { rmin = rnew; best = r; }
 	}
-	//console.log('N',items.length,'options',options,'res',res)
-
 	if (options.or == 'P') { rows = best.l; cols = best.s; } else { rows = best.s; cols = best.l; }
 
-	//console.log('=>rows', rows, 'cols', cols);
+	//console.log('=>rows', rows, 'cols', cols, res);
 	return { rows: rows, cols: cols };
 }
-function getSLCombis(n) {
+function prepDims(items, options) {
+	//console.log('rows',options.rows,'n',items.length)
+	let [sz, rows, cols] = calcRowsColsSize(items.length, options.rows, options.cols);
+	//console.log('picSz=' + sz, 'options.sz', options.sz,'rows',rows,'cols',cols)
+	if (nundef(options.sz)) options.sz = sz;
+	if (nundef(options.rows)) options.rows = rows;
+	if (nundef(options.cols)) options.cols = cols;
+	items.map(x => x.sz = sz);
+}
+function bestRowsColsWFit(n = 24, area) {
+	let combis = getSLCombis(n, true);
+	combis.map(x => console.log(x));
+
+	//how many fit in width?
+	defOptions = { percentGap: 5, szPic: { w: 100, h: 100 }, w: 800 };
+	for (const k in defOptions) {
+		if (nundef(options[k])) options[k] = defOptions[k];
+	}
+
+	let maxcols = 0, maxrows = 0, wn=options.szPic.w, hn=options.szPic.h, wb, hb, gpix;
+	while (maxcols * maxrows < n) {
+		gpix = Math.round(wn * options.percentGap / 100);
+		options.gap = gpix;
+		wb = wn + gpix;
+		hb = hn + gpix;
+
+		maxcols = Math.floor(options.w / wb);
+		maxrows = Math.floor(options.area.h / hb);
+		if (maxcols * maxrows < n) {
+			wn*=.9;
+			hn*=.9;
+
+		}
+
+	}
+	options.szPic={w:wn,h:hn};
+
+	console.log('maxcols', maxcols, options.w, '\nmaxrows', maxrows, options.area.h, '\nszPic',options.szPic, wb, 'gap', gpix)
+	let lCombis = combis.filter(x => x.l <= maxcols);
+
+	console.log('landscape:'); lCombis.map(x => console.log(x));
+
+	if (!isEmpty(lCombis)) { let c = arrLast(lCombis); return [c.s, c.l, 'L']; }
+	let pCombis = combis.filter(x => x.s <= maxcols);
+
+	console.log('portrait:'); pCombis.map(x => console.log(x));
+
+	if (!isEmpty(pCombis)) { let c = arrLast(pCombis); return [c.s, c.l, 'L']; }
+
+}
+function bestRowsColsWFit1(n = 24, options) {
+	let combis = getSLCombis(n, true);
+	combis.map(x => console.log(x));
+
+	//how many fit in width?
+	defOptions = { percentGap: 5, szPic: { w: 100, h: 100 }, w: 800 };
+	for (const k in defOptions) {
+		if (nundef(options[k])) options[k] = defOptions[k];
+	}
+
+	let maxcols = 0, maxrows = 0, wn=options.szPic.w, hn=options.szPic.h, wb, hb, gpix;
+	while (maxcols * maxrows < n) {
+		gpix = Math.round(wn * options.percentGap / 100);
+		options.gap = gpix;
+		wb = wn + gpix;
+		hb = hn + gpix;
+
+		maxcols = Math.floor(options.w / wb);
+		maxrows = Math.floor(options.area.h / hb);
+		if (maxcols * maxrows < n) {
+			wn*=.9;
+			hn*=.9;
+
+		}
+
+	}
+	options.szPic={w:wn,h:hn};
+
+	console.log('maxcols', maxcols, options.w, '\nmaxrows', maxrows, options.area.h, '\nszPic',options.szPic, wb, 'gap', gpix)
+	let lCombis = combis.filter(x => x.l <= maxcols);
+
+	console.log('landscape:'); lCombis.map(x => console.log(x));
+
+	if (!isEmpty(lCombis)) { let c = arrLast(lCombis); return [c.s, c.l, 'L']; }
+	let pCombis = combis.filter(x => x.s <= maxcols);
+
+	console.log('portrait:'); pCombis.map(x => console.log(x));
+
+	if (!isEmpty(pCombis)) { let c = arrLast(pCombis); return [c.s, c.l, 'L']; }
+
+}
+function getSLCombis(n, onlyRegular = false) {
 	let sq = Math.ceil(Math.sqrt(n));
 	let res = [];
-	for (let i = 2; i <= sq; i++) {
+	for (let i = 1; i <= sq; i++) {
 		let s = i;
 		let l = Math.ceil(n / s);
 		if (s <= l && s * l >= n) res.push({ s: s, l: l });
 	}
-	//teste die 2 letzten ob sie gleich sind!
+	if (onlyRegular) res = res.filter(x => x.s * x.l == n);
 
 	return res;
 }
