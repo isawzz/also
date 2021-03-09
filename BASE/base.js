@@ -726,6 +726,21 @@ function pSBC(p, c0, c1, l) {
 
 //#endregion
 
+//#region control flow
+function _safeLoop(func, params) {
+	let max = 100, i = 0;
+
+	while (i < max) {
+		i += 1;
+		let res = func(...params);
+		if (isdef(res)) return res;
+	}
+	console.log('_safeLoop: max reached!!!!!!!!!');
+	return null;
+}
+
+//#endregion
+
 //#region fire
 function fireClick(node) {
 	if (document.createEvent) {
@@ -956,6 +971,19 @@ function getRect(elem, relto) {
 	}
 	return { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
 }
+function idealFontsize(txt, wmax, hmax, fz, fzmin, weight) {
+	let tStyles = { fz: fz, family: 'arial' };
+	if (isdef(weight)) tStyles.weight = weight;
+	while (true) {
+		let tSize = getSizeWithStyles(txt, tStyles);
+
+		console.log('text size of', txt, 'mit font', tStyles.fz, tSize)
+
+		if (tSize.h <= hmax && tSize.w <= wmax || tStyles.fz <= fzmin) return { w: tSize.w, h: tSize.h, fz: tStyles.fz, family: 'arial' };
+		else tStyles.fz -= 1;
+	}
+
+}
 function getSizeWithStyles(text, styles) {
 	var d = document.createElement("div");
 	document.body.appendChild(d);
@@ -1082,13 +1110,8 @@ function mergeOverride(base, drueber) { return _deepMerge(base, drueber, { array
 function addIf(arr, el) {
 	if (!arr.includes(el)) arr.push(el);
 }
-function addIfDict(key, val, dict) {
-	if (!(key in dict)) {
-		dict[key] = [val];
-	} else {
-		addIf_dep(val, dict[key]);
-	}
-}
+function addKeys(oto, ofrom) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; }
+function addIfDict(key, val, dict) { if (!(key in dict)) { dict[key] = [val]; } }
 function any(arr, cond) {
 	return !isEmpty(arr.filter(cond));
 }
@@ -1363,7 +1386,23 @@ function shuffleChildren(dParent) {
 	//return;
 	shuffle(arr);
 	for (const elem of arr) { mAppend(dParent, elem) }
-} function takeFromStart(ad, n) {
+} 
+function sortBy(arr, key) {
+	//console.log(jsCopy(arr))
+	arr.sort((a, b) => (a[key] < b[key] ? -1 : 1));
+}
+function sortByDescending(arr, key) {
+	//console.log(jsCopy(arr))
+	arr.sort((a, b) => (a[key] > b[key] ? -1 : 1));
+}
+function sortByFunc(arr, func) {
+	arr.sort((a, b) => (func(a) < func(b) ? -1 : 1));
+}
+function sortByFuncDescending(arr, func) {
+	arr.sort((a, b) => (func(a) > func(b) ? -1 : 1));
+}
+
+function takeFromStart(ad, n) {
 	if (isDict(ad)) {
 		let keys = Object.keys(ad);
 		return keys.slice(0, n).map(x => (ad[x]));

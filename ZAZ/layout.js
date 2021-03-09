@@ -16,7 +16,7 @@ function makeFlexGrid(items, options, dGrid) {
 }
 function correctFlexGrid(items, options, dGrid, done) {
 	for (const item of items) item.rect = getRect(lDiv(item));
-	let r1 = items[options.itemWithLongestLabelIndex].rect;
+	let r1 = items[options.indexOfLongestLabelItem].rect;
 	let r2 = items[items.length - 1].rect;
 	//console.log('correctFlexGrid: rects', r1, r2)
 	if (r2.w > r1.w * 3) {

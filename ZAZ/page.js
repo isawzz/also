@@ -68,11 +68,11 @@ function getMainAreaPadding(dParent, padding = 10, bg = 'grey', styles = {}) {
 	return dArea;
 
 }
-function getMainAreaPercent(dParent, bg = 'grey', wPercent = 94, hPercent = 96) {
-
+function getMainAreaPercent(dParent, bg = 'grey', wPercent = 94, hPercent = 96, id) {
+	//console.log('clearing parent',dParent)
 	clearElement(dParent);
 	let aTable = percentOf(dParent, wPercent, hPercent); //getRect(dTable);
-	let dArea = getArea(dParent, { w: aTable.w, h: aTable.h, layout: 'hcc', bg: bg, });
+	let dArea = getArea(dParent, { w: aTable.w, h: aTable.h, layout: 'hcc', bg: bg }, id);
 	return dArea;
 
 }

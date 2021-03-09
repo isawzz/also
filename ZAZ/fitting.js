@@ -1,10 +1,10 @@
 function getFitting(items, options) {
 
 	let mimi = arrMinMax(items, x => x.label.length);
-	let longestLabel = options.longestLabel = mimi.max;
-	options.itemWithLongestLabelIndex = mimi.imax;
+	let longestLabelLen = options.longestLabelLen = mimi.max;
+	options.indexOfLongestLabelItem = mimi.imax;
 
-	let n = items.length; let res = n > 3 ? getSLCombis(n) : [{ s: 1, l: n }]; 
+	let n = items.length; let res = n > 3 ? getSLCombis(n) : [{ s: 1, l: n }];
 	let best = bestRowsColsCombinedRatio(items, options, res); //must use options.sizingPriority!!!
 
 	let cols = options.cols = best.cols;
@@ -19,7 +19,7 @@ function getFitting(items, options) {
 	wb -= gap * 1.25; hb -= gap * 1.25;
 
 	let fzText1, fzPic1;
-	if (isdef(options.longestLabel)) fzText1 = (wb / options.longestLabel) * (options.luc != 'u' ? 1.9 : 1.7);
+	if (isdef(options.longestLabelLen)) fzText1 = (wb / options.longestLabelLen) * (options.luc != 'u' ? 1.9 : 1.7);
 	else fzText1 = 0;
 
 	fzPic1 = Math.min(wb / 1.3, (hb - fzText1 * 1.2) / 1.3);
@@ -79,7 +79,7 @@ function bestRowsColsWFit(n = 24, area) {
 		if (nundef(options[k])) options[k] = defOptions[k];
 	}
 
-	let maxcols = 0, maxrows = 0, wn=options.szPic.w, hn=options.szPic.h, wb, hb, gpix;
+	let maxcols = 0, maxrows = 0, wn = options.szPic.w, hn = options.szPic.h, wb, hb, gpix;
 	while (maxcols * maxrows < n) {
 		gpix = Math.round(wn * options.percentGap / 100);
 		options.gap = gpix;
@@ -89,15 +89,15 @@ function bestRowsColsWFit(n = 24, area) {
 		maxcols = Math.floor(options.w / wb);
 		maxrows = Math.floor(options.area.h / hb);
 		if (maxcols * maxrows < n) {
-			wn*=.9;
-			hn*=.9;
+			wn *= .9;
+			hn *= .9;
 
 		}
 
 	}
-	options.szPic={w:wn,h:hn};
+	options.szPic = { w: wn, h: hn };
 
-	console.log('maxcols', maxcols, options.w, '\nmaxrows', maxrows, options.area.h, '\nszPic',options.szPic, wb, 'gap', gpix)
+	console.log('maxcols', maxcols, options.w, '\nmaxrows', maxrows, options.area.h, '\nszPic', options.szPic, wb, 'gap', gpix)
 	let lCombis = combis.filter(x => x.l <= maxcols);
 
 	console.log('landscape:'); lCombis.map(x => console.log(x));
@@ -120,7 +120,7 @@ function bestRowsColsWFit1(n = 24, options) {
 		if (nundef(options[k])) options[k] = defOptions[k];
 	}
 
-	let maxcols = 0, maxrows = 0, wn=options.szPic.w, hn=options.szPic.h, wb, hb, gpix;
+	let maxcols = 0, maxrows = 0, wn = options.szPic.w, hn = options.szPic.h, wb, hb, gpix;
 	while (maxcols * maxrows < n) {
 		gpix = Math.round(wn * options.percentGap / 100);
 		options.gap = gpix;
@@ -130,15 +130,15 @@ function bestRowsColsWFit1(n = 24, options) {
 		maxcols = Math.floor(options.w / wb);
 		maxrows = Math.floor(options.area.h / hb);
 		if (maxcols * maxrows < n) {
-			wn*=.9;
-			hn*=.9;
+			wn *= .9;
+			hn *= .9;
 
 		}
 
 	}
-	options.szPic={w:wn,h:hn};
+	options.szPic = { w: wn, h: hn };
 
-	console.log('maxcols', maxcols, options.w, '\nmaxrows', maxrows, options.area.h, '\nszPic',options.szPic, wb, 'gap', gpix)
+	console.log('maxcols', maxcols, options.w, '\nmaxrows', maxrows, options.area.h, '\nszPic', options.szPic, wb, 'gap', gpix)
 	let lCombis = combis.filter(x => x.l <= maxcols);
 
 	console.log('landscape:'); lCombis.map(x => console.log(x));
@@ -151,7 +151,7 @@ function bestRowsColsWFit1(n = 24, options) {
 	if (!isEmpty(pCombis)) { let c = arrLast(pCombis); return [c.s, c.l, 'L']; }
 
 }
-function getSLCombis(n, onlyRegular = false) {
+function getSLCombis(n, onlyRegular = false, addColsRows_cr = false) {
 	let sq = Math.ceil(Math.sqrt(n));
 	let res = [];
 	for (let i = 1; i <= sq; i++) {
@@ -159,7 +159,20 @@ function getSLCombis(n, onlyRegular = false) {
 		let l = Math.ceil(n / s);
 		if (s <= l && s * l >= n) res.push({ s: s, l: l });
 	}
+	//console.log('res',res)
 	if (onlyRegular) res = res.filter(x => x.s * x.l == n);
+
+	if (addColsRows_cr) {
+		let resX = [];
+		for (const res1 of res) {
+			resX.push({ rows: res1.s, cols: res1.l, s: res1.s, l: res1.l, sum:res1.s+res1.l });
+			if (res1.s != res1.l) resX.push({ rows: res1.l, cols: res1.s, s: res1.s, l: res1.l, sum:res1.s+res1.l });
+		}
+		sortBy(resX,'rows');
+		sortBy(resX,'sum');
+
+		return resX;
+	}
 
 	return res;
 }

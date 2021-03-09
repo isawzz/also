@@ -7,6 +7,14 @@ function addLabels(items, lang = 'E', lowerUpperCap = 'c') {
 	}
 	return max;
 }
+function genItems(n,options){
+	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
+	let mimi = arrMinMax(items, x => x.label.length);
+	options.longestLabelLen = mimi.max;
+	options.indexOfLongestLabelItem = mimi.imax;
+	options.longestLabel = items[mimi.imax].label;
+	return items;
+}
 function getAllItems(cond, baseSet = 'all') { return getItems(10000, cond, baseSet); }
 function getItem(k) { return infoToItem(Syms[k]); }
 function getItems(n, cond, baseSet = 'all') {

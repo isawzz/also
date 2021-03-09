@@ -1,3 +1,30 @@
+function _getFirstFittingCombi(items, options, combis) {
+	let wArea = options.area.w;
+	let hArea = options.area.h;
+
+	let wIdeal = options.szPicTest.w; //starts at wBrut!
+	let hIdeal = options.szPicTest.h; //starts at wBrut!
+
+	for (const res of combis) {
+		let colsFit = wArea / res.cols > wIdeal;
+
+		if (colsFit) {
+			let rowsFit = hArea / res.rows > hIdeal;
+			if (rowsFit) return res;
+
+		}
+		// console.log('test fit:', wArea / res.cols, wIdeal, colsFit, res.cols);
+	}
+	return null;
+}
+function _findBestCombiOrShrink(items, options, combis) {
+	bestCombi = _getFirstFittingCombi(items, options, combis);
+	if (isdef(bestCombi)) return bestCombi;
+	//otherwise, have to reduca the size
+	options.szPicTest = { w: .9 * options.szPicTest.w, h: .9 * options.szPicTest.h };
+	return null;
+}
+
 function zazTest03_newSample() {
 
 	let n = chooseRandom([36]); //2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42]);
@@ -131,7 +158,7 @@ function makeNoneGrid_0(items, options, dGrid) {
 }
 function correctFlexGrid_0(items, options, dGrid) {
 	for (const item of items) item.rect = getRect(lDiv(item));
-	let r1 = items[options.itemWithLongestLabelIndex].rect;
+	let r1 = items[options.indexOfLongestLabelItem].rect;
 	let r2 = items[items.length - 1].rect;
 	console.log('correctFlexGrid: rects', r1, r2)
 	if (r2.w > r1.w * 3) {

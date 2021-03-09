@@ -19,7 +19,7 @@ function makeFlexGrid(items, options, dGrid) {
 }
 function correctFlexGrid(items, options, dGrid) {
 	for (const item of items) item.rect = getRect(lDiv(item));
-	let r1 = items[options.itemWithLongestLabelIndex].rect;
+	let r1 = items[options.indexOfLongestLabelItem].rect;
 	let r2 = items[items.length - 1].rect;
 	//console.log('correctFlexGrid: rects', r1, r2)
 	if (r2.w > r1.w * 3) {
@@ -164,7 +164,7 @@ function presentItems2(items, dParent, options, callback) {
 	//console.log('_________N=' + items.length, 'AREA', AREA, 'szPic', sz, '\n==>rows=' + rows, 'cols=' + cols, 'szPic', szPic);
 	//console.log('N=' + items.length);
 
-	//let longestLabel = arrMinMax(items,x=>x.label.length).max;
+	//let longestLabelLen = arrMinMax(items,x=>x.label.length).max;
 
 	let gap = 12;
 	let wCorrect = Math.round((1 + 1 / (cols > 2 ? cols - 2 : cols)) * gap);
@@ -278,7 +278,7 @@ function presentItems1(items, dParent, options) {
 	//console.log('_________N=' + items.length, 'AREA', AREA, 'szPic', sz, '\n==>rows=' + rows, 'cols=' + cols, 'szPic', szPic);
 	//console.log('N=' + items.length);
 
-	//let longestLabel = arrMinMax(items,x=>x.label.length).max;
+	//let longestLabelLen = arrMinMax(items,x=>x.label.length).max;
 
 	let gap = 12;
 	let wCorrect = Math.round((1 + 1 / (cols > 2 ? cols - 2 : cols)) * gap);
@@ -391,7 +391,7 @@ function presentItems0(items, dParent, options) {
 	let [rows, cols, szPic] = getRowsColsSize(items.length, AREA, sz, szMax);
 	//console.log('_________N=' + items.length, 'AREA', AREA, 'szPic', sz, '\n==>rows=' + rows, 'cols=' + cols, 'szPic', szPic);
 
-	//let longestLabel = arrMinMax(items,x=>x.label.length).max;
+	//let longestLabelLen = arrMinMax(items,x=>x.label.length).max;
 
 	let gap = 12;
 	let wCorrect = Math.round((1 + 1 / (cols > 2 ? cols - 2 : cols)) * gap);
@@ -469,7 +469,7 @@ function presentationComplete0(items) {
 
 	dTable.style.opacity = 1;
 	//setTimeout(()=>dTable.style.opacity=1,1000);
-	// let tbc=items.filter(x=>x.label.length == longestLabel);
+	// let tbc=items.filter(x=>x.label.length == longestLabelLen);
 	// console.log('tbc',tbc)
 	// for(const item of tbc){
 	// 	console.log(lGet(item).dLabel)
