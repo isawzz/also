@@ -1,6 +1,10 @@
-function zazTest00(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labelPos, lang, minPadding, minGap, uniform } = {}) {
-	createPageDivsFullVisibleArea({ top: { h: 30 }, title: { h: 30 } }, { bg: colorTrans('dimgray', .5) }, { footer: { h: 30 } }, {}); //table is above footer
-	let dArea = getMainAreaPercent(dTable, 'random', wper, hper); //getMainAreaPadding(dTable, 2, 'silver');
+function zazTest08() {
+	// let n = chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
+	// let n = chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
+	let n = chooseRandom([2, 3, 4, 6]); 
+	dTitle.innerHTML = 'N=' + n;
+
+	let dArea = getMainAreaPercent(dTable, 'random', 80, 80); //getMainAreaPadding(dTable, 2, 'silver');
 	dArea.id = 'dArea';
 	let options = getOptionsFillContainer(dArea, arguments[1]);
 
@@ -14,29 +18,32 @@ function zazTest00(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, lab
 
 	for (const it of items) { mAppend(dGrid, lDiv(it)); }
 	//console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
-	if (options.isRegular) makeGridGrid(items, options, dGrid); //best if have reg option
-	else if (coin()) makeNoneGrid(items, options, dGrid); //best if not regular
+	if (options.isRegular) {
+		//makeGridGrid(items, options, dGrid); //best if have reg option
+		mStyleX(dGrid, {
+			display: 'grid', 'grid-template-columns': `repeat(${options.cols}, auto)`, gap: options.gap,
+			border: '5px solid yellow', box: true
+		});
+	} else if (coin()) makeNoneGrid(items, options, dGrid); //best if not regular
 	else makeFlexGrid(items, options, dGrid);
 	//console.log(dGrid);
 
 	console.log('options', options)
-
-
 	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 }
 
 
-function nu_zazTest07_regular() {
+function nu_zazTest07_regular_BROKEN() {
 	let n = chooseRandom([2, 3, 4, 6, 8, 9]);
 	//let n = chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
 	dTitle.innerHTML = 'N=' + n;
 
 	let options = {
 		keyset: 'lifePlus', maxlen: 25, lang: 'D', 'luc': 'c',
-		szPic: { w: 200, h: 200 }, minPadding:10, isRegular: true, isUniform: true,
+		szPic: { w: 200, h: 200 }, minPadding: 10, isRegular: true, isUniform: true,
 	};
 	let items = genItems(n, options);
-	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
+	let dArea = getMainAreaPercent(dTable, YELLOW, 80, 60, 'dArea');
 
 	//let d=mDiv100(dArea,{bg:'green'});	return;
 
@@ -46,10 +53,10 @@ function nu_zazTest07_regular() {
 	nu_adjustOptionsToRowsColsSize(bestCombi, options);
 
 	makeItemDivs(items, options);
-	let dGrid = mDiv(dArea, { hmax:options.area.h, fz: 2, padding: options.gap }, 'dGrid');
+	let dGrid = mDiv(dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, 'dGrid');
 
 	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-	
+
 	console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
 	mStyleX(dGrid, {
 		display: 'inline-grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap,
@@ -65,7 +72,7 @@ function zazTest07_regularUniform_givenPicSizeAndArea_minimizeGridHeight_preserv
 
 	let options = {
 		keyset: 'lifePlus', maxlen: 18, lang: 'D', 'luc': 'c',
-		szPic: { w: 200, h: 200 }, minPadding:2, isRegular: true, isUniform: true,
+		szPic: { w: 200, h: 200 }, minPadding: 2, isRegular: true, isUniform: true,
 	};
 	let items = genItems(n, options);
 	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
@@ -78,10 +85,10 @@ function zazTest07_regularUniform_givenPicSizeAndArea_minimizeGridHeight_preserv
 	_adjustOptionsToRowsColsSize(bestCombi, options);
 
 	makeItemDivs(items, options);
-	let dGrid = mDiv(dArea, { hmax:options.area.h, fz: 2, padding: options.gap }, 'dGrid');
+	let dGrid = mDiv(dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, 'dGrid');
 
 	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-	
+
 	console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
 	mStyleX(dGrid, {
 		display: 'inline-grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap,
