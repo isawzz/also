@@ -13844,7 +13844,7 @@ chair:
   w: 125
   h: 133
   E: chair
-  D: stuhl
+  D: sessel
   F: chaise
   S: silla
   C: 椅子
@@ -15040,7 +15040,7 @@ chopsticks:
   w: 125
   h: 133
   E: chopsticks
-  D: essstäbchen
+  D: stäbchen
   F: baguettes
   S: palillos
   C: 筷子
@@ -15580,10 +15580,10 @@ clinking beer mugs:
   isDuplicate: false
   w: 125
   h: 133
-  E: clink
-  D: klirren
-  F: choquer
-  S: tintinar
+  E: cheers
+  D: prost
+  F: à votre santé
+  S: salud
   C: 碰杯
   cats:
     - huge
@@ -19202,10 +19202,10 @@ cup with straw:
   isDuplicate: false
   w: 125
   h: 133
-  E: soda
-  D: sprudel
-  F: un soda
-  S: soda
+  E: drink
+  D: getränk
+  F: verre
+  S: bebida
   C: 蘇打
   cats:
     - huge
@@ -28947,7 +28947,7 @@ foot:
   w: 125
   h: 133
   E: foot
-  D: fuß
+  D: fuss
   F: pied
   S: pie
   C: 腳丫子
@@ -29715,10 +29715,10 @@ frowning face:
   isDuplicate: false
   w: 125
   h: 133
-  E: frowning
-  D: runzelte die stirn
-  F: renfrogné
-  S: ceñudo
+  E: disappointed
+  D: enttäuscht
+  F: triste
+  S: decepcionado
   C: 皺著眉頭
   cats:
     - huge
@@ -29735,7 +29735,7 @@ frowning face with open mouth:
   w: 125
   h: 133
   E: frowning
-  D: runzelte die stirn
+  D: stirnrunzeln
   F: renfrogné
   S: ceñudo
   C: 皺著眉頭
@@ -32964,11 +32964,11 @@ hand with fingers splayed:
   isDuplicate: false
   w: 125
   h: 133
-  E: splay
-  D: spreizen
-  F: évaser
-  S: biselar
-  C: play
+  E: hand
+  D: hand
+  F: main
+  S: mano
+  C: 手
   cats:
     - huge
     - all
@@ -41378,10 +41378,10 @@ kissing cat:
   isDuplicate: false
   w: 125
   h: 133
-  E: kissing cat
-  D: katze küssen
-  F: chat embrassant
-  S: besando gato
+  E: cat
+  D: katze
+  F: chat
+  S: gato
   C: 親吻貓
   cats:
     - huge
@@ -45263,7 +45263,7 @@ man factory worker:
   w: 125
   h: 133
   E: factory worker
-  D: fabrik arbeiter
+  D: fabrikarbeiter
   F: ouvrier
   S: trabajador de fábrica
   C: 工廠員工
@@ -45687,7 +45687,7 @@ man technologist:
   w: 125
   h: 133
   E: developer
-  D: entwickler
+  D: programmierer
   F: développeur
   S: desarrollador
   C: 開發商
@@ -45805,7 +45805,7 @@ man walking:
   w: 125
   h: 133
   E: red hair
-  D: rote haare
+  D: rothaarig
   F: cheveux roux
   S: cabello rojo
   C: 紅發
@@ -45823,8 +45823,8 @@ man walking:
   isDuplicate: false
   w: 125
   h: 133
-  E: white-haired man
-  D: weißhaariger mann
+  E: white-haired
+  D: weisshaarig
   F: homme aux cheveux blancs
   S: hombre de pelo blanco
   C: 白髮男人
@@ -50725,7 +50725,7 @@ old man:
   w: 125
   h: 133
   E: white hair
-  D: weißes haar
+  D: weisshaarig
   F: cheveux blancs
   S: pelo blanco
   C: 白色的頭髮
@@ -50744,7 +50744,7 @@ old woman:
   w: 125
   h: 133
   E: white hair
-  D: weißes haar
+  D: weisshaarig
   F: cheveux blancs
   S: pelo blanco
   C: 白色的頭髮
@@ -50807,7 +50807,7 @@ older person:
   w: 125
   h: 133
   E: white hair
-  D: weißes haar
+  D: weisshaarig
   F: cheveux blancs
   S: pelo blanco
   C: 白色的頭髮
@@ -62953,7 +62953,7 @@ shorts:
   w: 125
   h: 133
   E: shorts
-  D: kurze hose
+  D: badehose
   F: short
   S: pantalones cortos
   C: 短褲
@@ -66043,8 +66043,8 @@ sparkles:
   w: 125
   h: 133
   E: sparkles
-  D: funkelt
-  F: scintille
+  D: funkeln
+  F: scintiller
   S: destellos
   C: 閃閃發光
   cats:
@@ -79710,7 +79710,7 @@ woman technologist:
   w: 125
   h: 133
   E: developer
-  D: entwickler
+  D: programmierer
   F: développeur
   S: desarrollador
   C: 開發商
@@ -79784,7 +79784,7 @@ woman-elf-face:
   w: 125
   h: 133
   E: blond hair
-  D: blondes haar
+  D: blonhaarig
   F: cheveux blonds
   S: pelo rubio
   C: 金發
@@ -79841,7 +79841,7 @@ woman-elf-face:
   w: 125
   h: 133
   E: white hair
-  D: weißes haar
+  D: weisshaarig
   F: cheveux blancs
   S: pelo blanco
   C: 白色的頭髮
@@ -79860,8 +79860,8 @@ woman’s boot:
   w: 125
   h: 133
   E: boot
-  D: booten
-  F: démarrage
+  D: stiefel
+  F: botte
   S: bota
   C: 開機
   cats:

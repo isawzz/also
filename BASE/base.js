@@ -977,7 +977,7 @@ function idealFontsize(txt, wmax, hmax, fz, fzmin, weight) {
 	while (true) {
 		let tSize = getSizeWithStyles(txt, tStyles);
 
-		console.log('text size of', txt, 'mit font', tStyles.fz, tSize)
+		//console.log('text size of', txt, 'mit font', tStyles.fz, tSize)
 
 		if (tSize.h <= hmax && tSize.w <= wmax || tStyles.fz <= fzmin) return { w: tSize.w, h: tSize.h, fz: tStyles.fz, family: 'arial' };
 		else tStyles.fz -= 1;

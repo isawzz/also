@@ -3,8 +3,9 @@
 
 function makeGridGrid(items, options, dGrid) {
 	//code grid layout:
+	let wcol=options.isUniform?'1fr':'auto';
 	mStyleX(dGrid, {
-		display: 'grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap,
+		display: 'grid', 'grid-template-columns': `repeat(${options.cols}, ${wcol})`, gap: options.gap,
 		border: '5px solid yellow', box: true
 	});
 }

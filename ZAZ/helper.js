@@ -1,37 +1,3 @@
-// modifies options: add def options, set a few minor options, CREATE labelStyles, picStyles, outerStyles
-function _extendOptions(dArea, options, defOptions) {
-
-	//console.log('in _extend: options', options, 'def', defOptions)
-	if (nundef(defOptions)) {
-		defOptions = {
-			szPic: { w: 100, h: 100 },
-			showLabels: true, maxlen: 14, luc: 'c', labelPos: 'bottom', lang: 'E',
-			fzText: 20, fzPic: 60,
-			minPadding: 0, minGap: 1, isUniform: true, isRegular: true,
-		};
-	}
-	addKeys(options, defOptions);
-
-	options.area = getRect(dArea);
-	options.aRatio = options.area.w / options.area.h;
-	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
-
-	if (nundef(options.labelStyles)) options.labelStyles = {};
-
-	if (options.showLabels) {
-		if (options.labelPos == 'bottom') options.labelBottom = true; else options.labelTop = true;
-		options.labelStyles.fz = options.fzText;
-	}
-
-	options.picStyles = { fz: options.fzPic };
-
-	options.outerStyles = {
-		bg: 'random', display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
-		padding: 0, box: true, rounding: 6,
-	};
-
-	return options;
-}
 
 
 
