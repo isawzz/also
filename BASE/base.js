@@ -727,7 +727,12 @@ function pSBC(p, c0, c1, l) {
 //#endregion
 
 //#region control flow
-function _safeLoop(func, params) {
+function realTimeIfTrue(f, cnt) {
+	console.log('counter', cnt)
+	if (f()) setTimeout(() => realtimeIfTrue(f, cnt + 1), 10);
+
+}
+function safeLoop(func, params) {
 	let max = 100, i = 0;
 
 	while (i < max) {
@@ -735,7 +740,7 @@ function _safeLoop(func, params) {
 		let res = func(...params);
 		if (isdef(res)) return res;
 	}
-	console.log('_safeLoop: max reached!!!!!!!!!');
+	console.log('safeLoop: max reached!!!!!!!!!');
 	return null;
 }
 

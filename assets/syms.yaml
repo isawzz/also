@@ -10627,7 +10627,7 @@ bucket:
   w: 125
   h: 118
   E: bucket
-  D: eimer
+  D: kübel
   F: baquet
   S: cubeta
   C: 桶
@@ -32046,7 +32046,7 @@ grimacing face:
   w: 125
   h: 133
   E: grimacing
-  D: verzog das gesicht
+  D: grimasse
   F: grimaçant
   S: haciendo muecas
   C: 做鬼臉
@@ -49177,8 +49177,8 @@ music:
   w: 100
   h: 118
   E: music
-  D: musik-
-  F: la musique
+  D: musik
+  F: musique
   S: música
   C: 音樂
   cats:
@@ -49226,8 +49226,8 @@ musical note:
   w: 125
   h: 133
   E: music
-  D: musik-
-  F: la musique
+  D: musik
+  F: musique
   S: música
   C: 音樂
   cats:
@@ -49247,8 +49247,8 @@ musical notes:
   w: 125
   h: 133
   E: music
-  D: musik-
-  F: la musique
+  D: musik
+  F: musique
   S: música
   C: 音樂
   cats:
@@ -49268,9 +49268,9 @@ musical score:
   w: 125
   h: 133
   E: treble
-  D: verdreifachen
-  F: tripler
-  S: triplicar
+  D: note
+  F: note
+  S: nota
   C: 高音
   cats:
     - huge
@@ -49618,7 +49618,7 @@ nerd face:
   w: 125
   h: 133
   E: nerdy
-  D: nerdig
+  D: belesen
   F: ringard
   S: nerd
   C: 書呆子

@@ -32,7 +32,7 @@ function _bestRowsColsSize(items, options) {
 	//combis.map(x => console.log(x));
 
 	options.szPicTest = { w: options.szPic.w, h: options.szPic.h };
-	let bestCombi = _safeLoop(_findBestCombiOrShrink, [items, options, combis]);
+	let bestCombi = safeLoop(_findBestCombiOrShrink, [items, options, combis]);
 
 	//console.log('--------BEST:', bestCombi.rows, bestCombi.cols, options.szPic, options.szPicTest);
 	let [rows, cols, w, h] = [bestCombi.rows, bestCombi.cols, options.szPicTest.w, options.szPicTest.h]
@@ -51,6 +51,16 @@ function _calcPadGap(p, w, h) {
 	} else if (p > 0 && p < 1) return Math.min(w, h) * p;
 	else return p;
 }
+function _checkOverflow(items, options, dGrid) {
+	console.log('exec...')
+	if (isOverflown(dGrid)) { _sizeByFactor(items, options, dGrid, .99); }
+
+}
+function _checkOverflowPixel(items, options, dGrid) {
+	console.log('exec...')
+	if (isOverflown(dGrid)) { _sizeByPixel(items, options, dGrid, -1); }
+
+}
 function _extendOptions(dArea, options, defOptions) {
 	if (nundef(defOptions)) {
 		defOptions = {
@@ -67,6 +77,7 @@ function _extendOptions(dArea, options, defOptions) {
 	//_calcPadGap(options, w, h);
 
 	options.area = getRect(dArea);
+	options.idArea = dArea.id;
 	options.aRatio = options.area.w / options.area.h;
 	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
 
@@ -80,7 +91,7 @@ function _extendOptions(dArea, options, defOptions) {
 	options.picStyles = { fz: options.fzPic };
 
 	options.outerStyles = {
-		bg: 'random', display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
+		bg: valf(options.bg,'random'), display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
 		padding: 0, box: true, rounding: 6,
 	};
 
@@ -128,6 +139,10 @@ function _getSLCombis(n, onlyRegular = false, addColsRows_cr = false) {
 	}
 
 	return res;
+}
+function _getRandomRegularN(from = 2, to = 100) {
+	const arr = [2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 56, 64, 72, 84, 96, 100];
+	return chooseRandom(arr.filter(x => x >= from && x <= to));
 }
 function _getRegularN(from = 2, to = 100) {
 	const arr = [2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 56, 64, 72, 84, 96, 100];
@@ -179,17 +194,37 @@ function _reduceFontsBy(tx, px, items, options) {
 	}
 	console.log('fonts set to', fz, fzPic);
 }
-function _reduceSizeByFactor(items, options, factor = .9) {
+function _sizeByFactor(items, options, dGrid, factor = .9) {
+	console.log('vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
 	w = options.szPic.w * factor;
 	h = options.szPic.h * factor;
-	fz = options.fzText * factor;
+	fz = options.fzText;// * factor;
 	fzPic = options.fzPic * factor;
 	options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
 	options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
 	options.szPic = { w: w, h: h };
-
-	for (const item of items) { let ui = lGet(item); mStyleX(ui.dLabel, { fz: fz }); mStyleX(ui.div, { w: w, h: h }); mStyleX(ui.dPic, { fz: fzPic }); }
+	options.padding *= factor;
+	options.gap *= factor;
+	mStyleX(dGrid, { gap: options.gap / 2 });
+	for (const item of items) { let ui = lGet(item); mStyleX(ui.dLabel, { fz: fz }); mStyleX(ui.div, { padding: options.padding, w: w, h: h }); mStyleX(ui.dPic, { fz: fzPic }); }
 	console.log('fonts set to', fz, fzPic);
+	console.log('...nachher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+}
+function _sizeByPixel(items, options, dGrid, factor = -1) {
+	console.log('vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+	w = options.szPic.w + factor;
+	h = options.szPic.h + factor;
+	fz = options.fzText + factor;
+	fzPic = options.fzPic + factor;
+	options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
+	options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
+	options.szPic = { w: w, h: h };
+	options.padding += factor;
+	options.gap += factor;
+	mStyleX(dGrid, { gap: options.gap / 2 });
+	for (const item of items) { let ui = lGet(item); mStyleX(ui.dLabel, { fz: fz }); mStyleX(ui.div, { padding: options.padding, w: w, h: h }); mStyleX(ui.dPic, { fz: fzPic }); }
+	console.log('fonts set to', fz, fzPic);
+	console.log('...nachher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
 }
 function _reduceSizeBy(tx, px, items, options) {
 	w = options.szPic.w - tx;
@@ -228,15 +263,16 @@ function _handleTextTooSmall(fz, fzPic, wn, hn, options) {
 	options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
 	options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
 }
-function _makeGridGrid(items, options, dGrid) {
+function _makeGridGrid(items, options, dGrid, showBorder=false) {
 	let wcol = options.isUniform ? '1fr' : 'auto';
 	let display = options.fillArea ? 'grid' : 'inline-grid';
 	mStyleX(dGrid, {
 		display: display,
 		'grid-template-columns': `repeat(${options.cols}, ${wcol})`,
 		gap: options.gap,
-		border: '5px solid yellow', box: true
+		box:true
 	});
+	if (showBorder)		mStyleX(dGrid, { border: '5px solid yellow' });
 }
 function _makeNoneGrid(items, options, dGrid) {
 	options.szPic = { w: options.area.w / options.cols, h: options.area.h / options.rows };
@@ -339,7 +375,7 @@ function _tryGrow(items, options) {
 			mStyleX(live.dPic, { fz: options.fzPic });
 		}
 
-		let ov = getVerticalOverflow(dGrid);
+		let ov = getVerticalOverflow(mBy(options.idGrid));
 		//console.log('==>try grow! overflow:', ov, Math.floor(ov), Math.floor(ov) == 0, Math.floor(ov) <= 0);
 		if (Math.floor(ov) <= 0) again = true; else again = false;
 	}
