@@ -1,7 +1,7 @@
 
 //#region grid layouts grid,flex,non
 
-function makeGridGrid(items, options, dGrid) {
+function _makeGridGrid(items, options, dGrid) {
 	//code grid layout:
 	let wcol=options.isUniform?'1fr':'auto';
 	mStyleX(dGrid, {

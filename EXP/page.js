@@ -59,6 +59,7 @@ function getMainAreaPercent(dParent, bg = 'grey', wPercent = 94, hPercent = 96) 
 
 	clearElement(dParent);
 	let aTable = percentOf(dParent, wPercent, hPercent); //getRect(dTable);
+	//let d = mDiv(dParent, { w: aTable.w, h: aTable.h, bg: 'black', });
 	let dArea = getArea(dParent, { w: aTable.w, h: aTable.h, layout: 'hcc', bg: bg, });
 	return dArea;
 

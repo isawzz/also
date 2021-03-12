@@ -25297,7 +25297,7 @@ face with steam from nose:
   w: 125
   h: 133
   E: steaming
-  D: dämpfen
+  D: schnauben
   F: fumant
   S: humeante
   C: 蒸
@@ -41614,7 +41614,7 @@ kneeling:
   w: 125
   h: 133
   E: kneeling
-  D: kniend
+  D: knien
   F: a genou
   S: arrodillado
   C: 跪著
@@ -45456,7 +45456,7 @@ man kneeling:
   w: 125
   h: 133
   E: kneeling
-  D: kniend
+  D: knien
   F: a genou
   S: arrodillado
   C: 跪著
@@ -50724,10 +50724,10 @@ old man:
   isDuplicate: false
   w: 125
   h: 133
-  E: white hair
-  D: weisshaarig
-  F: cheveux blancs
-  S: pelo blanco
+  E: old
+  D: alt
+  F: vieux
+  S: viejo
   C: 白色的頭髮
   cats:
     - huge
@@ -50743,10 +50743,10 @@ old woman:
   isDuplicate: false
   w: 125
   h: 133
-  E: white hair
-  D: weisshaarig
-  F: cheveux blancs
-  S: pelo blanco
+  E: old
+  D: alt
+  F: vieux
+  S: viejo
   C: 白色的頭髮
   cats:
     - huge
@@ -59565,10 +59565,10 @@ rolling on the floor laughing:
   isDuplicate: false
   w: 125
   h: 133
-  E: grin
-  D: grinsen
-  F: sourire
-  S: mueca
+  E: laugh
+  D: lachen
+  F: rire
+  S: reir
   C: 咧嘴笑
   cats:
     - huge
@@ -64662,10 +64662,10 @@ smiling face with smiling eyes:
   isDuplicate: false
   w: 125
   h: 133
-  E: grin
-  D: grinsen
-  F: sourire
-  S: mueca
+  E: laugh
+  D: lachen
+  F: rire
+  S: reir
   C: 咧嘴笑
   cats:
     - huge
@@ -65424,10 +65424,10 @@ softball:
   isDuplicate: false
   w: 125
   h: 133
-  E: softball
-  D: weicher ball
-  F: balle molle
-  S: sofbol
+  E: baseball
+  D: baseball
+  F: balle
+  S: bola
   C: 壘球
   cats:
     - huge
@@ -72442,7 +72442,7 @@ thumbs down:
   w: 125
   h: 133
   E: down
-  D: nieder
+  D: hinunter
   F: vers le bas
   S: abajo
   C: 下
@@ -79479,7 +79479,7 @@ woman kneeling:
   w: 125
   h: 133
   E: kneeling
-  D: kniend
+  D: knien
   F: a genou
   S: arrodillado
   C: 跪著

@@ -8,11 +8,15 @@ function addLabels(items, lang = 'E', lowerUpperCap = 'c') {
 	return max;
 }
 function genItems(n,options){
+	//console.log(n,options.maxlen)
 	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
 	let mimi = arrMinMax(items, x => x.label.length);
 	options.longestLabelLen = mimi.max;
 	options.indexOfLongestLabelItem = mimi.imax;
 	options.longestLabel = items[mimi.imax].label;
+	// items.map(x=>console.log(x.label,x.label.length));
+	options.labelSum = arrSum(items,['label','length']);
+	options.N = n;
 	return items;
 }
 function getAllItems(cond, baseSet = 'all') { return getItems(10000, cond, baseSet); }
@@ -28,6 +32,9 @@ function getItems(n, cond, baseSet = 'all') {
 	//console.log('keys', keys.length);
 	if (isNumber(n)) n = n >= keys.length ? keys : choose(keys, n);
 	if (isString(n[0])) n = n.map(x => Syms[x]);
+
+	//console.log(n,cond,baseSet)
+
 	if (nundef(n[0].info)) n = n.map(x => infoToItem(x));
 	return n;
 }

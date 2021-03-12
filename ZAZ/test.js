@@ -1,319 +1,137 @@
+//grid layout
+function testGrid(isUniform, fillArea = false, isRegular = true) {
+	let dArea = getMainAreaPercent(dTable, YELLOW, 80, 60, 'dArea');
 
-function zazTest09() {
-	//just options
-	let options = genOptions({ n: 24, wper: 80, hper: 80, szPic: { w: 120, h: 120 }, idealGap: .1 });
+	//mStyleX(dArea,{display:'inline-flex','justify-content':'center','align-items':'center'});
 
-	console.log('1. ', options.idealGap, options.gap);
-
-	[options.rows, options.cols] = [4, 6];
-
-	let items = options.items;
-
-	// let bestCombi = nu_bestRowsColsSize(items, options);
-	_setRowsColsSize(options);
-
-	console.log('2. ', options.idealGap, options.gap);
-
-	makeItemDivs(items, options);
-	let dGrid = mDiv(options.dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, 'dGrid');
-
-	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-
-	makeGridGrid(items, options, dGrid);
-
-	console.log(options)
-}
-
-
-function zazTest08_fillArea() {
-	// let n = chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
-	// let n = chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
-	let n = chooseRandom([2, 3, 4, 6]);
-	dTitle.innerHTML = 'N=' + n;
-
-	let dArea = getMainAreaPercent(dTable, 'random', 80, 80); //getMainAreaPadding(dTable, 2, 'silver');
-	dArea.id = 'dArea';
-	let options = getOptionsFillContainer(dArea);
-
-	console.log(options)
-
-	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
-	let f = getFitting(items, options);
-
-	makeItemDivs(items, options);
-	let dGrid = mDiv100(dArea); dGrid.id = 'dGrid'; mStyleX(dGrid, { fz: 2 })
-
-	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-	//console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
-	if (options.isRegular) {
-		//makeGridGrid(items, options, dGrid); //best if have reg option
-		mStyleX(dGrid, {
-			display: 'grid', 'grid-template-columns': `repeat(${options.cols}, auto)`, gap: options.gap,
-			border: '5px solid yellow', box: true
-		});
-	} else if (coin()) makeNoneGrid(items, options, dGrid); //best if not regular
-	else makeFlexGrid(items, options, dGrid);
-	//console.log(dGrid);
-
-	console.log('options', options)
-	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-}
-function zazTest00(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labelPos, lang, minPadding, minGap, uniform } = {}) {
-	createPageDivsFullVisibleArea({ top: { h: 30 }, title: { h: 30 } }, { bg: colorTrans('dimgray', .5) }, { footer: { h: 30 } }, {}); //table is above footer
-	let dArea = getMainAreaPercent(dTable, 'random', wper, hper); //getMainAreaPadding(dTable, 2, 'silver');
-	dArea.id = 'dArea';
-	let options = getOptionsFillContainer(dArea, arguments[1]);
-
-	console.log(options)
-
-	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
-	let f = getFitting(items, options);
-
-	makeItemDivs(items, options);
-	let dGrid = mDiv100(dArea); dGrid.id = 'dGrid'; mStyleX(dGrid, { fz: 2 })
-
-	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-	//console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
-	if (options.isRegular) makeGridGrid(items, options, dGrid); //best if have reg option
-	else if (coin()) makeNoneGrid(items, options, dGrid); //best if not regular
-	else makeFlexGrid(items, options, dGrid);
-	//console.log(dGrid);
-
-	console.log('options', options)
-
-
-	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-}
-
-
-
-
-function zazTest07_regularUniform_givenPicSizeAndArea_minimizeGridHeight_preservePicRatio() {
-	let n = chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
-	dTitle.innerHTML = 'N=' + n;
-
-	let options = {
-		keyset: 'lifePlus', maxlen: 18, lang: 'D', 'luc': 'c',
-		szPic: { w: 200, h: 200 }, minPadding: 2, isRegular: true, isUniform: true,
-	};
-	let items = genItems(n, options);
-	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
-
-	//let d=mDiv100(dArea,{bg:'green'});	return;
-
+	let options = { szPic: { w: 200, h: 200 }, isUniform: isUniform, fillArea: fillArea, isRegular: isRegular, };
 	_extendOptions(dArea, options);
-
-	let bestCombi = _bestRowsColsSize(items, options);
-	_adjustOptionsToRowsColsSize(bestCombi, options);
-
+	let n = chooseRandom(_getRegularN(2, 100)); // 2, 20
+	let items = genItems(n, options);
+	dTitle.innerHTML = 'N=' + n;
+	presentGrid(dArea, items, options);
+}
+function presentGrid(dArea, items, options) {
+	[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
+	_setRowsColsSize(options);
 	makeItemDivs(items, options);
 	let dGrid = mDiv(dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, 'dGrid');
-
 	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-
-	console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
-	mStyleX(dGrid, {
-		display: 'inline-grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap,
-		border: '5px solid yellow', box: true
-	});
+	_makeGridGrid(items, options, dGrid);
 	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 }
-
-function zazTest06_maxPicSize() {
-	let n = chooseRandom(range(2, 14));//[2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
-	dTitle.innerHTML = 'N=' + n;
-
-	let options = { keyset: 'lifePlus', maxlen: 18, lang: 'D', 'luc': 'c', minPadding: 4, szPic: { w: 200, h: 200 } };
+function sample_non_uniform_grid() { testGrid(false, false, true); }
+function sample_regular_uniform_grid() { testGrid(true, false, true); }
+function sample_non_uniform_grid_fill() { testGrid(false, true, true); }
+function sample_regular_uniform_grid_fill() { testGrid(true, true, true); }
+function sample_regular_uniform_grid2() {
+	let dArea = getMainAreaPercent(dTable, YELLOW, 80, 60, 'dArea');
+	let options = { szPic: { w: 200, h: 200 }, isUniform: true, fillArea: false, isRegular: true, };
+	_extendOptions(dArea, options);
+	let n = chooseRandom(_getRegularN(2, 100)); // 2, 20
 	let items = genItems(n, options);
-
-	let dArea = getMainAreaPercent(dTable, null, 100, 100, 'dArea');
-
-	extendOptions(dArea, options);
-	//console.log(options)
-
-	let f = getFitting(items, options);
-
-	console.log('fitting', f)
-
-	adjustToItemSize(options, 200, 200, 'max', 'max');
-
+	dTitle.innerHTML = 'N=' + n;
+	[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
+	_setRowsColsSize(options);
 	makeItemDivs(items, options);
-	let dGrid = mDiv(dArea, { fz: 2, padding: options.gap }, 'dGrid');
-
+	let dGrid = mDiv(dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, 'dGrid');
 	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-	//console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
-	mStyleX(dGrid, {
-		display: 'inline-grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap,
-		border: '5px solid yellow', box: true
-	});
-	// if (options.isRegular) makeGridGrid(items, options, dGrid); //best if have reg option
-	// else if (coin()) makeNoneGrid(items, options, dGrid); //best if not regular
-	// else makeFlexGrid(items, options, dGrid);
-	//console.log(dGrid);
-
-	console.log('options', options)
-
+	_makeGridGrid(items, options, dGrid);
 	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 }
-function zazTest05() {
-	let n = chooseRandom(range(2, 200, 4));//[2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
+
+//plain divs layout
+function sample_fill_area_none() {
+	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
+	let options = { szPic: { w: 100, h: 100 }, isRegular: false, isUniform: false, fillArea: true };
+	_extendOptions(dArea, options);
+	let n = chooseRandom(range(1, 200)); // 2, 20
+	let items = genItems(n, options);
 	dTitle.innerHTML = 'N=' + n;
 
-	let dArea = getMainAreaPercent(dTable, null, 100, 100);
-	dArea.id = 'dArea';
-
-	let options = getOptionsFillContainer(dArea, arguments[1]);
-
-	console.log(options)
-
-	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
-	let f = getFitting(items, options);
-
+	[options.rows, options.cols, options.szPic.w, options.szPic.h, options.or] = _bestRowsColsFill(items, options);
 	makeItemDivs(items, options);
-	let dGrid = mDiv100(dArea); dGrid.id = 'dGrid'; mStyleX(dGrid, { fz: 2 })
-
+	let dGrid = mDiv100(dArea, { fz: 2 }, 'dGrid');
 	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-	//console.log(options.rows, options.cols, 'reg', options.isRegular, 'crowd', options.isCrowded)
-	if (options.isRegular) makeGridGrid(items, options, dGrid); //best if have reg option
-	else if (coin()) makeNoneGrid(items, options, dGrid); //best if not regular
-	else makeFlexGrid(items, options, dGrid);
-	//console.log(dGrid);
-
-	console.log('options', options)
-
-	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+	_makeNoneGrid(items, options, dGrid);
 }
-function zazTest04() {
+//flex layout
+function sample_fill_area_flex_uniform(n) {
+	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
+	let options = { maxlen: 12, szPic: { w: 100, h: 100 }, isRegular: false, isUniform: true, fillArea: true };
+	_extendOptions(dArea, options);
+	//console.log('options',options)
+	if (nundef(n)) n = chooseRandom(range(1, 200));
+	let items = genItems(n, options);
+	dTitle.innerHTML = 'N=' + n;
 
-	let n = chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42, 44, 48, 64, 72, 84, 100]);
+	[options.rows, options.cols, options.szPic.w, options.szPic.h, options.or] = _bestRowsColsFill(items, options);
+	makeItemDivs(items, options);
+	let dGrid = mDiv100(dArea, { fz: 2 }, 'dGrid');
+	mStyleX(dGrid, { display: 'flex', 'flex-flow': 'wrap', 'justify-content': 'space-between' });
+	for (const item of items) { mAppend(dGrid, lDiv(item)); }//mStyleX(lDiv(item), { flex: '1 1 auto' }) }
 
-	let dArea = getMainAreaPercent(dTable, null, 100, 100);
-	dArea.id = 'dArea';
+	_makeNoneGrid(items, options, dGrid);
 
-	options = getOptionsFixedPicSize(dArea, {
-		N: n,
-		maxlen: 12,
-		keyset: 'lifePlus',
-		lang: chooseRandom(['C', 'S']),
-		luc: 'l',
-		szPic: { w: 100, h: 100 },
-		percentGap: 10,
-		isRegular: true,
-		showLabels: true,
-	});
-	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
+	
+	// n is items.length already!
+	// let max=20,i=0;
+	// while (!isOverflown(dGrid)) {
+	// 	i += 1; if (i > max) { console.log('MAX REACHED!', options); break; }
+	// 	options.gap += 1;
+	// 	mStyleX(dGrid,{'column-gap':i});
+	// 	//for (const item of items) { mStyleX(lDiv(item), { hmargin: options.gap / 2 }); }
+	// }
+	// mStyleX(dGrid,{'column-gap':i-1});
+	// return;
+	// console.log('gap', options.gap, 'margin', options.outerStyles.margin, lDiv(items[0]).style.margin);
+	// let totalWidth = n * (options.gap + options.szPic.w);
+	// let wGrid = options.area.w;
+	// //wie oft geht wGrid in totalWidth: ceil ist rows
+	// let rows = totalWidth / wGrid;
+	// console.log('tw', totalWidth, 'wGrid', wGrid, 'es sind', rows, 'rows', options);
+	// let wReal = Math.ceil(rows) * wGrid;
+	// let wb = wReal / n;
+	// let gapReal = wb - options.szPic.w;
+	// console.log('old gap', options.gap / 2, 'newGap', gapReal / 2)
+	// for (const item of items) { mStyleX(lDiv(item), { hmargin: 1 + gapReal / 2 }); }
 
-	let [wp, hp, gap, rows, cols] = calcRowsColsSize(n, options.area.w, options.area.h, percentGap = 10);
-	options.gap = gap;
-	let fw = wp / options.szPic.w;
-	let fh = 1;
 
-	dTitle.innerHTML = 'N=' + options.N;
 
-	options.outerStyles.w = options.szPic.w = wp;
-	if (hp < options.szPic.h) { fh = hp / options.szPic.h; options.outerStyles.h = options.szPic.h = hp; }
-	options.rows = rows;
-	options.cols = cols;
-	let fmin = Math.min(fw, fh);
-	if (fmin != 1) {
-		options.labelStyles.fz = options.fzText = options.fzText * fmin;
-		options.picStyles.fz = options.fzPic = options.fzPic * fmin;
+	// for(const item of items){
+	// 	let ui = lGet(item);
+	// 	ui.div.style.minWidth=ui.div.style.width;
+	// 	ui.div.style.width='auto';
+
+	// }
+	//_reduceFontsBy(-1,0,items,options);
+
+	// mStyleX(dGrid, { display: 'flex', 'flex-flow': 'row wrap', 'justify-content': 'space-evenly', 'align-content': 'stretch', border: '5px solid green', box: true, });
+	// let max = 100, i = 0;
+	// while (isOverflown(dGrid)) {
+	// 	i += 1; if (i > max) { console.log('MAX REACHED!', options); break; }
+	// 	_reduceSizeByFactor(items, options, .9);
+	// }
+
+}
+function sample_fill_area_flex_non_uniform(N) {
+	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
+	let options = { szPic: { w: 100, h: 100 }, isRegular: false, isUniform: false, fillArea: true };
+	_extendOptions(dArea, options);
+	let n = isdef(N) ? N : chooseRandom(range(1, 200)); // 2, 20
+	let items = genItems(n, options);
+	dTitle.innerHTML = 'N=' + n;
+
+	[options.rows, options.cols, options.szPic.w, options.szPic.h, options.or] = _bestRowsColsFill(items, options);
+	makeItemDivs(items, options);
+	let dGrid = mDiv100(dArea, { fz: 2 }, 'dGrid');
+	for (const item of items) { mAppend(dGrid, lDiv(item)); mStyleX(lDiv(item), { flex: '1' }) }
+	_makeNoneGrid(items, options, dGrid);
+	mStyleX(dGrid, { display: 'flex', 'flex-flow': 'row wrap', 'justify-content': 'space-between', 'align-content': 'stretch', border: '5px solid green', box: true, });
+	while (isOverflown(dGrid)) {
+		_reduceFontsBy(1, 1, items, options)
 	}
-
-	// console.log('gap', options.gap)
-	makeItemDivs(items, options);
-	let dGrid = mDiv(dArea, { border: '5px solid yellow', box: true, fz: 2 }, 'dGrid');
-
-	mStyleX(dGrid, {
-		display: 'inline-grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap,
-		'justify-items': 'center', wmax: options.w, overflow: 'hidden', padding: options.gap,
-	});
-
-	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-
 }
-function zazTest03() {
-
-	let n = chooseRandom([36]); //2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30, 36, 40, 42]);
-
-	let dArea = getMainAreaPercent(dTable, null, 100, 100);
-	dArea.id = 'dArea';
-
-	options = getOptionsFixedPicSize(dArea, {
-		N: n,
-		maxlen: 12,
-		keyset: 'lifePlus',
-		lang: chooseRandom(['C', 'S']),
-		luc: 'l',
-		szPic: { w: 100, h: 100 },
-		percentGap: 10,
-		isRegular: true,
-		showLabels: true,
-	});
-	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
-
-	options.w = options.area.w;
-	console.log('width is', options.w, options);
-	[options.rows, options.cols, options.shape] = bestRowsColsWFit(n, options);
-	options.outerStyles.w = options.szPic.w;
-	options.outerStyles.h = options.szPic.h;
-
-	// console.log('gap', options.gap)
-	makeItemDivs(items, options);
-	let dGrid = mDiv(dArea, { border: '5px solid yellow', box: true, fz: 2 }, 'dGrid');
-
-	mStyleX(dGrid, {
-		display: 'inline-grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: options.gap,
-		'justify-items': 'center', wmax: options.w, overflow: 'hidden', padding: options.gap,
-	});
-
-	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-
-}
-function zazTest02() {
-	createPageDivsFullVisibleArea({ top: { h: 30 }, title: { h: 30 } }, { bg: colorTrans('dimgray', .5) }, { footer: { h: 30 } }, {}); //table is above footer
-
-	let n = chooseRandom([2, 3, 4, 6, 8, 9, 12, 15, 16, 20, 24, 30]);
-
-	let dArea = getMainAreaPercent(dTable, null, 100, 100);
-	dArea.id = 'dArea';
-	options = getOptionsFixedPicSize(dArea, {
-		N: n,
-		maxlen: 12,
-		keyset: 'lifePlus',
-		lang: 'S',
-		luc: 'l',
-		szPic: { w: 100, h: 100 },
-		percentGap: 5,
-		isRegular: true,
-	});
-	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
-
-	options.w = options.area.w;
-	//console.log('area width',options.w);
-	//console.log(options);
-	[options.rows, options.cols, options.shape] = bestRowsColsWFit(n, options);
-
-	//console.log('N', items.length, options);
-
-	makeItemDivs(items, options);
-	let dGrid = mDiv(dArea, { fz: 2, bg: 'blue', padding: 12 }, 'dGrid');
-
-	for (const it of items) { mAppend(dGrid, lDiv(it)); }
-
-	mStyleX(dGrid, {
-		display: 'inline-grid', 'grid-template-columns': `repeat(${options.cols}, 1fr)`, gap: 12,
-		border: '5px solid yellow', box: true, 'justify-items': 'center',
-	});
-}
-function zazTest01(n, wper, hper, lang = 'E') { zazTest00(n, { wper: wper, hper: hper, lang: lang, maxlen: 18, luc: 'c', szPic: { w: 200, h: 100 } }); }
-
-
-
-
-
-
-
 
 
 

@@ -1,17 +1,40 @@
 async function _start() {
-	testOnClick(zazTest09); //zazTest02();
-	//zazTest00(chooseRandom(range(1, 24)), { showLabels:true, fzText:20, fzPic:80, wper: chooseRandom([25, 50, 75, 90]), hper: chooseRandom([25, 50, 75, 90]), maxlen: 18, lang:chooseRandom(['E','D','F','S']), luc: 'c' }); //chooseRandom(range(1,100))); //12,32,56,100]));
-	//zazTest01(4,50,25);
-	//zazTest01(7,75,90);
-	//zazTest01(43,25,50);
+	//cycleThroughTestsOnClick();
+	testOnClick(sample_fill_area_flex_uniform);
+
+	// createSubtitledPage(BLUE);
+	// sample_fill_area_flex_uniform(47);
+	//sample_fill_area_flex_non_uniform(47);
 	mReveal(dMain);
 }
 
 function testOnClick(test) {
 	createSubtitledPage(BLUE);
-	onclick = test;
+	onclick = ()=>test();
 	test();
 }
 
+function cycleThroughTestsOnClick() {
+	Daat = {
+		index: 0,
+		fs: [sample_non_uniform_grid,
+			sample_regular_uniform_grid,
+			sample_regular_uniform_grid2,
+			sample_non_uniform_grid_fill,
+			sample_regular_uniform_grid_fill,
+			sample_fill_area_none, 
+			sample_fill_area_flex_uniform, 
+			sample_fill_area_flex_non_uniform],
+	};
 
+	createSubtitledPage(BLUE);
+	onclick = nextTest;
+	nextTest();
+}
+function nextTest() {
+	let f = Daat.fs[Daat.index];
+	console.log('test:', f.name)
+	f();
+	Daat.index = (Daat.index + 1) % Daat.fs.length;
+}
 
