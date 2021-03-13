@@ -37,12 +37,34 @@ function genItems(n, options) {
 	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
 	calcLongestLabel(items, options);
 
+	//hier koennt ich die ifs machen!
+	let ifs = options.ifs;
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		item.index = i;
+		//item.ifs = jsCopy(options.ifs);
+		let val;
+		for (const propName in ifs) {
+			let prop = ifs[propName];
+			console.log('___________',ifs[propName])
+			console.log('TYPE OF', propName, 'IS', typeof prop, prop, isLiteral(prop))
+			if (isLiteral(prop)) val = prop;
+			else if (isList(prop)) val = prop[i % prop.length];
+			else if (typeof (prop) == 'function') val = prop(i, item, options, items);
+			else val = null;
+			if (isdef(val)) item[propName] = val;
+			console.log('ifs prop:',propName,item[propName])
+		}
+	}
+
+	options.repeat=1;
+
 	if (options.repeat > 1) {
 		items = zRepeatEachItem(items, options.repeat, options.shufflePositions);
 	}
 
 	options.N = items.length;
-
+	console.log(items)
 	return items;
 }
 function zRepeatEachItem(items, repeat, shufflePositions = false) {
@@ -75,7 +97,6 @@ function getItems(n, cond, baseSet = 'all') {
 	if (isNumber(n)) n = n >= keys.length ? keys : choose(keys, n);
 	if (isString(n[0])) n = n.map(x => Syms[x]);
 	if (nundef(n[0].info)) n = n.map(x => infoToItem(x));
-	for (let i = 0; i < n.length; i++) n[i].index = i;
 	return n;
 }
 function getItemsMaxLen(n, len, baseSet = 'all', lang = 'E', lowerUpperCap = 'c') { return getItemsMaxWordLength(...arguments); }
@@ -92,7 +113,11 @@ function makeItemDivs(items, options) {
 		let item = items[i];
 
 		let dOuter = mCreate('div');
-		if (isdef(options.outerStyles)) mStyleX(dOuter, options.outerStyles);
+		if (isdef(options.outerStyles)) {
+			console.log('--------------\noptions.ifs',options.ifs,'\nouterStyles',options.outerStyles,'\nitem',item,'\nonly',Object.keys(options.ifs));
+			copyKeys(options.outerStyles,item,null,Object.keys(options.ifs));
+			mStyleX(dOuter, options.outerStyles);
+		}
 
 		let dLabel;
 		if (options.showLabels && options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }

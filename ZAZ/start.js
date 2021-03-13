@@ -3,7 +3,7 @@ async function _start() {
 	//testOnClick(sample_idealGridLayout);
 
 	createSubtitledPage(BLUE);
-	[items,options] = sample_idealGridLayout(true,false);
+	[items,options] = sample_idealGridLayout_try1(true,false);
 	setTimeout(() => nachbearbeitung(items,options), 10);
 
 	// sample_regular_uniform_grid_fill()
