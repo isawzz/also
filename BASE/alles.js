@@ -9928,7 +9928,7 @@ function createMenuUi(dParent) {
 	if (nundef(G)) return; else console.log('G',G);
 	//select the current game
 	SelectedMenuKey = G.id;
-	toggleSelectionOfPicture(MenuItems[G.id]);
+	toggleItemSelection(MenuItems[G.id]);
 }
 
 //#endregion

@@ -1,8 +1,105 @@
-//#region DOM m
+//#region DOM 
+//#region ani
+function aTranslateBy(d, x, y, ms) { return d.animate({ transform: `translate(${x}px,${y}px)` }, ms); }
+function aRotate(d, ms) { return d.animate({ transform: `rotate(360deg)` }, ms); }
+function aRotateAccel(d, ms) { return d.animate({ transform: `rotate(1200deg)` }, { easing: 'cubic-bezier(.72, 0, 1, 1)', duration: ms }); }
+//#endregion
+
+//#region i
+function iAppend(dParent, i) { mAppend(iDiv(dParent), iDiv(i)); }
+function iBounds(i, irel) {
+	if (isdef(i.div)) i = i.div;
+	if (isdef(irel) && isdef(irel.div)) irel = irel.div;
+	isParent = (i.parentNode == irel);
+	let b = getBounds(i, isParent, irel);
+	let [x, y, w, h] = [Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)];
+
+	//console.log('bounds', b);
+	return { x: x, y: y, w: w, h: h };
+}
+function iCenter(item, offsetX, offsetY) { let d = iDiv(item); mCenterAbs(d, offsetX, offsetY); }
+function iMoveFromTo(item, d1, d2, callback, offset) {
+	let bi = iBounds(item);
+	let b1 = iBounds(d1);
+	let b2 = iBounds(d2);
+	//console.log('item', bi);
+	//console.log('d1', b1);
+	//console.log('d2', b2);
+
+	//animate item to go translateY by d2.y-d1.y
+	if (nundef(offset)) offset = { x: 0, y: 0 };
+	let dist = { x: b2.x - b1.x + offset.x, y: b2.y - b1.y + offset.y };
+
+	item.div.style.zIndex = 100;
+	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
+	a.onfinish = () => { mAppend(d2, item.div); item.div.style.zIndex = item.z = iZMax(); if (isdef(callback)) callback(); };
+}
+function iParentBounds(i) {
+	if (isdef(i.div)) i = i.div;
+	let b = getBounds(i);
+	let [x, y, w, h] = [Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)];
+
+	//console.log('bounds', b);
+	return { x: x, y: y, w: w, h: h };
+}
+function iResize(i, w, h) { return isList(i) ? i.map(x => iSize(x, w, h)) : iSize(i, w, h); }
+function iSize(i, w, h) { i.w = w; i.h = h; mSize(i.div, w, h); }
+function isItem(i) { return isdef(i.div); }
+function iDiv(i) { return isItem(i) ? i.div : i; }
+function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
+function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ovUnit = '%', createHand = true, rememberFunc = true) {
+
+	if (!isList(items)) items = [items];
+	if (isEmpty(items)) return { w: 0, h: 0 };
+
+	let [w, h] = [items[0].w, items[0].h];
+
+	let isHorizontal = splay == 'right' || splay == 'left';
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		item.col = isHorizontal ? i : 0;
+		item.row = isHorizontal ? 0 : i;
+		item.index = item.z = i;
+	}
+
+	//phase 3: prep container for items
+	if (nundef(containerStyles)) containerStyles = {};
+	let dContainer = iDiv(iContainer);
+	let dParent, iParent;
+
+	if (createHand) {
+		dParent = mDiv(dContainer);
+		iParent = { div: dParent };
+	} else if (isItem(iContainer)) {
+		dParent = iContainer.div;
+		iParent = iContainer;
+
+	} else dParent = iContainer;
+	mStyleX(dParent, containerStyles);
+
+	//phase 4: add items to container
+	let gap = isdef(containerStyles.padding) ? containerStyles.padding : 0;
+	let overlap = ov;
+	if (ovUnit == '%') overlap = ov == 0 ? .5 : (isHorizontal ? w : h) * ov / 100;
+	let x = y = gap;
+
+	// call splayout primitive!!!
+	let sz = splayout(items.map(x => x.div), dParent, w, h, x, y, overlap, splay);
+
+	dParent.style.width = '' + sz.w + 'px';
+	dParent.style.height = '' + sz.h + 'px';
+	if (isdef(iParent)) { iParent.w = sz.w; iParent.h = sz.h; iParent.items = items; }
+	return isdef(iParent) ? iParent : dParent;
+
+}
+function iStyle(i, styles) { mStyleX(iDiv(i), styles); }
+//#endregion
+
+//region m
 function mAppend(d, child) { d.appendChild(child); }
 function mBy(id) { return document.getElementById(id); }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
-function mCreate(tag) { return document.createElement(tag); }
+function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
 function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDivid(id, dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
@@ -164,7 +261,6 @@ function mText(text, dParent, styles, classes) {
 	if (isdef(classes)) mClass(d, classes);
 	return d;
 }
-
 //#endregion
 
 //#region color
@@ -1115,7 +1211,7 @@ function mergeOverride(base, drueber) { return _deepMerge(base, drueber, { array
 function addIf(arr, el) {
 	if (!arr.includes(el)) arr.push(el);
 }
-function addKeys(oto, ofrom) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; }
+function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; }
 function addIfDict(key, val, dict) { if (!(key in dict)) { dict[key] = [val]; } }
 function any(arr, cond) {
 	return !isEmpty(arr.filter(cond));
@@ -1163,8 +1259,9 @@ function arrMinMax(arr, func) {
 
 	return { min: min, imin: imin, max: max, imax: imax };
 }
-function arrSum(arr, props) { 
-	if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0); }
+function arrSum(arr, props) {
+	if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0);
+}
 function copyKeys(ofrom, oto, except = {}, only) {
 	let keys = isdef(only) ? only : Object.keys(ofrom);
 	for (const k of keys) {
@@ -1392,7 +1489,7 @@ function shuffleChildren(dParent) {
 	//return;
 	shuffle(arr);
 	for (const elem of arr) { mAppend(dParent, elem) }
-} 
+}
 function sortBy(arr, key) {
 	//console.log(jsCopy(arr))
 	arr.sort((a, b) => (a[key] < b[key] ? -1 : 1));
@@ -1569,6 +1666,13 @@ function createElementFromHTML(htmlString) {
 	//console.log(div.firstChild)
 	return div.firstChild;
 }
+function evToClosestId(ev) {
+	//returns first ancestor that has an id
+	let elem = findParentWithId(ev.target);
+	return elem.id;
+}
+function findParentWithId(elem) { while (elem && !elem.id) { elem = elem.parentNode; } return elem; }
+
 function hasWhiteSpace(s) { return /\s/g.test(s); }
 function hide(elem) {
 	if (isString(elem)) elem = document.getElementById(elem);
@@ -1588,6 +1692,21 @@ function getDivisors(n) {
 		if (q == Math.round(q)) res.push(i);
 	}
 	return res;
+}
+function getTypeOf(param) {
+	//console.log('>>>>>getTypeOf',param)
+	let type = typeof param;
+	if (type == 'string') {
+		return 'string';
+	}
+	if (type == 'object') {
+		type = param.constructor.name;
+		if (startsWith(type, 'SVG')) type = stringBefore(stringAfter(type, 'SVG'), 'Element').toLowerCase();
+		else if (startsWith(type, 'HTML')) type = stringBefore(stringAfter(type, 'HTML'), 'Element').toLowerCase();
+	}
+	let lType = type.toLowerCase();
+	if (lType.includes('event')) type = 'event';
+	return type;
 }
 function getVerticalOverflow(element) { return element.scrollHeight - element.clientHeight; }
 function isAlphaNum(s) {
@@ -1617,6 +1736,7 @@ function isCapitalLetter(s) { return /^[A-Z]$/i.test(s); }
 function isCapitalLetterOrDigit(s) { return /^[A-Z0-9ÖÄÜ]$/i.test(s); }
 function isColorName(s) { ensureColorNames(); return (isdef(ColorNames[s.toLowerCase()])); }
 function isdef(x) { return x !== null && x !== undefined; }
+function isDOM(x){ let c=lookup(x,['constructor','name']); return c? startsWith(c,'HTML')|| startsWith(c,'SVG'):false;}
 function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
 function isDictOrList(d) { return typeof (d) == 'object'; }
 function isDigit(s) { return /^[0-9]$/i.test(s); }

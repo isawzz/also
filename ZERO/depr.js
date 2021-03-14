@@ -1,3 +1,249 @@
+function sample_idealGridLayout_orig(showLabels = true, showPic = true) {
+	let [isUniform, fillArea, isRegular] = [true, true, true];
+	let dArea = getMainAreaPercent(dTable, null, 100, 70, getUID());
+
+	let n = 30;// _getRandomRegularN(1, 56);// 8;// chooseRandom(_getRegularN(2, 10));
+	let maxlen = n > 24 ? 9 : 15;
+	let options = { shufflePositions: true, repeat: 2, szPic: { w: 200, h: 100 }, showLabels: showLabels, showPic: showPic, percentVertical: 30, maxlen: maxlen, isUniform: isUniform, fillArea: fillArea, isRegular: isRegular, };
+	_extendOptions_0(dArea, options);
+	let items = genItems(n, options);
+	dTitle.innerHTML = 'N=' + options.N;
+
+	console.log('items', items, '\noptions', options);
+	//return [items,options];
+
+	[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
+	console.log('rows', options.rows, 'cols', options.cols);
+	_setRowsColsSize(options);
+	makeItemDivs(items, options);
+
+	let dGrid = mDiv(dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, getUID());
+
+	options.idGrid = dGrid.id;
+	for (const item of items) { mAppend(dGrid, lDiv(item)); }
+	_makeGridGrid(items, options, dGrid);
+	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+	let wa = options.area.w, ha = options.area.h;
+	let wi = (wa / options.cols) - 1.25 * options.gap;
+	let hi = ha / options.rows - 1.25 * options.gap;
+	wi = Math.min(200, wi); wi = Math.round(wi);
+	hi = Math.min(200, hi); hi = Math.round(hi);
+	let fzMax, fpMax;
+	if (options.showLabels) {
+		// fzMax = Math.floor(idealFontsize(options.longestLabel, wi - 2 * Math.ceil(options.padding), hi, 24).fz);
+		fzMax = Math.floor(idealFontsize(options.wLongest, wi - 2 * options.padding, hi, 24).fz); //or longestLabel!
+		fpMax = options.showPic ? Math.min(hi / 2, wi * 2 / 3, hi - fzMax) : 0;
+	} else { fzMax = 1; fpMax = options.showPic ? Math.min(hi * 2 / 3, wi * 2 / 3) : 0; }
+	//let fpMax = Math.min(hi / 2, wi * 2 / 3, hi - fzMax);
+	console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
+	console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
+
+	options.fzPic = options.picStyles.fz = fpMax; //Math.floor(fzPic)
+	options.fzText = options.labelStyles.fz = fzMax; // Math.floor(fz);
+	options.szPic = { w: wi, h: hi };
+
+	for (const item of items) {
+		let ui = lGet(item);
+		mStyleX(ui.div, { wmin: wi, hmin: hi, padding: 0 });
+		// mStyleX(ui.dPic, { fz: hi/2 }); 
+		if (isdef(ui.dPic)) mStyleX(ui.dPic, { fz: fpMax });
+		if (isdef(ui.dLabel)) mStyleX(ui.dLabel, { fz: fzMax });
+	}
+	mStyleX(dGrid, { display: 'inline-grid', wmax: options.area.w, hmax: options.area.h });
+
+	//_checkOverflow(items, options, dGrid);
+	if (isOverflown(dGrid)) {
+		let factor = .9;
+		console.log('OVERFLOWN!!!!!!!!!!!! vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+		w = options.szPic.w * factor;
+		h = options.szPic.h * factor;
+		fz = options.fzText * factor; // idealFontsize(options.longestLabel, w, h, 22).fz; //options.fzText;// * factor;
+		fzPic = options.fzPic * factor;
+		options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
+		options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
+		options.szPic = { w: w, h: h };
+		options.padding *= factor;
+		options.gap *= factor;
+		mStyleX(dGrid, { gap: options.gap / 2 });
+		for (const item of items) { let ui = lGet(item); mStyleX(ui.dLabel, { fz: fz }); mStyleX(ui.div, { padding: options.padding, w: w, h: h }); mStyleX(ui.dPic, { fz: fzPic }); }
+		console.log('fonts set to', fz, fzPic);
+		console.log('...nachher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+	}
+
+
+	return [items, options];
+}
+function sample_idealGridLayout_try1(showLabels = true, showPic = false) {
+	let [isUniform, fillArea, isRegular] = [true, true, true];
+	let dArea = getMainAreaPercent(dTable, null, 100, 70, getUID());
+
+	let n = 20;// _getRandomRegularN(1, 56);// 8;// chooseRandom(_getRegularN(2, 10));
+	let maxlen = n > 24 ? 9 : 15;
+	let options = { shufflePositions: true, repeat: 2, szPic: { w: 200, h: 100 }, showLabels: showLabels, showPic: showPic, percentVertical: 30, maxlen: maxlen, isUniform: isUniform, fillArea: fillArea, isRegular: isRegular, };
+	_extendOptions_0(dArea, options);
+
+	let ifs = options.ifs = {};
+	let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
+	//let fg = (i, item) => item.bg == 'random'?'contrast': colorIdealText(item.bg);
+	let defIfs = { bg: bg }; //, fg: fg, contrast: .32, fz: 20, padding: 3 };
+	let defOptions = { shufflePositions: true, sameBackground: true, showRepeat: false, repeat: 1 };
+	addKeys(defIfs, ifs);
+	addKeys(defOptions, options);
+
+	//console.log('options',options);
+
+	let items = genItems(n, options);
+	dTitle.innerHTML = 'N=' + options.N;
+
+	//console.log('items', items, '\noptions', options);
+	//return [items,options];
+
+	[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
+	//console.log('rows', options.rows, 'cols', options.cols);
+	_setRowsColsSize(options);
+	makeItemDivs(items, options);
+
+	let dGrid = mDiv(dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, getUID());
+
+	options.idGrid = dGrid.id;
+	for (const item of items) { mAppend(dGrid, lDiv(item)); }
+	_makeGridGrid(items, options, dGrid);
+	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+	let wa = options.area.w, ha = options.area.h;
+	let wi = (wa / options.cols) - 1.25 * options.gap;
+	let hi = ha / options.rows - 1.25 * options.gap;
+	wi = Math.min(200, wi); wi = Math.round(wi);
+	hi = Math.min(200, hi); hi = Math.round(hi);
+	let fzMax, fpMax;
+	if (options.showLabels) {
+		// fzMax = Math.floor(idealFontsize(options.longestLabel, wi - 2 * Math.ceil(options.padding), hi, 24).fz);
+		fzMax = Math.floor(idealFontsize(options.wLongest, wi - 2 * options.padding, hi, 24).fz); //or longestLabel!
+		fpMax = options.showPic ? Math.min(hi / 2, wi * 2 / 3, hi - fzMax) : 0;
+	} else { fzMax = 1; fpMax = options.showPic ? Math.min(hi * 2 / 3, wi * 2 / 3) : 0; }
+	//let fpMax = Math.min(hi / 2, wi * 2 / 3, hi - fzMax);
+	//console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
+	//console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
+
+	options.fzPic = options.picStyles.fz = fpMax; //Math.floor(fzPic)
+	options.fzText = options.labelStyles.fz = fzMax; // Math.floor(fz);
+	options.szPic = { w: wi, h: hi };
+
+	for (const item of items) {
+		let ui = lGet(item);
+		mStyleX(ui.div, { wmin: wi, hmin: hi, padding: 0 });
+		// mStyleX(ui.dPic, { fz: hi/2 }); 
+		if (isdef(ui.dPic)) mStyleX(ui.dPic, { fz: fpMax });
+		if (isdef(ui.dLabel)) mStyleX(ui.dLabel, { fz: fzMax });
+	}
+	mStyleX(dGrid, { display: 'inline-grid', wmax: options.area.w, hmax: options.area.h });
+
+	//_checkOverflow(items, options, dGrid);
+	if (isOverflown(dGrid)) {
+		let factor = .9;
+		console.log('OVERFLOWN!!!!!!!!!!!! vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+		w = options.szPic.w * factor;
+		h = options.szPic.h * factor;
+		fz = options.fzText * factor; // idealFontsize(options.longestLabel, w, h, 22).fz; //options.fzText;// * factor;
+		fzPic = options.fzPic * factor;
+		options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
+		options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
+		options.szPic = { w: w, h: h };
+		options.padding *= factor;
+		options.gap *= factor;
+		mStyleX(dGrid, { gap: options.gap / 2 });
+		for (const item of items) { let ui = lGet(item); mStyleX(ui.dLabel, { fz: fz }); mStyleX(ui.div, { padding: options.padding, w: w, h: h }); mStyleX(ui.dPic, { fz: fzPic }); }
+		console.log('fonts set to', fz, fzPic);
+		console.log('...nachher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+	}
+
+
+	return [items, options];
+}
+
+
+//from live.js:
+function lAdd(item, uis, other) {
+	let id = isString(item) ? item : item.id;
+	let l = Live[id];
+
+
+	if (isdef(other)) copyKeys(other, l);
+	for (const k in uis) { l[k] = uis[k]; l.addUi(uis[k]); }
+}
+
+
+function sample_regular_uniform_grid_fill_vCenter_WORK() {
+	let [isUniform, fillArea, isRegular] = [true, true, true];
+	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 70, getUID());
+
+	let n = 30;// _getRandomRegularN(1, 56);// 8;// chooseRandom(_getRegularN(2, 10));
+	let maxlen = n > 24 ? 9 : 15;
+	let options = { percentVertical: 30, maxlen: maxlen, szPic: { w: 200, h: 200 }, isUniform: isUniform, fillArea: fillArea, isRegular: isRegular, };
+	_extendOptions_0(dArea, options);
+	let items = genItems(n, options);
+	dTitle.innerHTML = 'N=' + n;
+
+	[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
+	console.log('rows', options.rows, 'cols', options.cols);
+	_setRowsColsSize(options);
+	makeItemDivs(items, options);
+	let dGrid = mDiv(dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, getUID());
+	options.idGrid = dGrid.id;
+	for (const item of items) { mAppend(dGrid, lDiv(item)); }
+	_makeGridGrid(items, options, dGrid);
+	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+	let wa = options.area.w, ha = options.area.h;
+	let wi = (wa / options.cols) - 1.25 * options.gap;
+	let hi = ha / options.rows - 1.25 * options.gap;
+	wi = Math.min(200, wi); wi = Math.round(wi);
+	hi = Math.min(200, hi); hi = Math.round(hi);
+	// let fzMax = Math.floor(idealFontsize(options.longestLabel, wi-2*options.padding, hi, 24).fz);
+	let fzMax = Math.floor(idealFontsize(options.wLongest, wi - 2 * options.padding, hi, 24).fz); //or longestLabel!
+	console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
+	let fpMax = Math.min(hi / 2, wi * 2 / 3, hi - fzMax);
+	console.log('=====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel);
+
+	options.fzPic = options.picStyles.fz = fpMax; //Math.floor(fzPic)
+	options.fzText = options.labelStyles.fz = fzMax; // Math.floor(fz);
+	options.szPic = { w: wi, h: hi };
+
+	for (const item of items) {
+		let ui = lGet(item);
+		mStyleX(ui.div, { wmin: wi, hmin: hi });
+		// mStyleX(ui.dPic, { fz: hi/2 }); 
+		mStyleX(ui.dPic, { fz: fpMax });
+		mStyleX(ui.dLabel, { fz: fzMax });
+	}
+	mStyleX(dGrid, { display: 'inline-grid', wmax: options.area.w, hmax: options.area.h });
+
+	//_checkOverflow(items, options, dGrid);
+	if (isOverflown(dGrid)) {
+		let factor = .9;
+		console.log('vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+		w = options.szPic.w * factor;
+		h = options.szPic.h * factor;
+		fz = options.fzText * factor; // idealFontsize(options.longestLabel, w, h, 22).fz; //options.fzText;// * factor;
+		fzPic = options.fzPic * factor;
+		options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
+		options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
+		options.szPic = { w: w, h: h };
+		options.padding *= factor;
+		options.gap *= factor;
+		mStyleX(dGrid, { gap: options.gap / 2 });
+		for (const item of items) { let ui = lGet(item); mStyleX(ui.dLabel, { fz: fz }); mStyleX(ui.div, { padding: options.padding, w: w, h: h }); mStyleX(ui.dPic, { fz: fzPic }); }
+		console.log('fonts set to', fz, fzPic);
+		console.log('...nachher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+	}
+
+
+	return [items, options];
+}
+
+
+
 function _correctFlexGrid(items, options, dGrid) {
 	return;
 	for (const item of items) item.rect = getRect(lDiv(item));
@@ -48,7 +294,7 @@ function sample_fill_area_flex_uniform(N) {
 	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
 
 	let options = { szPic: { w: 200, h: 100 }, isRegular: false, isUniform: true, fillArea: true };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 
 	//console.log('fzPic',options.fzPic,'fz',options.fzText);
 
@@ -139,7 +385,7 @@ function extendOptionsFillContainer(dArea, options = {}) {
 	};
 	if (nundef(options.fzPic)) options.fzPic = Math.floor(options.fzText * 4 * (options.luc == 'u' ? .7 : .6)); //taking 4 as min word length
 
-	_extendOptions(dArea, options, defOptions);
+	_extendOptions_0(dArea, options, defOptions);
 }
 function getOptionsSize(dArea, options = {},) {
 	defOptions = {
@@ -149,7 +395,7 @@ function getOptionsSize(dArea, options = {},) {
 	};
 	if (nundef(options.fzPic)) options.fzPic = Math.floor(options.fzText * 4 * (options.luc == 'u' ? .7 : .6)); //taking 4 as min word length
 
-	return _extendOptions(dArea, options, defOptions);
+	return _extendOptions_0(dArea, options, defOptions);
 }
 
 function getOptionsFillContainer(dArea, options = {}) {
@@ -160,7 +406,7 @@ function getOptionsFillContainer(dArea, options = {}) {
 	};
 	if (nundef(options.fzPic)) options.fzPic = Math.floor(options.fzText * 4 * (options.luc == 'u' ? .7 : .6)); //taking 4 as min word length
 
-	return _extendOptions(dArea, options, defOptions);
+	return _extendOptions_0(dArea, options, defOptions);
 }
 
 
@@ -174,7 +420,7 @@ function getOptionsFixedPicSize(dArea, options = {}) {
 	options.fzText = options.showLabels ? 20 : 0;
 	options.fzPic = options.showLabels ? 60 : 70;
 
-	options = _extendOptions(dArea, options, defOptions);
+	options = _extendOptions_0(dArea, options, defOptions);
 
 	options.outerStyles = mergeOverride(options.outerStyles,
 		{ w: options.szPic.w, h: options.szPic.h });
@@ -597,7 +843,7 @@ function zazTest11() {
 	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
 
 	let options = { szPic: { w: 100, h: 100 }, isRegular: false, isUniform: false, fillArea: true, padding: 0, };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 
 	let n = chooseRandom(range(1, 50)); // 2, 20
 	let items = genItems(n, options);
@@ -625,7 +871,7 @@ function zazTest10_fillNone() {
 	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
 
 	let options = { szPic: { w: 100, h: 100 }, isRegular: false, isUniform: false, fillArea: true };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 
 	let n = chooseRandom(range(1, 200)); // 2, 20
 	let items = genItems(n, options);
@@ -649,7 +895,7 @@ function zazTest10() {
 	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
 
 	let options = { szPic: { w: 100, h: 100 }, isRegular: false, isUniform: false, fillArea: true };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 
 	let n = chooseRandom(range(1, 200)); // 2, 20
 	let items = genItems(n, options);
@@ -770,7 +1016,7 @@ function sample_fill_area_v0() {
 	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
 
 	let options = { szPic: { w: 200, h: 100 }, isRegular: false, isUniform: false, fillArea: true, padding: .01, };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 
 	let n = 117;// chooseRandom(range(1,200)); // 2, 20
 	let items = genItems(n, options);
@@ -830,7 +1076,7 @@ function zazTest07_regularUniform_givenPicSizeAndArea_minimizeGridHeight_preserv
 
 	//let d=mDiv100(dArea,{bg:'green'});	return;
 
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 
 	let bestCombi = _bestRowsColsSize(items, options);
 	_adjustOptionsToRowsColsSize(bestCombi, options);

@@ -1,34 +1,56 @@
-function sample_idealGridLayout_try1(showLabels = true, showPic = true) {
-	let [isUniform, fillArea, isRegular] = [true, true, true];
-	let dArea = getMainAreaPercent(dTable, null, 100, 70, getUID());
+function itemViewer() {
+	//options
+	let options = {
+		n: 100,
+		wper: 100, hper: 100, //dParent: dTable, is default!
+		szPic: { w: 100, h: 70 }, padding:0, 
+		showLabels: true, showPic: true, maxlen: 100,
+		isUniform: true, fillArea: true, isRegular: true, hugeFont: true,
+		handler: _standardHandler(handSelectBadKeys),
+	};
+	_extendOptions(options);
 
-	let n = 2;// _getRandomRegularN(1, 56);// 8;// chooseRandom(_getRegularN(2, 10));
-	let maxlen = n > 24 ? 9 : 15;
-	let options = { shufflePositions: true, repeat: 2, szPic: { w: 200, h: 100 }, showLabels: showLabels, showPic: showPic, percentVertical: 30, maxlen: maxlen, isUniform: isUniform, fillArea: fillArea, isRegular: isRegular, };
-	_extendOptions(dArea, options);
+	//items
+	let items = genItems(options.n, options);
+	console.log('n',options.n,options.maxlen,options.N,)
 
-	let ifs = options.ifs = {};
-	let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
-	//let fg = (i, item) => item.bg == 'random'?'contrast': colorIdealText(item.bg);
-	let defIfs = { bg: bg }; //, fg: fg, contrast: .32, fz: 20, padding: 3 };
-	let defOptions = { shufflePositions: true, sameBackground: true, showRepeat: false, repeat: 1 };
-	addKeys(ifs, defIfs);
-	addKeys(options, defOptions);
+	//dims&divs
+	//grid
+	present00(items,options);
+	return [items,options];
+}
 
-	console.log('options',options);
+// OIL paradigm: options - items - layout
+function sample00() {
+	//options
+	let n= _getRandomRegularN(2,40);
+	let options = {
+		n: n,
+		wper: 80, hper: 80, //dParent: dTable, is default!
+		shufflePositions: true, repeat: 4, //colorKeys: ['red', 'blue', 'green'],
+		szPic: { w: 100, h: 100 },
+		showLabels: true, showPic: true, percentVertical: 30, maxlen: n<10?9:6,
+		isUniform: true, fillArea: true, isRegular: true,
+		handler: _standardHandler(modifyColorkey),
+	};
+	_extendOptions(options);
 
-	let items = genItems(n, options);
-	dTitle.innerHTML = 'N=' + options.N;
+	//items
+	let items = genItems(options.n, options);
+	console.log('n',options.n,options.maxlen,options.N,)
 
-	console.log('items', items, '\noptions', options);
-	//return [items,options];
-
+	//dims&divs
+	//grid
+	present00(items,options);
+	return [items,options];
+}
+function present00(items,options){
 	[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
-	console.log('rows', options.rows, 'cols', options.cols);
+	//console.log('rows', options.rows, 'cols', options.cols);
 	_setRowsColsSize(options);
 	makeItemDivs(items, options);
 
-	let dGrid = mDiv(dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, getUID());
+	let dGrid = mDiv(options.dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, getUID());
 
 	options.idGrid = dGrid.id;
 	for (const item of items) { mAppend(dGrid, lDiv(item)); }
@@ -47,8 +69,8 @@ function sample_idealGridLayout_try1(showLabels = true, showPic = true) {
 		fpMax = options.showPic ? Math.min(hi / 2, wi * 2 / 3, hi - fzMax) : 0;
 	} else { fzMax = 1; fpMax = options.showPic ? Math.min(hi * 2 / 3, wi * 2 / 3) : 0; }
 	//let fpMax = Math.min(hi / 2, wi * 2 / 3, hi - fzMax);
-	console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
-	console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
+	//console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
+	//console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
 
 	options.fzPic = options.picStyles.fz = fpMax; //Math.floor(fzPic)
 	options.fzText = options.labelStyles.fz = fzMax; // Math.floor(fz);
@@ -84,29 +106,34 @@ function sample_idealGridLayout_try1(showLabels = true, showPic = true) {
 
 
 	return [items, options];
+
 }
 
-
-
-//ideal grid layout
-function ideal00() { sample_idealGridLayout(false) }
-function idealNoPic() { sample_idealGridLayout(true, false) }
 function sample_idealGridLayout(showLabels = true, showPic = true) {
 	let [isUniform, fillArea, isRegular] = [true, true, true];
 	let dArea = getMainAreaPercent(dTable, null, 100, 70, getUID());
 
-	let n = 30;// _getRandomRegularN(1, 56);// 8;// chooseRandom(_getRegularN(2, 10));
+	let n = 10;// _getRandomRegularN(1, 56);
 	let maxlen = n > 24 ? 9 : 15;
-	let options = { shufflePositions: true, repeat: 2, szPic: { w: 200, h: 100 }, showLabels: showLabels, showPic: showPic, percentVertical: 30, maxlen: maxlen, isUniform: isUniform, fillArea: fillArea, isRegular: isRegular, };
-	_extendOptions(dArea, options);
+	let options = {
+		shufflePositions: true, repeat: 4, //colorKeys: ['red', 'blue', 'green'],
+		szPic: { w: 100, h: 100 },
+		showLabels: showLabels, showPic: showPic, percentVertical: 30, maxlen: maxlen,
+		isUniform: isUniform, fillArea: fillArea, isRegular: isRegular,
+		handler: _standardHandler(modifyColorkey),
+	};
+	_extendOptions_0(dArea, options);
+
+	//console.log('options', options);
+
 	let items = genItems(n, options);
 	dTitle.innerHTML = 'N=' + options.N;
 
-	console.log('items', items, '\noptions', options);
+	//console.log('items', items, '\noptions', options);
 	//return [items,options];
 
 	[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
-	console.log('rows', options.rows, 'cols', options.cols);
+	//console.log('rows', options.rows, 'cols', options.cols);
 	_setRowsColsSize(options);
 	makeItemDivs(items, options);
 
@@ -129,8 +156,8 @@ function sample_idealGridLayout(showLabels = true, showPic = true) {
 		fpMax = options.showPic ? Math.min(hi / 2, wi * 2 / 3, hi - fzMax) : 0;
 	} else { fzMax = 1; fpMax = options.showPic ? Math.min(hi * 2 / 3, wi * 2 / 3) : 0; }
 	//let fpMax = Math.min(hi / 2, wi * 2 / 3, hi - fzMax);
-	console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
-	console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
+	//console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
+	//console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
 
 	options.fzPic = options.picStyles.fz = fpMax; //Math.floor(fzPic)
 	options.fzText = options.labelStyles.fz = fzMax; // Math.floor(fz);
@@ -167,6 +194,11 @@ function sample_idealGridLayout(showLabels = true, showPic = true) {
 
 	return [items, options];
 }
+
+//ideal grid layout shortcuts
+function samplePicsAndText() { return sample_idealGridLayout(true, true) }
+function sampleJustPics() { return sample_idealGridLayout(false) }
+function sampleJustText() { return sample_idealGridLayout(true, false) }
 
 
 //grid layout
@@ -177,7 +209,7 @@ function testGrid(isUniform, fillArea = false, isRegular = true) {
 	//mStyleX(dArea,{display:'inline-flex','justify-content':'center','align-items':'center'});
 
 	let options = { szPic: { w: 200, h: 200 }, isUniform: isUniform, fillArea: fillArea, isRegular: isRegular, };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 	let n = chooseRandom(_getRegularN(2, 100)); // 2, 20
 	let items = genItems(n, options);
 	dTitle.innerHTML = 'N=' + n;
@@ -205,7 +237,7 @@ function sample_regular_uniform_grid_fill_vCenter() {
 	let [isUniform, fillArea, isRegular] = [true, true, true];
 	let dArea = getMainAreaPercent(dTable, YELLOW, 80, 60, getUID());
 	let options = { szPic: { w: 200, h: 200 }, isUniform: isUniform, fillArea: fillArea, isRegular: isRegular, };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 	let n = chooseRandom(_getRegularN(2, 10));
 	let items = genItems(n, options);
 	dTitle.innerHTML = 'N=' + n;
@@ -215,7 +247,7 @@ function sample_regular_uniform_grid_fill_vCenter() {
 function sample_regular_uniform_grid2() {
 	let dArea = getMainAreaPercent(dTable, YELLOW, 80, 60, getUID());
 	let options = { szPic: { w: 200, h: 200 }, isUniform: true, fillArea: false, isRegular: true, };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 	let n = chooseRandom(_getRegularN(2, 100)); // 2, 20
 	let items = genItems(n, options);
 	dTitle.innerHTML = 'N=' + n;
@@ -234,7 +266,7 @@ function sample_regular_uniform_grid2() {
 function sample_fill_area_none() {
 	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, getUID());
 	let options = { szPic: { w: 100, h: 100 }, isRegular: false, isUniform: false, fillArea: true };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 	let n = chooseRandom(range(1, 200)); // 2, 20
 	let items = genItems(n, options);
 	dTitle.innerHTML = 'N=' + n;
@@ -250,7 +282,7 @@ function sample_fill_area_none() {
 function sample_fill_area_flex_uniform(n) {
 	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, 'dArea');
 	let options = { maxlen: 12, szPic: { w: 100, h: 100 }, isRegular: false, isUniform: true, fillArea: true };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 	//console.log('options',options)
 	if (nundef(n)) n = chooseRandom(range(1, 200));
 	let items = genItems(n, options);
@@ -313,7 +345,7 @@ function sample_fill_area_flex_uniform(n) {
 function sample_fill_area_flex_non_uniform(N) {
 	let dArea = getMainAreaPercent(dTable, YELLOW, 90, 50, getUID());
 	let options = { szPic: { w: 100, h: 100 }, isRegular: false, isUniform: false, fillArea: true };
-	_extendOptions(dArea, options);
+	_extendOptions_0(dArea, options);
 	let n = isdef(N) ? N : chooseRandom(range(1, 200)); // 2, 20
 	let items = genItems(n, options);
 	dTitle.innerHTML = 'N=' + n;

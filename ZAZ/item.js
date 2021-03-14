@@ -1,3 +1,4 @@
+//#region syms item + div + dPic + dLabel
 function addLabels(items, lang = 'E', lowerUpperCap = 'c') {
 	let max = 0;
 	for (const item of items) {
@@ -7,11 +8,29 @@ function addLabels(items, lang = 'E', lowerUpperCap = 'c') {
 	}
 	return max;
 }
+function applyColorkey(item) {
+	//console.log('halllllllllllll')
+	let l = lGet(item);
+	let sShade = '0 0 0 ' + item.textShadowColor;
+	item.shadeStyles = { 'text-shadow': sShade, fg: anyColorToStandardString('black', l.options.contrast) };
+	let ui = l.options.showPic ? l.dPic : l.dLabel;
+	mStyleX(ui, item.shadeStyles);
+}
 function calcLongestLabel(items, options) {
 	let mimi = arrMinMax(items, x => x.label.length);
 	let max = options.longestLabelLen = mimi.max;
 	let longest = items.filter(x => x.label.length == max);
-	console.log('longest items:', longest)
+
+	options.labelSum = arrSum(items, ['label', 'length']);
+	if (options.hugeFont) {
+		let item = longest[0];
+		options.longestLabel = item.label;
+		options.indexOfLongestLabelItem = item.index;
+		options.wLongest = item.label + 'n';
+		return;
+	}
+
+	//console.log('longest items:', longest)
 	let bestItem = longest[0], maxmw = 0;
 	for (const item of longest) {
 		let w = item.label.toLowerCase();
@@ -27,11 +46,10 @@ function calcLongestLabel(items, options) {
 	options.wLongest = replaceAll(options.wLongest, 't', 'n');
 	options.wLongest = replaceAll(options.wLongest, 'r', 'n');
 	options.indexOfLongestLabelItem = bestItem.index;
-	console.log('longest item label is', options.longestLabel)
+	//console.log('longest item label is', options.longestLabel)
 	// items.map(x=>console.log(x.label,x.label.length));
 	options.labelSum = arrSum(items, ['label', 'length']);
 }
-
 function genItems(n, options) {
 	//console.log(n,options.maxlen)
 	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
@@ -46,22 +64,19 @@ function genItems(n, options) {
 		let val;
 		for (const propName in ifs) {
 			let prop = ifs[propName];
-			console.log('___________',ifs[propName])
-			console.log('TYPE OF', propName, 'IS', typeof prop, prop, isLiteral(prop))
+			//console.log('___________',ifs[propName])
+			//console.log('TYPE OF', propName, 'IS', typeof prop, prop, isLiteral(prop))
 			if (isLiteral(prop)) val = prop;
 			else if (isList(prop)) val = prop[i % prop.length];
 			else if (typeof (prop) == 'function') val = prop(i, item, options, items);
 			else val = null;
 			if (isdef(val)) item[propName] = val;
-			console.log('ifs prop:',propName,item[propName])
+			//console.log('ifs prop:',propName,item[propName]);
 		}
 	}
 
-	options.repeat=1;
-
-	if (options.repeat > 1) {
-		items = zRepeatEachItem(items, options.repeat, options.shufflePositions);
-	}
+	if (options.repeat > 1) { items = zRepeatEachItem(items, options.repeat, options.shufflePositions); }
+	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
 
 	options.N = items.length;
 	console.log(items)
@@ -71,7 +86,7 @@ function zRepeatEachItem(items, repeat, shufflePositions = false) {
 	//repeat items: repeat & shufflePositions
 	let orig = items;
 	let itRepeat = items;
-	for (let i = 1; i < repeat; i++) { itRepeat = itRepeat.concat(orig.map(x=>registeredItemCopy(x))); }
+	for (let i = 1; i < repeat; i++) { itRepeat = itRepeat.concat(orig.map(x => registeredItemCopy(x))); }
 	if (shufflePositions) { shuffle(itRepeat); }
 	//weil die items schon geshuffled wurden muss ich iRepeat neu setzen in den reihenfolge in der sie in itRepeat vorkommen!
 	let labelRepeat = {};
@@ -84,6 +99,34 @@ function zRepeatEachItem(items, repeat, shufflePositions = false) {
 		labelRepeat[item.label] = iRepeat;
 	}
 	return itRepeat;
+}
+function zRepeatInColorEachItem(items, colorKeys) {
+	//colorKeys: copy colorKeys.length times into different colors
+	let itColors = [];
+	for (let i = 0; i < colorKeys.length; i++) {
+		let newItems;
+		if (i > 0) { newItems = jsCopy(items); newItems.map(x => registerAsNewItem(x)); }
+		else newItems = items;
+		itColors = itColors.concat(newItems);
+	}
+
+	for (let i = 0; i < colorKeys.length; i++) {
+		let colorKey = colorKeys[i];
+		let textShadowColor = ColorDict[colorKey].c;
+		for (let j = 0; j < items.length; j++) {
+			let index = i * items.length + j;
+			console.log('schau', index, colorKey);
+			let x = itColors[index];
+			x.index = index;
+			x.textShadowColor = textShadowColor;
+			x.color = ColorDict[colorKey];
+			x.colorKey = colorKey;
+		}
+		//newItems.map(x => { x.textShadowColor = textShadowColor; x.color = ColorDict[colorKey]; x.colorKey = colorKey; });
+	}
+	//for (let i = 0; i < itColors.length; i++) itColors[i].index = i;
+	//console.log(itColors[0])
+	return itColors;
 }
 function getAllItems(cond, baseSet = 'all') { return getItems(10000, cond, baseSet); }
 function getItem(k) { return infoToItem(Syms[k]); }
@@ -106,17 +149,39 @@ function getItemsMaxWordLength(n, len, baseSet = 'all', lang = 'E', lowerUpperCa
 	addLabels(items, lang, lowerUpperCap);
 	return items;
 }
+function handSelectBadKeys(item) {
+	if (nundef(Daat.badKeys)) Daat.badKeys = [];
+	toggleItemSelection(item, Daat.badKeys);
+	// Daat.badKeys.push(item);
+	// mStyleX(lDiv(item),{border:'5px solid yellow'});
+}
 function infoToItem(x) { let item = { info: x, key: x.key }; item.id = lRegister(item); return item; }
-function registeredItemCopy(orig) { let item = jsCopy(orig); item.id = lRegister(item); return item; }
+function modifyColorkey(item) {
+	let colorkey = chooseRandom(Object.keys(ColorDict));
+	let textShadowColor = ColorDict[colorkey].c;
+	item.textShadowColor = textShadowColor;
+	item.color = ColorDict[colorkey];
+	item.colorKey = colorkey;
+	console.log('colorkey', colorkey)
+	applyColorkey(item);
+}
 function makeItemDivs(items, options) {
 	for (let i = 0; i < items.length; i++) {
 		let item = items[i];
 
-		let dOuter = mCreate('div');
-		if (isdef(options.outerStyles)) {
-			console.log('--------------\noptions.ifs',options.ifs,'\nouterStyles',options.outerStyles,'\nitem',item,'\nonly',Object.keys(options.ifs));
-			copyKeys(options.outerStyles,item,null,Object.keys(options.ifs));
-			mStyleX(dOuter, options.outerStyles);
+		if (isdef(options.outerStyles)) copyKeys(item, options.outerStyles, {}, Object.keys(options.ifs)); //options.ifs contains per item dynamic styles!!!!!
+		let dOuter = mCreate('div', options.outerStyles, getUID());
+
+		if (isdef(item.textShadowColor)) {
+			//console.log('halllllllllllll')
+			let sShade = '0 0 0 ' + item.textShadowColor;
+			if (options.showPic) {
+				options.picStyles['text-shadow'] = sShade;
+				options.picStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+			} else {
+				options.labelStyles['text-shadow'] = sShade;
+				options.labelStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+			}
 		}
 
 		let dLabel;
@@ -133,11 +198,30 @@ function makeItemDivs(items, options) {
 
 		if (isdef(options.handler)) dOuter.onclick = options.handler;
 
-		lAdd(item, { div: dOuter, options: options });
-		if (isdef(dLabel)) lAdd(item, { dLabel: dLabel })
-		if (isdef(dPic)) lAdd(item, { dPic: dPic })
+		lAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
+
+		if (isdef(item.textShadowColor)) { applyColorkey(item, options); }
+
+
 	}
 
+}
+function toggleItemSelection(item, selectedItems) {
+	console.log('TOGGKE!!!!')
+	let ui = lDiv(item);
+	item.isSelected = nundef(item.isSelected) ? true : !item.isSelected;
+	if (item.isSelected) mClass(ui, 'framedPicture'); else mRemoveClass(ui, 'framedPicture');
+
+	//if piclist is given, add or remove pic according to selection state
+	if (isdef(selectedItems)) {
+		if (item.isSelected) {
+			console.assert(!selectedItems.includes(item), 'UNSELECTED PIC IN PICLIST!!!!!!!!!!!!')
+			selectedItems.push(item);
+		} else {
+			console.assert(selectedItems.includes(item), 'PIC NOT IN PICLIST BUT HAS BEEN SELECTED!!!!!!!!!!!!')
+			removeInPlace(selectedItems, item);
+		}
+	}
 }
 
 

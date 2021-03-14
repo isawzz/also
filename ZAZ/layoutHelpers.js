@@ -1,6 +1,4 @@
-
-
-//#region helpers
+//#region layout helpers
 function _bestRowsColsFill(items, options) {
 	let combis = _getSLCombis(items.length, options.isRegular);
 
@@ -61,17 +59,82 @@ function _checkOverflowPixel(items, options, dGrid) {
 	if (isOverflown(dGrid)) { _sizeByPixel(items, options, dGrid, -1); }
 
 }
-function _extendOptions(dArea, options, defOptions) {
-	if (nundef(defOptions)) {
-		defOptions = {
-			szPic: { w: 100, h: 100 },
-			showLabels: true, maxlen: 25, luc: 'c', labelPos: 'bottom', lang: 'D',
-			fzText: 20, fzPic: 60,
-			padding: .025, gap: .1, isUniform: true, isRegular: true, fillArea: false,
-		};
+function _standardHandler(handler) {
+	let f = isdef(handler) ?
+		ev => { ev.cancelBubble = true; console.log('clicked on', evToClosestId(ev), evToLive(ev), evToItem(ev)); handler(evToItem(ev)); }
+		: ev => { ev.cancelBubble = true; console.log('clicked on', evToClosestId(ev), evToLive(ev), evToItem(ev)); };
+	return f;
+}
+function _extendOptions(options, defOptions) {
+	defOptions = {
+		n: 20,
+		wper: 90, hper: 90, dParent: dTable,
+		szPic: { w: 100, h: 100 },
+		showLabels: true, maxlen: 25, luc: 'c', labelPos: 'bottom', lang: 'D',
+		fzText: 20, fzPic: 60,
+		padding: .025, gap: .1, isUniform: true, isRegular: true, fillArea: false,
+		shufflePositions: false, sameBackground: true, showRepeat: false, repeat: 1,
+		contrast: .32,
+		ifs: {},
+		handler: _standardHandler,
+	};
+
+	addKeys(defOptions, options);
+
+	if (nundef(options.dArea)) {
+		if (isdef(options.areaPadding)) {
+			options.dArea = getMainAreaPadding(options.dParent, padding = options.areaPadding);
+		} else options.dArea = getMainAreaPercent(options.dParent, null, options.wper, options.hper, getUID());
+	}
+	options.area = getRect(options.dArea);
+	options.idArea = options.dArea.id;
+	options.aRatio = options.area.w / options.area.h;
+	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
+
+	if (options.repeat > 1 && nundef(options.ifs.bg)) {
+		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
+		options.ifs.bg = bg;
 	}
 
-	addKeys(options, defOptions);
+	_calcFontPicFromText(options, false);
+	//_calcPadGap(options, w, h);
+
+
+	if (nundef(options.labelStyles)) options.labelStyles = {};
+
+	if (options.showLabels) {
+		if (options.labelPos == 'bottom') options.labelBottom = true; else options.labelTop = true;
+		options.labelStyles.fz = options.fzText;
+	}
+
+	options.picStyles = { fz: options.fzPic };
+
+	options.outerStyles = {
+		bg: 'blue', fg: 'contrast',
+		display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
+		padding: 0, box: true, rounding: 6,
+	};
+
+	return options;
+}
+function _extendOptions_0(dArea, options, defOptions) {
+	defOptions = {
+		szPic: { w: 100, h: 100 },
+		showLabels: true, maxlen: 25, luc: 'c', labelPos: 'bottom', lang: 'D',
+		fzText: 20, fzPic: 60,
+		padding: .025, gap: .1, isUniform: true, isRegular: true, fillArea: false,
+		shufflePositions: false, sameBackground: true, showRepeat: false, repeat: 1,
+		contrast: .32,
+		ifs: {},
+		handler: _standardHandler,
+	};
+
+	addKeys(defOptions, options);
+
+	if (options.repeat > 1 && nundef(options.ifs.bg)) {
+		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
+		options.ifs.bg = bg;
+	}
 
 	_calcFontPicFromText(options, false);
 	//_calcPadGap(options, w, h);
@@ -91,7 +154,8 @@ function _extendOptions(dArea, options, defOptions) {
 	options.picStyles = { fz: options.fzPic };
 
 	options.outerStyles = {
-		bg: valf(options.bg,'random'), display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
+		bg: 'blue', fg: 'contrast',
+		display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
 		padding: 0, box: true, rounding: 6,
 	};
 
@@ -106,7 +170,7 @@ function _extendOptionsFillArea(dArea, options) {
 	};
 	if (nundef(options.fzPic)) options.fzPic = Math.floor(options.fzText * 4 * (options.luc == 'u' ? .7 : .6)); //taking 4 as min word length
 
-	_extendOptions(dArea, options, defOptions);
+	_extendOptions_0(dArea, options, defOptions);
 
 }
 function _findBestCombiOrShrink(items, options, combis) {
@@ -155,7 +219,7 @@ function _genOptions(opt = {}) {
 		fzText: 20, fzPic: 60,
 		padding: .025, gap: .1, isUniform: true, isRegular: true, fillArea: false,
 	};
-	addKeys(opt, defOptions);
+	addKeys(defOptions, opt);
 
 	if (nundef(opt.dArea)) opt.dArea = getMainAreaPercent(dTable, YELLOW, opt.wper, opt.hper, 'dArea');
 	if (nundef(opt.items)) opt.items = genItems(opt.n, opt);
@@ -263,16 +327,16 @@ function _handleTextTooSmall(fz, fzPic, wn, hn, options) {
 	options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
 	options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
 }
-function _makeGridGrid(items, options, dGrid, showBorder=false) {
+function _makeGridGrid(items, options, dGrid, showBorder = false) {
 	let wcol = options.isUniform ? '1fr' : 'auto';
 	let display = options.fillArea ? 'grid' : 'inline-grid';
 	mStyleX(dGrid, {
 		display: display,
 		'grid-template-columns': `repeat(${options.cols}, ${wcol})`,
 		gap: options.gap,
-		box:true
+		box: true
 	});
-	if (showBorder)		mStyleX(dGrid, { border: '5px solid yellow' });
+	if (showBorder) mStyleX(dGrid, { border: '5px solid yellow' });
 }
 function _makeNoneGrid(items, options, dGrid) {
 	options.szPic = { w: options.area.w / options.cols, h: options.area.h / options.rows };

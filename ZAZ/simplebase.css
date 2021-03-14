@@ -20,6 +20,10 @@
 	white-space: normal;
 	overflow: visible;
 }
+.framedPicture {
+	outline: solid 8px yellow;
+	outline-offset: -6px;
+}
 
 html,
 body {

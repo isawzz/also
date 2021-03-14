@@ -7840,7 +7840,7 @@ birthday cake:
   w: 125
   h: 133
   E: cake
-  D: kuchen
+  D: torte
   F: gâteau
   S: pastel
   C: 蛋糕
@@ -30344,8 +30344,8 @@ gear:
   w: 125
   h: 133
   E: gear
-  D: ausrüstung
-  F: équipement
+  D: zahnrad
+  F: embrayage
   S: engranaje
   C: 齒輪
   cats:
@@ -53482,7 +53482,7 @@ person bowing:
   w: 125
   h: 133
   E: sorry
-  D: es tut uns leid
+  D: entschuldigung
   F: pardon
   S: lo siento
   C: 抱歉
@@ -61542,10 +61542,10 @@ seal:
   w: 125
   h: 118
   E: seal
-  D: dichtung
-  F: joint
-  S: sello
-  C: 海豹
+  D: seelöwe
+  F: phoque
+  S: foca
+  C: 密封
   cats:
     - huge
     - all
@@ -67032,9 +67032,9 @@ spiral shell:
   w: 125
   h: 133
   E: shell
-  D: schale
+  D: muschel
   F: coquille
-  S: cáscara
+  S: concha
   C: 貝殼
   cats:
     - huge
@@ -79783,10 +79783,10 @@ woman-elf-face:
   isDuplicate: false
   w: 125
   h: 133
-  E: blond hair
-  D: blonhaarig
-  F: cheveux blonds
-  S: pelo rubio
+  E: blond
+  D: blond
+  F: blond
+  S: rubio
   C: 金發
   cats:
     - huge

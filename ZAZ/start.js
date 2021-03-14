@@ -1,17 +1,20 @@
 async function _start() {
-	// cycleThroughTestsOnClick();
-	//testOnClick(sample_idealGridLayout);
 
 	createSubtitledPage(BLUE);
-	[items,options] = sample_idealGridLayout_try1(true,false);
-	setTimeout(() => nachbearbeitung(items,options), 10);
+	//[items, options] = samplePicsAndText(); //ok!
+	[items, options] = itemViewer(); //sample00(); //ok!
 
-	// sample_regular_uniform_grid_fill()
-	// sample_fill_area_flex_uniform(47);
-	//sample_fill_area_flex_non_uniform(47);
+
+	//KOMISCH ABER GEHT! [items,options] = sample_regular_uniform_grid_fill()
+	//BROKEN!!! [items,options] = sample_fill_area_flex_uniform(47); 
+	//BROKEN!!! [items,options] = sample_fill_area_flex_non_uniform(47);
+	setTimeout(() => nachbearbeitung(items, options), 10);
+
+	//BROKEN!!! cycleThroughTestsOnClick(); return;
+	// testOnClick(sample_idealGridLayout_try2); return; //ok, aber hupft herum!
 }
-function rectToSize(r){return {w:r.w,h:r.h}}
-function nachbearbeitung(items,options) {
+function rectToSize(r) { return { w: r.w, h: r.h } }
+function nachbearbeitung(items, options) {
 	//nachbearbeitung!
 
 	let dGrid = mBy(options.idGrid);
@@ -19,19 +22,19 @@ function nachbearbeitung(items,options) {
 	let gRect = getRect(dGrid);
 	let aRect = getRect(dArea);
 	let itemRect = getRect(lDiv(items[0]));
-	let [gsz,asz,itemsz]=[rectToSize(gRect),rectToSize(aRect),rectToSize(itemRect)]
+	let [gsz, asz, itemsz] = [rectToSize(gRect), rectToSize(aRect), rectToSize(itemRect)]
 
-	console.log('grid:',gsz,'area',asz,'item',itemsz);
+	//console.log('grid:',gsz,'area',asz,'item',itemsz);
 	let extra = options.area.h - gRect.h;
-	let pv=valf(options.percentVertical,50);
+	let pv = valf(options.percentVertical, 50);
 
-	let matop = extra*pv/100;
+	let matop = extra * pv / 100;
 	mStyleX(dGrid, { matop: matop });
 	mReveal(dMain);
 }
 function testOnClick(test) {
 	createSubtitledPage(BLUE);
-	onclick = ()=>nextTest(test);
+	onclick = () => nextTest(test);
 	nextTest(test);
 }
 
@@ -53,12 +56,12 @@ function cycleThroughTestsOnClick() {
 	nextTest();
 }
 function nextTest(f) {
-	if (nundef(f))  f = Daat.fs[Daat.index];
+	if (nundef(f)) f = Daat.fs[Daat.index];
 	console.log('test:', f.name);
 	//dMain.style.opacity=0;
-	let [items,options] = f();
-	setTimeout(() => nachbearbeitung(items,options), 20);
-	console.log('options',options)
+	let [items, options] = f();
+	setTimeout(() => nachbearbeitung(items, options), 20);
+	console.log('options', options)
 	if (isdef(Daat.index)) Daat.index = (Daat.index + 1) % Daat.fs.length;
 }
 
