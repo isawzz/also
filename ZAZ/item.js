@@ -168,11 +168,11 @@ function getItemsMaxWordLength(n, len, keySet = 'all', lang = 'E', lowerUpperCap
 	return items;
 }
 
-function handSelectBadKeys(item) {
-	if (nundef(Daat.badKeys)) Daat.badKeys = [];
-	toggleItemSelection(item, Daat.badKeys);
-	return Daat.badKeys.map(x=>x.key);
-	// Daat.badKeys.push(item);
+function handSelectSpecialKeys(item) {
+	if (nundef(Daat.specialKeys)) Daat.specialKeys = [];
+	toggleItemSelection(item, Daat.specialKeys);
+	return Daat.specialKeys.map(x=>x.key);
+	// Daat.specialKeys.push(item);
 	// mStyleX(lDiv(item),{border:'5px solid yellow'});
 }
 function infoToItem(x) { let item = { info: x, key: x.key }; item.id = lRegister(item); return item; }

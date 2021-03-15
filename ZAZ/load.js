@@ -6,6 +6,8 @@ async function _loader() {
 
 	C52 = await localOrRoute('C52', '../assets/c52.yaml');
 	Syms = await localOrRoute('Syms', '../assets/syms.yaml');
+	let symsNo = await localOrRoute('Syms', '../assets/symsNo.yaml');
+	for(const k in symsNo){ delete Syms[k.toLowerCase()]; }
 	SymKeys = Object.keys(Syms);
 
 	//dbInit:

@@ -256,12 +256,12 @@ function _reduceFontsBy(tx, px, items, options) {
 		if (tx != 0) mStyleX(ui.dLabel, { fz: fz });
 		if (px != 0) mStyleX(ui.dPic, { fz: fzPic });
 	}
-	console.log('fonts set to', fz, fzPic);
+	//console.log('fonts set to', fz, fzPic);
 }
 function _setTextFont(items,options,fz){
 	options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
 	items.map(x=>{let dl=lGet(x).dLabel;if (isdef(dl))dl.style.fontSize=fz+'px';});
-	console.log('fonts set to', fz);
+	//console.log('fonts set to', fz);
 }
 function _sizeByFactor(items, options, dGrid, factor = .9) {
 	console.log('vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);

@@ -6,7 +6,7 @@ function itemViewer() {
 		szPic: { w: 100, h: 70 }, padding:0, 
 		showLabels: true, showPic: true, maxlen: 100,
 		isUniform: true, fillArea: true, isRegular: true, hugeFont: true,
-		handler: _standardHandler(handSelectBadKeys),
+		handler: _standardHandler(handSelectspecialKeys),
 	};
 	_extendOptions(options);
 

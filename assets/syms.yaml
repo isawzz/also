@@ -2594,7 +2594,7 @@ airplane departure:
   w: 125
   h: 133
   E: departure
-  D: abfahrt
+  D: abflug
   F: départ
   S: salida
   C: 離開
@@ -3107,9 +3107,9 @@ amphora:
   isDuplicate: true
   w: 125
   h: 133
-  E: jug
-  D: krug
-  F: cruche
+  E: amphora
+  D: amphore
+  F: amphore
   S: jarra
   C: 壺
   cats:
@@ -4460,7 +4460,7 @@ articulated lorry:
   w: 125
   h: 118
   E: truck
-  D: lkw
+  D: lastwagen
   F: un camion
   S: camión
   C: 卡車
@@ -5481,7 +5481,7 @@ badminton:
   w: 125
   h: 133
   E: badminton
-  D: badminton
+  D: federball
   F: badminton
   S: bádminton
   C: 羽毛球
@@ -5569,11 +5569,11 @@ balance scale:
   isDuplicate: false
   w: 125
   h: 133
-  E: scale
-  D: rahmen
-  F: échelle
-  S: escala
-  C: 規模
+  E: balance scale
+  D: waage
+  F: balance
+  S: balanza
+  C: 平衡秤
   cats:
     - huge
     - all
@@ -6245,11 +6245,11 @@ barrier:
   isDuplicate: true
   w: 125
   h: 133
-  E: traffic
-  D: der verkehr
-  F: trafic
-  S: tráfico
-  C: 交通
+  E: barrier
+  D: schranke
+  F: barrière
+  S: barrera
+  C: 障礙
   cats:
     - huge
     - all
@@ -7181,11 +7181,11 @@ beer mug:
   isDuplicate: false
   w: 125
   h: 133
-  E: mug
-  D: becher
-  F: agresser
-  S: jarra
-  C: 杯
+  E: beer
+  D: bier
+  F: biere
+  S: cerveza
+  C: 啤酒杯
   cats:
     - huge
     - all
@@ -7953,10 +7953,10 @@ black nib:
   isDuplicate: false
   w: 125
   h: 133
-  E: pen
-  D: stift
+  E: fountain pen
+  D: füllfeder
   F: stylo
-  S: bolígrafo
+  S: pluma fuente
   C: 鋼筆
   cats:
     - huge
@@ -9022,11 +9022,11 @@ bookmark tabs:
   isDuplicate: false
   w: 125
   h: 133
-  E: tabs
-  D: registerkarten
-  F: onglets
-  S: pestañas
-  C: 標籤
+  E: bookmarks
+  D: lesezeichen
+  F: signets
+  S: marcadores
+  C: 書籤
   cats:
     - huge
     - all
@@ -10157,8 +10157,8 @@ briefs:
   w: 125
   h: 133
   E: briefs
-  D: slip
-  F: slips
+  D: unterhose
+  F: feuillet
   S: bragas
   C: 內褲
   cats:
@@ -11996,10 +11996,10 @@ canned food:
   w: 125
   h: 133
   E: can
-  D: kann
-  F: pouvez
-  S: pueden
-  C: 能夠
+  D: konserve
+  F: boîte
+  S: lata
+  C: 罐
   cats:
     - huge
     - all
@@ -13345,9 +13345,9 @@ cartwheel:
   w: 100
   h: 133
   E: cartwheel
-  D: wagenrad
-  F: roue de charrette
-  S: rueda de carro
+  D: rad
+  F: roue
+  S: voltereta
   C: 車輪
   cats:
     - huge
@@ -13362,9 +13362,9 @@ cartwheeling:
   w: 125
   h: 133
   E: cartwheel
-  D: wagenrad
-  F: roue de charrette
-  S: rueda de carro
+  D: rad
+  F: roue
+  S: voltereta
   C: 車輪
   cats:
     - huge
@@ -14518,7 +14518,7 @@ cherry blossom:
   w: 125
   h: 133
   E: blossom
-  D: blühen
+  D: blüte
   F: fleur
   S: flor
   C: 開花
@@ -14556,7 +14556,7 @@ chess pawn:
   w: 125
   h: 133
   E: pawn
-  D: pfand
+  D: bauer
   F: pion
   S: empeñar
   C: 典當
@@ -16239,11 +16239,11 @@ club suit:
   isDuplicate: false
   w: 125
   h: 133
-  E: club
-  D: verein
-  F: club
-  S: club
-  C: 俱樂部
+  E: clubs
+  D: treff
+  F: trèfles
+  S: trebol
+  C: 草花
   cats:
     - huge
     - all
@@ -17493,7 +17493,7 @@ cookie:
   w: 125
   h: 133
   E: cookie
-  D: plätzchen
+  D: keks
   F: biscuit
   S: galleta
   C: 曲奇餅
@@ -20099,8 +20099,8 @@ delivery truck:
   w: 125
   h: 133
   E: truck
-  D: lkw
-  F: un camion
+  D: lastwagen
+  F: camion
   S: camión
   C: 卡車
   cats:
@@ -32064,11 +32064,11 @@ grin:
   isDuplicate: false
   w: 97
   h: 110
-  E: grin
-  D: grinsen
-  F: sourire
-  S: mueca
-  C: 咧嘴笑
+  E: laugh
+  D: lachen
+  F: rire
+  S: reir
+  C: 笑
   cats:
     - huge
 grin-alt:
@@ -41776,7 +41776,7 @@ label:
   w: 125
   h: 133
   E: label
-  D: etikette
+  D: etikett
   F: étiquette
   S: etiqueta
   C: 標籤
@@ -57791,10 +57791,10 @@ ram:
   w: 125
   h: 133
   E: ram
-  D: ram
-  F: ram
-  S: ram
-  C: 內存
+  D: widder
+  F: mouton
+  S: carnero
+  C: 羊
   cats:
     - huge
     - all
@@ -65896,9 +65896,9 @@ spade suit:
   w: 125
   h: 133
   E: spade
-  D: spaten
-  F: bêche
-  S: pala
+  D: pik
+  F: pique
+  S: espada
   C: 鏟
   cats:
     - huge
@@ -80851,7 +80851,7 @@ zipper-mouth face:
   w: 125
   h: 133
   E: sealed
-  D: versiegelt
+  D: verschwiegen
   F: scellé
   S: sellado
   C: 密封
