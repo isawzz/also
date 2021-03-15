@@ -1,3 +1,37 @@
+function genItems(n, options) {
+	//console.log(n,options.maxlen)
+	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
+	calcLongestLabel(items, options);
+
+	//hier koennt ich die ifs machen!
+	let ifs = options.ifs;
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		item.index = i;
+		//item.ifs = jsCopy(options.ifs);
+		let val;
+		for (const propName in ifs) {
+			let prop = ifs[propName];
+			//console.log('___________',ifs[propName])
+			//console.log('TYPE OF', propName, 'IS', typeof prop, prop, isLiteral(prop))
+			if (isLiteral(prop)) val = prop;
+			else if (isList(prop)) val = prop[i % prop.length];
+			else if (typeof (prop) == 'function') val = prop(i, item, options, items);
+			else val = null;
+			if (isdef(val)) item[propName] = val;
+			//console.log('ifs prop:',propName,item[propName]);
+		}
+	}
+
+	if (options.repeat > 1) { items = zRepeatEachItem(items, options.repeat, options.shufflePositions); }
+	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
+
+	options.N = items.length;
+	console.log(items)
+	return items;
+}
+
+
 function sample_idealGridLayout_orig(showLabels = true, showPic = true) {
 	let [isUniform, fillArea, isRegular] = [true, true, true];
 	let dArea = getMainAreaPercent(dTable, null, 100, 70, getUID());

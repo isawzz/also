@@ -1,4 +1,4 @@
-const BROADCAST_SETTINGS = false;
+const BROADCAST_SETTINGS = true;
 
 //#region config
 

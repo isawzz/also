@@ -50,38 +50,6 @@ function calcLongestLabel(items, options) {
 	// items.map(x=>console.log(x.label,x.label.length));
 	options.labelSum = arrSum(items, ['label', 'length']);
 }
-function genItems(n, options) {
-	//console.log(n,options.maxlen)
-	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
-	calcLongestLabel(items, options);
-
-	//hier koennt ich die ifs machen!
-	let ifs = options.ifs;
-	for (let i = 0; i < items.length; i++) {
-		let item = items[i];
-		item.index = i;
-		//item.ifs = jsCopy(options.ifs);
-		let val;
-		for (const propName in ifs) {
-			let prop = ifs[propName];
-			//console.log('___________',ifs[propName])
-			//console.log('TYPE OF', propName, 'IS', typeof prop, prop, isLiteral(prop))
-			if (isLiteral(prop)) val = prop;
-			else if (isList(prop)) val = prop[i % prop.length];
-			else if (typeof (prop) == 'function') val = prop(i, item, options, items);
-			else val = null;
-			if (isdef(val)) item[propName] = val;
-			//console.log('ifs prop:',propName,item[propName]);
-		}
-	}
-
-	if (options.repeat > 1) { items = zRepeatEachItem(items, options.repeat, options.shufflePositions); }
-	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
-
-	options.N = items.length;
-	console.log(items)
-	return items;
-}
 function zRepeatEachItem(items, repeat, shufflePositions = false) {
 	//repeat items: repeat & shufflePositions
 	let orig = items;
@@ -128,30 +96,82 @@ function zRepeatInColorEachItem(items, colorKeys) {
 	//console.log(itColors[0])
 	return itColors;
 }
-function getAllItems(cond, baseSet = 'all') { return getItems(10000, cond, baseSet); }
 function getItem(k) { return infoToItem(Syms[k]); }
-function getItems(n, cond, baseSet = 'all') {
+
+//new API:
+function genKeys(options) {
+	let [n, maxlen, lang, keySet] = [options.n, options.maxlen, options.lang, options.keySet];
+	let cond = isdef(maxlen) ? ((x) => x[lang].length <= maxlen) : null;
+	let keys = _getKeysCond(n, cond, keySet);
+	return keys;
+}
+function _getKeysCond(n, cond, keySet = 'all') {
+	console.log('n', n, 'cond', cond, 'keySet', keySet)
+	if (isString(keySet)) keySet = KeySets[keySet];
+	let keys = isdef(cond) ? isString(cond) ?
+		isdef(KeySets[cond]) ? KeySets[cond] : keySet.filter(x => x.includes(cond))
+		: keySet.filter(x => cond(Syms[x])) : keySet;
+	keys = n >= keys.length ? keys : choose(keys, n);
+	return keys;
+}
+function genItems(options) { let keys = genKeys(options); let items = genItemsFromKeys(keys, options); return items; }
+function genItemsFromKeys(keys, options) {
+	let items = keys.map(x => infoToItem(Syms[x]));
+	addLabels(items, options.lang, options.lowerUpperCap);
+	calcLongestLabel(items, options);
+
+	//hier koennt ich die ifs machen!
+	let ifs = options.ifs;
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		item.index = i;
+		//item.ifs = jsCopy(options.ifs);
+		let val;
+		for (const propName in ifs) {
+			let prop = ifs[propName];
+			//console.log('___________',ifs[propName])
+			//console.log('TYPE OF', propName, 'IS', typeof prop, prop, isLiteral(prop))
+			if (isLiteral(prop)) val = prop;
+			else if (isList(prop)) val = prop[i % prop.length];
+			else if (typeof (prop) == 'function') val = prop(i, item, options, items);
+			else val = null;
+			if (isdef(val)) item[propName] = val;
+			//console.log('ifs prop:',propName,item[propName]);
+		}
+	}
+
+	if (options.repeat > 1) { items = zRepeatEachItem(items, options.repeat, options.shufflePositions); }
+	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
+
+	options.N = items.length;
+	//console.log(items)
+	return items;
+}
+
+//#older code
+function getAllItems(cond, keySet = 'all') { return getItems(10000, cond, keySet); }
+function getItems(n, cond, keySet = 'all') {
 	//n ... number, key list, info list or item list
 	//cond ... undefined, string(KeySet or search SymKeys) or function(filter SymKeys)
-	if (isString(baseSet)) baseSet = KeySets[baseSet];
-	let keys = isdef(cond) ? isString(cond) ?
-		isdef(KeySets[cond]) ? KeySets[cond] : baseSet.filter(x => x.includes(cond))
-		: baseSet.filter(x => cond(Syms[x])) : baseSet;
-	if (isNumber(n)) n = n >= keys.length ? keys : choose(keys, n);
+	if (isNumber(n)) { n = _getKeysCond(n, cond, keySet); }
+
+	//n is now list of keys! here i can 
 	if (isString(n[0])) n = n.map(x => Syms[x]);
 	if (nundef(n[0].info)) n = n.map(x => infoToItem(x));
 	return n;
 }
-function getItemsMaxLen(n, len, baseSet = 'all', lang = 'E', lowerUpperCap = 'c') { return getItemsMaxWordLength(...arguments); }
-function getItemsMaxWordLength(n, len, baseSet = 'all', lang = 'E', lowerUpperCap = 'c') {
+function getItemsMaxLen(n, len, keySet = 'all', lang = 'E', lowerUpperCap = 'c') { return getItemsMaxWordLength(...arguments); }
+function getItemsMaxWordLength(n, len, keySet = 'all', lang = 'E', lowerUpperCap = 'c') {
 	//assumes adding the labels in that language!
-	let items = getItems(n, x => x[lang].length <= len, baseSet); // cond is on Syms object!!!
+	let items = getItems(n, x => x[lang].length <= len, keySet); // cond is on Syms object!!!
 	addLabels(items, lang, lowerUpperCap);
 	return items;
 }
+
 function handSelectBadKeys(item) {
 	if (nundef(Daat.badKeys)) Daat.badKeys = [];
 	toggleItemSelection(item, Daat.badKeys);
+	return Daat.badKeys.map(x=>x.key);
 	// Daat.badKeys.push(item);
 	// mStyleX(lDiv(item),{border:'5px solid yellow'});
 }
@@ -207,7 +227,6 @@ function makeItemDivs(items, options) {
 
 }
 function toggleItemSelection(item, selectedItems) {
-	console.log('TOGGKE!!!!')
 	let ui = lDiv(item);
 	item.isSelected = nundef(item.isSelected) ? true : !item.isSelected;
 	if (item.isSelected) mClass(ui, 'framedPicture'); else mRemoveClass(ui, 'framedPicture');

@@ -97,6 +97,18 @@ function iStyle(i, styles) { mStyleX(iDiv(i), styles); }
 
 //region m
 function mAppend(d, child) { d.appendChild(child); }
+function mButton(caption, handler, dParent, styles, classes) {
+	let x = mCreate('button');
+	x.innerHTML = caption;
+	if (isdef(handler)) x.onclick = handler;
+	if (isdef(dParent)) dParent.appendChild(x);
+	if (isdef(styles)) mStyleX(x, styles);
+	if (isdef(classes)) {
+		//console.log('setting classes',classes,...classes)
+		mClass(x, ...classes);
+	}
+	return x;
+}
 function mBy(id) { return document.getElementById(id); }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
@@ -1237,6 +1249,7 @@ function arrFirst(arr) { return arr.length > 0 ? arr[0] : null; }
 function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
 function arrTail(arr) { return arr.slice(1); }
 function arrFromIndex(arr, i) { return arr.slice(i); }
+function arrFromTo(arr, iFrom, iTo) { return takeFromTo(arr,iFrom,iTo); }
 function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
 function arrPlus(a, b) { let res = a.concat(b); return res; }
 function arrWithout(a, b) { return arrMinus(a, b); }
@@ -1480,6 +1493,15 @@ function range(f, t, st = 1) {
 		arr.push(i);
 	}
 	return arr;
+}
+function removeInPlace(arr, el) {
+	for (var i = 0; i < arr.length; i++) {
+		if (arr[i] === el) {
+			arr.splice(i, 1);
+			i--;
+			return;
+		}
+	}
 }
 function shuffle(arr) { return fisherYates(arr); }
 function shuffleChildren(dParent) {

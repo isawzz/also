@@ -61,7 +61,7 @@ function _checkOverflowPixel(items, options, dGrid) {
 }
 function _standardHandler(handler) {
 	let f = isdef(handler) ?
-		ev => { ev.cancelBubble = true; console.log('clicked on', evToClosestId(ev), evToLive(ev), evToItem(ev)); handler(evToItem(ev)); }
+		ev => { ev.cancelBubble = true; let res = handler(evToItem(ev)); console.log('clicked', evToItem(ev).key, 'res', res); }
 		: ev => { ev.cancelBubble = true; console.log('clicked on', evToClosestId(ev), evToLive(ev), evToItem(ev)); };
 	return f;
 }
@@ -70,8 +70,8 @@ function _extendOptions(options, defOptions) {
 		n: 20,
 		wper: 90, hper: 90, dParent: dTable,
 		szPic: { w: 100, h: 100 },
-		showLabels: true, maxlen: 25, luc: 'c', labelPos: 'bottom', lang: 'D',
-		fzText: 20, fzPic: 60,
+		showLabels: true, luc: 'c', labelPos: 'bottom', lang: 'D', keySet: 'all',
+		fzText: 20, fzPic: 60, 
 		padding: .025, gap: .1, isUniform: true, isRegular: true, fillArea: false,
 		shufflePositions: false, sameBackground: true, showRepeat: false, repeat: 1,
 		contrast: .32,
@@ -110,7 +110,7 @@ function _extendOptions(options, defOptions) {
 	options.picStyles = { fz: options.fzPic };
 
 	options.outerStyles = {
-		bg: 'blue', fg: 'contrast',
+		fg: 'contrast',
 		display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
 		padding: 0, box: true, rounding: 6,
 	};
@@ -257,6 +257,11 @@ function _reduceFontsBy(tx, px, items, options) {
 		if (px != 0) mStyleX(ui.dPic, { fz: fzPic });
 	}
 	console.log('fonts set to', fz, fzPic);
+}
+function _setTextFont(items,options,fz){
+	options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
+	items.map(x=>{let dl=lGet(x).dLabel;if (isdef(dl))dl.style.fontSize=fz+'px';});
+	console.log('fonts set to', fz);
 }
 function _sizeByFactor(items, options, dGrid, factor = .9) {
 	console.log('vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);

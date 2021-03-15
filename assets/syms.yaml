@@ -5231,7 +5231,7 @@ backhand index pointing down:
   w: 125
   h: 133
   E: down
-  D: nieder
+  D: unten
   F: vers le bas
   S: abajo
   C: 下
@@ -5271,7 +5271,7 @@ backhand index pointing right:
   w: 125
   h: 133
   E: right
-  D: recht
+  D: rechts
   F: droite
   S: derecho
   C: 對
@@ -5540,9 +5540,9 @@ baguette bread:
   w: 125
   h: 133
   E: baguette
-  D: stangenbrot
+  D: baguette
   F: baguette
-  S: junquillo
+  S: pan
   C: 法國麵包
   cats:
     - huge
@@ -17311,7 +17311,7 @@ construction site:
   w: 125
   h: 133
   E: construction
-  D: konstruktion
+  D: baustelle
   F: construction
   S: construcción
   C: 施工

@@ -1,18 +1,22 @@
 async function _start() {
 
-	createSubtitledPage(BLUE);
+	createSubtitledPage(BLUE); 
+	
+	//revealMain();
 	//[items, options] = samplePicsAndText(); //ok!
-	[items, options] = itemViewer(); //sample00(); //ok!
+	itemViewer(); return; //sample00(); //ok!
 
 
 	//KOMISCH ABER GEHT! [items,options] = sample_regular_uniform_grid_fill()
 	//BROKEN!!! [items,options] = sample_fill_area_flex_uniform(47); 
 	//BROKEN!!! [items,options] = sample_fill_area_flex_non_uniform(47);
-	setTimeout(() => nachbearbeitung(items, options), 10);
+	//setTimeout(() => nachbearbeitung(items, options), 10);
 
 	//BROKEN!!! cycleThroughTestsOnClick(); return;
 	// testOnClick(sample_idealGridLayout_try2); return; //ok, aber hupft herum!
 }
+function hideMain(){mReveal(dMain);}
+function revealMain(){mReveal(dMain);}
 function rectToSize(r) { return { w: r.w, h: r.h } }
 function nachbearbeitung(items, options) {
 	//nachbearbeitung!

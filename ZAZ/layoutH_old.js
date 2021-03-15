@@ -1,63 +1,35 @@
-//#region itemViewer
-function itemViewerNext() {
-	let i = Daat.iStart;
-	let options = Daat.options;
-	Daat.iStart += options.n;
-	let items = arrFromTo(Daat.items, i, i + options.n);
-
-	//console.log(items[0],items);
-	console.log('presenting items from:', items[0].index, 'to', items[options.n - 1].index, items)
-	// let itemsNext=arrFromTo(items,i,i+100);
-	// Daat.iStart+=100;
-	clearElement(options.dArea);
-	present00(items,options); 
-
-	//items.map(x=>lGet(x).dLabel.style.fontSize='16px');
-}
 function itemViewer() {
 	//options
 	let options = {
 		n: 100,
 		wper: 100, hper: 100, //dParent: dTable, is default!
-		szPic: { w: 100, h: 70 }, padding: 0,
-		showLabels: true, showPic: true, fixTextFont: true,
+		szPic: { w: 100, h: 70 }, padding:0, 
+		showLabels: true, showPic: true, maxlen: 100,
 		isUniform: true, fillArea: true, isRegular: true, hugeFont: true,
 		handler: _standardHandler(handSelectBadKeys),
 	};
 	_extendOptions(options);
-	options.wLongest='alabama';
 
 	//items
-	//let keys = genKeys(options);	keys[0] = 'spiral shell';	let items = genItemsFromKeys(keys,options);
-	Daat.items = genItemsFromKeys(KeySets.all, options);//genItems(options);
-	Daat.options = options;
-	Daat.iStart = 0;
-	options.N=options.n; //WICHTIG!!!
+	let items = genItems(options.n, options);
+	console.log('n',options.n,options.maxlen,options.N,)
 
-	mButton('next', itemViewerNext, dTitleLeft, { outline:'none' });
-
-
-	itemViewerNext();revealMain();
-	//console.log('items',items)
-	//dims&divs, grid
-	//Daat.iStart=0;
-	//ivShow(items,options);
-	//present00(items,options);
-	// return [items,options];
+	//dims&divs
+	//grid
+	present00(items,options);
+	return [items,options];
 }
-
-//#endregion
 
 // OIL paradigm: options - items - layout
 function sample00() {
 	//options
-	let n = _getRandomRegularN(2, 40);
+	let n= _getRandomRegularN(2,40);
 	let options = {
 		n: n,
 		wper: 80, hper: 80, //dParent: dTable, is default!
 		shufflePositions: true, repeat: 4, //colorKeys: ['red', 'blue', 'green'],
 		szPic: { w: 100, h: 100 },
-		showLabels: true, showPic: true, percentVertical: 30, maxlen: n < 10 ? 9 : 6,
+		showLabels: true, showPic: true, percentVertical: 30, maxlen: n<10?9:6,
 		isUniform: true, fillArea: true, isRegular: true,
 		handler: _standardHandler(modifyColorkey),
 	};
@@ -65,28 +37,18 @@ function sample00() {
 
 	//items
 	let items = genItems(options.n, options);
-	console.log('n', options.n, options.maxlen, options.N,)
+	console.log('n',options.n,options.maxlen,options.N,)
 
 	//dims&divs
 	//grid
-	present00(items, options);
-	return [items, options];
+	present00(items,options);
+	return [items,options];
 }
-function present00(items, options) {
+function present00(items,options){
 	[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
 	//console.log('rows', options.rows, 'cols', options.cols);
-	
-	let fzOrig=options.fzOrig=options.fzText;
-	console.log('fzText',options.fzText)
 	_setRowsColsSize(options);
-
-	if (options.fixTextFont == true) {
-		_setTextFont(items,options,(options.fzOrig+options.fzText)/2);
-		console.log('fzText',options.fzText)
-	}
-
 	makeItemDivs(items, options);
-	console.log('fzText',options.fzText)
 
 	let dGrid = mDiv(options.dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, getUID());
 
@@ -94,8 +56,6 @@ function present00(items, options) {
 	for (const item of items) { mAppend(dGrid, lDiv(item)); }
 	_makeGridGrid(items, options, dGrid);
 	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-	console.log('fzText',options.fzText)
-	// options.fzOrig = options.fzText;
 
 	let wa = options.area.w, ha = options.area.h;
 	let wi = (wa / options.cols) - 1.25 * options.gap;
@@ -111,7 +71,6 @@ function present00(items, options) {
 	//let fpMax = Math.min(hi / 2, wi * 2 / 3, hi - fzMax);
 	//console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
 	//console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
-	console.log('===>pad', options.padding, 'wi', wi, 'wnet',wi-2*options.padding, 'fz',fzMax );
 
 	options.fzPic = options.picStyles.fz = fpMax; //Math.floor(fzPic)
 	options.fzText = options.labelStyles.fz = fzMax; // Math.floor(fz);
@@ -124,10 +83,6 @@ function present00(items, options) {
 		if (isdef(ui.dPic)) mStyleX(ui.dPic, { fz: fpMax });
 		if (isdef(ui.dLabel)) mStyleX(ui.dLabel, { fz: fzMax });
 	}
-	console.log('fzText',options.fzText);
-
-	if (options.fzText<options.fzOrig && options.fixTextFont==true) _setTextFont(items,options,(options.fzOrig+options.fzText)/2)
-
 	mStyleX(dGrid, { display: 'inline-grid', wmax: options.area.w, hmax: options.area.h });
 
 	//_checkOverflow(items, options, dGrid);
@@ -149,7 +104,6 @@ function present00(items, options) {
 		console.log('...nachher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
 	}
 
-	console.log('fzText',options.fzText)
 
 	return [items, options];
 
@@ -409,7 +363,6 @@ function sample_fill_area_flex_non_uniform(N) {
 	return [items, options];
 
 }
-
 
 
 
