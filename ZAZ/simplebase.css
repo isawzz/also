@@ -24,6 +24,15 @@
 	outline: solid 8px yellow;
 	outline-offset: -6px;
 }
+.dragelem {
+	position: fixed;
+	z-index: 100;
+	cursor: pointer;
+	color: rgb(60, 0, 248); /* change [input cursor color] by this*/
+	text-shadow: 0px 0px 0px #d60b0b; /* change [input font] by this*/
+	-webkit-text-fill-color: transparent;
+	border: 2px solid pink;
+}
 
 html,
 body {

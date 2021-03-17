@@ -12,7 +12,7 @@ const CLEAR_LOCAL_STORAGE =  BROADCAST_SETTINGS;
 
 //#endregion
 
-var C52, Syms, SymKeys, KeySets;
+var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup; //, CatSets, SymbolDict, SInfo;
 
 //#region color constants
 var ColorNames; //see base.js colors

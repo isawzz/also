@@ -168,13 +168,13 @@ function getItemsMaxWordLength(n, len, keySet = 'all', lang = 'E', lowerUpperCap
 	return items;
 }
 
-function handSelectSpecialKeys(item) {
-	if (nundef(Daat.specialKeys)) Daat.specialKeys = [];
-	toggleItemSelection(item, Daat.specialKeys);
-	return Daat.specialKeys.map(x=>x.key);
-	// Daat.specialKeys.push(item);
-	// mStyleX(lDiv(item),{border:'5px solid yellow'});
+function getItemsCat(n,cat){
+	let keys = KeySets.all;
+	keys = KeySets.all.filter(x=>firstCond(Syms[x].cats,x=>x.includes(cat)));
+	keys = choose(keys,n)
+	return getItems(keys);
 }
+
 function infoToItem(x) { let item = { info: x, key: x.key }; item.id = lRegister(item); return item; }
 function modifyColorkey(item) {
 	let colorkey = chooseRandom(Object.keys(ColorDict));

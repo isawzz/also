@@ -1,59 +1,3 @@
-//#region itemViewer
-function itemViewerNext() {
-	let i = Daat.iStart;
-	let options = Daat.options;
-	Daat.iStart += options.n;
-	let items = arrFromTo(Daat.items, i, i + options.n);
-
-	//console.log(items[0],items);
-	//console.log('presenting items from:', items[0].index, 'to', items[options.n - 1].index, items)
-	// let itemsNext=arrFromTo(items,i,i+100);
-	// Daat.iStart+=100;
-	clearElement(options.dArea);
-	options.fzText = 20;
-	present00(items, options);
-
-	//items.map(x=>lGet(x).dLabel.style.fontSize='16px');
-}
-function itemViewer() {
-	//options
-	let options = {
-		n: 100,
-		wper: 100, hper: 100, //dParent: dTable, is default!
-		szPic: { w: 100, h: 70 }, padding: 0,
-		showLabels: true, showPic: true, fixTextFont: true,
-		isUniform: true, fillArea: true, isRegular: true, hugeFont: true,
-		handler: _standardHandler(handSelectSpecialKeys),
-	};
-	_extendOptions(options);
-	options.wLongest = 'alabama';
-
-	//items
-	//let keys = genKeys(options);	keys[0] = 'spiral shell';	let items = genItemsFromKeys(keys,options);
-	Daat.items = genItemsFromKeys(KeySets.all, options);//genItems(options);
-	Daat.options = options;
-	Daat.iStart = 0;
-	options.N = options.n; //WICHTIG!!!
-
-	let dButtons = mDiv(dTitleLeft, { display: 'flex', 'flex-direction': 'column' });
-	mButton('next', itemViewerNext, dButtons, { outline: 'none', mabottom: 6, matop: 10 });
-
-	mButton('download', saveSpecialKeys, dButtons, { outline: 'none' });
-
-	itemViewerNext(); revealMain();
-}
-
-function saveSpecialKeys() {
-	let items = Daat.specialKeys;
-	let dict = {};
-	for (const item of items) {
-		dict[item.key] = item.info;
-	}
-	downloadAsYaml(dict, 'specialKeys');
-}
-
-//#endregion
-
 // OIL paradigm: options - items - layout
 function sample00() {
 	//options
@@ -80,7 +24,7 @@ function sample00() {
 }
 function present00(items, options) {
 	[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
-	//console.log('rows', options.rows, 'cols', options.cols);
+	console.log('present00: rows', options.rows, 'cols', options.cols);
 
 	let fzOrig = options.fzOrig = options.fzText;
 	//console.log('fzText',options.fzText)

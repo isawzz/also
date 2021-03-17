@@ -273,6 +273,15 @@ function mText(text, dParent, styles, classes) {
 	if (isdef(classes)) mClass(d, classes);
 	return d;
 }
+function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
+	let d = mDiv(dParent, outerStyles);
+	let dTitle = mDiv(d);
+	dTitle.innerHTML = title;
+	innerStyles.w = '100%';
+	innerStyles.h = outerStyles.h - getRect(dTitle).h;
+	let dContent = mDiv(d, innerStyles, id);
+	return dContent;
+}
 //#endregion
 
 //#region color
@@ -953,26 +962,6 @@ function jsonToYaml(o) {
 
 //#endregion
 
-//#region keys
-function getKeySets() {
-	let ks = localStorage.getItem('KeySets');
-	if (isdef(ks)) return JSON.parse(ks);
-
-	let res = {};
-	for (const k in Syms) {
-		let info = Syms[k];
-		if (nundef(info.cats)) continue;
-		for (const ksk of info.cats) {
-			lookupAddIfToList(res, [ksk], k);
-		}
-	}
-	localStorage.setItem('KeySets', JSON.stringify(res));
-	return res;
-
-}
-
-//#endregion
-
 //#region loading DB, yaml, json, text
 async function dbInit(appName, dir = '../DATA/') {
 	let users = await route_path_yaml_dict(dir + '_users.yaml');
@@ -1225,12 +1214,8 @@ function addIf(arr, el) {
 }
 function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; }
 function addIfDict(key, val, dict) { if (!(key in dict)) { dict[key] = [val]; } }
-function any(arr, cond) {
-	return !isEmpty(arr.filter(cond));
-}
-function anyStartsWith(arr, prefix) {
-	return any(arr, el => startsWith(el, prefix));
-}
+function any(arr, cond) { return !isEmpty(arr.filter(cond)); }
+function anyStartsWith(arr, prefix) { return any(arr, el => startsWith(el, prefix)); }
 function arrTake(arr, n) { return takeFromStart(arr, n); }
 function arrRotate(arr, count) {
 	// usage:
@@ -1249,7 +1234,7 @@ function arrFirst(arr) { return arr.length > 0 ? arr[0] : null; }
 function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
 function arrTail(arr) { return arr.slice(1); }
 function arrFromIndex(arr, i) { return arr.slice(i); }
-function arrFromTo(arr, iFrom, iTo) { return takeFromTo(arr,iFrom,iTo); }
+function arrFromTo(arr, iFrom, iTo) { return takeFromTo(arr, iFrom, iTo); }
 function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
 function arrPlus(a, b) { let res = a.concat(b); return res; }
 function arrWithout(a, b) { return arrMinus(a, b); }
@@ -1303,7 +1288,7 @@ function firstCond(arr, func) {
 	return null;
 }
 function firstNCond(n, arr, func) {
-	//return first elem that fulfills condition
+	//return first n elements that fulfills condition
 	if (nundef(arr)) return [];
 	let result = [];
 	let cnt = 0;
@@ -1405,6 +1390,7 @@ function lookupAddToList(dict, keys, val) {
 	//usage: lookupAddToList({a:{b:[2]}}, [a,c], 3) => {a:{b:[2],c:[3]}}
 	//usage: lookupAddToList({a:[0, [2], {b:[]}]}, [a,1], 3) => { a:[ 0, [2,3], {b:[]} ] }
 	let d = dict;
+	//console.log(dict)
 	let ilast = keys.length - 1;
 	let i = 0;
 	for (const k of keys) {
@@ -1669,7 +1655,47 @@ function toNoun(s) { return capitalize(s.toLowerCase()); }
 //#region type checking / checking
 //#endregion
 
+//#region asset helpers
+function buildNewSyms() {
+	let newSyms = {};
+	for (const k of KeySets.all) {
+		let info = Syms[k];
+		console.log(info)
+		delete info.w;
+		delete info.h;
+		let old = symbolDict[k];
+		console.log('old symbol:', old);
+		if (isdef(old)) {
+			addIf(info.cats, old.group);
+			addIf(info.cats, old.subgroups);
+		}
+		newSyms[k] = Syms[k];
+		//break;
+	}
+	downloadAsYaml(newSyms, 'newSyms')
+}
+
+//#endregion
+
 //#region misc helpers (auch type check is...)
+function allElementsFromPoint(x, y) {
+	var element, elements = [];
+	var old_visibility = [];
+	while (true) {
+		element = document.elementFromPoint(x, y);
+		if (!element || element === document.documentElement) {
+			break;
+		}
+		elements.push(element);
+		old_visibility.push(element.style.visibility);
+		element.style.visibility = 'hidden'; // Temporarily hide the element (without changing the layout)
+	}
+	for (var k = 0; k < elements.length; k++) {
+		elements[k].style.visibility = old_visibility[k];
+	}
+	elements.reverse();
+	return elements;
+}
 function clearElement(elem) {
 	//console.log(elem);
 	if (isString(elem)) elem = document.getElementById(elem);
@@ -1758,7 +1784,7 @@ function isCapitalLetter(s) { return /^[A-Z]$/i.test(s); }
 function isCapitalLetterOrDigit(s) { return /^[A-Z0-9ÖÄÜ]$/i.test(s); }
 function isColorName(s) { ensureColorNames(); return (isdef(ColorNames[s.toLowerCase()])); }
 function isdef(x) { return x !== null && x !== undefined; }
-function isDOM(x){ let c=lookup(x,['constructor','name']); return c? startsWith(c,'HTML')|| startsWith(c,'SVG'):false;}
+function isDOM(x) { let c = lookup(x, ['constructor', 'name']); return c ? startsWith(c, 'HTML') || startsWith(c, 'SVG') : false; }
 function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
 function isDictOrList(d) { return typeof (d) == 'object'; }
 function isDigit(s) { return /^[0-9]$/i.test(s); }

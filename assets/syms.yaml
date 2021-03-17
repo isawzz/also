@@ -2159,6 +2159,7 @@ accordion:
     - all
     - nemo
     - object
+    - music
     - object50
     - objectPlus
 ace:
@@ -28593,11 +28594,11 @@ flying disc:
   isDuplicate: false
   w: 125
   h: 133
-  E: disc
-  D: rabatt
-  F: disque
-  S: dto
-  C: 碟片
+  E: frisbee
+  D: frisbee
+  F: frisbee
+  S: frisbee
+  C: 飛盤
   cats:
     - huge
     - all

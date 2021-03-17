@@ -1145,29 +1145,6 @@ flushed face:
     - huge
     - all
     - emo
-flying disc:
-  key: flying disc
-  hexcode: 1F94F
-  hex: 1F94F
-  family: emoNoto
-  text: '&#129359;'
-  type: emo
-  isDuplicate: false
-  w: 125
-  h: 133
-  E: disc
-  D: rabatt
-  F: disque
-  S: dto
-  C: 碟片
-  cats:
-    - huge
-    - all
-    - nemo
-    - object
-    - action
-    - objectPlus
-    - actionPlus
 growing heart:
   key: growing heart
   hexcode: 1F497
@@ -1533,3 +1510,164 @@ smirking face:
     - huge
     - all
     - emo
+wind face:
+  key: wind face
+  hexcode: 1F32C
+  hex: 1F32C
+  family: emoNoto
+  text: '&#127788;'
+  type: emo
+  isDuplicate: false
+  E: blow
+  D: schlag
+  F: coup
+  S: soplar
+  C: 打擊
+  cats:
+    - huge
+    - all
+    - nemo
+    - object
+    - objectPlus
+    - travel-places
+    - sky-weather
+weary cat:
+  key: weary cat
+  hexcode: 1F640
+  hex: 1F640
+  family: emoNoto
+  text: '&#128576;'
+  type: emo
+  isDuplicate: false
+  E: tired
+  D: müde
+  F: fatigué
+  S: cansado
+  C: 累
+  cats:
+    - huge
+    - all
+    - emo
+    - smileys-emotion
+    - cat-face
+weary face:
+  key: weary face
+  hexcode: 1F629
+  hex: 1F629
+  family: emoNoto
+  text: '&#128553;'
+  type: emo
+  isDuplicate: false
+  E: weary
+  D: müde
+  F: se lasser
+  S: cansado
+  C: 厭倦
+  cats:
+    - huge
+    - all
+    - emo
+    - smileys-emotion
+    - face-concerned
+waning gibbous moon:
+  key: waning gibbous moon
+  hexcode: 1F316
+  hex: 1F316
+  family: emoNoto
+  text: '&#127766;'
+  type: emo
+  isDuplicate: false
+  E: moon
+  D: mond
+  F: lune
+  S: luna
+  C: 月亮
+  cats:
+    - huge
+    - all
+    - nemo
+    - object
+    - objectPlus
+    - travel-places
+    - sky-weather
+waxing crescent moon:
+  key: waxing crescent moon
+  hexcode: 1F312
+  hex: 1F312
+  family: emoNoto
+  text: '&#127762;'
+  type: emo
+  isDuplicate: false
+  E: moon
+  D: mond
+  F: lune
+  S: luna
+  C: 月亮
+  cats:
+    - huge
+    - all
+    - nemo
+    - object
+    - objectPlus
+    - travel-places
+    - sky-weather
+waxing gibbous moon:
+  key: waxing gibbous moon
+  hexcode: 1F314
+  hex: 1F314
+  family: emoNoto
+  text: '&#127764;'
+  type: emo
+  isDuplicate: false
+  E: moon
+  D: mond
+  F: lune
+  S: luna
+  C: 月亮
+  cats:
+    - huge
+    - all
+    - nemo
+    - object
+    - objectPlus
+    - travel-places
+    - sky-weather
+vulcan salute:
+  key: vulcan salute
+  hexcode: 1F596
+  hex: 1F596-1F3FC
+  family: emoNoto
+  text: '&#128406;'
+  type: emo
+  isDuplicate: false
+  E: vulcan salute
+  D: vulkanischer gruß
+  F: salut vulcain
+  S: saludo vulcano
+  C: 火神致敬
+  cats:
+    - huge
+    - all
+    - nemo
+    - emo
+    - people-body
+    - hand-fingers-open
+upside-down face:
+  key: upside-down face
+  hexcode: 1F643
+  hex: 1F643
+  family: emoNoto
+  text: '&#128579;'
+  type: emo
+  isDuplicate: false
+  E: grin
+  D: grinsen
+  F: sourire
+  S: mueca
+  C: 咧嘴笑
+  cats:
+    - huge
+    - all
+    - emo
+    - smileys-emotion
+    - face-smiling

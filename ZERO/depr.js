@@ -1,3 +1,278 @@
+async function _start() {
+
+	//getCatSets();
+	//await loadGroupsAndCategories();
+	//let keysByGroupAndSubgroup = ByGroupSubgroup = res[1];
+
+	console.log(ByGroupSubgroup);
+
+	//let k1=getKeysIn('Activities','sport'); console.log('k1',k1)
+
+	let keys = getGSG('sport');
+	console.log('keys',keys);
+
+	// let cats = getRandomCats(3);
+	// console.log(cats);
+	// let dictDisjoint=calcDisjunctKeysets();
+	// let areDisjoint=true;
+	// for(const k1 of cats.map(x=>x.key)){
+	// 	for(const k2 of cats.map(x=>x.key)){
+	// 		if (k1 == k2) continue;
+	// 		if (!dictDisjoint[k1][k2]){
+	// 			areDisjoint = false;
+	// 			console.log('these sets are NOT disjoint:',k1,k2);
+	// 		} 
+	// 	}
+	// }
+	// console.log('result:',cats.keys,'are disjoint:',areDisjoint);
+	// console.log('lists:',cats.list)
+	// //
+	// //how can I find 3 different cats that are mutually disjoint?
+	// //
+	return;
+
+
+	createSubtitledPage('seagreen');
+
+	revealMain();
+	//[items, options] = samplePicsAndText(); //sample00(); //ok! 
+	// let app = new ItemViewerClass(dTable, dTitleLeft);//, ['abacus', 'bee', 'fly', 'amphora']); //ok!
+	solCats();
+
+	downloadAsText(Categories, 'cats');
+
+
+
+	//KOMISCH ABER GEHT! [items,options] = sample_regular_uniform_grid_fill()
+	//BROKEN!!! [items,options] = sample_fill_area_flex_uniform(47); 
+	//BROKEN!!! [items,options] = sample_fill_area_flex_non_uniform(47);
+	//setTimeout(() => nachbearbeitung(items, options), 10);
+
+	//BROKEN!!! cycleThroughTestsOnClick(); return;
+	// testOnClick(sample_idealGridLayout_try2); return; //ok, aber hupft herum!
+}
+
+
+//#region cats
+function getRandomCats(n) {
+	const catGroups = {
+		catsAnimals: { amphibian: 'animal-amphibian', bird: 'animal-bird', insect: 'animal-bug', mammal: 'animal-mammal', marine: 'animal-marine', reptile: 'animal-reptile', },
+		catsOther: {
+			weather: 'weather', sound: 'sound', travel: 'travel',
+			award: 'award-medal', body: 'body-parts', book: 'book-paper', food: 'food', hands: 'hands', hotel: 'hotel', sport: 'person-sport',
+		},
+		catsVocab: { life: 'life', object: 'object', objects: 'objects', },
+		catsFoodDrink: { fruit: 'food-fruit', vegetable: 'food-vegetable', dessert: 'food-sweet', drink: 'drink', },
+		catsObjects: {
+			art: 'arts-crafts',
+			clothing: 'clothing', household: 'household',
+			lock: 'lock',
+			mail: 'mail',
+			medical: 'medical',
+			money: 'money',
+			music: 'musical-instrument',
+			office: 'office',
+			computer: 'computer',
+			dishware: 'dishware', hotel: 'hotel', game: 'game', phone: 'phone', science: 'science',
+		},
+		cats1: {
+			art: 'arts-crafts', body: 'body-parts', book: 'book-paper', clothing: 'clothing', computer: 'computer', object: 'object',
+			objects: 'objects', household: 'household',
+			lock: 'lock',
+			mail: 'mail',
+			medical: 'medical',
+			money: 'money',
+			music: 'musical-instrument',
+			office: 'office', phone: 'phone', science: 'science',
+		},
+		cats2: {
+			animal: 'animals-nature', emotion: 'smileys-emotion', face: 'face', hand: 'hand', building: 'place-building',
+			place: 'place', weather: 'weather', travel: 'travel',
+			map: 'place-map',
+		},
+		cats3: {
+			action: 'action', drink: 'drink', food: 'food', fruit: 'food-fruit', role: 'person-role', plant: 'plant',
+			sport: 'person-sport', role: 'person-role',
+			vegetable: 'food-vegetable',
+			dessert: 'food-sweet',
+		},
+		catsBest: {
+			action: 'action',
+			animal: 'animals-nature',
+			art: 'arts-crafts',
+			clothing: 'clothing',
+			computer: 'computer',
+			dishware: 'dishware',
+			drink: 'drink',
+			emotion: 'smileys-emotion',
+			fruit: 'food-fruit',
+			vegetable: 'food-vegetable',
+			dessert: 'food-sweet',
+			game: 'game',
+			hand: 'hand',
+			household: 'household',
+			lock: 'lock',
+			mail: 'mail',
+			medical: 'medical',
+			money: 'money',
+			music: 'musical-instrument',
+			office: 'office',
+			role: 'person-role',
+			phone: 'phone',
+			building: 'place-building',
+			place: 'place',
+			map: 'place-map',
+			plant: 'plant',
+			science: 'science',
+			sound: 'sound',
+			sport: 'sport',
+			tool: 'tool',
+			transport: 'transport',
+			writing: 'writing',
+		},
+	};
+	let list = Object.keys(catGroups.catsBest);
+	let nRandom = choose(list, n);
+	let res = [];
+	
+	for(const catName of nRandom){
+		let list,realKey;
+		for(const k in KeySets){
+			if (k.includes(catName)) {list=KeySets[k];realKey=k; break;}
+		}
+		res.push({cat:catName,friendly: getFriendlyByCat(catName),key:realKey,list:list});
+	}
+	return res;
+}
+
+
+
+//#endregion
+
+//#region safe for all code fuer DD solitaire
+function dropHandler(source, target, isCopy=true) {
+	let dSource = getDiv(source);
+	let dTarget = getDiv(target);
+	
+	if (!isCopy) {
+		mAppend(dTarget,dSource);
+	}else {
+		let dNew = mText(dSource.innerHTML, dTarget, { wmin:100, fz: 20, padding: 4, margin: 4, display:'inline-block' });
+		addDDSource(dNew,false);
+	}
+	
+	//relayout sources in target
+}
+function solCats() {
+	//OIL for category boxes
+	clearElement(dTable);
+	let dArea = mDiv(dTable, { display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
+	let i = 0;
+	let containers = [];
+	for (const cat of ['animals', 'sport', 'transport']) {
+		let cont = mTitledDiv(cat, dArea, { w: 150, h: 300, bg: 'random', rounding: 12, display: 'inline-block', margin: 12 },
+			{  }, 'c' + i);
+			i+=1;
+			containers.push(cont);
+	}
+	mLinebreak(dArea);
+	i = 0;
+	let objects = [];
+	for (const cat of ['horse', 'soccer', 'bird']) {
+		let o = mTitledDiv(cat, dArea, { bg: 'random', rounding: 12, display: 'inline-block', padding:4, margin: 12 },
+			{}, 'i' + i);
+			i+=1;
+			objects.push(o.parentNode);
+	}
+
+	enableDD(objects, containers, dropHandler, false);
+
+
+	//items 1: need 3 category items: just 3 boxes
+
+
+}
+
+var DragElem = null; //is the clone of HTML element from which drag started
+var DDInfo = null;
+function addDDSource(source, isCopy=true) {
+	DDInfo.sources.push(source);
+	let d=getDiv(source);
+	d.onmousedown = (ev) => ddStart(ev, source, isCopy); 
+}
+function enableDD(sources, targets,dropHandler, isCopy) {
+	DDInfo = { sources: sources, targets: targets, dropHandler:dropHandler };
+	let sourceDivs = getDivs(sources);
+	for(let i=0;i<sources.length;i++){
+		let source=sources[i];
+		let d=sourceDivs[i];
+		d.onmousedown = (ev) => ddStart(ev, source, isCopy); 
+	}
+}
+function canAct() { return true; }
+function ddStart(ev, source, isCopy = true) {
+	if (!canAct()) return;
+	ev.preventDefault();
+
+	//console.log('ev',ev,'source',source);
+
+	DDInfo.source = source;
+	let d = getDiv(source);
+	var clone = DragElem = DDInfo.clone = d.cloneNode(true);
+	// clone.eliminateSource = !isCopy;
+	clone.isCopy = isCopy;
+	mAppend(document.body, clone);//mClass(clone, 'letter')
+	mClass(clone, 'dragelem');//der clone muss class 'dragelem' sein
+	mStyleX(clone, { left: ev.clientX - ev.offsetX, top: ev.clientY - ev.offsetY });//der clone wird richtig plaziert
+	clone.drag = { offsetX: ev.offsetX, offsetY: ev.offsetY };
+	// von jetzt an un solange DragElem != null ist muss der clone sich mit der maus mitbewegen
+	document.body.onmousemove = onMovingCloneAround;
+	document.body.onmouseup = onReleaseClone;// ev=>console.log('mouse up')
+}
+function onMovingCloneAround(ev) {
+	if (DragElem === null) return;
+
+	let mx = ev.clientX;
+	let my = ev.clientY;
+	let dx = mx - DragElem.drag.offsetX;
+	let dy = my - DragElem.drag.offsetY;
+	mStyleX(DragElem, { left: dx, top: dy });
+}
+function getDiv(x){if (isdef(x.div)) return x.div; else return x;}
+function getDivs(list) {
+	if (isdef(list[0].div)) return list.map(x => x.div); else return list;
+}
+function onReleaseClone(ev) {
+	let els = allElementsFromPoint(ev.clientX, ev.clientY);
+	//console.log('_________',els);
+	let source = DDInfo.source;
+	let dSource = getDiv(source);
+	let dropHandler = DDInfo.dropHandler;
+	for (const target of DDInfo.targets) {
+		let dTarget = getDiv(target);
+		if (els.includes(dTarget)) {
+			if (isdef(dropHandler)){
+				dropHandler(source,target,DragElem.isCopy);
+			}else console.log('dropped',source,'on',target);
+			//console.log('yes, we are over',dTarget);
+			// dTarget.innerHTML = DragElem.innerHTML;
+
+		}
+	}
+	//destroy clone
+	//if (DragElem.eliminateSource) dSource.remove();
+	DragElem.remove();
+	DragElem = null;
+	//DDInfo = null;
+	document.body.onmousemove = document.body.onmouseup = null;
+}
+
+
+
+
+//#endregion
+
+
 function genItems(n, options) {
 	//console.log(n,options.maxlen)
 	let items = getItemsMaxLen(n, options.maxlen, options.keyset, options.lang, options.luc);
