@@ -1,4 +1,42 @@
-async function _start() {
+class SolitaireClass{
+	constructor(dParent){
+		this.options = {
+			n: 100, dParent: dParent,
+			wper: 100, hper: 100, //dParent: dTable, is default!
+			szPic: { w: 100, h: 70 }, padding: 0,
+			showLabels: true, showPic: true, 
+			isUniform: true, fillArea: true, isRegular: false, 
+			handler: _standardHandler,
+		};
+		_extendOptions(this.options);
+		this.options.wLongest = 'alabama';
+
+	}
+
+}
+
+async function _start_dep() {
+	console.log(ByGroupSubgroup);	let keys = getGSG('sport');	console.log('keys',keys);
+
+	//erstmal: unvertraegliche combis
+	let doNotCombineGroups=[
+		['Animals & Nature','Food & Drink'],
+		['Activities','People & Body'],
+		['Activities','Objects'],
+		['People & Body','Smileys & Emotion'],
+
+	];
+	let doNotCombineSubgroups = [
+		['arts & crafts','book-paper','writing','tool','event'],
+		['sport','person-sport','game','event'],
+		['music','musical-instrument'],
+		['plant-flower','plant-other'],
+
+	];
+	
+
+}
+async function _start_dep() {
 
 	//getCatSets();
 	//await loadGroupsAndCategories();
@@ -150,7 +188,7 @@ function getRandomCats(n) {
 //#endregion
 
 //#region safe for all code fuer DD solitaire
-function dropHandler(source, target, isCopy=true) {
+function dropHandler_dep(source, target, isCopy=true) {
 	let dSource = getDiv(source);
 	let dTarget = getDiv(target);
 	
@@ -163,7 +201,7 @@ function dropHandler(source, target, isCopy=true) {
 	
 	//relayout sources in target
 }
-function solCats() {
+function solCats_dep() {
 	//OIL for category boxes
 	clearElement(dTable);
 	let dArea = mDiv(dTable, { display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})

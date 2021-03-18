@@ -642,6 +642,42 @@ People & Body:
     - namaste
     - open hands
     - raising hands
+  job:
+    - construction worker
+    - detective
+    - guard
+    - man astronaut
+    - man farmer
+    - man firefighter
+    - man judge
+    - man mechanic
+    - man office worker
+    - man pilot
+    - man technologist
+    - police officer
+    - woman artist
+    - woman cook
+    - woman factory worker
+    - woman health worker
+    - woman scientist
+    - woman singer
+    - woman student
+    - woman teacher
+  job-other:
+    - man artist
+    - man cook
+    - man factory worker
+    - man health worker
+    - man scientist
+    - man singer
+    - man student
+    - man teacher
+    - woman farmer
+    - woman judge
+    - woman mechanic
+    - woman office worker
+    - woman pilot
+    - woman technologist
   person:
     - baby
     - boy
@@ -776,6 +812,17 @@ People & Body:
   person-symbol:
     - footprints
     - speaking head
+  role:
+    - breast-feeding
+    - ninja
+    - person in tuxedo
+    - person wearing turban
+    - person with skullcap
+    - person with veil
+    - pregnant woman
+    - prince
+    - princess
+    - woman with headscarf
 Smileys & Emotion:
   cat-face:
     - smiling cat with heart-eyes

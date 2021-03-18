@@ -49,6 +49,23 @@ function _calcPadGap(p, w, h) {
 	} else if (p > 0 && p < 1) return Math.min(w, h) * p;
 	else return p;
 }
+function _centerGridVerticallyWithinArea(items, options) {
+	let dGrid = mBy(options.idGrid);
+	let dArea = mBy(options.idArea);
+	let gRect = getRect(dGrid);
+	let aRect = getRect(dArea);
+	let itemRect = getRect(lDiv(items[0]));
+	let [gsz, asz, itemsz] = [rectToSize(gRect), rectToSize(aRect), rectToSize(itemRect)]
+
+	//console.log('grid:',gsz,'area',asz,'item',itemsz);
+	let extra = options.area.h - gRect.h;
+	let pv = valf(options.percentVertical, 50);
+
+	let matop = extra * pv / 100;
+	mStyleX(dGrid, { matop: matop });
+	mReveal(dMain);
+}
+
 function _checkOverflow(items, options, dGrid) {
 	console.log('exec...')
 	if (isOverflown(dGrid)) { _sizeByFactor(items, options, dGrid, .99); }
@@ -70,7 +87,7 @@ function _extendOptions(options, defOptions) {
 		n: 20,
 		wper: 90, hper: 90, dParent: dTable,
 		szPic: { w: 100, h: 100 },
-		showLabels: true, luc: 'c', labelPos: 'bottom', lang: 'D', keySet: 'all',
+		showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
 		fzText: 20, fzPic: 60, 
 		padding: .025, gap: .1, isUniform: true, isRegular: true, fillArea: false,
 		shufflePositions: false, sameBackground: true, showRepeat: false, repeat: 1,

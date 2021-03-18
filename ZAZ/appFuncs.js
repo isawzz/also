@@ -1,3 +1,5 @@
+//#region game controller
+
 //#region solitaire: categories:
 
 
@@ -24,7 +26,7 @@ function solCats() {
 
 
 	//let options = {}; _extendOptions();
-	let items = getItemsCat(3,'anim');
+	let items = getItemsCat_dep(3,'anim');
 	console.log(items)
 
 	i = 0;
@@ -58,7 +60,7 @@ function itemViewer() {
 
 	//items
 	//let keys = genKeys(options);	keys[0] = 'spiral shell';	let items = genItemsFromKeys(keys,options);
-	Daat.items = genItemsFromKeys(KeySets.all, options);//genItems(options);
+	Daat.items = genItemsFromKeys(KeySets.all, options);
 	Daat.options = options;
 	Daat.iStart = 0;
 

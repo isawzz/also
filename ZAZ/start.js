@@ -1,30 +1,18 @@
 async function _start() {
-	console.log(ByGroupSubgroup);	let keys = getGSG('sport');	console.log('keys',keys);
 
-	//erstmal: unvertraegliche combis
-	let doNotCombineGroups=[
-		['Animals & Nature','Food & Drink'],
-		['Activities','People & Body'],
-		['Activities','Objects'],
-		['People & Body','Smileys & Emotion'],
+	//repairSubgroups(); return; //instead of person-role, makes subgroups job,jobman,role
+	//showGroupsSubgroups();
 
-	];
-	let doNotCombineSubgroups = [
-		['arts & crafts','book-paper','writing','tool','event'],
-		['sport','person-sport','game','event'],
-		['music','musical-instrument'],
-		['plant-flower','plant-other'],
+	createSubtitledPage('seagreen'); revealMain();
+	console.log(DB);
+	let data = genCats();
+	let sample = new SolCatsClass(data);
+	sample.prompt();
 
-	];
-	
 
 }
 
-function hideMain() { mReveal(dMain); }
-function revealMain() { mReveal(dMain); }
-function rectToSize(r) { return { w: r.w, h: r.h } }
 function nachbearbeitung(items, options) {
-	//nachbearbeitung!
 
 	let dGrid = mBy(options.idGrid);
 	let dArea = mBy(options.idArea);
@@ -46,7 +34,6 @@ function testOnClick(test) {
 	onclick = () => nextTest(test);
 	nextTest(test);
 }
-
 function cycleThroughTestsOnClick() {
 	Daat = {
 		index: 0,
@@ -73,4 +60,14 @@ function nextTest(f) {
 	console.log('options', options)
 	if (isdef(Daat.index)) Daat.index = (Daat.index + 1) % Daat.fs.length;
 }
+function showGroupsSubgroups() {
+	for (const group in ByGroupSubgroup) {
+		let g = ByGroupSubgroup[group];
+		for (const sub in g) {
+			s = g[sub];
+			console.log('', group, sub, s);
+		}
+	}
+	console.log(ByGroupSubgroup);
 
+}

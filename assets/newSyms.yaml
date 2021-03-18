@@ -2118,7 +2118,7 @@ breast-feeding:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: role
 brick:
   key: brick
   hexcode: 1F9F1
@@ -4209,7 +4209,7 @@ construction worker:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 cooked rice:
   key: cooked rice
   hexcode: 1F35A
@@ -5055,7 +5055,7 @@ detective:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 diamond suit:
   key: diamond suit
   hexcode: '2666'
@@ -8211,7 +8211,7 @@ guard:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 guitar:
   key: guitar
   hexcode: 1F3B8
@@ -10885,7 +10885,7 @@ man artist:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 man astronaut:
   key: man astronaut
   hexcode: 1F468-200D-1F680
@@ -10908,7 +10908,7 @@ man astronaut:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 man blind:
   key: man blind
   hexcode: 1F468-200D-1F9AF
@@ -10954,7 +10954,7 @@ man cook:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 man dancing:
   key: man dancing
   hexcode: 1F57A
@@ -11000,7 +11000,7 @@ man factory worker:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 man fairy:
   key: man fairy
   hexcode: 1F9DA-200D-2642-FE0F
@@ -11044,7 +11044,7 @@ man farmer:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 man firefighter:
   key: man firefighter
   hexcode: 1F468-200D-1F692
@@ -11067,7 +11067,7 @@ man firefighter:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 man golfing:
   key: man golfing
   hexcode: 1F3CC-FE0F-200D-2642-FE0F
@@ -11113,7 +11113,7 @@ man health worker:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 man in manual wheelchair:
   key: man in manual wheelchair
   hexcode: 1F468-200D-1F9BD
@@ -11188,7 +11188,7 @@ man judge:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 man kneeling:
   key: man kneeling
   hexcode: 1F9CE-200D-2642-FE0F
@@ -11234,7 +11234,7 @@ man mechanic:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 man office worker:
   key: man office worker
   hexcode: 1F468-200D-1F4BC
@@ -11257,7 +11257,7 @@ man office worker:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 man pilot:
   key: man pilot
   hexcode: 1F468-200D-2708-FE0F
@@ -11280,7 +11280,7 @@ man pilot:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 man running:
   key: man running
   hexcode: 1F3C3-200D-2642-FE0F
@@ -11326,7 +11326,7 @@ man scientist:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 man singer:
   key: man singer
   hexcode: 1F468-200D-1F3A4
@@ -11349,7 +11349,7 @@ man singer:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 man standing:
   key: man standing
   hexcode: 1F9CD-200D-2642-FE0F
@@ -11395,7 +11395,7 @@ man student:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 man surfing:
   key: man surfing
   hexcode: 1F3C4-200D-2642-FE0F
@@ -11441,7 +11441,7 @@ man teacher:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 man technologist:
   key: man technologist
   hexcode: 1F468-200D-1F4BB
@@ -11464,7 +11464,7 @@ man technologist:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 man walking:
   key: man walking
   hexcode: 1F6B6-200D-2642-FE0F
@@ -13026,7 +13026,7 @@ ninja:
     - huge
     - all
     - nemo
-  subgroup: person-role
+  subgroup: role
   group: People & Body
 nose:
   key: nose
@@ -14406,7 +14406,7 @@ person in tuxedo:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: role
 person pouting:
   key: person pouting
   hexcode: 1F64E
@@ -14495,7 +14495,7 @@ person wearing turban:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: role
 person with skullcap:
   key: person with skullcap
   hexcode: 1F472
@@ -14518,7 +14518,7 @@ person with skullcap:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: role
 person with veil:
   key: person with veil
   hexcode: 1F470
@@ -14541,7 +14541,7 @@ person with veil:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: role
 'person: blond hair':
   key: 'person: blond hair'
   hexcode: 1F471
@@ -14962,7 +14962,7 @@ police officer:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 poodle:
   key: poodle
   hexcode: 1F429
@@ -15250,7 +15250,7 @@ pregnant woman:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: role
 pretzel:
   key: pretzel
   hexcode: 1F968
@@ -15294,7 +15294,7 @@ prince:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: role
 princess:
   key: princess
   hexcode: 1F478
@@ -15317,7 +15317,7 @@ princess:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: role
 printer:
   key: printer
   hexcode: 1F5A8
@@ -21815,7 +21815,7 @@ woman artist:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 woman blind:
   key: woman blind
   hexcode: 1F469-200D-1F9AF
@@ -21861,7 +21861,7 @@ woman cook:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 woman dancing:
   key: woman dancing
   hexcode: 1F483
@@ -21907,7 +21907,7 @@ woman factory worker:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 woman fairy:
   key: woman fairy
   hexcode: 1F9DA-200D-2640-FE0F
@@ -21951,7 +21951,7 @@ woman farmer:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 woman golfing:
   key: woman golfing
   hexcode: 1F3CC-FE0F-200D-2640-FE0F
@@ -21997,7 +21997,7 @@ woman health worker:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 woman in manual wheelchair:
   key: woman in manual wheelchair
   hexcode: 1F469-200D-1F9BD
@@ -22066,7 +22066,7 @@ woman judge:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 woman kneeling:
   key: woman kneeling
   hexcode: 1F9CE-200D-2640-FE0F
@@ -22112,7 +22112,7 @@ woman mechanic:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 woman office worker:
   key: woman office worker
   hexcode: 1F469-200D-1F4BC
@@ -22135,7 +22135,7 @@ woman office worker:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 woman pilot:
   key: woman pilot
   hexcode: 1F469-200D-2708-FE0F
@@ -22158,7 +22158,7 @@ woman pilot:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 woman running:
   key: woman running
   hexcode: 1F3C3-200D-2640-FE0F
@@ -22204,7 +22204,7 @@ woman scientist:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 woman singer:
   key: woman singer
   hexcode: 1F469-200D-1F3A4
@@ -22227,7 +22227,7 @@ woman singer:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 woman standing:
   key: woman standing
   hexcode: 1F9CD-200D-2640-FE0F
@@ -22273,7 +22273,7 @@ woman student:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 woman surfing:
   key: woman surfing
   hexcode: 1F3C4-200D-2640-FE0F
@@ -22319,7 +22319,7 @@ woman teacher:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job
 woman technologist:
   key: woman technologist
   hexcode: 1F469-200D-1F4BB
@@ -22342,7 +22342,7 @@ woman technologist:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: job-other
 woman walking:
   key: woman walking
   hexcode: 1F6B6-200D-2640-FE0F
@@ -22388,7 +22388,7 @@ woman with headscarf:
     - people-body
     - person-role
   group: People & Body
-  subgroup: person-role
+  subgroup: role
 woman’s boot:
   key: woman’s boot
   hexcode: 1F462

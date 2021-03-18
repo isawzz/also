@@ -1,10 +1,12 @@
 //#region syms item + div + dPic + dLabel
-function addLabels(items, lang = 'E', lowerUpperCap = 'c') {
+function addLabels(items, lang = 'E', luc = 'c') {
 	let max = 0;
 	for (const item of items) {
 		let label = item.info[lang];
+		//console.log(':::::::::',item,item.info,lang,label)
 		if (label.length > max) { max = label.length; }
-		item.label = lowerUpperCap == 'c' ? toNoun(label) : lowerUpperCap == 'l' ? label : label.toUpperCase();
+		item.label = luc == 'c' ? toNoun(label) : luc == 'l' ? label : label.toUpperCase();
+		//console.log(':::::::::::::',item.label)
 	}
 	return max;
 }
@@ -99,14 +101,14 @@ function zRepeatInColorEachItem(items, colorKeys) {
 function getItem(k) { return infoToItem(Syms[k]); }
 
 //new API:
-function genKeys(options) {
-	let [n, maxlen, lang, keySet] = [options.n, options.maxlen, options.lang, options.keySet];
+function genKeys(n,options) {
+	let [maxlen, lang, keySet] = [options.maxlen, options.lang, options.keySet];
 	let cond = isdef(maxlen) ? ((x) => x[lang].length <= maxlen) : null;
 	let keys = _getKeysCond(n, cond, keySet);
 	return keys;
 }
 function _getKeysCond(n, cond, keySet = 'all') {
-	console.log('n', n, 'cond', cond, 'keySet', keySet)
+	//console.log('n', n, 'cond', cond, 'keySet', keySet)
 	if (isString(keySet)) keySet = KeySets[keySet];
 	let keys = isdef(cond) ? isString(cond) ?
 		isdef(KeySets[cond]) ? KeySets[cond] : keySet.filter(x => x.includes(cond))
@@ -114,10 +116,12 @@ function _getKeysCond(n, cond, keySet = 'all') {
 	keys = n >= keys.length ? keys : choose(keys, n);
 	return keys;
 }
-function genItems(options) { let keys = genKeys(options); let items = genItemsFromKeys(keys, options); return items; }
+function genItems(n,options) { let keys = genKeys(n,options); let items = genItemsFromKeys(keys, options); return items; }
 function genItemsFromKeys(keys, options) {
 	let items = keys.map(x => infoToItem(Syms[x]));
-	addLabels(items, options.lang, options.lowerUpperCap);
+	//console.log(options.lang,options.luc)
+	addLabels(items, options.lang, options.luc);
+	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
 	calcLongestLabel(items, options);
 
 	//hier koennt ich die ifs machen!
@@ -139,12 +143,14 @@ function genItemsFromKeys(keys, options) {
 			//console.log('ifs prop:',propName,item[propName]);
 		}
 	}
+	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
 
 	if (options.repeat > 1) { items = zRepeatEachItem(items, options.repeat, options.shufflePositions); }
 	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
 
 	options.N = items.length;
 	//console.log(items)
+	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
 	return items;
 }
 
@@ -160,15 +166,35 @@ function getItems(n, cond, keySet = 'all') {
 	if (nundef(n[0].info)) n = n.map(x => infoToItem(x));
 	return n;
 }
-function getItemsMaxLen(n, len, keySet = 'all', lang = 'E', lowerUpperCap = 'c') { return getItemsMaxWordLength(...arguments); }
-function getItemsMaxWordLength(n, len, keySet = 'all', lang = 'E', lowerUpperCap = 'c') {
+function getItemsMaxLen(n, len, keySet = 'all', lang = 'E', luc = 'c') { return getItemsMaxWordLength(...arguments); }
+function getItemsMaxWordLength(n, len, keySet = 'all', lang = 'E', luc = 'c') {
 	//assumes adding the labels in that language!
 	let items = getItems(n, x => x[lang].length <= len, keySet); // cond is on Syms object!!!
-	addLabels(items, lang, lowerUpperCap);
+	addLabels(items, lang, luc);
 	return items;
 }
+function getNItemsPerKeylist(n,keylists,options={}){
+	let items = [];
+	for(const list of keylists){
+		options.keySet = list;
+		//console.log('list',list)
+		let newItems =genItems(n,options);
+		newItems.map(x=>items.push(x));
+	}
+	//console.log('items',items)
+	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
+	return items;
+	// let keyList = [];
+	// for(const cat of this.cats){
+	// 	keyList = keyList.concat(choose(this.keysByCat[cat],2));
+	// }
+	// shuffle(keyList);
+	// console.log(keyList);
+	// let items = this.items = keyList.map(x=>Syms[x]);
 
-function getItemsCat(n,cat){
+}
+
+function getItemsCat_dep(n,cat){
 	let keys = KeySets.all;
 	keys = KeySets.all.filter(x=>firstCond(Syms[x].cats,x=>x.includes(cat)));
 	keys = choose(keys,n)

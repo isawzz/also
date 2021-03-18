@@ -1,100 +1,3 @@
-//#region DOM 
-//#region ani
-function aTranslateBy(d, x, y, ms) { return d.animate({ transform: `translate(${x}px,${y}px)` }, ms); }
-function aRotate(d, ms) { return d.animate({ transform: `rotate(360deg)` }, ms); }
-function aRotateAccel(d, ms) { return d.animate({ transform: `rotate(1200deg)` }, { easing: 'cubic-bezier(.72, 0, 1, 1)', duration: ms }); }
-//#endregion
-
-//#region i
-function iAppend(dParent, i) { mAppend(iDiv(dParent), iDiv(i)); }
-function iBounds(i, irel) {
-	if (isdef(i.div)) i = i.div;
-	if (isdef(irel) && isdef(irel.div)) irel = irel.div;
-	isParent = (i.parentNode == irel);
-	let b = getBounds(i, isParent, irel);
-	let [x, y, w, h] = [Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)];
-
-	//console.log('bounds', b);
-	return { x: x, y: y, w: w, h: h };
-}
-function iCenter(item, offsetX, offsetY) { let d = iDiv(item); mCenterAbs(d, offsetX, offsetY); }
-function iMoveFromTo(item, d1, d2, callback, offset) {
-	let bi = iBounds(item);
-	let b1 = iBounds(d1);
-	let b2 = iBounds(d2);
-	//console.log('item', bi);
-	//console.log('d1', b1);
-	//console.log('d2', b2);
-
-	//animate item to go translateY by d2.y-d1.y
-	if (nundef(offset)) offset = { x: 0, y: 0 };
-	let dist = { x: b2.x - b1.x + offset.x, y: b2.y - b1.y + offset.y };
-
-	item.div.style.zIndex = 100;
-	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
-	a.onfinish = () => { mAppend(d2, item.div); item.div.style.zIndex = item.z = iZMax(); if (isdef(callback)) callback(); };
-}
-function iParentBounds(i) {
-	if (isdef(i.div)) i = i.div;
-	let b = getBounds(i);
-	let [x, y, w, h] = [Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)];
-
-	//console.log('bounds', b);
-	return { x: x, y: y, w: w, h: h };
-}
-function iResize(i, w, h) { return isList(i) ? i.map(x => iSize(x, w, h)) : iSize(i, w, h); }
-function iSize(i, w, h) { i.w = w; i.h = h; mSize(i.div, w, h); }
-function isItem(i) { return isdef(i.div); }
-function iDiv(i) { return isItem(i) ? i.div : i; }
-function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
-function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ovUnit = '%', createHand = true, rememberFunc = true) {
-
-	if (!isList(items)) items = [items];
-	if (isEmpty(items)) return { w: 0, h: 0 };
-
-	let [w, h] = [items[0].w, items[0].h];
-
-	let isHorizontal = splay == 'right' || splay == 'left';
-	for (let i = 0; i < items.length; i++) {
-		let item = items[i];
-		item.col = isHorizontal ? i : 0;
-		item.row = isHorizontal ? 0 : i;
-		item.index = item.z = i;
-	}
-
-	//phase 3: prep container for items
-	if (nundef(containerStyles)) containerStyles = {};
-	let dContainer = iDiv(iContainer);
-	let dParent, iParent;
-
-	if (createHand) {
-		dParent = mDiv(dContainer);
-		iParent = { div: dParent };
-	} else if (isItem(iContainer)) {
-		dParent = iContainer.div;
-		iParent = iContainer;
-
-	} else dParent = iContainer;
-	mStyleX(dParent, containerStyles);
-
-	//phase 4: add items to container
-	let gap = isdef(containerStyles.padding) ? containerStyles.padding : 0;
-	let overlap = ov;
-	if (ovUnit == '%') overlap = ov == 0 ? .5 : (isHorizontal ? w : h) * ov / 100;
-	let x = y = gap;
-
-	// call splayout primitive!!!
-	let sz = splayout(items.map(x => x.div), dParent, w, h, x, y, overlap, splay);
-
-	dParent.style.width = '' + sz.w + 'px';
-	dParent.style.height = '' + sz.h + 'px';
-	if (isdef(iParent)) { iParent.w = sz.w; iParent.h = sz.h; iParent.items = items; }
-	return isdef(iParent) ? iParent : dParent;
-
-}
-function iStyle(i, styles) { mStyleX(iDiv(i), styles); }
-//#endregion
-
 //region m
 function mAppend(d, child) { d.appendChild(child); }
 function mButton(caption, handler, dParent, styles, classes) {
@@ -282,6 +185,102 @@ function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
 	let dContent = mDiv(d, innerStyles, id);
 	return dContent;
 }
+//#endregion
+
+//#region i
+function iAppend(dParent, i) { mAppend(iDiv(dParent), iDiv(i)); }
+function iBounds(i, irel) {
+	if (isdef(i.div)) i = i.div;
+	if (isdef(irel) && isdef(irel.div)) irel = irel.div;
+	isParent = (i.parentNode == irel);
+	let b = getBounds(i, isParent, irel);
+	let [x, y, w, h] = [Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)];
+
+	//console.log('bounds', b);
+	return { x: x, y: y, w: w, h: h };
+}
+function iCenter(item, offsetX, offsetY) { let d = iDiv(item); mCenterAbs(d, offsetX, offsetY); }
+function iMoveFromTo(item, d1, d2, callback, offset) {
+	let bi = iBounds(item);
+	let b1 = iBounds(d1);
+	let b2 = iBounds(d2);
+	//console.log('item', bi);
+	//console.log('d1', b1);
+	//console.log('d2', b2);
+
+	//animate item to go translateY by d2.y-d1.y
+	if (nundef(offset)) offset = { x: 0, y: 0 };
+	let dist = { x: b2.x - b1.x + offset.x, y: b2.y - b1.y + offset.y };
+
+	item.div.style.zIndex = 100;
+	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
+	a.onfinish = () => { mAppend(d2, item.div); item.div.style.zIndex = item.z = iZMax(); if (isdef(callback)) callback(); };
+}
+function iParentBounds(i) {
+	if (isdef(i.div)) i = i.div;
+	let b = getBounds(i);
+	let [x, y, w, h] = [Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)];
+
+	//console.log('bounds', b);
+	return { x: x, y: y, w: w, h: h };
+}
+function iResize(i, w, h) { return isList(i) ? i.map(x => iSize(x, w, h)) : iSize(i, w, h); }
+function iSize(i, w, h) { i.w = w; i.h = h; mSize(i.div, w, h); }
+function isItem(i) { return isdef(i.div); }
+function iDiv(i) { return isItem(i) ? i.div : i; }
+function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
+function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ovUnit = '%', createHand = true, rememberFunc = true) {
+
+	if (!isList(items)) items = [items];
+	if (isEmpty(items)) return { w: 0, h: 0 };
+
+	let [w, h] = [items[0].w, items[0].h];
+
+	let isHorizontal = splay == 'right' || splay == 'left';
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		item.col = isHorizontal ? i : 0;
+		item.row = isHorizontal ? 0 : i;
+		item.index = item.z = i;
+	}
+
+	//phase 3: prep container for items
+	if (nundef(containerStyles)) containerStyles = {};
+	let dContainer = iDiv(iContainer);
+	let dParent, iParent;
+
+	if (createHand) {
+		dParent = mDiv(dContainer);
+		iParent = { div: dParent };
+	} else if (isItem(iContainer)) {
+		dParent = iContainer.div;
+		iParent = iContainer;
+
+	} else dParent = iContainer;
+	mStyleX(dParent, containerStyles);
+
+	//phase 4: add items to container
+	let gap = isdef(containerStyles.padding) ? containerStyles.padding : 0;
+	let overlap = ov;
+	if (ovUnit == '%') overlap = ov == 0 ? .5 : (isHorizontal ? w : h) * ov / 100;
+	let x = y = gap;
+
+	// call splayout primitive!!!
+	let sz = splayout(items.map(x => x.div), dParent, w, h, x, y, overlap, splay);
+
+	dParent.style.width = '' + sz.w + 'px';
+	dParent.style.height = '' + sz.h + 'px';
+	if (isdef(iParent)) { iParent.w = sz.w; iParent.h = sz.h; iParent.items = items; }
+	return isdef(iParent) ? iParent : dParent;
+
+}
+function iStyle(i, styles) { mStyleX(iDiv(i), styles); }
+//#endregion
+
+//#region ani
+function aTranslateBy(d, x, y, ms) { return d.animate({ transform: `translate(${x}px,${y}px)` }, ms); }
+function aRotate(d, ms) { return d.animate({ transform: `rotate(360deg)` }, ms); }
+function aRotateAccel(d, ms) { return d.animate({ transform: `rotate(1200deg)` }, { easing: 'cubic-bezier(.72, 0, 1, 1)', duration: ms }); }
 //#endregion
 
 //#region color
@@ -861,6 +860,77 @@ function safeLoop(func, params) {
 	return null;
 }
 
+//#endregion
+
+//#region drag drop
+var DragElem = null; //is the clone of HTML element from which drag started
+var DDInfo = null;
+function addDDSource(source, isCopy=true) {
+	DDInfo.sources.push(source);
+	let d=getDiv(source);
+	d.onmousedown = (ev) => ddStart(ev, source, isCopy); 
+}
+function enableDD(sources, targets,dropHandler, isCopy) {
+	DDInfo = { sources: sources, targets: targets, dropHandler:dropHandler };
+	let sourceDivs = getDivs(sources);
+	for(let i=0;i<sources.length;i++){
+		let source=sources[i];
+		let d=sourceDivs[i];
+		d.onmousedown = (ev) => ddStart(ev, source, isCopy); 
+	}
+}
+function ddStart(ev, source, isCopy = true) {
+	if (!canAct()) return;
+	ev.preventDefault();
+
+	//console.log('ev',ev,'source',source);
+
+	DDInfo.source = source;
+	let d = getDiv(source);
+	var clone = DragElem = DDInfo.clone = d.cloneNode(true);
+	// clone.eliminateSource = !isCopy;
+	clone.isCopy = isCopy;
+	mAppend(document.body, clone);//mClass(clone, 'letter')
+	mClass(clone, 'dragelem');//der clone muss class 'dragelem' sein
+	mStyleX(clone, { left: ev.clientX - ev.offsetX, top: ev.clientY - ev.offsetY });//der clone wird richtig plaziert
+	clone.drag = { offsetX: ev.offsetX, offsetY: ev.offsetY };
+	// von jetzt an un solange DragElem != null ist muss der clone sich mit der maus mitbewegen
+	document.body.onmousemove = onMovingCloneAround;
+	document.body.onmouseup = onReleaseClone;// ev=>console.log('mouse up')
+}
+function onMovingCloneAround(ev) {
+	if (DragElem === null) return;
+
+	let mx = ev.clientX;
+	let my = ev.clientY;
+	let dx = mx - DragElem.drag.offsetX;
+	let dy = my - DragElem.drag.offsetY;
+	mStyleX(DragElem, { left: dx, top: dy });
+}
+function onReleaseClone(ev) {
+	let els = allElementsFromPoint(ev.clientX, ev.clientY);
+	//console.log('_________',els);
+	let source = DDInfo.source;
+	let dSource = getDiv(source);
+	let dropHandler = DDInfo.dropHandler;
+	for (const target of DDInfo.targets) {
+		let dTarget = getDiv(target);
+		if (els.includes(dTarget)) {
+			if (isdef(dropHandler)){
+				dropHandler(source,target,DragElem.isCopy);
+			}else console.log('dropped',source,'on',target);
+			//console.log('yes, we are over',dTarget);
+			// dTarget.innerHTML = DragElem.innerHTML;
+
+		}
+	}
+	//destroy clone
+	//if (DragElem.eliminateSource) dSource.remove();
+	DragElem.remove();
+	DragElem = null;
+	//DDInfo = null;
+	document.body.onmousemove = document.body.onmouseup = null;
+}
 //#endregion
 
 //#region fire

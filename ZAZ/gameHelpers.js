@@ -1,3 +1,4 @@
+function canAct() { return true; }
 function createContainers(list,dArea){
 	let i = 0;
 	let containers = [];
@@ -9,3 +10,12 @@ function createContainers(list,dArea){
 	}
 	return containers;
 }
+function getDiv(x){ return isdef(x.info)? lDiv(x):isdef(x.div)?x.div:x;}
+function getDivs(list) { 
+	if (isdef(list[0].info)) return list.map(x=>lDiv(x));
+	else if (isdef(list[0].div)) return list.map(x => x.div); 
+	else return list;
+}
+function rectToSize(r) { return { w: r.w, h: r.h } }
+function revealMain() { mReveal(dMain); }
+

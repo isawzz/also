@@ -1,23 +1,3 @@
-const GSG = {
-	sport: { f: x => x.group == 'Activities' && x.subgroup == 'sport', ov: ['object', 'clothing'] },
-	animal: { f: x => startsWith(x.subgroup, 'anim'), ov: ['nature'] },
-	nature: { f: x => startsWith(x.group, 'Anim'), ov: ['animal', 'food'] },
-	plant: { f: x => startsWith(x.subgroup, 'plant'), ov: ['nature', 'food'] },
-	food: { f: x => startsWith(x.subgroup, 'food'), ov: ['nature', 'plant', 'animal'] }
-
-}
-function getGSG(k) {
-	let set = [];
-	let gsg = GSG[k];
-	for (const k in Syms) {
-		let info = Syms[k];
-		//console.log(info.group)
-		if (gsg.f(info)) set.push(k);
-	}
-	return set;
-}
-
-//#region keys: KeySets, Categories, 
 function getKeySets() {
 	let ks = localStorage.getItem('KeySets');
 	if (isdef(ks)) return JSON.parse(ks);
@@ -41,6 +21,84 @@ function getKeySets() {
 	return res;
 
 }
+function getGroup(friendlyName) {
+	console.log(ByGroupSubgroup);
+
+
+}
+function genCats() {
+	let di = {
+		sport: ByGroupSubgroup['Activities']['sport'],
+		mammal: ByGroupSubgroup['Animals & Nature']['animal-mammal'],
+		job: ByGroupSubgroup['People & Body']['job'],
+	};
+	return di;
+}
+
+
+function extendByGSGToObjects() {
+	// let bgsg = {};
+	// let flatByFriendly = {};
+	// for (const gname in ByGroupSubgroup) {
+	// 	let group = ByGroupSubgroup[kg];
+	// 	let gnew = bgsg[gname] = {};
+	// 	for (const sname in group) {
+	// 		let keys = group[sname];
+	// 		let friendly = startsWith(sname, 'animal') ? stringAfter(sname, '-') :
+	// 			startsWith(sname, 'plant')? stringAfter(sname,'-')
+	// 		gnew[sname] = { keys: keys, friendly: friendly };
+	// 	}
+	// }
+}
+function repairSubgroups() {
+	let job = ["construction worker", "detective", "guard", "man astronaut", "man farmer",
+		"man firefighter", "man judge", "man mechanic", "man office worker", "man pilot",
+		"man technologist", "police officer", "woman artist", "woman cook", "woman factory worker",
+		"woman health worker", "woman scientist", "woman singer", "woman student", "woman teacher",
+	];
+	let jobman = ["man artist", "man singer", "man cook", "woman pilot", "woman farmer", "woman technologist", "woman office worker", "man teacher",
+		"man factory worker", "man student", "man scientist", "woman judge", "man health worker", "woman mechanic"]
+	let role = ["breast-feeding", "ninja", "person in tuxedo", "person wearing turban", "person with skullcap", "person with veil", "pregnant woman", "prince", "princess", "woman with headscarf"];
+
+	console.log(ByGroupSubgroup['People & Body']['person-role']);
+	//return;
+	for (const k of ByGroupSubgroup['People & Body']['person-role']) {
+
+		let info = Syms[k];
+		// if (job.includes(k)) info.subgroup = 'job';
+		// console.log(k, job.includes(k),info.subgroup, );
+		// continue;
+
+		let newsub = job.includes(k) ? 'job' : jobman.includes(k) ? 'job-other' : 'role';
+		info.subgroup = newsub;
+		lookupAddIfToList(ByGroupSubgroup, ['People & Body', newsub], k);
+	}
+	downloadAsYaml(Syms, 'newSyms');
+	downloadAsYaml(ByGroupSubgroup, 'symsGSG');
+}
+
+
+
+const GSG = {
+	sport: { f: x => x.group == 'Activities' && x.subgroup == 'sport', ov: ['object', 'clothing'] },
+	animal: { f: x => startsWith(x.subgroup, 'anim'), ov: ['nature'] },
+	nature: { f: x => startsWith(x.group, 'Anim'), ov: ['animal', 'food'] },
+	plant: { f: x => startsWith(x.subgroup, 'plant'), ov: ['nature', 'food'] },
+	food: { f: x => startsWith(x.subgroup, 'food'), ov: ['nature', 'plant', 'animal'] }
+
+}
+function getGSG(k) {
+	let set = [];
+	let gsg = GSG[k];
+	for (const k in Syms) {
+		let info = Syms[k];
+		//console.log(info.group)
+		if (gsg.f(info)) set.push(k);
+	}
+	return set;
+}
+
+//#region keys: KeySets, Categories, 
 function getEmoSets_orig() {
 	var emoSets = {
 		nosymbols: { name: 'nosymbols', f: o => o.group != 'symbols' && o.group != 'flags' && o.group != 'clock' },
@@ -235,15 +293,15 @@ async function loadGroupsAndCategories() {
 		symsCorrected[kCorrect] = info;
 	}
 
-	let ds={};
+	let ds = {};
 	let groups = Object.keys(ByGroupSubgroup);
 	groups.sort();
-	for(const g of groups){
+	for (const g of groups) {
 		let sgroups = Object.keys(ByGroupSubgroup[g]);
 		sgroups.sort();
-		ds[g]={};
-		for(const sg of sgroups){
-			ds[g][sg]=ByGroupSubgroup[g][sg];
+		ds[g] = {};
+		for (const sg of sgroups) {
+			ds[g][sg] = ByGroupSubgroup[g][sg];
 		}
 		console.log(sgroups)
 	}
