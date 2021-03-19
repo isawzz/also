@@ -22,7 +22,7 @@ var AD, ADS; //addons: current instance and dict of all existing addons (form DB
 var UIS = {}; 
 
 var App; //not sure!
-var Daat = {}; //some kind of global object for testing ...
+var Daaa = {}; //some kind of global object for testing ...
 
 //#endregion
 
@@ -9731,7 +9731,7 @@ class TimeoutManager {
 class CountdownTimer {
 	constructor(ms, elem) {
 		this.timeLeft = ms;
-		this.msStart = Daat.now();
+		this.msStart = Daaa.now();
 		this.elem = elem;
 		this.tick();
 	}
@@ -10734,8 +10734,8 @@ function startUnit() {
 }
 
 function initSymbolTableForGamesAddons() {
-	//console.log('Daat', Daat);//yes this is an empty dict!
-	Daat.GameClasses = {
+	//console.log('Daaa', Daaa);//yes this is an empty dict!
+	Daaa.GameClasses = {
 		gTouchPic: GTouchPic, gNamit: GNamit,
 		gTouchColors: GTouchColors, gPremem: GPremem, gMem: GMem, gMissingLetter: GMissingLetter,
 		gMissingNumber: GMissingNumber, gWritePic: GWritePic, gSayPic: GSayPic, gSteps: GSteps, gElim: GElim,

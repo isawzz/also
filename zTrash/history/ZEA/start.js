@@ -16,25 +16,25 @@ function test59(n,wper,hper,lang='E'){
 	//test60_pageVisibleArea();
 }
 function test64_multi(fTest, ns = [4, 12, 20], lens = [8, 14], wpers = [50, 90], hpers = [50, 90]) {
-	Daat.tests = [];
+	Daaa.tests = [];
 	for (const n of ns) {
 		for (const len of lens) {
 			for (const wPercent of wpers) {
 				for (const hPercent of hpers) {
-					Daat.tests.push({ n: n, wPercent: wPercent, hPercent: hPercent, len: len });
+					Daaa.tests.push({ n: n, wPercent: wPercent, hPercent: hPercent, len: len });
 				}
 			}
 		}
 	}
-	Daat.iTest = 0;
+	Daaa.iTest = 0;
 	onclick = () => test64_present(fTest);
 	test64_present(fTest);
 }
 function test64_present(fTest) {
-	let t = Daat.tests[Daat.iTest];
+	let t = Daaa.tests[Daaa.iTest];
 	fTest(t.n, t.len, t.wPercent, t.hPercent);
-	Daat.iTest = (Daat.iTest + 1) % Daat.tests.length;
-	//console.log(Daat.iTest);
+	Daaa.iTest = (Daaa.iTest + 1) % Daaa.tests.length;
+	//console.log(Daaa.iTest);
 }
 
 

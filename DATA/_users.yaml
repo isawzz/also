@@ -1,194 +1,54 @@
-nil:
-  id: nil
-  avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gNamit
+amanda:
+  id: felix
+  avGames: [gKrieg, gAristo]
+  lastGame: gKrieg
   settings:
-    # settings common to all games
-    samplesPerGame: 20
-    minutesPerUnit: 20
-    incrementLevelOnPositiveStreak: 4
-    decrementLevelOnNegativeStreak: 4
-    showLabels: toggle #always never toggle (=remove labels after half level)
-    language: D
-    vocab: lifePlus
-    showTime: true
-    spokenFeedback: true
-    silentMode: false
-    switchGame: true
-    #indiv game settings default
-    trials:  1
-    showHint: true
-    # activity animal body drink emotion food fruit game gesture kitchen object person place plant role sport time transport vegetable nosymemo nosymbols
-    categories: [nosymemo]
-    pressControlToUnfreeze: false
-    reducedAnimations: true
-    levelBadges: false
+    color: blue
   games:
-    gNamit:
-      #vocab: 
-      startLevel: 4
-    gTouchPic:
-      #vocab: 
-      startLevel: 1
-    gPremem:
-      startLevel: 3
-    gTouchColors: 
-      startLevel: 0
-    gMissingLetter: 
-      startLevel: 2
-    gSteps: 
-      startLevel: 0
-    gSayPic: 
-      startLevel: 0
-    gMem:
-      startLevel: 1
-    gMissingNumber: 
-      startLevel: 2
-    gWritePic: 
-      startLevel: 2
-    gAnagram: 
-      startLevel: 0
-    gElim: 
-      startLevel: 2
-    gAbacus:
-      startLevel: 0
-    gPasscode:
-      startLevel: 0
-  avAddons: [aPasscode, aAddress, aPassword]
-  addons:
-    aPasscode:
-      open: true
-      #tNext: 2000 #next time this should be running is in 20 seconds!
-    aAddress:
-      open: true
-    aPassword:
-      open: true
-guest0:
-  id: guest
-  avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gNamit
+  tables:
+felix:
+  id: felix
+  avGames: [gKrieg, gAristo]
+  lastGame: gKrieg
   settings:
-    # settings common to all games
-    samplesPerGame: 10
-    minutesPerUnit: 10
-    incrementLevelOnPositiveStreak: 10
-    decrementLevelOnNegativeStreak: 5
-    showLabels: toggle #always never toggle (=remove labels after half level)
-    language: E
-    vocab: best25
-    showTime: false
-    spokenFeedback: true
-    silentMode: false
-    switchGame: true
-    #indiv game settings default
-    trials:  2
-    showHint: true
+    color: red
   games:
-    gTouchPic:
-      startLevel: 0
-test0:
-  id: test0
-  avGames: [gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gTouchPic
+  tables:
+lauren:
+  id: lauren
+  avGames: [gKrieg, gAristo]
+  lastGame: gKrieg
   settings:
-    # settings common to all games
-    samplesPerGame: 10
-    minutesPerUnit: 10
-    incrementLevelOnPositiveStreak: 10
-    decrementLevelOnNegativeStreak: 5
-    showLabels: toggle #always never toggle (=remove labels after half level)
-    language: E
-    vocab: best25
-    showTime: false
-    spokenFeedback: true
-    silentMode: false
-    switchGame: true
-    #indiv game settings default
-    trials:  2
-    showHint: true
+    color: pink
   games:
-    gTouchPic:
-      #vocab: 
-      startLevel: 3
-    gPremem:
-      startLevel: 0
-    gTouchColors: 
-      startLevel: 0
-    gMissingLetter: 
-      startLevel: 2
-    gSteps: 
-      startLevel: 0
-    gSayPic: 
-      startLevel: 0
-    gMem:
-      startLevel: 1
-    gMissingNumber: 
-      startLevel: 2
-    gWritePic: 
-      startLevel: 2
-    gAnagram: 
-      startLevel: 3
-    gElim: 
-      startLevel: 0
-    gAbacus:
-      startLevel: 0
-    gPasscode:
-      startLevel: 0
+  tables:
 gul:
   id: gul
-  avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gTouchPic
+  avGames: [gKrieg, gAristo]
+  lastGame: gKrieg
   settings:
-    # settings common to all games
-    samplesPerGame: 25
-    minutesPerUnit: 20
-    incrementLevelOnPositiveStreak: 10
-    decrementLevelOnNegativeStreak: 5
-    showLabels: toggle #always never toggle (=remove labels after half level)
-    language: D
-    vocab: lifePlus
-    showTime: true
-    spokenFeedback: true
-    silentMode: false
-    switchGame: true
-    #indiv game settings default
-    trials:  2
-    showHint: true
+    color: orange
   games:
-    gTouchPic:
-      startLevel: 3
-    gPremem:
-      startLevel: 3
-    gTouchColors: 
-      startLevel: 2
-    gMissingLetter: 
-      startLevel: 2
-    gSteps: 
-      startLevel: 0
-    gSayPic: 
-      startLevel: 0
-    gMem:
-      startLevel: 1
-    gMissingNumber: 
-      startLevel: 2
-    gWritePic: 
-      startLevel: 2
-    gAnagram: 
-      startLevel: 1
-    gElim: 
-      startLevel: 2
-    gAbacus:
-      startLevel: 2
-    gPasscode:
-      startLevel: 0
-    gNamit:
-      startLevel: 3
-  avAddons: [aPasscode, aAddress, aPassword]
-  addons:
-    aPasscode:
-      open: true
-      #tNext: 2000 #next time this should be running is in 20 seconds!
-    aAddress:
-      open: false
-    aPassword:
-      open: false
+  tables:
+nil:
+  id: nil
+  avGames: [gKrieg, gAristo]
+  lastGame: gKrieg
+  settings:
+    color: green
+  games:
+  tables:
+guest0:
+  id: guest
+  avGames: [gKrieg, gAristo]
+  settings:
+    color: random
+  games:
+  tables:
+test0:
+  id: test
+  avGames: [gKrieg, gAristo]
+  settings:
+    color: random
+  games:
+  tables:

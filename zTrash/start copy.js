@@ -247,7 +247,7 @@ async function _start() {
 	initSidebar();
 	initAux();
 	initScore();
-	initSymbolTableForGamesAddons(); //creates Daat
+	initSymbolTableForGamesAddons(); //creates Daaa
 
 	//initAddons(); //old API ==>deprecate
 	addonFeatureInit(); //new API!
@@ -301,8 +301,8 @@ function startUnit() {
 }
 
 function initSymbolTableForGamesAddons() {
-	//console.log('Daat', Daat);//yes this is an empty dict!
-	Daat.GameClasses = {
+	//console.log('Daaa', Daaa);//yes this is an empty dict!
+	Daaa.GameClasses = {
 		gTouchPic: GTouchPic, gNamit: GNamit,
 		gTouchColors: GTouchColors, gPremem: GPremem, gMem: GMem, gMissingLetter: GMissingLetter,
 		gMissingNumber: GMissingNumber, gWritePic: GWritePic, gSayPic: GSayPic, gSteps: GSteps, gElim: GElim,

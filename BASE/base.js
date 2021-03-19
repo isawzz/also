@@ -18,6 +18,31 @@ function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isd
 function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDivid(id, dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
+function mEditableOnEdited(id, dParent, label, initialVal, onEdited, onOpening) {
+	let inp = mEditableInput(dParent, label, initialVal);
+	inp.id = id;
+	if (isdef(onOpening)) { inp.addEventListener('focus', ev => onOpening(ev)); }
+	inp.addEventListener('focusout', ev => {
+		//unselect text in span
+		window.getSelection().removeAllRanges();
+		if (isdef(onEdited)) onEdited(inp.innerHTML, ev);
+	}); //(ev) => { onChange(ev,isCaseSensitive?inp.innerHTML:inp.innerHTML.toLowerCase()); });
+	return inp;
+}
+function mEditableInput(dParent, label, val) {
+	let labelElem = createElementFromHTML(`<span>${label}</span>	`)
+	let elem = createElementFromHTML(`<span contenteditable="true" spellcheck="false">${val}</span>	`)
+	elem.addEventListener('keydown', (ev) => {
+		if (ev.key === 'Enter') {
+			ev.preventDefault();
+			mBy('dummy').focus();
+		}
+	});
+	let dui = mDiv(dParent);
+	mAppend(dui, labelElem);
+	mAppend(dui, elem);
+	return elem;
+}
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
 function mLinebreak(d, gap) { mGap(d, gap); }
@@ -394,10 +419,34 @@ function alphaToHex(zero1) {
 	//console.log('alpha from', zero1, 'to', hex);
 	return hex;
 } //ok
-function colorBlend(zero1, c0, c1, log = true) {
+function bestContrastingColor(color, colorlist) {
+	//console.log('dddddddddddddddd')
+	let contrast = 0;
+	let result = null;
+	let rgb = colorRGB(color, true);
+	rgb = [rgb.r, rgb.g, rgb.b];
+	for (c1 of colorlist) {
+		let x = colorRGB(c1, true)
+		x = [x.r, x.g, x.b];
+		let c = getContrast(rgb, x);
+		//console.log(rgb,x,c);
+		if (c > contrast) { contrast = c; result = c1; }
+	}
+	//console.log(contrast,result)
+	return result;
+}function colorBlend(zero1, c0, c1, log = true) {
 	c0 = anyColorToStandardString(c0);
 	c1 = anyColorToStandardString(c1);
 	return pSBC(zero1, c0, c1, log);
+} //ok
+function colorLighter(c, zero1 = .2, log = true) {
+	c = anyColorToStandardString(c);
+	return pSBC(zero1, c, undefined, !log);
+} //ok
+function colorDarker(c, zero1 = .8, log = true) {
+	//1 is darkest,0 is orig color
+	c = anyColorToStandardString(c);
+	return pSBC(-zero1, c, undefined, !log);
 } //ok
 function colorShade(plusMinus1, color, log = true) {
 	let c = anyColorToStandardString(color);
@@ -419,6 +468,18 @@ function colorIdealText(bg, grayPreferred = false) {
 	return foreColor;
 	// return 'white';
 }
+function colorHex(cAny) {
+	//returns hex string w/ alpha channel or without
+	let c = anyColorToStandardString(cAny);
+	if (c[0] == '#') {
+		return c;
+	} else {
+		//it is now an rgba string and has alpha
+		let res = pSBC(0, c, 'c');
+		//console.log('in colorHex!!!!', c, res);
+		return res;
+	}
+} //ok
 function colorRGB(cAny, asObject = false) {
 	//returns { r:[0,255], g:[0,255], b:[0,255]}
 	let res = anyColorToStandardString(cAny);
@@ -455,6 +516,7 @@ function colorPalShade(color) {
 	}
 	return res;
 }
+function getColorDictColor(c) { return isdef(ColorDict[c]) ? ColorDict[c].c : c; }
 function getColorNames() {
 	return [
 		'AliceBlue',
@@ -759,7 +821,40 @@ function getColorHexes(x) {
 		'9acd32'
 	];
 } //ok
-
+function getBrightness(c) {
+	function luminance(r, g, b) {
+		var a = [r, g, b].map(function (v) {
+			v /= 255;
+			return v <= 0.03928
+				? v / 12.92
+				: Math.pow((v + 0.055) / 1.055, 2.4);
+		});
+		return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+	}
+	let x = colorRGB(c, true);
+	return luminance(x.r, x.g, x.b);
+}
+function getContrast(rgb1, rgb2) {
+	// usage:
+	// contrast([255, 255, 255], [255, 255, 0]); // 1.074 for yellow
+	// contrast([255, 255, 255], [0, 0, 255]); // 8.592 for blue
+	// minimal recommended contrast ratio is 4.5, or 3 for larger font-sizes
+	var lum1 = luminance(rgb1[0], rgb1[1], rgb1[2]);
+	var lum2 = luminance(rgb2[0], rgb2[1], rgb2[2]);
+	var brightest = Math.max(lum1, lum2);
+	var darkest = Math.min(lum1, lum2);
+	return (brightest + 0.05)
+		/ (darkest + 0.05);
+}
+function luminance(r, g, b) {
+	var a = [r, g, b].map(function (v) {
+		v /= 255;
+		return v <= 0.03928
+			? v / 12.92
+			: Math.pow((v + 0.055) / 1.055, 2.4);
+	});
+	return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+}
 function computeColor(c) { return (c == 'random') ? randomColor() : c; }
 function computeColorX(c) {
 
@@ -865,18 +960,18 @@ function safeLoop(func, params) {
 //#region drag drop
 var DragElem = null; //is the clone of HTML element from which drag started
 var DDInfo = null;
-function addDDSource(source, isCopy=true) {
+function addDDSource(source, isCopy = true) {
 	DDInfo.sources.push(source);
-	let d=getDiv(source);
-	d.onmousedown = (ev) => ddStart(ev, source, isCopy); 
+	let d = getDiv(source);
+	d.onmousedown = (ev) => ddStart(ev, source, isCopy);
 }
-function enableDD(sources, targets,dropHandler, isCopy) {
-	DDInfo = { sources: sources, targets: targets, dropHandler:dropHandler };
+function enableDD(sources, targets, dropHandler, isCopy) {
+	DDInfo = { sources: sources, targets: targets, dropHandler: dropHandler };
 	let sourceDivs = getDivs(sources);
-	for(let i=0;i<sources.length;i++){
-		let source=sources[i];
-		let d=sourceDivs[i];
-		d.onmousedown = (ev) => ddStart(ev, source, isCopy); 
+	for (let i = 0; i < sources.length; i++) {
+		let source = sources[i];
+		let d = sourceDivs[i];
+		d.onmousedown = (ev) => ddStart(ev, source, isCopy);
 	}
 }
 function ddStart(ev, source, isCopy = true) {
@@ -916,9 +1011,9 @@ function onReleaseClone(ev) {
 	for (const target of DDInfo.targets) {
 		let dTarget = getDiv(target);
 		if (els.includes(dTarget)) {
-			if (isdef(dropHandler)){
-				dropHandler(source,target,DragElem.isCopy);
-			}else console.log('dropped',source,'on',target);
+			if (isdef(dropHandler)) {
+				dropHandler(source, target, DragElem.isCopy);
+			} else console.log('dropped', source, 'on', target);
 			//console.log('yes, we are over',dTarget);
 			// dTarget.innerHTML = DragElem.innerHTML;
 
@@ -1337,6 +1432,13 @@ function copyKeys(ofrom, oto, except = {}, only) {
 		oto[k] = ofrom[k];
 	}
 }
+function createKeyIndex(di, prop) {
+	let res = {};
+	for (const k in di) {
+		res[di[k][prop]] = k;
+	}
+	return res;
+}
 function fisherYates(array) {
 	var rnd, temp;
 
@@ -1630,6 +1732,7 @@ function chooseRandom(arr, condFunc = null) {
 	let idx = Math.floor(Math.random() * len);
 	return arr[idx];
 }
+function chooseKeys(dict, n, except) { let keys = Object.keys(dict); let ind = except.map(x => keys.indexOf(x)); return choose(keys, n, ind); }
 function randomColor(s, l, a) { return isdef(s) ? randomHslaColor(s, l, a) : randomHexColor(); }
 function randomHslaColor(s = 100, l = 70, a = 1) {
 	//s,l in percent, a in [0,1], returns hsla string

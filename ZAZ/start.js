@@ -35,7 +35,7 @@ function testOnClick(test) {
 	nextTest(test);
 }
 function cycleThroughTestsOnClick() {
-	Daat = {
+	Daaa = {
 		index: 0,
 		fs: [sample_non_uniform_grid,
 			sample_regular_uniform_grid,
@@ -52,13 +52,13 @@ function cycleThroughTestsOnClick() {
 	nextTest();
 }
 function nextTest(f) {
-	if (nundef(f)) f = Daat.fs[Daat.index];
+	if (nundef(f)) f = Daaa.fs[Daaa.index];
 	console.log('test:', f.name);
 	//dMain.style.opacity=0;
 	let [items, options] = f();
 	setTimeout(() => nachbearbeitung(items, options), 20);
 	console.log('options', options)
-	if (isdef(Daat.index)) Daat.index = (Daat.index + 1) % Daat.fs.length;
+	if (isdef(Daaa.index)) Daaa.index = (Daaa.index + 1) % Daaa.fs.length;
 }
 function showGroupsSubgroups() {
 	for (const group in ByGroupSubgroup) {

@@ -57,7 +57,7 @@ function iPresentHand(h, redo = true) {
 	return h;
 }
 function iMakeHand(iarr, id) {
-	let data = Daat[id] = {};
+	let data = Daaa[id] = {};
 	let h = data.deck = new Deck();
 	h.init(iarr);
 	iPresentHand(data);

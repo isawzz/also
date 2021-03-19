@@ -1,5 +1,5 @@
-function initLive() { Live = {}; Daat = {}; UIS = {}; }
-//uses Live,UIS, may use Daat
+function initLive() { Live = {}; Daaa = {}; UIS = {}; }
+//uses Live,UIS, may use Daaa
 
 function lRegister(item) { let x = new LiveObject(item); return x.id; }
 function registeredItemCopy(orig) { let item = jsCopy(orig); item.id = lRegister(item); return item; }
