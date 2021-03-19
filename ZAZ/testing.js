@@ -24,7 +24,7 @@ function togglePic(ev) {
 function test03_2HandsRandom() {
 	let h1 = iMakeHand([0, 1, 2, 3, 4], 'h1');
 	let h2 = iMakeHand([13, 14, 15, 16, 17], 'h2');
-	//console.log('Daaa', Daaa)
+	//console.log('DA', DA)
 
 	setTimeout(test03_2Hands_transferStarts, 1000);
 }
@@ -38,22 +38,22 @@ function test03_sortDeck() {
 function test03_2Hands() {
 	let h1 = iMakeHand([0, 1, 2, 3, 4], 'h1');
 	let h2 = iMakeHand([13, 14, 15, 16, 17], 'h2');
-	//console.log('Daaa', Daaa)
+	//console.log('DA', DA)
 
 	setTimeout(test03_2Hands_transferStarts, 1000);
 }
 function test03_2Hands_transferStarts() {
 
-	let h1 = Daaa.h1.iHand;
+	let h1 = DA.h1.iHand;
 	let n1 = h1.items.length;
 	//console.log('hand h1 has', n1, 'cards');
-	let h2 = Daaa.h2.iHand;
+	let h2 = DA.h2.iHand;
 	let n2 = h2.items.length;
 	//console.log('hand h2 has', n2, 'cards');
-	//console.assert(n2 == Daaa.h2.deck.count());
+	//console.assert(n2 == DA.h2.deck.count());
 
 	let c = chooseRandom(h2.items);
-	Daaa.item = c;
+	DA.item = c;
 
 	let w = c.w;
 	let ov = w / 4;
@@ -63,16 +63,16 @@ function test03_2Hands_transferStarts() {
 }
 function test03_2Hands_transfer() {
 	//modify the deck object
-	let deck1 = Daaa.h1.deck;
-	let deck2 = Daaa.h2.deck;
-	let item = Daaa.item;
+	let deck1 = DA.h1.deck;
+	let deck2 = DA.h2.deck;
+	let item = DA.item;
 
 	deck1.addTop(item.val);
 	deck2.remove(item.val);
 
-	iPresentHand(Daaa.h1);
-	iPresentHand(Daaa.h2);
-	iSortHand(Daaa.h1)
+	iPresentHand(DA.h1);
+	iPresentHand(DA.h2);
+	iSortHand(DA.h1)
 
 }
 function test03_komischeBubbles(){
@@ -106,32 +106,32 @@ function updateBubbleColors(e) {
 }
 
 function test03_splayHand() {
-	let h = Daaa.hand = new Deck();
+	let h = DA.hand = new Deck();
 	h.init([3, 4, 5, 6, 13, 23]);
 
 	console.log(h); let cards = h.cards(); console.log(cards);
-	let zHand = Daaa.zone = iHandZone();
+	let zHand = DA.zone = iHandZone();
 	let items = i52(h.cards());
-	let handItem = Daaa.iHand = iSplay(items, zHand);
+	let handItem = DA.iHand = iSplay(items, zHand);
 
 	let z = iHandZone();
-	let item = Daaa.item = iAppend52(18, z);
-	console.log('Daaa', Daaa)
+	let item = DA.item = iAppend52(18, z);
+	console.log('DA', DA)
 
 	setTimeout(test03_addCard, 1000);
 }
 function test03_addCard() {
 
-	let h = Daaa.hand;
+	let h = DA.hand;
 	let n = h.count();
 	console.log('hand has', n, 'cards');
-	let c = Daaa.item;
+	let c = DA.item;
 	let w = c.w;
 	let ov = w / 4;
 	let xOffset = n * ov;
 
 	//how to move the card to the hand?????
-	iMoveFromTo(Daaa.item, Daaa.item.div.parentNode, Daaa.zone, transferElement, { x: xOffset, y: 0 });
+	iMoveFromTo(DA.item, DA.item.div.parentNode, DA.zone, transferElement, { x: xOffset, y: 0 });
 
 	// clearElement(dTable);
 	// console.log(h); cards = h.cards(); console.log(cards);
@@ -142,15 +142,15 @@ function test03_addCard() {
 }
 function transferElement() {
 	//modify the deck object
-	let h = Daaa.hand;
-	let item = Daaa.item;
+	let h = DA.hand;
+	let item = DA.item;
 	h.addTop(item.val);
 
 	//resplay in same zone:
-	let zHand = Daaa.zone;
+	let zHand = DA.zone;
 	clearElement(zHand);
 	let items = i52(h.cards());
-	let handItem = Daaa.iHand = iSplay(items, zHand);
+	let handItem = DA.iHand = iSplay(items, zHand);
 
 
 }

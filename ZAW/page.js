@@ -85,7 +85,7 @@ function getMainAreaPercent(dParent, bg = 'grey', wPercent = 94, hPercent = 96, 
 function setPageBackground(bg, fg = 'white', isBase = true) {
 	bg = colorHex(bg);
 	//console.log('setting bg to', bg)
-	if (isBase) Daaa.baseColor = bg;
+	if (isBase) DA.baseColor = bg;
 	mStyleX(dMain, { bg: bg, fg: isdef(fg) ? fg : 'contrast' });
 }
 //#prefabs
@@ -114,8 +114,8 @@ function addDummy() {
 function toggleTheme() {
 	let bg = colorHex(dMain.style.backgroundColor);
 	let lum = getBrightness(bg);
-	console.log('current:\nbg', bg, '\nbaseColor', Daaa.baseColor, '\nlum', lum);
-	if (bg != Daaa.baseColor) setPageBackground(Daaa.baseColor, 'white', false);
+	console.log('current:\nbg', bg, '\nbaseColor', DA.baseColor, '\nlum', lum);
+	if (bg != DA.baseColor) setPageBackground(DA.baseColor, 'white', false);
 	else if (lum <= .5) setPageBackground(colorLighter(bg), 'black', false);
 	else setPageBackground(colorDarker(bg, 1), 'white', false);
 }

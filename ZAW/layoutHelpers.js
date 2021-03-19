@@ -86,7 +86,7 @@ function _extendOptions(options, defOptions) {
 	defOptions = {
 		n: 20,
 		wper: 90, hper: 90, dParent: dTable,
-		szPic: { w: 100, h: 100 },
+		showPic: true, szPic: { w: 100, h: 100 },
 		showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
 		fzText: 20, fzPic: 60, 
 		padding: .025, gap: .1, isUniform: true, isRegular: true, fillArea: false,

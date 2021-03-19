@@ -101,7 +101,7 @@ function zRepeatInColorEachItem(items, colorKeys) {
 function getItem(k) { return infoToItem(Syms[k]); }
 
 //new API:
-function genKeys(n,options) {
+function genKeys(n, options) {
 	let [maxlen, lang, keySet] = [options.maxlen, options.lang, options.keySet];
 	let cond = isdef(maxlen) ? ((x) => x[lang].length <= maxlen) : null;
 	let keys = _getKeysCond(n, cond, keySet);
@@ -116,7 +116,7 @@ function _getKeysCond(n, cond, keySet = 'all') {
 	keys = n >= keys.length ? keys : choose(keys, n);
 	return keys;
 }
-function genItems(n,options) { let keys = genKeys(n,options); let items = genItemsFromKeys(keys, options); return items; }
+function genItems(n, options) { let keys = genKeys(n, options); let items = genItemsFromKeys(keys, options); return items; }
 function genItemsFromKeys(keys, options) {
 	let items = keys.map(x => infoToItem(Syms[x]));
 	//console.log(options.lang,options.luc)
@@ -173,13 +173,13 @@ function getItemsMaxWordLength(n, len, keySet = 'all', lang = 'E', luc = 'c') {
 	addLabels(items, lang, luc);
 	return items;
 }
-function getNItemsPerKeylist(n,keylists,options={}){
+function getNItemsPerKeylist(n, keylists, options = {}) {
 	let items = [];
-	for(const list of keylists){
+	for (const list of keylists) {
 		options.keySet = list;
 		//console.log('list',list)
-		let newItems =genItems(n,options);
-		newItems.map(x=>items.push(x));
+		let newItems = genItems(n, options);
+		newItems.map(x => items.push(x));
 	}
 	//console.log('items',items)
 	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
@@ -194,14 +194,14 @@ function getNItemsPerKeylist(n,keylists,options={}){
 
 }
 
-function getItemsCat_dep(n,cat){
+function getItemsCat_dep(n, cat) {
 	let keys = KeySets.all;
-	keys = KeySets.all.filter(x=>firstCond(Syms[x].cats,x=>x.includes(cat)));
-	keys = choose(keys,n)
+	keys = KeySets.all.filter(x => firstCond(Syms[x].cats, x => x.includes(cat)));
+	keys = choose(keys, n)
 	return getItems(keys);
 }
 
-function infoToItem(x) { let item = { info: x, key: x.key }; item.id = lRegister(item); return item; }
+function infoToItem(x) { let item = { info: x, key: x.key }; item.id = iRegister(item); return item; }
 function modifyColorkey(item) {
 	let colorkey = chooseRandom(Object.keys(ColorDict));
 	let textShadowColor = ColorDict[colorkey].c;
@@ -210,6 +210,43 @@ function modifyColorkey(item) {
 	item.colorKey = colorkey;
 	console.log('colorkey', colorkey)
 	applyColorkey(item);
+}
+function makeItemDiv(item, options) {
+
+	if (isdef(options.outerStyles)) copyKeys(item, options.outerStyles, {}, Object.keys(options.ifs)); //options.ifs contains per item dynamic styles!!!!!
+	let dOuter = mCreate('div', options.outerStyles, getUID());
+
+	if (isdef(item.textShadowColor)) {
+		//console.log('halllllllllllll')
+		let sShade = '0 0 0 ' + item.textShadowColor;
+		if (options.showPic) {
+			options.picStyles['text-shadow'] = sShade;
+			options.picStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+		} else {
+			options.labelStyles['text-shadow'] = sShade;
+			options.labelStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+		}
+	}
+
+	let dLabel;
+	if (options.showLabels && options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+	let dPic;
+	if (options.showPic) {
+		dPic = mDiv(dOuter, { family: item.info.family });
+		dPic.innerHTML = item.info.text;
+		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
+	}
+
+	if (options.showLabels && options.labelBottom == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+	if (isdef(options.handler)) dOuter.onclick = options.handler;
+
+	iAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
+
+	if (isdef(item.textShadowColor)) { applyColorkey(item, options); }
+	return dOuter;
+
 }
 function makeItemDivs(items, options) {
 	for (let i = 0; i < items.length; i++) {

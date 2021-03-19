@@ -2,7 +2,7 @@ function changeGameTo(id) {
 	//console.log('changing game to', id)
 	if (isdef(id) && (isdef(G) && G.friendly == id || id == Gamename)) { console.log('???'); return; }
 	if (isdef(T)) { saveTable(); }
-	loadGame(Daaa.gameKeyByFriendly[capitalize(id.toLowerCase())]);
+	loadGame(DA.gameKeyByFriendly[capitalize(id.toLowerCase())]);
 	//loadTable();
 }
 function loadGame(id, dParent) {
@@ -14,7 +14,7 @@ function loadGame(id, dParent) {
 	G.color = getColorDictColor(G.color);
 	G.id = Gamename = id;
 
-	if (nundef(Daaa.gameKeyByFriendly)) { Daaa.gameKeyByFriendly = createKeyIndex(DB.games, 'friendly'); }
+	if (nundef(DA.gameKeyByFriendly)) { DA.gameKeyByFriendly = createKeyIndex(DB.games, 'friendly'); }
 
 	//console.log(Gamename, U);
 	updateGamenameUi(dParent, G.friendly);//, G.color);//change bg instead!!!!

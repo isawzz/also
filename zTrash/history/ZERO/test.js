@@ -547,7 +547,7 @@ function t96_parseEmojiString() {
 		}
 		infos[key] = o;
 	}
-	lookupSet(Daaa, ['newSyms'], infos);
+	lookupSet(DA, ['newSyms'], infos);
 	console.log(infos)
 	return infos;
 }

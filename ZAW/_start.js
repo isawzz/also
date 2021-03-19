@@ -3,7 +3,9 @@ async function _start() {
 	createSubtitledPage('indigo'); revealMain();
 
 	temple(dTitleLeft);
+	loadUser('nil');
 
+	onClickTemple();
 }
 
 

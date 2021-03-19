@@ -1,54 +1,11 @@
-amanda:
-  id: felix
-  avGames: [gKrieg, gAristo]
-  lastGame: gKrieg
-  settings:
-    color: blue
-  games:
-  tables:
-felix:
-  id: felix
-  avGames: [gKrieg, gAristo]
-  lastGame: gKrieg
-  settings:
-    color: red
-  games:
-  tables:
-lauren:
-  id: lauren
-  avGames: [gKrieg, gAristo]
-  lastGame: gKrieg
-  settings:
-    color: pink
-  games:
-  tables:
-gul:
-  id: gul
-  avGames: [gKrieg, gAristo]
-  lastGame: gKrieg
-  settings:
-    color: orange
-  games:
-  tables:
 nil:
   id: nil
-  avGames: [gKrieg, gAristo]
+  favs: [gKrieg, gAristo, gTouchPic, gMem]
+  games: [gKrieg, gAristo]
+  solitaires: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
+  addons: [aPasscode, aAddress, aPassword]
   lastGame: gKrieg
   settings:
     color: green
-  games:
-  tables:
-guest0:
-  id: guest
-  avGames: [gKrieg, gAristo]
-  settings:
-    color: random
-  games:
-  tables:
-test0:
-  id: test
-  avGames: [gKrieg, gAristo]
-  settings:
-    color: random
-  games:
-  tables:
+  startup: #settings for starting new game (eg. startLevel)
+  tables: #ids of tables this user is a player

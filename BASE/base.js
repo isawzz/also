@@ -44,6 +44,7 @@ function mEditableInput(dParent, label, val) {
 	return elem;
 }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
+function mInner(html,dParent,styles){dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent,styles);}
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
 function mLinebreak(d, gap) { mGap(d, gap); }
 function mLine3(dParent, index, ids, styles) {
@@ -213,6 +214,27 @@ function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
 //#endregion
 
 //#region i
+function iAdd(item, props) {
+	let id,l;
+	if (isString(item)) {id=item;item=Items[id];}	else if (nundef(item.id)) {id=iRegister(item);}	else id=item.id;
+
+	if (nundef(item.live)) item.live={}; l=item.live;
+
+	for (const k in props) {
+		let val = props[k];
+		l[k] = val;
+		if (isDict(val) && !isEmpty(val.id)) {
+			// console.log('val.id is defined:',val.id)
+			val.liveId = id;
+			//console.log('type of',k,'is',typeof(val),getTypeOf(val));
+			// if is elem should go to UIS!
+			if (isDOM(val)) {
+				// console.log('found DOM elem w/ id!!!!',val.id,k);
+				lookupSet(l,['uids',k], val.id);
+			}
+		}
+	}
+}
 function iAppend(dParent, i) { mAppend(iDiv(dParent), iDiv(i)); }
 function iBounds(i, irel) {
 	if (isdef(i.div)) i = i.div;
@@ -254,6 +276,7 @@ function iSize(i, w, h) { i.w = w; i.h = h; mSize(i.div, w, h); }
 function isItem(i) { return isdef(i.div); }
 function iDiv(i) { return isItem(i) ? i.div : i; }
 function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
+function iRegister(item) { let uid = getUID(); Items[uid] = item; }
 function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ovUnit = '%', createHand = true, rememberFunc = true) {
 
 	if (!isList(items)) items = [items];
@@ -1133,7 +1156,7 @@ async function dbInit(appName, dir = '../DATA/') {
 	let settings = await route_path_yaml_dict(dir + '_settings.yaml');
 	let addons = await route_path_yaml_dict(dir + '_addons.yaml');
 	let games = await route_path_yaml_dict(dir + '_games.yaml');
-	let speechGames = await route_path_yaml_dict(dir + '_speechGames.yaml');
+	//let speechGames = await route_path_yaml_dict(dir + '_speechGames.yaml');
 	let tables = await route_path_yaml_dict(dir + '_tables.yaml');
 
 	DB = {
@@ -1142,7 +1165,7 @@ async function dbInit(appName, dir = '../DATA/') {
 		settings: settings,
 		games: games,
 		tables: tables,
-		speechGames: speechGames,
+		//speechGames: speechGames,
 		addons: addons,
 	};
 

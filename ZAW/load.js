@@ -35,7 +35,7 @@ async function _loader() {
 	if (CLEAR_LOCAL_STORAGE) localStorage.clear();
 
 	C52 = await localOrRoute('C52', '../assets/c52.yaml');
-	Syms = await localOrRoute('syms', '../assets/newSyms.yaml');
+	Syms = await localOrRoute('syms', '../assets/allSyms.yaml');
 	SymKeys = Object.keys(Syms);
 	ByGroupSubgroup = await localOrRoute('gsg', '../assets/symGSG.yaml');
 	//await addGroupInfo();
@@ -51,9 +51,10 @@ async function _loader() {
 async function _start0() {
 	console.assert(isdef(DB));
 
-	Daaa={};
+	DA={};Items={};
 	Speech = new SpeechAPI('E');
 	KeySets = getKeySets();
+	TO=new TimeoutManager();
 
 	_start();
 

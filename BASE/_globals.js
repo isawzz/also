@@ -13,10 +13,13 @@ const CLEAR_LOCAL_STORAGE =  BROADCAST_SETTINGS;
 //#endregion
 
 var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup; //, CatSets, SymbolDict, SInfo;
+var DB;
 
-var Live, DB; //var Settings, SettingsChanged; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
+var U;
+var uiActive=false,TO;
+//var Live; //var Settings, SettingsChanged; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 
-var Daaa;
+var DA,Items;
 //#region color constants
 var ColorNames; //see base.js colors
 const BLUE = '#4363d8';

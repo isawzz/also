@@ -60,9 +60,9 @@ function itemViewer() {
 
 	//items
 	//let keys = genKeys(options);	keys[0] = 'spiral shell';	let items = genItemsFromKeys(keys,options);
-	Daaa.items = genItemsFromKeys(KeySets.all, options);
-	Daaa.options = options;
-	Daaa.iStart = 0;
+	DA.items = genItemsFromKeys(KeySets.all, options);
+	DA.options = options;
+	DA.iStart = 0;
 
 	let dButtons = mDiv(dTitleLeft, { display: 'flex', 'flex-direction': 'column' });
 	mButton('next', itemViewerNext, dButtons, { outline: 'none', mabottom: 6, matop: 10 });
@@ -71,25 +71,25 @@ function itemViewer() {
 	itemViewerNext(); revealMain();
 }
 function itemViewerNext() {
-	let i = Daaa.iStart;
-	let options = Daaa.options;
-	let items = arrFromTo(Daaa.items, i, i + options.n);
+	let i = DA.iStart;
+	let options = DA.options;
+	let items = arrFromTo(DA.items, i, i + options.n);
 	options.n = options.N = items.length;
-	Daaa.iStart += options.n;
-	// console.log('total',Daaa.items.length,'items from:', items[0].index, 'to', items[options.n - 1].index);
+	DA.iStart += options.n;
+	// console.log('total',DA.items.length,'items from:', items[0].index, 'to', items[options.n - 1].index);
 	clearElement(options.dArea);
 	options.fzText = 20;
 	present00(items, options);
 }
 function handSelectSpecialKeys(item) {
-	if (nundef(Daaa.specialKeys)) Daaa.specialKeys = [];
-	toggleItemSelection(item, Daaa.specialKeys);
-	return Daaa.specialKeys.map(x => x.key);
-	// Daaa.specialKeys.push(item);
+	if (nundef(DA.specialKeys)) DA.specialKeys = [];
+	toggleItemSelection(item, DA.specialKeys);
+	return DA.specialKeys.map(x => x.key);
+	// DA.specialKeys.push(item);
 	// mStyleX(lDiv(item),{border:'5px solid yellow'});
 }
 function saveSpecialKeys() {
-	let items = Daaa.specialKeys;
+	let items = DA.specialKeys;
 	let dict = {};
 	for (const item of items) {
 		dict[item.key] = item.info;

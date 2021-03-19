@@ -1,11 +1,22 @@
-class SolitaireClass{
-	constructor(dParent){
+//#region join all syms
+function joinAllSyms() {
+	let oldSyms = await localOrRoute('oldSyms', '../assets/syms.yaml');
+	for (const k in oldSyms) {
+		if (isdef(Syms[k])) continue;
+		Syms[k] = oldSyms[k];
+	}
+	downloadAsYaml(Syms, 'Syms');
+}
+
+
+class SolitaireClass {
+	constructor(dParent) {
 		this.options = {
 			n: 100, dParent: dParent,
 			wper: 100, hper: 100, //dParent: dTable, is default!
 			szPic: { w: 100, h: 70 }, padding: 0,
-			showLabels: true, showPic: true, 
-			isUniform: true, fillArea: true, isRegular: false, 
+			showLabels: true, showPic: true,
+			isUniform: true, fillArea: true, isRegular: false,
 			handler: _standardHandler,
 		};
 		_extendOptions(this.options);
@@ -16,24 +27,24 @@ class SolitaireClass{
 }
 
 async function _start_dep() {
-	console.log(ByGroupSubgroup);	let keys = getGSG('sport');	console.log('keys',keys);
+	console.log(ByGroupSubgroup); let keys = getGSG('sport'); console.log('keys', keys);
 
 	//erstmal: unvertraegliche combis
-	let doNotCombineGroups=[
-		['Animals & Nature','Food & Drink'],
-		['Activities','People & Body'],
-		['Activities','Objects'],
-		['People & Body','Smileys & Emotion'],
+	let doNotCombineGroups = [
+		['Animals & Nature', 'Food & Drink'],
+		['Activities', 'People & Body'],
+		['Activities', 'Objects'],
+		['People & Body', 'Smileys & Emotion'],
 
 	];
 	let doNotCombineSubgroups = [
-		['arts & crafts','book-paper','writing','tool','event'],
-		['sport','person-sport','game','event'],
-		['music','musical-instrument'],
-		['plant-flower','plant-other'],
+		['arts & crafts', 'book-paper', 'writing', 'tool', 'event'],
+		['sport', 'person-sport', 'game', 'event'],
+		['music', 'musical-instrument'],
+		['plant-flower', 'plant-other'],
 
 	];
-	
+
 
 }
 async function _start_dep() {
@@ -47,7 +58,7 @@ async function _start_dep() {
 	//let k1=getKeysIn('Activities','sport'); console.log('k1',k1)
 
 	let keys = getGSG('sport');
-	console.log('keys',keys);
+	console.log('keys', keys);
 
 	// let cats = getRandomCats(3);
 	// console.log(cats);
@@ -172,13 +183,13 @@ function getRandomCats(n) {
 	let list = Object.keys(catGroups.catsBest);
 	let nRandom = choose(list, n);
 	let res = [];
-	
-	for(const catName of nRandom){
-		let list,realKey;
-		for(const k in KeySets){
-			if (k.includes(catName)) {list=KeySets[k];realKey=k; break;}
+
+	for (const catName of nRandom) {
+		let list, realKey;
+		for (const k in KeySets) {
+			if (k.includes(catName)) { list = KeySets[k]; realKey = k; break; }
 		}
-		res.push({cat:catName,friendly: getFriendlyByCat(catName),key:realKey,list:list});
+		res.push({ cat: catName, friendly: getFriendlyByCat(catName), key: realKey, list: list });
 	}
 	return res;
 }
@@ -188,17 +199,17 @@ function getRandomCats(n) {
 //#endregion
 
 //#region safe for all code fuer DD solitaire
-function dropHandler_dep(source, target, isCopy=true) {
+function dropHandler_dep(source, target, isCopy = true) {
 	let dSource = getDiv(source);
 	let dTarget = getDiv(target);
-	
+
 	if (!isCopy) {
-		mAppend(dTarget,dSource);
-	}else {
-		let dNew = mText(dSource.innerHTML, dTarget, { wmin:100, fz: 20, padding: 4, margin: 4, display:'inline-block' });
-		addDDSource(dNew,false);
+		mAppend(dTarget, dSource);
+	} else {
+		let dNew = mText(dSource.innerHTML, dTarget, { wmin: 100, fz: 20, padding: 4, margin: 4, display: 'inline-block' });
+		addDDSource(dNew, false);
 	}
-	
+
 	//relayout sources in target
 }
 function solCats_dep() {
@@ -209,18 +220,18 @@ function solCats_dep() {
 	let containers = [];
 	for (const cat of ['animals', 'sport', 'transport']) {
 		let cont = mTitledDiv(cat, dArea, { w: 150, h: 300, bg: 'random', rounding: 12, display: 'inline-block', margin: 12 },
-			{  }, 'c' + i);
-			i+=1;
-			containers.push(cont);
+			{}, 'c' + i);
+		i += 1;
+		containers.push(cont);
 	}
 	mLinebreak(dArea);
 	i = 0;
 	let objects = [];
 	for (const cat of ['horse', 'soccer', 'bird']) {
-		let o = mTitledDiv(cat, dArea, { bg: 'random', rounding: 12, display: 'inline-block', padding:4, margin: 12 },
+		let o = mTitledDiv(cat, dArea, { bg: 'random', rounding: 12, display: 'inline-block', padding: 4, margin: 12 },
 			{}, 'i' + i);
-			i+=1;
-			objects.push(o.parentNode);
+		i += 1;
+		objects.push(o.parentNode);
 	}
 
 	enableDD(objects, containers, dropHandler, false);
@@ -233,18 +244,18 @@ function solCats_dep() {
 
 var DragElem = null; //is the clone of HTML element from which drag started
 var DDInfo = null;
-function addDDSource(source, isCopy=true) {
+function addDDSource(source, isCopy = true) {
 	DDInfo.sources.push(source);
-	let d=getDiv(source);
-	d.onmousedown = (ev) => ddStart(ev, source, isCopy); 
+	let d = getDiv(source);
+	d.onmousedown = (ev) => ddStart(ev, source, isCopy);
 }
-function enableDD(sources, targets,dropHandler, isCopy) {
-	DDInfo = { sources: sources, targets: targets, dropHandler:dropHandler };
+function enableDD(sources, targets, dropHandler, isCopy) {
+	DDInfo = { sources: sources, targets: targets, dropHandler: dropHandler };
 	let sourceDivs = getDivs(sources);
-	for(let i=0;i<sources.length;i++){
-		let source=sources[i];
-		let d=sourceDivs[i];
-		d.onmousedown = (ev) => ddStart(ev, source, isCopy); 
+	for (let i = 0; i < sources.length; i++) {
+		let source = sources[i];
+		let d = sourceDivs[i];
+		d.onmousedown = (ev) => ddStart(ev, source, isCopy);
 	}
 }
 function canAct() { return true; }
@@ -276,7 +287,7 @@ function onMovingCloneAround(ev) {
 	let dy = my - DragElem.drag.offsetY;
 	mStyleX(DragElem, { left: dx, top: dy });
 }
-function getDiv(x){if (isdef(x.div)) return x.div; else return x;}
+function getDiv(x) { if (isdef(x.div)) return x.div; else return x; }
 function getDivs(list) {
 	if (isdef(list[0].div)) return list.map(x => x.div); else return list;
 }
@@ -289,9 +300,9 @@ function onReleaseClone(ev) {
 	for (const target of DDInfo.targets) {
 		let dTarget = getDiv(target);
 		if (els.includes(dTarget)) {
-			if (isdef(dropHandler)){
-				dropHandler(source,target,DragElem.isCopy);
-			}else console.log('dropped',source,'on',target);
+			if (isdef(dropHandler)) {
+				dropHandler(source, target, DragElem.isCopy);
+			} else console.log('dropped', source, 'on', target);
 			//console.log('yes, we are over',dTarget);
 			// dTarget.innerHTML = DragElem.innerHTML;
 
