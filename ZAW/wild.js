@@ -15,18 +15,21 @@ function menu() {
 	//console.log(U);
 
 	clearElement(dTable);
-	let options = {}; _extendOptions(options);
+	let options = {}; _extendOptions(options); options.isRegular=false;
 	let dParent = options.dArea;
-	mStyleX(dParent,{layout:'fhcs'});//display:'flex','justify-content':'center'})
-	console.log('options',options)
-	for (const k of U.favs) {
+	let list = U.solitaires; //favs
+	let [rows, cols, w, h, lp] = _bestRowsColsSize(list, options);
+	console.log('cols',cols)
+	mStyleX(dParent, { layout: 'g_' + 4 });//display:'flex','justify-content':'center'})
+	//console.log('options', options)
+	for (const k of list) {
 		let menuItem = DB.games[k];
-		console.log(menuItem);
-		let styles = { bg: menuItem.color, w: 100, h: 100, margin:20 };
+		//console.log(menuItem);
+		let styles = { bg: menuItem.color, w: 100, h: 100, margin: 20 };
 		let item = getItem(menuItem.logo);
 		item.label = menuItem.friendly;
 		let d = makeItemDiv(item, options);
-		iAdd(item,{div:d});
+		iAdd(item, { div: d });
 		mAppend(dParent, d);
 		mStyleX(d, styles);
 		//break;

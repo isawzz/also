@@ -27,7 +27,7 @@ function _bestRowsColsFill(items, options) {
 }
 function _bestRowsColsSize(items, options) {
 	let combis = _getSLCombis(items.length, options.isRegular, true);
-	//combis.map(x => console.log(x));
+	combis.map(x => console.log(x));
 
 	options.szPicTest = { w: options.szPic.w, h: options.szPic.h };
 	let bestCombi = safeLoop(_findBestCombiOrShrink, [items, options, combis]);
