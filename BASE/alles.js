@@ -10427,7 +10427,7 @@ var PROD_START = !IS_TESTING;
 function initLive() { Live = {}; }
 
 
-class LiveObject {
+class UIClass {
 	static States = { none: 0, gettingReady: 1, ready: 2, running: 3, on: 3, off: 4 }
 	constructor(k) { //a live object gets an id at birth
 		//console.log('__________________k',k)
@@ -10437,7 +10437,7 @@ class LiveObject {
 		this.TOList = [];
 		this.UIS = [];
 		this.uiActivated = false;
-		this.uiState = LiveObject.States.none;
+		this.uiState = UIClass.States.none;
 	}
 	//#region hidden API
 	_clearTO() { this.TOList.map(x => clearTimeout(x)); this.TOList = []; }
@@ -10449,9 +10449,9 @@ class LiveObject {
 	die() { this._clearTO(); console.assert(isdef(this.div)); this.div.remove(); Live[this.id] = null; }
 	run() { console.log('object', this.id, 'is running...') }
 
-	setGettingReady() { this.running = false; this.uiState = LiveObject.States.gettingReady; console.log('...getting ready!'); }
-	setRunning() { this.running = true; this.uiState = LiveObject.States.running; }
-	setReady() { this.running = false; this.uiState = LiveObject.States.ready; console.log('ready!'); }
+	setGettingReady() { this.running = false; this.uiState = UIClass.States.gettingReady; console.log('...getting ready!'); }
+	setRunning() { this.running = true; this.uiState = UIClass.States.running; }
+	setReady() { this.running = false; this.uiState = UIClass.States.ready; console.log('ready!'); }
 	getReady(ms) {
 		if (isdef(ms)) { this.setGettingReady(); setTimeout(this.setReady.bind(this), ms); }
 		else this.setReady();

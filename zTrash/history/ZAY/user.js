@@ -39,12 +39,12 @@ function updateUsernameUi(dParent, id, color) {
 		});
 	}
 	ui.innerHTML = id;
-	//find out if 
-	//let fg=bestContrastingColor(GREEN,[color]);
-	bg = colorIdealText(color);
-	if (bg == 'white') bg = colorTrans(bg, .5); else bg='transparent';
-	//if (bg == 'black') bg = dMain.style.backgroundColor;
-	mStyleX(ui, { fg: color, bg: bg, vpadding: 1, hpadding: 6, rounding: 3 });
+
+	// bg = colorIdealText(color);
+	// if (bg == 'white') bg = colorTrans(bg, .5); else bg='transparent';
+	// mStyleX(ui, { fg: color, bg: bg, vpadding: 1, hpadding: 6, rounding: 3 });
+	//mStyleX(ui, { fg: color});
+	//mStyleX(ui,{mabottom:20})
 }
 
 class Player {

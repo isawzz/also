@@ -1,11 +1,12 @@
 function changeGameTo(id) {
-	if (isdef(id) && (isdef(G) && G.friendly == id || id == Gamename)) return;
+	//console.log('changing game to', id)
+	if (isdef(id) && (isdef(G) && G.friendly == id || id == Gamename)) { console.log('???'); return; }
 	if (isdef(T)) { saveTable(); }
-	loadGame(Daaa.gameKeyByFriendly[id]);
-	loadTable();
+	loadGame(Daaa.gameKeyByFriendly[capitalize(id.toLowerCase())]);
+	//loadTable();
 }
-function loadGame(id,dParent) {
-	//console.log('________ id', id, 'Gamename', Gamename, 'DEF', DEFAULTUSERNAME)
+function loadGame(id, dParent) {
+	//console.log('________ id', id)
 	if (nundef(id)) id = localStorage.getItem('game');
 	if (nundef(id)) id = Object.keys(DB.games)[0];
 
@@ -13,7 +14,7 @@ function loadGame(id,dParent) {
 	G.color = getColorDictColor(G.color);
 	G.id = Gamename = id;
 
-	if (nundef(Daaa.gameKeyByFriendly)){Daaa.gameKeyByFriendly=createKeyIndex(DB.games,'friendly');}
+	if (nundef(Daaa.gameKeyByFriendly)) { Daaa.gameKeyByFriendly = createKeyIndex(DB.games, 'friendly'); }
 
 	//console.log(Gamename, U);
 	updateGamenameUi(dParent, G.friendly);//, G.color);//change bg instead!!!!

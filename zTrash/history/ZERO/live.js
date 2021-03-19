@@ -1,7 +1,7 @@
 function initLive() { Live = {}; Daaa = {}; UIS = {}; }
 //uses Live,UIS, may use Daaa
 
-function lRegister(item) { let x = new LiveObject(item); return x.id; }
+function lRegister(item) { let x = new UIClass(item); return x.id; }
 function lAdd(item, props) {
 	let id = isString(item) ? item : item.id;
 	let l = Live[id];
@@ -22,7 +22,7 @@ function evToLive(ev) { let id = evToClosestId(ev); return isdef(id) ? UIS[id] :
 function evToItem(ev) { let live = evToLive(ev); return isdef(live) ? live.item : null; }
 
 
-class LiveObject {
+class UIClass {
 	constructor(o) { //a live object represents some other object (eg.,'serverData' object, picture,...) and gets a UID at birth
 		//console.log('__________________k',k)
 		this.oid = o.id; //koennt eine oid sein???
@@ -35,7 +35,7 @@ class LiveObject {
 		this.TOList = [];
 		this.UIS = {}; //unused!!!
 		this.uiActivated = false;
-		this.uiState = LiveObject.States.none;
+		this.uiState = UIClass.States.none;
 	}
 	//#region hidden API
 	_clearTO() { this.TOList.map(x => clearTimeout(x)); this.TOList = []; }
@@ -52,9 +52,9 @@ class LiveObject {
 	//#region states ???
 	static States = { none: 0, gettingReady: 1, ready: 2, running: 3, on: 3, off: 4 }
 	run() { console.log('object', this.id, 'is running...') }
-	setGettingReady() { this.running = false; this.uiState = LiveObject.States.gettingReady; console.log('...getting ready!'); }
-	setRunning() { this.running = true; this.uiState = LiveObject.States.running; }
-	setReady() { this.running = false; this.uiState = LiveObject.States.ready; console.log('ready!'); }
+	setGettingReady() { this.running = false; this.uiState = UIClass.States.gettingReady; console.log('...getting ready!'); }
+	setRunning() { this.running = true; this.uiState = UIClass.States.running; }
+	setReady() { this.running = false; this.uiState = UIClass.States.ready; console.log('ready!'); }
 	getReady(ms) {
 		if (isdef(ms)) { this.setGettingReady(); setTimeout(this.setReady.bind(this), ms); }
 		else this.setReady();

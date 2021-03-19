@@ -3,7 +3,7 @@ async function _start() {
 	//console.log(DB);
 
 	createSubtitledPage('indigo'); 
-	mDiv(dTitleRight, { matop: -20 }, 'dRight');
+	mDiv(dTitleRight, { matop: -14 }, 'dRight');
 	revealMain();
 
 	// dSubtitle.innerHTML = 'phase: King'

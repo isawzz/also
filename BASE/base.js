@@ -38,7 +38,7 @@ function mEditableInput(dParent, label, val) {
 			mBy('dummy').focus();
 		}
 	});
-	let dui = mDiv(dParent);
+	let dui = mDiv(dParent,{margin:2});
 	mAppend(dui, labelElem);
 	mAppend(dui, elem);
 	return elem;

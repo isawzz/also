@@ -14,7 +14,7 @@ const CLEAR_LOCAL_STORAGE =  BROADCAST_SETTINGS;
 
 var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup; //, CatSets, SymbolDict, SInfo;
 
-var Live, DB, G, T, P, U, User, Settings, SettingsChanged; //, G...Game, T...Table, U...Userdata
+var Live, DB; //var Settings, SettingsChanged; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 
 var Daaa;
 //#region color constants
