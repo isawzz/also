@@ -13,6 +13,15 @@ function mButton(caption, handler, dParent, styles, classes) {
 	return x;
 }
 function mBy(id) { return document.getElementById(id); }
+function mCenterCenterFlex(d) { mCenterFlex(d, true, true, true); }
+function mCenterFlexNowrap(d) { mCenterFlex(d, true, true, false); }
+function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
+	let styles = { display: 'flex' };
+	if (hCenter) styles['justify-content'] = 'center';
+	styles['align-content'] = vCenter? 'center' : 'flex-start';
+	if (wrap) styles['flex-wrap'] = 'wrap';
+	mStyleX(d, styles);
+}
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
 function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
@@ -38,13 +47,13 @@ function mEditableInput(dParent, label, val) {
 			mBy('dummy').focus();
 		}
 	});
-	let dui = mDiv(dParent,{margin:2});
+	let dui = mDiv(dParent, { margin: 2 });
 	mAppend(dui, labelElem);
 	mAppend(dui, elem);
 	return elem;
 }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
-function mInner(html,dParent,styles){dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent,styles);}
+function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent, styles); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
 function mLinebreak(d, gap) { mGap(d, gap); }
 function mLine3(dParent, index, ids, styles) {
@@ -215,10 +224,10 @@ function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
 
 //#region i
 function iAdd(item, props) {
-	let id,l;
-	if (isString(item)) {id=item;item=Items[id];}	else if (nundef(item.id)) {id=iRegister(item);}	else id=item.id;
+	let id, l;
+	if (isString(item)) { id = item; item = Items[id]; } else if (nundef(item.id)) { id = iRegister(item); } else id = item.id;
 
-	if (nundef(item.live)) item.live={}; l=item.live;
+	if (nundef(item.live)) item.live = {}; l = item.live;
 
 	for (const k in props) {
 		let val = props[k];
@@ -230,7 +239,7 @@ function iAdd(item, props) {
 			// if is elem should go to UIS!
 			if (isDOM(val)) {
 				// console.log('found DOM elem w/ id!!!!',val.id,k);
-				lookupSet(l,['uids',k], val.id);
+				lookupSet(l, ['uids', k], val.id);
 			}
 		}
 	}
@@ -273,10 +282,10 @@ function iParentBounds(i) {
 }
 function iResize(i, w, h) { return isList(i) ? i.map(x => iSize(x, w, h)) : iSize(i, w, h); }
 function iSize(i, w, h) { i.w = w; i.h = h; mSize(i.div, w, h); }
-function isItem(i) { return isdef(i.div); }
-function iDiv(i) { return isItem(i) ? i.div : i; }
+function isItem(i) { return isdef(i.live) || isdef(i.div); }
+function iDiv(i) { return isItem(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
 function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
-function iRegister(item) { let uid = getUID(); Items[uid] = item; }
+function iRegister(item) { let uid = getUID(); Items[uid] = item; return uid; }
 function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ovUnit = '%', createHand = true, rememberFunc = true) {
 
 	if (!isList(items)) items = [items];
@@ -457,7 +466,7 @@ function bestContrastingColor(color, colorlist) {
 	}
 	//console.log(contrast,result)
 	return result;
-}function colorBlend(zero1, c0, c1, log = true) {
+} function colorBlend(zero1, c0, c1, log = true) {
 	c0 = anyColorToStandardString(c0);
 	c1 = anyColorToStandardString(c1);
 	return pSBC(zero1, c0, c1, log);

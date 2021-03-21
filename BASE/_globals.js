@@ -8,7 +8,7 @@ const OFFLINE = true;
 
 const SERVERURL = OFFLINE ? 'http://localhost:3000/app/' : 'https://speech-games.herokuapp.com/app/';
 var USE_LOCAL_STORAGE = !BROADCAST_SETTINGS; // true | false //localStorage is cleared when false!!!!!
-const CLEAR_LOCAL_STORAGE =  BROADCAST_SETTINGS;
+const CLEAR_LOCAL_STORAGE = BROADCAST_SETTINGS;
 
 //#endregion
 
@@ -16,14 +16,15 @@ var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup; //, CatSets, Symbo
 var DB;
 
 var U;
-var uiActive=false,TO;
+var uiActive = false, TO;
 //var Live; //var Settings, SettingsChanged; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 
-var DA,Items;
+var DA, Items;
 //#region color constants
 var ColorNames; //see base.js colors
 const BLUE = '#4363d8';
 const BLUEGREEN = '#004054';
+const BROWN = '#96613d';
 const GREEN = '#3cb44b';
 const FIREBRICK = '#800000';
 const LIGHTGREEN = '#afff45'; //'#bfef45';
@@ -34,15 +35,18 @@ const PURPLE = '#911eb4';
 const RED = '#e6194B';
 const TEAL = '#469990';
 const YELLOW = '#ffe119';
-const YELLOW2 = '#ffa0a0';
+const YELLOW2 = '#ffa0a0'; //?pink???
+const YELLOW3 = '#ffed01';
 
 const ColorList = ['lightgreen', 'lightblue', 'yellow', 'red', 'green', 'blue', 'purple', 'violet', 'lightyellow',
 	'teal', 'orange', 'brown', 'olive', 'deepskyblue', 'deeppink', 'gold', 'black', 'white', 'grey'];
 const ColorDict = {
 	black: { c: 'black', E: 'black', D: 'schwarz' },
 	blue: { c: 'blue', E: 'blue', D: 'blau' },
+	BLUEGREEN: { c: BLUEGREEN, E: 'bluegreen', D: 'blaugrün' },
 	blue1: { c: BLUE, E: 'blue', D: 'blau' },
-	brown: { c: FIREBRICK, E: 'brown', D: 'rotbraun' },
+	BROWN: { c: BROWN, E: 'brown', D: 'braun' },
+	deepyellow: { c: YELLOW3, E: 'yellow', D: 'gelb' },
 	gold: { c: 'gold', E: 'gold', D: 'golden' },
 	green: { c: 'green', E: 'green', D: 'grün' },
 	green1: { c: GREEN, E: 'green', D: 'grün' },

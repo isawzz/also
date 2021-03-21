@@ -1,11 +1,11 @@
-// OIL paradigm: options - items - layout
+//grid layout version 03: OIL paradigm: options - items - layout
 function sample00() {
 	//options
-	let n = _getRandomRegularN(2, 40);
+	let n = 3; //_getRandomRegularN(2, 40);
 	let options = {
 		n: n,
 		wper: 80, hper: 80, //dParent: dTable, is default!
-		shufflePositions: true, repeat: 4, //colorKeys: ['red', 'blue', 'green'],
+		shufflePositions: true, repeat: 2, //colorKeys: ['blue', 'green'],
 		szPic: { w: 100, h: 100 },
 		showLabels: true, showPic: true, percentVertical: 30, maxlen: n < 10 ? 9 : 6,
 		isUniform: true, fillArea: true, isRegular: true,
@@ -15,10 +15,11 @@ function sample00() {
 
 	//items
 	let items = genItems(options.n, options);
-	console.log('n', options.n, options.maxlen, options.N,)
+	//console.log('n', options.n, options.maxlen, options.N,)
 
 	//dims&divs
 	//grid
+	console.log('________',items,'\noptions',options)
 	present00(items, options);
 	return [items, options];
 }
@@ -30,18 +31,19 @@ function present00(items, options) {
 	//console.log('fzText',options.fzText)
 	_setRowsColsSize(options);
 
+	makeItemDivs(items, options);
+
 	if (options.fixTextFont == true) {
 		_setTextFont(items, options, (options.fzOrig + options.fzText) / 2);
 		//console.log('fzText',options.fzText)
 	}
 
-	makeItemDivs(items, options);
 	//console.log('fzText',options.fzText)
 
 	let dGrid = mDiv(options.dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, getUID());
 
 	options.idGrid = dGrid.id;
-	for (const item of items) { mAppend(dGrid, lDiv(item)); }
+	for (const item of items) { mAppend(dGrid, iDiv(item)); }
 	_makeGridGrid(items, options, dGrid);
 	//console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 	//console.log('fzText',options.fzText)
@@ -105,6 +107,10 @@ function present00(items, options) {
 
 }
 
+//ideal grid layout version 02
+function samplePicsAndText() { return sample_idealGridLayout(true, true) }
+function sampleJustPics() { return sample_idealGridLayout(false) }
+function sampleJustText() { return sample_idealGridLayout(true, false) }
 function sample_idealGridLayout(showLabels = true, showPic = true) {
 	let [isUniform, fillArea, isRegular] = [true, true, true];
 	let dArea = getMainAreaPercent(dTable, null, 100, 70, getUID());
@@ -136,7 +142,7 @@ function sample_idealGridLayout(showLabels = true, showPic = true) {
 	let dGrid = mDiv(dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, getUID());
 
 	options.idGrid = dGrid.id;
-	for (const item of items) { mAppend(dGrid, lDiv(item)); }
+	for (const item of items) { mAppend(dGrid, iDiv(item)); }
 	_makeGridGrid(items, options, dGrid);
 	console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
@@ -191,13 +197,8 @@ function sample_idealGridLayout(showLabels = true, showPic = true) {
 	return [items, options];
 }
 
-//ideal grid layout shortcuts
-function samplePicsAndText() { return sample_idealGridLayout(true, true) }
-function sampleJustPics() { return sample_idealGridLayout(false) }
-function sampleJustText() { return sample_idealGridLayout(true, false) }
 
-
-//grid layout
+//grid layout version 01
 function testGrid(isUniform, fillArea = false, isRegular = true) {
 
 	let dArea = getMainAreaPercent(dTable, YELLOW, 80, 60, getUID());
@@ -288,7 +289,7 @@ function sample_fill_area_flex_uniform(n) {
 	makeItemDivs(items, options);
 	let dGrid = mDiv100(dArea, { fz: 2 }, getUID()); options.idGrid = dGrid.id;
 	mStyleX(dGrid, { display: 'flex', 'flex-flow': 'wrap', 'justify-content': 'space-between' });
-	for (const item of items) { mAppend(dGrid, lDiv(item)); }//mStyleX(lDiv(item), { flex: '1 1 auto' }) }
+	for (const item of items) { mAppend(dGrid, iDiv(item)); }//mStyleX(iDiv(item), { flex: '1 1 auto' }) }
 
 	_makeNoneGrid(items, options, dGrid);
 
@@ -309,7 +310,7 @@ function sample_fill_area_flex_uniform(n) {
 	// 	i += 1; if (i > max) { console.log('MAX REACHED!', options); break; }
 	// 	options.gap += 1;
 	// 	mStyleX(dGrid,{'column-gap':i});
-	// 	//for (const item of items) { mStyleX(lDiv(item), { hmargin: options.gap / 2 }); }
+	// 	//for (const item of items) { mStyleX(iDiv(item), { hmargin: options.gap / 2 }); }
 	// }
 	// mStyleX(dGrid,{'column-gap':i-1});
 	// return;
@@ -323,7 +324,7 @@ function sample_fill_area_flex_uniform(n) {
 	// let wb = wReal / n;
 	// let gapReal = wb - options.szPic.w;
 	// console.log('old gap', options.gap / 2, 'newGap', gapReal / 2)
-	// for (const item of items) { mStyleX(lDiv(item), { hmargin: 1 + gapReal / 2 }); }
+	// for (const item of items) { mStyleX(iDiv(item), { hmargin: 1 + gapReal / 2 }); }
 
 
 
@@ -349,7 +350,7 @@ function sample_fill_area_flex_non_uniform(N) {
 	[options.rows, options.cols, options.szPic.w, options.szPic.h, options.or] = _bestRowsColsFill(items, options);
 	makeItemDivs(items, options);
 	let dGrid = mDiv100(dArea, { fz: 2 }, getUID()); options.idGrid = dGrid.id;
-	for (const item of items) { mAppend(dGrid, lDiv(item)); mStyleX(lDiv(item), { flex: '1' }) }
+	for (const item of items) { mAppend(dGrid, iDiv(item)); mStyleX(iDiv(item), { flex: '1' }) }
 	_makeNoneGrid(items, options, dGrid);
 	mStyleX(dGrid, { display: 'flex', 'flex-flow': 'row wrap', 'justify-content': 'space-between', 'align-content': 'stretch', border: '5px solid green', box: true, });
 	while (isOverflown(dGrid)) {

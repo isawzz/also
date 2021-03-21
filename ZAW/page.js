@@ -64,6 +64,12 @@ function getArea(dParent, styles, id) {
 
 	return d;
 }
+function getMainArea(dParent, styles = {}) {
+	clearElement(dParent);
+	let dArea = getArea(dParent, styles);
+	return dArea;
+
+}
 function getMainAreaPadding(dParent, padding = 10, bg = 'grey', styles = {}) {
 	let aTable = percentOf(dParent, 100, 100);
 	//console.log('in getMainAreaPadding',aTable);

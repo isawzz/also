@@ -1,25 +1,8 @@
-gGuess:
-  friendly: 'Guess'
-  logo: 'word'
-  color: GREEN
-  type: word
-  numPlayers: 2
-gAristo:
-  friendly: 'Aristocracy'
-  logo: 'crown'
-  color: indigo
-  type: c52
-  numPlayers: [2,3,4,5]
-gKrieg:
-  friendly: 'Krieg'
-  logo: 'fencing'
-  color: BLUE
-  type: c52
-  numPlayers: 2
 gTouchPic:
   friendly: 'Pictures!'
   logo: 'computer mouse'
   color: deepskyblue
+  type: solitaire
   levels:
     0: 
       numPics: 2
@@ -33,33 +16,11 @@ gTouchPic:
       numPics: 24
     5: 
       numPics: 35
-gMissingLetter:
-  friendly: 'Letters!'
-  logo: 'black nib'
-  color: gold
-  levels:
-    0:
-      numMissing: 1
-      posMissing: start
-    1:
-      numMissing: 2
-      posMissing: start
-    2:
-      numMissing: 1
-      posMissing: random
-    3:
-      numMissing: 2
-      posMissing: random
-    4:
-      numMissing: 3
-      posMissing: random
-    5:
-      numMissing: 5
-      posMissing: random
 gMissingNumber:
   friendly: 'Sequence!'
   logo: 'fleur-de-lis'
   color: deeppink
+  type: solitaire
   numMissing: 1
   minNum: 0
   maxNum: 99
@@ -102,10 +63,35 @@ gMissingNumber:
       maxNum: 99
       steps: [3,4,5,6,7,8,9,10]
       ops: [plus,minus]
+gMissingLetter:
+  friendly: 'Letters!'
+  logo: 'black nib'
+  color: gold
+  type: solitaire
+  levels:
+    0:
+      numMissing: 1
+      posMissing: start
+    1:
+      numMissing: 2
+      posMissing: start
+    2:
+      numMissing: 1
+      posMissing: random
+    3:
+      numMissing: 2
+      posMissing: random
+    4:
+      numMissing: 3
+      posMissing: random
+    5:
+      numMissing: 5
+      posMissing: random
 gSteps:
   friendly: 'Steps!'
   logo: 'stairs'
   color: PURPLE
+  type: solitaire
   contrast: 0.22
   colors: [blue1, violet, lightgreen, pink, red, yellow]
   levels:
@@ -149,59 +135,11 @@ gSteps:
       numColors: 4
       numRepeat: 3
       numSteps: 3
-gSet:
-  friendly: 'Set!'
-  logo: 'stairs'
-  color: PURPLE
-  contrast: 0.22
-  colors: [blue, violet, lightgreen, pink, red, yellow]
-  levels:
-    0: 
-      numPics: 3
-      numColors: 4
-      numRepeat: 2
-      numSteps: 2
-    1: 
-      numPics: 4
-      numColors: 1
-      numRepeat: 4
-      numSteps: 2
-    2: 
-      numPics: 2
-      numColors: 4
-      numRepeat: 3
-      numSteps: 2
-gElim:
-  friendly: 'Elim!'
-  logo: 'collision'
-  color: CRIMSON
-  contrast: 0.22
-  colors: [blue, violet, lightgreen, pink, red, yellow]
-  levels:
-    0: 
-      numPics: 3
-      numColors: 3
-      numRepeat: 1
-    1: 
-      numPics: 3
-      numColors: 1
-      numRepeat: 3
-    2: 
-      numPics: 2
-      numColors: 2
-      numRepeat: 2
-    3: 
-      numPics: 3
-      numColors: 4
-      numRepeat: 2
-    4: 
-      numPics: 3
-      numColors: 4
-      numRepeat: 3
 gTouchColors:
   friendly: 'Colors!'
   logo: 'artist palette'
   color: LIGHTGREEN
+  type: solitaire
   contrast: 0.32
   colors:
     - red
@@ -224,10 +162,35 @@ gTouchColors:
     4: 
       numPics: 5
       numColors: 4
+gPasscode:
+  friendly: 'Passcode!'
+  logo: 'lock'
+  color: indigo
+  type: solitaire
+  levels:
+    0: 
+      passcodeLength: 1
+      numPics: 4
+    1: 
+      passcodeLength: 1
+      numPics: 9
+    2: 
+      passcodeLength: 1
+      numPics: 15
+    3: 
+      passcodeLength: 2
+      numPics: 4
+    4: 
+      passcodeLength: 2
+      numPics: 9
+    5: 
+      passcodeLength: 2
+      numPics: 15
 gPremem:
   friendly: 'Premem!'
   logo: 'hammer and wrench'
-  color: RED
+  color: deepyellow
+  type: solitaire
   trials: 1
   sameBackground: true
   levels:
@@ -261,6 +224,7 @@ gMem:
   friendly: 'Memory!'
   logo: 'memory'
   color: GREEN
+  type: solitaire
   levels:
     0: 
       numPics: 2
@@ -287,10 +251,12 @@ gSayPic:
   friendly: 'Speak up!'
   logo: 'microphone'
   color: BLUE
+  type: solitaire
 gInno:
   friendly: 'Innovate!'
   logo: 'horse'
   color: silver
+  type: solitaire
   levels:
     0:
       maxWordLength: 3
@@ -308,6 +274,7 @@ gWritePic:
   friendly: 'Type it!'
   logo: 'keyboard'
   color: orange
+  type: solitaire
   levels:
     0: 
       maxWordLength: 4
@@ -317,27 +284,11 @@ gWritePic:
       maxWordLength: 8
     3: 
       maxWordLength: 100
-gAnagram:
-  friendly: 'Anagram!'
-  logo: 'ram'
-  color: rgb(0,152,105)
-  levels:
-    0:
-      maxWordLength: 3
-    1:
-      maxWordLength: 4
-    2:
-      maxWordLength: 5
-    3:
-      maxWordLength: 6
-    4:
-      maxWordLength: 7
-    5:
-      maxWordLength: 8
 gAbacus:
   friendly: 'Abacus'
   logo: 'abacus'
   color: mediumslateblue
+  type: solitaire
   numMissing: 1
   minNum: 0
   maxNum: 10
@@ -368,33 +319,57 @@ gAbacus:
       maxNum: 12
       maxFactor: 12
       ops: [mult]
-gPasscode:
-  friendly: 'Passcode!'
-  logo: 'lock'
-  color: indigo
+gElim:
+  friendly: 'Elim!'
+  logo: 'collision'
+  color: CRIMSON
+  type: solitaire
+  contrast: 0.22
+  colors: [blue, violet, lightgreen, pink, red, yellow]
   levels:
     0: 
-      passcodeLength: 1
-      numPics: 4
+      numPics: 3
+      numColors: 3
+      numRepeat: 1
     1: 
-      passcodeLength: 1
-      numPics: 9
+      numPics: 3
+      numColors: 1
+      numRepeat: 3
     2: 
-      passcodeLength: 1
-      numPics: 15
+      numPics: 2
+      numColors: 2
+      numRepeat: 2
     3: 
-      passcodeLength: 2
-      numPics: 4
+      numPics: 3
+      numColors: 4
+      numRepeat: 2
     4: 
-      passcodeLength: 2
-      numPics: 9
-    5: 
-      passcodeLength: 2
-      numPics: 15
+      numPics: 3
+      numColors: 4
+      numRepeat: 3
+gAnagram:
+  friendly: 'Anagram!'
+  logo: 'ram'
+  color: rgb(0,152,105)
+  type: solitaire
+  levels:
+    0:
+      maxWordLength: 3
+    1:
+      maxWordLength: 4
+    2:
+      maxWordLength: 5
+    3:
+      maxWordLength: 6
+    4:
+      maxWordLength: 7
+    5:
+      maxWordLength: 8
 gNamit:
   friendly: 'Name it!'
   logo: 'bee'
   color: rgb(152,0,105)
+  type: solitaire
   levels:
     0: 
       numPics: 2
@@ -406,3 +381,43 @@ gNamit:
       numPics: 5
     4: 
       numPics: 6
+gMixup:
+  friendly: 'Mixup'
+  logo: 'green salad'
+  color: BLUEGREEN
+  type: c52
+  numPlayers: 2
+gGuess:
+  friendly: 'Guess'
+  logo: 'input latin letters'
+  color: midnightblue #YELLOW
+  type: word
+  numPlayers: 2
+gCats:
+  friendly: 'Category'
+  logo: 'bookmark tabs'
+  color: BROWN
+  type: solitaire
+  levels:
+    0: 
+      numPics: 2
+    1: 
+      numPics: 3
+    2: 
+      numPics: 4
+    3: 
+      numPics: 5
+    4: 
+      numPics: 6
+gAristo:
+  friendly: 'Aristocracy'
+  logo: 'crown'
+  color: indigo
+  type: c52
+  numPlayers: [2,3,4,5]
+gKrieg:
+  friendly: 'Krieg'
+  logo: 'fencing'
+  color: steelblue
+  type: c52
+  numPlayers: 2

@@ -54,10 +54,11 @@ class ItemViewerClass {
 
 		//items
 		//let keys = genKeys(options);	keys[0] = 'spiral shell';	let items = genItemsFromKeys(keys,options);
-		this.allItems = genItemsFromKeys(isdef(keys) ? keys : KeySets.all, this.options);
+		this.allItems = genItemsFromKeys(isdef(keys) ? keys : SymKeys, this.options);
+		console.log(this.allItems.length);
 		this.iStart = 0;
 
-		dButtons = mDiv(dButtons, { display: 'flex', 'flex-direction': 'column' });
+		dButtons = mDiv(dButtons, { display: 'flex', 'flex-direction': 'column', matop:-12 });
 		mButton('download', this.saveSpecialKeys.bind(this), dButtons, { outline: 'none' });
 		if (this.allItems.length > 100) mButton('next', this.itemViewerNext.bind(this), dButtons, { outline: 'none', mabottom: 6, matop: 10 });
 

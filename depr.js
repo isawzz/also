@@ -1,3 +1,12 @@
+function getItemsCat_dep(n, cat) {
+	let keys = KeySets.all;
+	keys = KeySets.all.filter(x => firstCond(Syms[x].cats, x => x.includes(cat)));
+	keys = choose(keys, n)
+	return getItems(keys);
+}
+
+
+
 //#region join all syms
 function joinAllSyms() {
 	let oldSyms = await localOrRoute('oldSyms', '../assets/syms.yaml');

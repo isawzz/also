@@ -1,8 +1,6 @@
 //#region game controller
 
-//#region solitaire: categories:
-
-
+//#region solitaire: categories: does not use grid layout, just individual divs!
 function solCats() {
 	function dropHandler(source, target, isCopy = true) {
 		let dSource = getDiv(source);
@@ -44,7 +42,7 @@ function solCats() {
 }
 //#endregion
 
-//#region itemViewer
+//#region itemViewer: uses grid layout present00
 function itemViewer() {
 	//options
 	let options = {

@@ -8,38 +8,30 @@ function loadUser(username) {
 	mInner('user: ' + username, dSubtitleLeft);
 }
 
-
-function menu() {
-	//ich hab DB
-	//ich will eine page auf der all die games gelistet werden
-	//console.log(U);
-
+function menuOIL(list) {
 	clearElement(dTable);
-	let options = {}; _extendOptions(options); options.isRegular=false;
-	let dParent = options.dArea;
-	let list = U.solitaires; //favs
-	let [rows, cols, w, h, lp] = _bestRowsColsSize(list, options);
-	console.log('cols',cols)
-	mStyleX(dParent, { layout: 'g_' + 4 });//display:'flex','justify-content':'center'})
-	//console.log('options', options)
-	for (const k of list) {
-		let menuItem = DB.games[k];
-		//console.log(menuItem);
-		let styles = { bg: menuItem.color, w: 100, h: 100, margin: 20 };
-		let item = getItem(menuItem.logo);
-		item.label = menuItem.friendly;
-		let d = makeItemDiv(item, options);
-		iAdd(item, { div: d });
-		mAppend(dParent, d);
-		mStyleX(d, styles);
-		//break;
-	}
-
+	mCenterFlex(dTable);
+	if (nundef(list)) list = Object.values(DB.games); //U.games.map(x => DB.games[x]);
+	let options = {
+		margin: 8, wArea: 800, hArea: 500,
+		ifs: { bg: (i, item) => { return getColorDictColor(item.o.color); } },
+	}; _extendOptions(options);
+	let items = genItemsFromObjects(list, 'logo', 'friendly', options);
+	options.handler = _standardHandler(x => newItemSelection(x, items, startGame))
+	makeItemDivs(items, options);
+	let dArea = options.dArea;
+	mCenterFlex(dArea);
+	items.map(x => mAppend(dArea, iDiv(x)))
 }
+
 function saveUser() {
 	//was muss von U.live uebernommen werden?
 	delete U.live;
 	dbSave('boardGames');
+}
+function startGame(item) {
+	console.log('starting game', item);
+	//if (isdef(item.info)) game=item.o.key;
 }
 function temple(dParent) {
 	let elem = createElementFromHTML(`<div id='dTemple' onclick='onClickTemple()'>🏛️</div>`);

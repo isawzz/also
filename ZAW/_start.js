@@ -5,7 +5,9 @@ async function _start() {
 	temple(dTitleLeft);
 	loadUser('nil');
 
-	onClickTemple();
+	menu(); //OIL(); //sample00(); //onClickTemple();
+	// let keys = SymKeys.filter(x=>x.includes('bookmark') || x.includes('box'));
+	// let app = new ItemViewerClass(dTable, dTitleRight,keys);
 }
 
 

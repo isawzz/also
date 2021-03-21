@@ -1,5 +1,11 @@
 //#region syms item + div + dPic + dLabel
 function addLabels(items, lang = 'E', luc = 'c') {
+	for (const item of items) {
+		let label = item.info[lang];
+		item.label = luc == 'c' ? toNoun(label) : luc == 'l' ? label : label.toUpperCase();
+	}
+}
+function addLabels_dep(items, lang = 'E', luc = 'c') {
 	let max = 0;
 	for (const item of items) {
 		let label = item.info[lang];
@@ -52,6 +58,9 @@ function calcLongestLabel(items, options) {
 	// items.map(x=>console.log(x.label,x.label.length));
 	options.labelSum = arrSum(items, ['label', 'length']);
 }
+function registeredItemCopy(orig) { let item = jsCopy(orig); item.id = iRegister(item); return item; }
+function registerAsNewItem(item) { item.id = iRegister(item); return item; }
+
 function zRepeatEachItem(items, repeat, shufflePositions = false) {
 	//repeat items: repeat & shufflePositions
 	let orig = items;
@@ -85,7 +94,7 @@ function zRepeatInColorEachItem(items, colorKeys) {
 		let textShadowColor = ColorDict[colorKey].c;
 		for (let j = 0; j < items.length; j++) {
 			let index = i * items.length + j;
-			console.log('schau', index, colorKey);
+			//console.log('schau', index, colorKey);
 			let x = itColors[index];
 			x.index = index;
 			x.textShadowColor = textShadowColor;
@@ -122,6 +131,32 @@ function genItemsFromKeys(keys, options) {
 	//console.log(options.lang,options.luc)
 	addLabels(items, options.lang, options.luc);
 	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
+
+	items = _extendItemsAndOptions(items, options);
+	return items;
+}
+function genItemsFromObjects(list, keyProp, labelProp, options) {
+	//console.log('list',list)
+	let keys = [];
+	for (const l of list) keys.push(l[keyProp]);
+	//console.log(keys);
+	//console.log(keyProp,list)
+	//for(const k of keys) {console.log(k);console.log(Syms[k]);}
+	let items = list.map(x => infoToItem(Syms[x[keyProp]]));
+	let i = 0, luc = options.luc;
+	for (const item of items) {
+		let label = list[i][labelProp];
+		//console.log(label);
+		item.o = list[i];
+		//console.log('item.o',list[i])
+		item.label = luc == 'c' ? toNoun(label) : luc == 'l' ? label : label.toUpperCase();
+		i += 1;
+	}
+	//console.log(items)
+	items = _extendItemsAndOptions(items, options);
+	return items;
+}
+function _extendItemsAndOptions(items, options) {
 	calcLongestLabel(items, options);
 
 	//hier koennt ich die ifs machen!
@@ -181,27 +216,11 @@ function getNItemsPerKeylist(n, keylists, options = {}) {
 		let newItems = genItems(n, options);
 		newItems.map(x => items.push(x));
 	}
-	//console.log('items',items)
-	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
 	return items;
-	// let keyList = [];
-	// for(const cat of this.cats){
-	// 	keyList = keyList.concat(choose(this.keysByCat[cat],2));
-	// }
-	// shuffle(keyList);
-	// console.log(keyList);
-	// let items = this.items = keyList.map(x=>Syms[x]);
-
 }
-
-function getItemsCat_dep(n, cat) {
-	let keys = KeySets.all;
-	keys = KeySets.all.filter(x => firstCond(Syms[x].cats, x => x.includes(cat)));
-	keys = choose(keys, n)
-	return getItems(keys);
-}
-
 function infoToItem(x) { let item = { info: x, key: x.key }; item.id = iRegister(item); return item; }
+function evToItem(ev) { let id = evToClosestId(ev); return isdef(id) ? Items[id] : null; }
+
 function modifyColorkey(item) {
 	let colorkey = chooseRandom(Object.keys(ColorDict));
 	let textShadowColor = ColorDict[colorkey].c;
@@ -214,7 +233,7 @@ function modifyColorkey(item) {
 function makeItemDiv(item, options) {
 
 	if (isdef(options.outerStyles)) copyKeys(item, options.outerStyles, {}, Object.keys(options.ifs)); //options.ifs contains per item dynamic styles!!!!!
-	let dOuter = mCreate('div', options.outerStyles, getUID());
+	let dOuter = mCreate('div', options.outerStyles, item.id);
 
 	if (isdef(item.textShadowColor)) {
 		//console.log('halllllllllllll')
@@ -248,7 +267,8 @@ function makeItemDiv(item, options) {
 	return dOuter;
 
 }
-function makeItemDivs(items, options) {
+function makeItemDivs(items, options) { for (let i = 0; i < items.length; i++) { makeItemDiv(items[i], options) } }
+function makeItemDivs_dep(items, options) {
 	for (let i = 0; i < items.length; i++) {
 		let item = items[i];
 
@@ -289,8 +309,16 @@ function makeItemDivs(items, options) {
 	}
 
 }
+function newItemSelection(item, items, onSelectSelected = null) {
+	console.log('===>',item,items)
+	let selectedItem = firstCond(items, x => x.isSelected);
+	if (selectedItem && selectedItem != item) toggleItemSelection(selectedItem);
+	else if (onSelectSelected && selectedItem) { onSelectSelected(item); }
+	toggleItemSelection(item);
+}
+
 function toggleItemSelection(item, selectedItems) {
-	let ui = lDiv(item);
+	let ui = iDiv(item);
 	item.isSelected = nundef(item.isSelected) ? true : !item.isSelected;
 	if (item.isSelected) mClass(ui, 'framedPicture'); else mRemoveClass(ui, 'framedPicture');
 

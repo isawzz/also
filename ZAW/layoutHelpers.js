@@ -27,7 +27,7 @@ function _bestRowsColsFill(items, options) {
 }
 function _bestRowsColsSize(items, options) {
 	let combis = _getSLCombis(items.length, options.isRegular, true);
-	combis.map(x => console.log(x));
+	//combis.map(x => console.log(x));
 
 	options.szPicTest = { w: options.szPic.w, h: options.szPic.h };
 	let bestCombi = safeLoop(_findBestCombiOrShrink, [items, options, combis]);
@@ -84,12 +84,11 @@ function _standardHandler(handler) {
 }
 function _extendOptions(options, defOptions) {
 	defOptions = {
-		n: 20,
-		wper: 90, hper: 90, dParent: dTable,
-		showPic: true, szPic: { w: 100, h: 100 },
+		wper: 96, hper: 96, dParent: dTable,
+		showPic: true, szPic: { w: 120, h: 120 }, bg: 'random', fg: 'white', margin:4, rounding:6,
 		showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
-		fzText: 20, fzPic: 60, 
-		padding: .025, gap: .1, isUniform: true, isRegular: true, fillArea: false,
+		fzText: 20, fzPic: 60,
+		padding: .025, gap: .1, isUniform: true, isRegular: false, fillArea: true,
 		shufflePositions: false, sameBackground: true, showRepeat: false, repeat: 1,
 		contrast: .32,
 		ifs: {},
@@ -99,7 +98,9 @@ function _extendOptions(options, defOptions) {
 	addKeys(defOptions, options);
 
 	if (nundef(options.dArea)) {
-		if (isdef(options.areaPadding)) {
+		if (isdef(options.wArea) && isdef(options.hArea)){
+			options.dArea = getMainArea(options.dParent,{w:options.wArea,h:options.hArea});
+		}else 		if (isdef(options.areaPadding)) {
 			options.dArea = getMainAreaPadding(options.dParent, padding = options.areaPadding);
 		} else options.dArea = getMainAreaPercent(options.dParent, null, options.wper, options.hper, getUID());
 	}
@@ -110,12 +111,12 @@ function _extendOptions(options, defOptions) {
 
 	if (options.repeat > 1 && nundef(options.ifs.bg)) {
 		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
+		let fg = isdef(options.colorKeys) ? 'black' : 'white';
 		options.ifs.bg = bg;
+		options.ifs.fg = fg;
 	}
 
 	_calcFontPicFromText(options, false);
-	//_calcPadGap(options, w, h);
-
 
 	if (nundef(options.labelStyles)) options.labelStyles = {};
 
@@ -126,10 +127,11 @@ function _extendOptions(options, defOptions) {
 
 	options.picStyles = { fz: options.fzPic };
 
+	let [w, h] = [options.szPic.w, options.szPic.h];
 	options.outerStyles = {
-		fg: 'contrast',
+		w: w, h: h, bg: options.bg, fg: options.fg,
 		display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
-		padding: 0, box: true, rounding: 6,
+		padding: 0, box: true, margin:options.margin, rounding: options.rounding,
 	};
 
 	return options;
@@ -275,9 +277,10 @@ function _reduceFontsBy(tx, px, items, options) {
 	}
 	//console.log('fonts set to', fz, fzPic);
 }
-function _setTextFont(items,options,fz){
+function _setTextFont(items, options, fz) {
 	options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
-	items.map(x=>{let dl=lGet(x).dLabel;if (isdef(dl))dl.style.fontSize=fz+'px';});
+	console.log('items',items)
+	items.map(x => { let dl = x.live.dLabel; if (isdef(dl)) dl.style.fontSize = fz + 'px'; });
 	//console.log('fonts set to', fz);
 }
 function _sizeByFactor(items, options, dGrid, factor = .9) {
