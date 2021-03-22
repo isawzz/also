@@ -310,7 +310,7 @@ function makeItemDivs_dep(items, options) {
 
 }
 function newItemSelection(item, items, onSelectSelected = null) {
-	console.log('===>',item,items)
+	//console.log('===>',item,items)
 	let selectedItem = firstCond(items, x => x.isSelected);
 	if (selectedItem && selectedItem != item) toggleItemSelection(selectedItem);
 	else if (onSelectSelected && selectedItem) { onSelectSelected(item); }

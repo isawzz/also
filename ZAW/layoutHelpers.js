@@ -78,7 +78,7 @@ function _checkOverflowPixel(items, options, dGrid) {
 }
 function _standardHandler(handler) {
 	let f = isdef(handler) ?
-		ev => { ev.cancelBubble = true; let res = handler(evToItem(ev)); console.log('clicked', evToItem(ev).key, 'res', res); }
+		ev => { ev.cancelBubble = true; let res = handler(evToItem(ev)); } //console.log('clicked', evToItem(ev).key, 'res', res); }
 		: ev => { ev.cancelBubble = true; console.log('clicked on', evToClosestId(ev), evToLive(ev), evToItem(ev)); };
 	return f;
 }

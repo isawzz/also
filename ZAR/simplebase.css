@@ -10,6 +10,29 @@
 	justify-content: center;
 	align-items: center;
 }
+.truncate {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.truncate:hover {
+	cursor: none;
+	white-space: normal;
+	overflow: visible;
+}
+.framedPicture {
+	outline: solid 8px yellow;
+	outline-offset: -6px;
+}
+.dragelem {
+	position: fixed;
+	z-index: 100;
+	cursor: pointer;
+	color: rgb(60, 0, 248); /* change [input cursor color] by this*/
+	text-shadow: 0px 0px 0px #d60b0b; /* change [input font] by this*/
+	-webkit-text-fill-color: transparent;
+	border: 2px solid pink;
+}
 
 html,
 body {
@@ -17,13 +40,13 @@ body {
 	padding: 0;
 	margin: 0;
 	font: 20px Arial;
-	background: #004054;
-	color: white;
+	/* background: #004054; */
+	/* color: white; */
+	position: relative;
 }
 div {
 	user-select: none;
 }
-/* #endregion 0 */
 
 /* #region screen layout: ONE PAGE (just visible screen) */
 #dMain {

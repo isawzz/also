@@ -1,6 +1,7 @@
 async function _start() {
 
-	createSubtitledPage3T2('indigo'); revealMain();
+	//createSubtitledPage3T2('indigo'); 
+	revealMain(); return;
 
 	
 

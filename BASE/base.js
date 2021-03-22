@@ -18,7 +18,7 @@ function mCenterFlexNowrap(d) { mCenterFlex(d, true, true, false); }
 function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	let styles = { display: 'flex' };
 	if (hCenter) styles['justify-content'] = 'center';
-	styles['align-content'] = vCenter? 'center' : 'flex-start';
+	styles['align-content'] = vCenter ? 'center' : 'flex-start';
 	if (wrap) styles['flex-wrap'] = 'wrap';
 	mStyleX(d, styles);
 }
@@ -1464,6 +1464,10 @@ function copyKeys(ofrom, oto, except = {}, only) {
 		oto[k] = ofrom[k];
 	}
 }
+function createClassByName(name,...a) {
+	var c = eval(name);
+	return new c(...a);
+}
 function createKeyIndex(di, prop) {
 	let res = {};
 	for (const k in di) {
@@ -1471,7 +1475,17 @@ function createKeyIndex(di, prop) {
 	}
 	return res;
 }
-function fisherYates(array) {
+function dict2list(d, keyName = 'id') {
+	let res = [];
+	for (const key in d) {
+		let val = d[key];
+		let o;
+		if (isDict(val)) { o = jsCopy(val); } else { o = { value: val }; }
+		o[keyName] = key;
+		res.push(o);
+	}
+	return res;
+} function fisherYates(array) {
 	var rnd, temp;
 
 	for (var i = array.length - 1; i; i--) {

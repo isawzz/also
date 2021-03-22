@@ -1,5 +1,5 @@
 function interrupt(){
-	uiActive = false;
+	uiActivated = false;
 	TO.clear();
 }
 

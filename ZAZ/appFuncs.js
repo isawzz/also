@@ -1,4 +1,52 @@
+
 //#region game controller
+
+//#region menu
+function menu(list) {
+	clearElement(dTable);
+	mCenterFlex(dTable);
+	if (nundef(list)) list = dict2list(DB.games); //U.games.map(x => DB.games[x]);
+
+	let options = {
+		margin: 8, wArea: 800, hArea: 500,
+		ifs: { bg: (i, item) => { return getColorDictColor(item.o.color); } },
+	}; _extendOptions(options);
+	let items = genItemsFromObjects(list, 'logo', 'friendly', options);
+	options.handler = _standardHandler(x => newItemSelection(x, items, startGame))
+	makeItemDivs(items, options);
+	let dArea = options.dArea;
+	mCenterFlex(dArea);
+	items.map(x => mAppend(dArea, iDiv(x)))
+}
+function menu_dep(list) {
+	clearElement(dTable);
+	mCenterFlex(dTable);
+	if (nundef(list)) list = Object.values(DB.games); //U.games.map(x => DB.games[x]);
+	let options = {
+		margin: 8, wArea: 800, hArea: 500,
+	}; _extendOptions(options);
+	let dParent = options.dArea;
+	let [rows, cols, w, h, lp] = _bestRowsColsSize(list, options);
+	console.log('cols', cols, '\nlist', list)
+	mStyleX(dParent, { layout: 'g_' + cols });
+	let items = list.map(x => getItem(x.logo));
+	let i = 0;
+	for (const menuItem of list) {
+		//let menuItem = DB.games[k];
+		//console.log(menuItem)
+		let styles = { bg: getColorDictColor(menuItem.color), w: 100, h: 100, margin: 20 };
+		let item = items[i]; i += 1;
+		item.o = menuItem;
+		item.label = menuItem.friendly;
+		let d = makeItemDiv(item, options);
+		d.onclick = _standardHandler(x => newItemSelection(x, items, startGame))
+		iAdd(item, { div: d });
+		mAppend(dParent, d);
+		mStyleX(d, styles);
+	}
+}
+
+
 
 //#region solitaire: categories: does not use grid layout, just individual divs!
 function solCats() {

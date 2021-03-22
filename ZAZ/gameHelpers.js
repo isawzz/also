@@ -1,4 +1,4 @@
-function canAct() { return uiActive; }
+function canAct() { return uiActivated; }
 function createContainers(list,dArea){
 	let i = 0;
 	let containers = [];

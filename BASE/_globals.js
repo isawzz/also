@@ -16,7 +16,7 @@ var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup; //, CatSets, Symbo
 var DB;
 
 var U;
-var uiActive = false, TO;
+var Pictures, Goal, Selected, Score, uiActivated = false, TO, QuestionCounter = 0;
 //var Live; //var Settings, SettingsChanged; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 
 var DA, Items;
