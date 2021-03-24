@@ -1,5 +1,44 @@
 async function _start() {
 
+	initLive();
+
+	initTable();
+
+	initSidebar();  initAux(); initScore(); initSymbolTableForGamesAddons(); //creates Daat
+	addonFeatureInit(); //new API!
+	Speech = new SpeechAPI('E');
+	KeySets = getKeySets();
+
+	loadUser(); console.assert(isdef(G));
+
+	restartTime();
+	U.session = {};
+	if (PROD_START) { PROD_START = false; onClickTemple(); } else startGame();
+
+}
+
+
+function initSymbolTableForGamesAddons() {
+	//console.log('Daat', Daat);//yes this is an empty dict!
+	if (nundef(Daat)) Daat={};
+	Daat.GameClasses = {
+		gTouchPic: GTouchPic, gNamit: GNamit, gStory: GStory,
+		gTouchColors: GTouchColors, gPremem: GPremem, gMem: GMem, gMissingLetter: GMissingLetter,
+		gMissingNumber: GMissingNumber, gWritePic: GWritePic, gSayPic: GSayPic, gSteps: GSteps, gElim: GElim,
+		gAnagram: GAnagram, gAbacus: GAbacus, gPasscode: GPasscode, gCats: GCats,
+
+	}
+}
+
+
+
+
+
+
+
+
+
+async function _start_neu(){
 	//createSubtitledPage3T2('indigo'); 
 	revealMain(); 
 	loadUser('nil',dUsername); 
@@ -7,8 +46,8 @@ async function _start() {
 	initScore();
 	initTable();
 
-	menu(dTable);
-	//startGame();
+	//menu(dTable);
+	startGame();
 	return;
 	
 

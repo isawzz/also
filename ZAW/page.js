@@ -26,6 +26,8 @@ function createSubtitledPage3T2(bg = 'silver', title = 'Aristocracy', subtitle =
 
 	addDummy();
 }
+
+//#region BROKEN!
 function createPageWithSidebar(bg = 'silver') {
 	setPageBackground(bg);
 	console.log('hallo');
@@ -88,8 +90,6 @@ function createPageWithSidebar(bg = 'silver') {
 	return rect;
 	addDummy();
 }
-
-//#region page aufbau
 function createPageDivsFullVisibleAreaSidebar(above, tableStyles, below, defs = { bg: 'random', fg: 'contrast' }) {
 	//console.log('defs',defs)
 	clearElement(dMain);
@@ -134,6 +134,8 @@ function createPageDivsFullVisibleAreaSidebar(above, tableStyles, below, defs = 
 	let rect = getRect(dTable);
 	return rect;
 }
+
+//#region page aufbau
 function createPageDivsFullVisibleArea(above, tableStyles, below, defs = { bg: 'random', fg: 'contrast' }) {
 	//console.log('defs',defs)
 	clearElement(dMain);

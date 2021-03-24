@@ -1799,7 +1799,12 @@ function randomNumber(min = 0, max = 100) {
 //#endregion
 
 //#region string functions
-function allNumbers(s) {
+function allIntegers(s) {
+	//returns array of all numbers within string s
+	return s.match(/\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => {
+		return +v;
+	});
+}function allNumbers(s) {
 	//returns array of all numbers within string s
 	let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
 	if (m) return m.map(v => Number(v)); else return null;

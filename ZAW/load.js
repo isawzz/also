@@ -35,7 +35,7 @@ async function _loader() {
 	if (CLEAR_LOCAL_STORAGE) localStorage.clear();
 
 	C52 = await localOrRoute('C52', '../assets/c52.yaml');
-	Syms = await localOrRoute('syms', '../assets/allSyms.yaml');
+	symbolDict = Syms = await localOrRoute('syms', '../assets/allSyms.yaml');
 	SymKeys = Object.keys(Syms);
 	ByGroupSubgroup = await localOrRoute('gsg', '../assets/symGSG.yaml');
 	//await addGroupInfo();

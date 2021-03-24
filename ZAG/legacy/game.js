@@ -1,11 +1,4 @@
-var TOList,TOMain,TOTrial;
-function clearTimeouts() {
-	clearTimeout(TOMain);
-	clearTimeout(TOFleetingMessage);
-	clearTimeout(TOTrial);
-	if (isdef(TOList)) { for (const k in TOList) { TOList[k].map(x => clearTimeout(x)); } }
-}
-
+var TOList;
 //#region animations
 function animationCallback(secs, callback, removeBg = false) {
 	for (const p of Pictures) { slowlyTurnFaceDown(p, secs - 1, removeBg); }
@@ -36,57 +29,6 @@ function aniFadeInOut(elem, secs) {
 	setTimeout(() => { mRemoveClass(elem, 'transopaOn'); mClass(elem, 'transopaOff'); }, secs * 1000);
 }
 function aniPulse(elem, ms) { animate(elem, 'onPulse', ms); }
-//#endregion
-
-//#region badges
-var badges = [];
-function removeBadges(dParent, level) {
-	while (badges.length > level) {
-		let badge = badges.pop()
-		removeElem(badge.div);
-	}
-}
-function addBadge(dParent, level, clickHandler, animateRubberband = false) {
-	let fg = '#00000080';
-	let textColor = 'white';
-	let stylesForLabelButton = { rounding: 8, margin: 4 };
-	//const picStyles = ['twitterText', 'twitterImage', 'openMojiText', 'openMojiImage', 'segoe', 'openMojiBlackText', 'segoeBlack'];
-	let isText = true; let isOmoji = false;
-	let i = level - 1;
-	let key = levelKeys[i];
-	let k = replaceAll(key, ' ', '-');
-	let info = symbolDict[k];
-	let label = "level " + i;
-	let h = window.innerHeight; let hBadge = h / 14;
-	let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: levelColors[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
-	d1.id = 'dBadge_' + i;
-	if (animateRubberband) mClass(d1, 'aniRubberBand');
-	if (isdef(clickHandler)) d1.onclick = clickHandler;
-	badges.push({ key: info.key, info: info, div: d1, id: d1.id, index: i });
-	return arrLast(badges);
-}
-function showBadges(dParent, level, clickHandler) {
-	clearElement(dParent); badges = [];
-	for (let i = 1; i <= level; i++) {
-		addBadge(dParent, i, clickHandler);
-	}
-	//console.log(badges)
-}
-function showBadgesX(dParent, level, clickHandler, maxLevel) {
-	clearElement(dParent);
-	badges = [];
-	for (let i = 1; i <= maxLevel + 1; i++) {
-		if (i > level) {
-			let b = addBadge(dParent, i, clickHandler, false);
-			b.div.style.opacity = .25;
-			b.achieved = false;
-		} else {
-			let b = addBadge(dParent, i, clickHandler, true);
-			b.achieved = true;
-		}
-	}
-	//console.log(badges)
-}
 //#endregion
 
 //#region drag drop example mit letters und inputs: TODO: generalize!
@@ -252,19 +194,19 @@ function createDragClone(ev, items, onRelease) {
 	document.body.onmouseup = onRelease;// ev=>console.log('mouse up')
 
 }
-function cancelDD(){
+function cancelDD() {
 	DragElem.remove();
 	DragElem = DragSource = DragSourceItem = DropZoneItem = null;
 	//document.body.onmousemove = document.body.onmouseup = null;
 }
 function dropAndEval(ev) {
-	cancelBubble=true;
+	cancelBubble = true;
 	let els = allElementsFromPoint(ev.clientX, ev.clientY);
 	if (nundef(DragElem)) return;
 	let targetItem = DropZoneItem = firstCond(DropZoneItems, x => els.includes(x.div));//DropZones.includes(x));
 	//let targetItem = findItemFromElem(Pictures,targetElem);
 
-	if (nundef(targetItem)) {cancelDD(); return;}
+	if (nundef(targetItem)) { cancelDD(); return; }
 
 	let droppedItem = DragSourceItem;
 	replacePicAndLabel(targetItem, targetItem.key, droppedItem.label);
@@ -1181,9 +1123,9 @@ function failSomePictures(withComment = false) {
 		sayRandomVoice(chooseRandom(comments));
 	}
 	for (const p of Pictures) {
-		let ui=p.div;
-		let sz=p.sz;
-		if (p.isCorrect==false) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
+		let ui = p.div;
+		let sz = p.sz;
+		if (p.isCorrect == false) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 		else mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
 	}
 	// if (isdef(Selected) && isdef(Selected.feedbackUI)) {
@@ -1266,7 +1208,7 @@ var TOFleetingMessage;
 function clearFleetingMessage() {
 	//console.log('HIER!');//, getFunctionsNameThatCalledThisFunction());
 	clearTimeout(TOFleetingMessage);
-	clearElement(dBottom);
+	clearElement(dLineBottomMiddle);
 }
 function showFleetingMessage(msg, msDelay, styles = {}, fade = false) {
 
@@ -1310,23 +1252,16 @@ function aniGameOver(msg, silent = false) {
 	mStyleX(d, { fz: 20, matop: 40, bg: 'silver', fg: 'indigo', rounding: 20, padding: 25 })
 	let style = { matop: 4 };
 
-	if (calibrating()) {
-		dMessage.innerHTML = msg;
-		dComment.innerHTML = '*** END OF TEST ***';
-		showCalibrationResults(d);
+	dComment.innerHTML = 'Great Job!';
+	dMessage.innerHTML = isdef(msg) ? msg : 'Time for a Break...';
+	d.style.textAlign = 'center';
+	mText('Unit Score:', d, { fz: 22 });
 
-	} else {
-		dComment.innerHTML = 'Great Job!';
-		dMessage.innerHTML = isdef(msg) ? msg : 'Time for a Break...';
-		d.style.textAlign = 'center';
-		mText('Unit Score:', d, { fz: 22 });
+	for (const gname in U.session) {
+		let sc = U.session[gname];
+		if (sc.nTotal == 0) continue;
+		mText(`${DB.games[gname].friendly}: ${sc.nCorrect}/${sc.nTotal} correct answers (${sc.percentage}%) `, d, style);
 
-		for (const gname in U.session) {
-			let sc = U.session[gname];
-			if (sc.nTotal == 0) continue;
-			mText(`${DB.games[gname].friendly}: ${sc.nCorrect}/${sc.nTotal} correct answers (${sc.percentage}%) `, d, style);
-
-		}
 	}
 
 
@@ -1379,6 +1314,7 @@ function toggleSelectionOfPicture(pic, selectedPics) {
 		}
 	}
 }
+
 function addNthInputElement(dParent, n) {
 	mLinebreak(dParent, 10);
 	let d = mDiv(dParent);
@@ -1396,7 +1332,7 @@ function calcMemorizingTime(numItems, randomGoal = true) {
 	return ldep;
 }
 function clearTable() {
-	clearElement(dTable); clearElement(dTitle); removeMarkers();
+	clearElement(dLineTableMiddle); clearElement(dLineTitleMiddle); removeMarkers();
 }
 function containsColorWord(s) {
 	let colors = ['old', 'blond', 'red', 'blue', 'green', 'purple', 'black', 'brown', 'white', 'grey', 'gray', 'yellow', 'orange'];
@@ -1417,12 +1353,29 @@ function findItemFromElem(items, elem) {
 
 }
 function findItemFromKey(items, key) { return firstCond(items, x => x.key == key); }
-function getActualText(item){
+function getActualText(item) {
 	//console.log(item)
 	if (isdef(item.text)) return item.text.div.innerHTML;
 	//if (isdef(item.pic)){return item.div.children[1].innerHTML;} else {return item.div.children[0].innerHTML;}
 }
 function getRandomKeysFromGKeys(n) { return getRandomKeys(n, G.keys); }
+function getGameValues(user, game, level) {
+	//console.log(user,game,level)
+	let di = { numColors: 1, numRepeat: 1, numPics: 1, numSteps: 1, trials: Settings.trials, colors: ColorList }; // general defaults
+	let oGame = lookup(DB.games, [game]);
+	if (isDict(oGame)) {
+		di = mergeOverride(di, oGame); //das ist die entry in settings.yaml
+		let levelInfo = lookup(di, ['levels', level]); //das sind specific values for this level
+		if (isdef(levelInfo)) { di = mergeOverride(di, levelInfo); }
+	}
+	if (nundef(di.numLabels)) di.numLabels = di.numPics * di.numRepeat * di.numColors;
+	delete di.levels;
+	delete di.color;
+	copyKeys(di, G);
+	//console.log('di', di, '\nlevelInfo', levelInfo, '\nG', G);
+	//console.log(di,G)
+
+}
 function getGameOrLevelInfo(k, defval) {
 	let val = lookup(DB.games, [G.id, 'levels', G.level, k]);
 	if (!val) val = lookupSet(DB.games, [G.id, k], defval);
@@ -1435,26 +1388,6 @@ function getDistinctVals(list, prop) {
 		addIf(res, val);
 	}
 	return res;
-}
-function getGameValues() {
-	let user = U.id;
-	let game = G.id;
-	let level = G.level;
-
-	let settings = { numColors: 1, numRepeat: 1, numPics: 1, numSteps: 1, colors: ColorList }; // general defaults
-	settings = mergeOverride(settings, DB.settings);
-	if (isdef(U.settings)) settings = mergeOverride(settings, U.settings);
-	if (isdef(DB.games[game])) settings = mergeOverride(settings, DB.games[game]);
-	let next = lookup(DB.games,[game,'levels',level]); if (next) settings = mergeOverride(settings, next);
-	next = lookup(U,['gameSettings',game]); if (next) settings = mergeOverride(settings, next);
-	next = lookup(U,['gameSettings',game,'levels',level]); if (next) settings = mergeOverride(settings, next);
-
-	console.log(settings);
-	delete settings.levels;
-	Speech.setLanguage(settings.language);
-
-	Settings = settings;
-	return settings;
 }
 function getGlobalColors() { return Object.keys(ColorDict).map(x => x.E); }
 function getOrdinal(i) { return G.numRepeat == 1 ? '' : Settings.language == 'E' ? ordinal_suffix_of(i) : '' + i + '. '; }
@@ -1506,11 +1439,6 @@ function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
 	//console.log('spoken', spoken, 'written', written);
 	return [written, spoken, corr];
 }
-function getUserStartLevel(game) {
-	gInfo = U.games[game];
-	level = isdef(gInfo) && isdef(gInfo.startLevel) ? gInfo.startLevel : 0;
-	return level;
-}
 function removePicture(pic, reorder = false) {
 	removeInPlace(Pictures, pic);
 	if (reorder) {
@@ -1521,10 +1449,12 @@ function removePicture(pic, reorder = false) {
 	}
 }
 function resetRound() {
+	console.log('...')
 	clearTimeouts();
 	clearFleetingMessage();
 	clearTable();
 	updateLabelSettings();
+
 }
 function resetScore() {
 	//if (nundef(Score)) Score = {};
@@ -1565,19 +1495,19 @@ function setBadgeLevel(i) {
 		badges[iBadge].div.style.opacity = .75;
 		badges[iBadge].div.style.border = 'transparent';
 		// badges[iBadge].div.children[1].innerHTML = '* ' + iBadge + ' *'; //style.color = 'white';
-		badges[iBadge].div.children[1].innerHTML = '* ' + (iBadge+1) + ' *'; //style.color = 'white';
+		badges[iBadge].div.children[1].innerHTML = '* ' + (iBadge + 1) + ' *'; //style.color = 'white';
 		badges[iBadge].div.children[0].style.color = 'white';
 	}
 	badges[G.level].div.style.border = '1px solid #00000080';
 	badges[G.level].div.style.opacity = 1;
 	// badges[G.level].div.children[1].innerHTML = 'Level ' + G.level; //style.color = 'white';
-	badges[G.level].div.children[1].innerHTML = 'Level ' + (G.level+1); //style.color = 'white';
+	badges[G.level].div.children[1].innerHTML = 'Level ' + (G.level + 1); //style.color = 'white';
 	badges[G.level].div.children[0].style.color = 'white';
 	for (let iBadge = G.level + 1; iBadge < badges.length; iBadge++) {
 		badges[iBadge].div.style.border = 'transparent';
 		badges[iBadge].div.style.opacity = .25;
 		// badges[iBadge].div.children[1].innerHTML = 'Level ' + iBadge; //style.color = 'white';
-		badges[iBadge].div.children[1].innerHTML = 'Level ' + (iBadge+1); //style.color = 'white';
+		badges[iBadge].div.children[1].innerHTML = 'Level ' + (iBadge + 1); //style.color = 'white';
 		badges[iBadge].div.children[0].style.color = 'black';
 	}
 }
@@ -1657,13 +1587,13 @@ function showInstructionX(written, dParent, spoken, { fz, voice } = {}) {
 
 }
 function showLevel() {
-	dLevel.innerHTML = 'level: ' + (G.level+1) + '/' + (G.maxLevel+1);
+	dLevel.innerHTML = 'level: ' + (G.level + 1) + '/' + (G.maxLevel + 1);
 	// dLevel.innerHTML = 'level: ' + G.level + '/' + G.maxLevel;
 }
-function showGameTitle() { dTitleRight.innerHTML = G.friendly; }
+function showGameTitle() { dGameTitle.innerHTML = G.friendly; }
 function showScore() {
 
-	//console.log('===>_showScore!!!', Score);
+	//console.log('===>_showScore!!! level:', G.level);
 	if (Score.gameChange) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
 
 	let scoreString = 'question: ' + (Score.nTotal + 1) + '/' + Settings.samplesPerGame;
@@ -1679,22 +1609,14 @@ function showScore() {
 	}
 }
 function showStats() {
+	if (nundef(Score)) initScore();
 	showGameTitle();
+	showLevel();
 	showScore();
-	//showLevel();
-	//if (calibrating()) { dScore.innerHTML = 'calibrating...'; } else showScore();
 
 	Score.levelChange = false;
 	Score.gameChange = false;
 }
-
-
-
-
-
-
-
-
 
 
 

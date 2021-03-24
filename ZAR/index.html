@@ -13,8 +13,6 @@
 		<link rel="stylesheet" href="../assets/fonts/fonts.css" />
 		<link rel="stylesheet" href="../ZAR/simplebase.css" />
 
-
-
 		<script src="../BASE/_globals.js"></script>
 		<!-- <script src="../BASE/alles.js"></script> -->
 
@@ -31,47 +29,51 @@
 		<script src="../ZAZ/keys.js"></script>
 		<script src="../ZAZ/testing.js"></script>
 
-		<script src="../ZAW/controller.js"></script>
-		<script src="../ZAW/game.js"></script>
-		<script src="../ZAW/item.js"></script>
 		<script src="../ZAW/layout.js"></script>
 		<script src="../ZAW/layoutHelpers.js"></script>
 		<script src="../ZAW/layoutSamples.js"></script>
 		<script src="../ZAW/load.js"></script>
-		<script src="../ZAW/onClick.js"></script>
 		<script src="../ZAW/scoring.js"></script>
 		<script src="../ZAW/settings.js"></script>
-		<script src="../ZAW/wild.js"></script>
 
+		<script src="../ZAR/item.js"></script>
+		<script src="../ZAR/controller.js"></script>
+		<script src="../ZAR/game.js"></script>
+		<script src="../ZAR/onClick.js"></script>
 		<script src="../ZAR/page.js"></script>
+		<script src="../ZAR/wild.js"></script>
+
 		<script src="../ZAR/_work.js"></script>
 		<script src="../ZAR/_start.js"></script>
 	</head>
 
 	<body>
-		<div id="dTitle" class="lineOuter">
-			<div>
-				<div id="dStats" class="lineMiddle">Round III</div>
-				<div id="dUsername" class="lineLeft">Tom</div>
-				<div id="dGamename" class="lineRight">Nations</div>
+		<div id="dAll" style="height:100%;opacity: 0">
+			<div id="dTop" class="lineOuter">
+				<div>
+					<div id="dScore" class="lineMiddle">Round III</div>
+					<div id="dUsername" class="lineLeft">Tom</div>
+					<div id="dGamename" class="lineRight">Nations</div>
+				</div>
 			</div>
-		</div>
 
-		<div id="dMain">
-			<div id="dSidebar" style="display: none"></div>
-			<div id="dRightSidebar" style="display: none"></div>
-			<div id="dTableBackground">
-				<div id="dTable" class="flexWrap"></div>
+			<div id="dMain">
+				<div id="dSidebar" style="display: none"></div>
+				<div id="dRightSidebar" style="display: none"></div>
+				<div id="dTableBackground">
+					<!-- <div id="dTable"></div> -->
+					<!-- <div id="dMenu" style='display:none;position:absolute;'></div> -->
+				</div>
 			</div>
-		</div>
 
-		<div id="dFooter" class="lineOuter">
-			<div>
-				<div id="dStatus" class="lineMiddle">waiting for move</div>
-				<div id="dTime" class="lineLeft">17:34:02</div>
-				<div id="dButtons" class="lineRight" style="margin-top: -3px">
-					<span id="spBalance">⚖️</span>
-					<span id="spGear">⚙️</span>
+			<div id="dFooter" class="lineOuter">
+				<div>
+					<div id="dStatus" class="lineMiddle">waiting for move</div>
+					<div id="dTime" class="lineLeft">17:34:02</div>
+					<div id="dButtons" class="lineRight" style="margin-top: -3px">
+						<span id="spBalance">⚖️</span>
+						<span id="spGear">⚙️</span>
+					</div>
 				</div>
 			</div>
 		</div>

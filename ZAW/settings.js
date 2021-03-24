@@ -47,6 +47,7 @@ function createSettingsUi(dParent) {
 
 //#region update Settings after ui change
 function appSpecificSettings() {
+	console.log('....',G.showLabels,'init')
 	updateLabelSettings();
 	updateTimeSettings();
 	updateKeySettings();
@@ -70,7 +71,8 @@ function updateTimeSettings() {
 	else hide(timeElem);
 }
 function updateLabelSettings() {
-	console.assert(isdef(Score.labels), 'Score not set!!!!!')
+	console.log('....',G.showLabels,Settings,G)
+	console.assert(isdef(Score.labels), 'Score not set!!!!!');
 	if (Settings.showLabels == 'toggle') Settings.labels = Score.labels == true; //true;
 	else Settings.labels = (Settings.showLabels == 'always');
 }

@@ -1,4 +1,4 @@
-var TOList,TOMain,TOTrial;
+var TOList, TOMain, TOTrial;
 function clearTimeouts() {
 	clearTimeout(TOMain);
 	clearTimeout(TOFleetingMessage);
@@ -49,21 +49,39 @@ function removeBadges(dParent, level) {
 function addBadge(dParent, level, clickHandler, animateRubberband = false) {
 	let fg = '#00000080';
 	let textColor = 'white';
-	let stylesForLabelButton = { rounding: 8, margin: 4 };
+	//let stylesForLabelButton = { rounding: 8, margin: 4 };
 	//const picStyles = ['twitterText', 'twitterImage', 'openMojiText', 'openMojiImage', 'segoe', 'openMojiBlackText', 'segoeBlack'];
 	let isText = true; let isOmoji = false;
 	let i = level - 1;
 	let key = levelKeys[i];
 	let k = replaceAll(key, ' ', '-');
-	let info = symbolDict[k];
-	let label = "level " + i;
-	let h = window.innerHeight; let hBadge = h / 14;
-	let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: levelColors[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
-	d1.id = 'dBadge_' + i;
-	if (animateRubberband) mClass(d1, 'aniRubberBand');
-	if (isdef(clickHandler)) d1.onclick = clickHandler;
-	badges.push({ key: info.key, info: info, div: d1, id: d1.id, index: i });
+
+	let item = getItem(k);
+	let label = item.label = "level " + i;
+	let h = window.innerHeight;
+	let sz = h / 14;
+	let options = _simpleOptions({ w: sz, h: sz, fz: sz / 4, fzPic: sz / 2, bg: levelColors[i], fg: textColor });
+	//console.log('options.....',options);
+	options.handler = clickHandler;
+	let d = makeItemDiv(item, options);
+	//console.log(d)
+	mAppend(dParent, d);
+
+	item.index = i;
+	badges.push(item);
 	return arrLast(badges);
+	// let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: levelColors[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+	// d1.id = 'dBadge_' + i;
+
+	// let info = Syms[k];
+	// let label = "level " + i;
+	// let h = window.innerHeight; let hBadge = h / 14;
+	// let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: levelColors[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+	// d1.id = 'dBadge_' + i;
+	// if (animateRubberband) mClass(d1, 'aniRubberBand');
+	// if (isdef(clickHandler)) d1.onclick = clickHandler;
+	// badges.push({ key: info.key, info: info, div: d1, id: d1.id, index: i });
+	// return arrLast(badges);
 }
 function showBadges(dParent, level, clickHandler) {
 	clearElement(dParent); badges = [];
@@ -75,10 +93,12 @@ function showBadges(dParent, level, clickHandler) {
 function showBadgesX(dParent, level, clickHandler, maxLevel) {
 	clearElement(dParent);
 	badges = [];
+	//console.log('maxlevel', maxLevel)
 	for (let i = 1; i <= maxLevel + 1; i++) {
 		if (i > level) {
 			let b = addBadge(dParent, i, clickHandler, false);
-			b.div.style.opacity = .25;
+			//console.log('badge', i, 'is', b)
+			b.live.div.style.opacity = .25;
 			b.achieved = false;
 		} else {
 			let b = addBadge(dParent, i, clickHandler, true);
@@ -252,19 +272,19 @@ function createDragClone(ev, items, onRelease) {
 	document.body.onmouseup = onRelease;// ev=>console.log('mouse up')
 
 }
-function cancelDD(){
+function cancelDD() {
 	DragElem.remove();
 	DragElem = DragSource = DragSourceItem = DropZoneItem = null;
 	//document.body.onmousemove = document.body.onmouseup = null;
 }
 function dropAndEval(ev) {
-	cancelBubble=true;
+	cancelBubble = true;
 	let els = allElementsFromPoint(ev.clientX, ev.clientY);
 	if (nundef(DragElem)) return;
 	let targetItem = DropZoneItem = firstCond(DropZoneItems, x => els.includes(x.div));//DropZones.includes(x));
 	//let targetItem = findItemFromElem(Pictures,targetElem);
 
-	if (nundef(targetItem)) {cancelDD(); return;}
+	if (nundef(targetItem)) { cancelDD(); return; }
 
 	let droppedItem = DragSourceItem;
 	replacePicAndLabel(targetItem, targetItem.key, droppedItem.label);
@@ -1181,9 +1201,9 @@ function failSomePictures(withComment = false) {
 		sayRandomVoice(chooseRandom(comments));
 	}
 	for (const p of Pictures) {
-		let ui=p.div;
-		let sz=p.sz;
-		if (p.isCorrect==false) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
+		let ui = p.div;
+		let sz = p.sz;
+		if (p.isCorrect == false) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 		else mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
 	}
 	// if (isdef(Selected) && isdef(Selected.feedbackUI)) {
@@ -1417,7 +1437,7 @@ function findItemFromElem(items, elem) {
 
 }
 function findItemFromKey(items, key) { return firstCond(items, x => x.key == key); }
-function getActualText(item){
+function getActualText(item) {
 	//console.log(item)
 	if (isdef(item.text)) return item.text.div.innerHTML;
 	//if (isdef(item.pic)){return item.div.children[1].innerHTML;} else {return item.div.children[0].innerHTML;}
@@ -1445,11 +1465,11 @@ function getGameValues() {
 	settings = mergeOverride(settings, DB.settings);
 	if (isdef(U.settings)) settings = mergeOverride(settings, U.settings);
 	if (isdef(DB.games[game])) settings = mergeOverride(settings, DB.games[game]);
-	let next = lookup(DB.games,[game,'levels',level]); if (next) settings = mergeOverride(settings, next);
-	next = lookup(U,['gameSettings',game]); if (next) settings = mergeOverride(settings, next);
-	next = lookup(U,['gameSettings',game,'levels',level]); if (next) settings = mergeOverride(settings, next);
+	let next = lookup(DB.games, [game, 'levels', level]); if (next) settings = mergeOverride(settings, next);
+	next = lookup(U, ['gameSettings', game]); if (next) settings = mergeOverride(settings, next);
+	next = lookup(U, ['gameSettings', game, 'levels', level]); if (next) settings = mergeOverride(settings, next);
 
-	console.log(settings);
+	//console.log(settings);
 	delete settings.levels;
 	Speech.setLanguage(settings.language);
 
@@ -1521,6 +1541,7 @@ function removePicture(pic, reorder = false) {
 	}
 }
 function resetRound() {
+	console.log('......resetRound')
 	clearTimeouts();
 	clearFleetingMessage();
 	clearTable();
@@ -1562,26 +1583,29 @@ function setBadgeLevel(i) {
 	if (isEmpty(badges)) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
 
 	for (let iBadge = 0; iBadge < G.level; iBadge++) {
-		badges[iBadge].div.style.opacity = .75;
-		badges[iBadge].div.style.border = 'transparent';
-		// badges[iBadge].div.children[1].innerHTML = '* ' + iBadge + ' *'; //style.color = 'white';
-		badges[iBadge].div.children[1].innerHTML = '* ' + (iBadge+1) + ' *'; //style.color = 'white';
-		badges[iBadge].div.children[0].style.color = 'white';
+		let d1 = iDiv(badges[iBadge]);
+		d1.style.opacity = .75;
+		d1.style.border = 'transparent';
+		// d1.children[1].innerHTML = '* ' + iBadge + ' *'; //style.color = 'white';
+		d1.children[1].innerHTML = '* ' + (iBadge + 1) + ' *'; //style.color = 'white';
+		d1.children[0].style.color = 'white';
 	}
-	badges[G.level].div.style.border = '1px solid #00000080';
-	badges[G.level].div.style.opacity = 1;
-	// badges[G.level].div.children[1].innerHTML = 'Level ' + G.level; //style.color = 'white';
-	badges[G.level].div.children[1].innerHTML = 'Level ' + (G.level+1); //style.color = 'white';
-	badges[G.level].div.children[0].style.color = 'white';
+	let d = iDiv(badges[G.level]);
+	d.style.border = '1px solid #00000080';
+	d.style.opacity = 1;
+	// d.children[1].innerHTML = 'Level ' + G.level; //style.color = 'white';
+	d.children[1].innerHTML = 'Level ' + (G.level + 1); //style.color = 'white';
+	d.children[0].style.color = 'white';
 	for (let iBadge = G.level + 1; iBadge < badges.length; iBadge++) {
-		badges[iBadge].div.style.border = 'transparent';
-		badges[iBadge].div.style.opacity = .25;
-		// badges[iBadge].div.children[1].innerHTML = 'Level ' + iBadge; //style.color = 'white';
-		badges[iBadge].div.children[1].innerHTML = 'Level ' + (iBadge+1); //style.color = 'white';
-		badges[iBadge].div.children[0].style.color = 'black';
+		let d1 = iDiv(badges[iBadge]);
+		d1.style.border = 'transparent';
+		d1.style.opacity = .25;
+		// d1.children[1].innerHTML = 'Level ' + iBadge; //style.color = 'white';
+		d1.children[1].innerHTML = 'Level ' + (iBadge + 1); //style.color = 'white';
+		d1.children[0].style.color = 'black';
 	}
 }
-function setBackgroundColor() { document.body.style.backgroundColor = G.color; }
+function setBackgroundColor() { dTableBackground.style.backgroundColor = G.color; }
 function setGoal(index) {
 	if (nundef(index)) {
 		let rnd = G.numPics < 2 ? 0 : randomNumber(0, G.numPics - 2);
@@ -1657,13 +1681,16 @@ function showInstructionX(written, dParent, spoken, { fz, voice } = {}) {
 
 }
 function showLevel() {
-	dLevel.innerHTML = 'level: ' + (G.level+1) + '/' + (G.maxLevel+1);
+	dLevel.innerHTML = 'level: ' + (G.level + 1) + '/' + (G.maxLevel + 1);
 	// dLevel.innerHTML = 'level: ' + G.level + '/' + G.maxLevel;
 }
-function showGameTitle() { dTitleRight.innerHTML = G.friendly; }
+function showGameTitle() { dGamename.innerHTML = G.friendly; }
 function showScore() {
 
 	//console.log('===>_showScore!!!', Score);
+	if (nundef(mBy('dLeiste'))) initSidebar();
+	//console.log(G.maxLevel)
+
 	if (Score.gameChange) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
 
 	let scoreString = 'question: ' + (Score.nTotal + 1) + '/' + Settings.samplesPerGame;
@@ -1687,7 +1714,26 @@ function showStats() {
 	Score.levelChange = false;
 	Score.gameChange = false;
 }
+function showPictures(n,handler){
+	let space = getRect(dTableBackground);
+	console.log('space',space);
+	let options = {
+		n: n, dParent: dTable,
+		wArea: space.w, hArea: space.h*.8, //dParent: dTable, is default!
+		//shufflePositions: true, repeat: 2, //colorKeys: ['blue', 'green'],
+		szPic: { w: 130, h: 130 },
+		showLabels: true, showPic: true, percentVertical: 30, maxlen: n < 10 ? 9 : 6,
+		isUniform: true, fillArea: true, isRegular: true,
+		handler: _standardHandler(handler),
+	};
+	_extendOptions(options);
 
+	let items = genItems(options.n, options);
+	console.log('________',items,'\noptions',options)
+	present00(items, options);
+	return [items, options];
+
+}
 
 
 

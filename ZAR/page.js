@@ -1,186 +1,21 @@
-//#prefabs
-function createSubtitledPage(bg = 'silver', title = 'Aristocracy', subtitle = '', footer = 'a game by F. Ludos') {
-
-	setPageBackground(bg);
-	createPageDivsFullVisibleArea({
-		title: { h: 42, family: 'AlgerianRegular', fz: 36 },
-		subtitle: { h: 30, fz: 16 },
-		titleLine: { h: 5, bg: '#00000080' },
-	}, { bg: '#00000050' }, { footer: { h: 30, fz: 16 } }, {}); //table is above footer
-	dTitle.innerHTML = title;
-	dSubtitle.innerHTML = subtitle;
-	dFooter.innerHTML = footer;
-
-	addDummy();
-}
-function createSubtitledPage3T2(bg = 'silver', title = 'Aristocracy', subtitle = '', footer = 'a game by F. Ludos') {
-	setPageBackground(bg);
-	createPageDivsFullVisibleArea({
-		title: { h: 42, family: 'AlgerianRegular', fz: 36 },
-		subtitle: { h: 30, fz: 16 },
-		titleLine: { h: 5, bg: '#00000080' },
-	}, { bg: '#00000050' }, { bottom: { hmin: 30, fz: 20, bg: '#00000050' }, footer: { h: 30, fz: 16 } }, {}); //table is above footer
-	dTitle.innerHTML = title;
-	dSubtitle.innerHTML = subtitle;
-	dFooter.innerHTML = footer;
-
-	addDummy();
-}
-function createPageWithSidebar(bg = 'silver') {
-	setPageBackground(bg);
-	console.log('hallo');
-
-	clearElement(dMain);
-
-	
-	//mStyleX(dMain, { display: 'grid', 'grid-template-columns': 'auto 1fr', h: '120%', w: '100%', box: true });
-
-
-	let dSidebar = mDiv(dMain, { h: '100%', flex: '0 0 auto', box: true, padding: 12, align: 'center', bg: 'yellow' }, 'dSidebar');
-	let dRightSide = mDiv(dMain, { box: true, h: '100%', display: 'flex', 'flex-direction': 'column', 'flex-grow': 10, bg: 'green' });
-
-	//let table = mDiv(dRightSide, {w:'100%',bg:'red'}, 'table'); //table.innerHTML='hallo';
-	return;
-	let above = {
-		title: { h: 42, family: 'AlgerianRegular', fz: 36 },
-		subtitle: { h: 30, fz: 16 },
-		titleLine: { h: 5, bg: '#00000080' }
-	};
-	let below = { bottom: { hmin: 30, fz: 20, bg: '#00000050' }, footer: { h: 30, fz: 16 } };
-
-	let defs = { bg: 'random', fg: 'contrast' };
-	let tableStyles = {};
-
-	for (const k in above) {
-		let name = 'd' + capitalize(k);
-		let ltop = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs, above[k]));
-	}
-
-
-	//sum up total heights of above,below
-	let vals = Object.values(above);
-	vals = vals.concat(Object.values(below));
-	//console.log('vals', vals)
-	let sum = arrSum(vals, 'h');
-	let sum1 = arrSum(vals, 'hmin');
-	console.log('sum', sum, 'sum1', sum1);
-	sum += sum1;
-	// console.log('total height of lines is',sum)
-	let hTable = percentVh(100) - sum;// + 4;//??????? //die 10 sind abstand von footer, die 30 sind footer
-	let wTable = percentVw(100) - 20; //die 20 sind padding (je 10) von get3ColLine
-	if (nundef(tableStyles)) tableStyles = {};
-	tableStyles = mergeOverride({ bg: 'dimgray', w: wTable, h: hTable, vpadding: 0, hpadding: 0 }, tableStyles);
-	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight', tableStyles);
-	ltable.id = 'lTable';
-	mSize(dTable.parentNode, '100%', '100%');
-	console.log(dTable.parentNode)
-	mSize(dTable, '100%', '100%');
-
-	console.log('below', below);
-	for (const k in below) {
-		let name = 'd' + capitalize(k);
-		let lbottom = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs, below[k]));
-	}
-	// let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
-	dFooter.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
-
-	let rect = getRect(dTable);
-	return rect;
-	addDummy();
+function initSidebar1() {
+	show(dSidebar);
+	clearElement(dSidebar);
+	mDiv(dSidebar,{ 'min-width':50, 'max-height': '100vh', display: 'flex', 'flex-flow': 'column wrap', 'align-content':'center' },'dLeiste');
 }
 
 //#region page aufbau
-function createPageDivsFullVisibleAreaSidebar(above, tableStyles, below, defs = { bg: 'random', fg: 'contrast' }) {
-	//console.log('defs',defs)
-	clearElement(dMain);
-	mStyleX(dMain, { display: 'flex', w: '100%', bg: 'blue' });
-	let dSidebar = mDiv(dMain, { h: '100%', flex: '0 0 auto', box: true, padding: 12, align: 'center' }, 'dSidebar');
-	let dRightSide = mDiv(dMain, { h: '100%', display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
-	return;
-	let table = mDiv(dRightSide, {}, 'table'); //table.innerHTML='hallo';
-
-	for (const k in above) {
-		let name = 'd' + capitalize(k);
-		let ltop = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs, above[k]));
-	}
-
-	//sum up total heights of above,below
-	let vals = Object.values(above);
-	vals = vals.concat(Object.values(below));
-	//console.log('vals', vals)
-	let sum = arrSum(vals, 'h');
-	let sum1 = arrSum(vals, 'hmin');
-	console.log('sum', sum, 'sum1', sum1);
-	sum += sum1;
-	// console.log('total height of lines is',sum)
-	let hTable = percentVh(100) - sum;// + 4;//??????? //die 10 sind abstand von footer, die 30 sind footer
-	let wTable = percentVw(100) - 20; //die 20 sind padding (je 10) von get3ColLine
-	if (nundef(tableStyles)) tableStyles = {};
-	tableStyles = mergeOverride({ bg: 'dimgray', w: wTable, h: hTable, vpadding: 0, hpadding: 0 }, tableStyles);
-	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight', tableStyles);
-	ltable.id = 'lTable';
-	mSize(dTable.parentNode, '100%', '100%');
-	console.log(dTable.parentNode)
-	mSize(dTable, '100%', '100%');
-
-	console.log('below', below);
-	for (const k in below) {
-		let name = 'd' + capitalize(k);
-		let lbottom = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs, below[k]));
-	}
-	// let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
-	dFooter.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
-
-	let rect = getRect(dTable);
-	return rect;
-}
-function createPageDivsFullVisibleArea(above, tableStyles, below, defs = { bg: 'random', fg: 'contrast' }) {
-	//console.log('defs',defs)
-	clearElement(dMain);
-	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
-
-	let table = mDiv(dRightSide, {}, 'table'); //table.innerHTML='hallo';
-
-	for (const k in above) {
-		let name = 'd' + capitalize(k);
-		let ltop = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs, above[k]));
-	}
-
-	//sum up total heights of above,below
-	let vals = Object.values(above);
-	vals = vals.concat(Object.values(below));
-	//console.log('vals', vals)
-	let sum = arrSum(vals, 'h');
-	let sum1 = arrSum(vals, 'hmin');
-	console.log('sum', sum, 'sum1', sum1);
-	sum += sum1;
-	// console.log('total height of lines is',sum)
-	let hTable = percentVh(100) - sum;// + 4;//??????? //die 10 sind abstand von footer, die 30 sind footer
-	let wTable = percentVw(100) - 20; //die 20 sind padding (je 10) von get3ColLine
-	if (nundef(tableStyles)) tableStyles = {};
-	tableStyles = mergeOverride({ bg: 'dimgray', w: wTable, h: hTable, vpadding: 0, hpadding: 0 }, tableStyles);
-	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight', tableStyles);
-	ltable.id = 'lTable';
-	mSize(dTable.parentNode, '100%', '100%');
-	mSize(dTable, '100%', '100%');
-
-	console.log('below', below);
-	for (const k in below) {
-		let name = 'd' + capitalize(k);
-		let lbottom = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs, below[k]));
-	}
-	// let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
-	dFooter.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
-
-	let rect = getRect(dTable);
-	return rect;
+function get3ColLineName(dParent, name, styles = {}) {
+	name = 'd' + capitalize(name);
+	let dLine = get3ColLine(dParent, name + 'Left', name, name + 'Right', styles);
+	return dLine;
 }
 function get3ColLine(dParent, idleft, idmiddle, idright, styles = {}) {
 	let dOuter = mDiv(dParent);
 
 	let middleStyles = { fz: styles.fz, family: styles.family };
 	delete styles.fz; delete styles.family;
-	styles = mergeOverride({ wmin: '100%', vpadding: 4, hpadding: 10, box: true, h: 30 }, styles);
+	styles = mergeOverride({ wmin: '100%', hmin: 30, vpadding: 4, hpadding: 10, box: true }, styles);
 	//console.log(jsCopy(styles))
 	mStyleX(dOuter, styles);
 
@@ -227,11 +62,28 @@ function getMainAreaPercent(dParent, bg = 'grey', wPercent = 94, hPercent = 96, 
 	return dArea;
 
 }
+function initTable() {
+	clearElement(dTableBackground);
+	setTableBackground(RED, 'white', true);
+	//title line
+	let ltitle = get3ColLineName(dTableBackground, 'title', { hmin: 30 });//, bg:BLUE});
+	mStyleX(dTitle,{maleft:-50})
+	let ltable = get3ColLineName(dTableBackground, 'table', {});
+	let lbottom = get3ColLineName(dTableBackground, 'bottom', { position: 'absolute', bottom: 30 });
+	// dTitle.innerHTML='HALLO';
+	// dBottom.innerHTML='<p>Hallo das ist ein neues message</p>'
+}
 function setPageBackground(bg, fg = 'white', isBase = true) {
 	bg = colorHex(bg);
 	//console.log('setting bg to', bg)
-	if (isBase) DA.baseColor = bg;
+	if (isBase) DA.pageBaseColor = bg;
 	mStyleX(dMain, { bg: bg, fg: isdef(fg) ? fg : 'contrast' });
+}
+function setTableBackground(bg, fg = 'white', isBase = true) {
+	bg = colorHex(bg);
+	//console.log('setting bg to', bg)
+	if (isBase) DA.tableBaseColor = bg;
+	mStyleX(dTableBackground, { bg: bg, fg: isdef(fg) ? fg : 'contrast' });
 }
 function addDummy() {
 	let b = mButton('', null, dTitleRight, { opacity: 0, h: 0, w: 0, padding: 0, margin: 0, outline: 'none', border: 'none', bg: 'transparent' });
@@ -244,12 +96,12 @@ function addDummy() {
 function toggleTheme() {
 	let bg = colorHex(dMain.style.backgroundColor);
 	let lum = getBrightness(bg);
-	console.log('current:\nbg', bg, '\nbaseColor', DA.baseColor, '\nlum', lum);
-	if (bg != DA.baseColor) setPageBackground(DA.baseColor, 'white', false);
+	console.log('current:\nbg', bg, '\nbaseColor', DA.pageBaseColor, '\nlum', lum);
+	if (bg != DA.pageBaseColor) setPageBackground(DA.pageBaseColor, 'white', false);
 	else if (lum <= .5) setPageBackground(colorLighter(bg), 'black', false);
 	else setPageBackground(colorDarker(bg, 1), 'white', false);
 }
-function setTheme(isDark = true) {
+function setTheme_dep(isDark = true) {
 	let bg = dMain.style.backgroundColor;
 	let lum = getBrightness(bg);
 	console.log('bg is', bg, 'lum', lum)
@@ -267,4 +119,61 @@ function setTheme(isDark = true) {
 		}
 	} else if (lum > .5) return; else { setPageBackground(colorLighter(bg)); }
 
+}
+
+//#old prefabs
+function createSubtitledPage(bg = 'silver', title = 'Aristocracy', subtitle = '', footer = 'a game by F. Ludos') {
+
+	setPageBackground(bg);
+	createPageDivsFullVisibleArea({
+		title: { h: 42, family: 'AlgerianRegular', fz: 36 },
+		subtitle: { h: 30, fz: 16 },
+		titleLine: { h: 5, bg: '#00000080' },
+	}, { bg: '#00000050' }, { footer: { h: 30, fz: 16 } }, {}); //table is above footer
+	dTitle.innerHTML = title;
+	dSubtitle.innerHTML = subtitle;
+	dFooter.innerHTML = footer;
+
+	addDummy();
+}
+function createPageDivsFullVisibleArea(above, tableStyles, below, defs = { bg: 'random', fg: 'contrast' }) {
+	//console.log('defs',defs)
+	clearElement(dMain);
+	let dRightSide = mDiv(dMain, { display: 'flex', 'flex-direction': 'column', 'flex-grow': 10 });
+
+	let table = mDiv(dRightSide, {}, 'table'); //table.innerHTML='hallo';
+
+	for (const k in above) {
+		let name = 'd' + capitalize(k);
+		let ltop = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs, above[k]));
+	}
+
+	//sum up total heights of above,below
+	let vals = Object.values(above);
+	vals = vals.concat(Object.values(below));
+	//console.log('vals', vals)
+	let sum = arrSum(vals, 'h');
+	let sum1 = arrSum(vals, 'hmin');
+	console.log('sum', sum, 'sum1', sum1);
+	sum += sum1;
+	// console.log('total height of lines is',sum)
+	let hTable = percentVh(100) - sum;// + 4;//??????? //die 10 sind abstand von footer, die 30 sind footer
+	let wTable = percentVw(100) - 20; //die 20 sind padding (je 10) von get3ColLine
+	if (nundef(tableStyles)) tableStyles = {};
+	tableStyles = mergeOverride({ bg: 'dimgray', w: wTable, h: hTable, vpadding: 0, hpadding: 0 }, tableStyles);
+	let ltable = get3ColLine(table, 'dTableLeft', 'dTable', 'dTableRight', tableStyles);
+	ltable.id = 'lTable';
+	mSize(dTable.parentNode, '100%', '100%');
+	mSize(dTable, '100%', '100%');
+
+	console.log('below', below);
+	for (const k in below) {
+		let name = 'd' + capitalize(k);
+		let lbottom = get3ColLine(table, name + 'Left', name, name + 'Right', mergeOverride(defs, below[k]));
+	}
+	// let lfooter = get3ColLine(table, 'dFooterLeft', 'dFooterMiddle', 'dFooterRight', { bg: 'orange' });
+	dFooter.innerHTML = 'HALLO'; //mStyleX(lfooter, { bottom: 0 })
+
+	let rect = getRect(dTable);
+	return rect;
 }

@@ -25,6 +25,24 @@ function _bestRowsColsFill(items, options) {
 	let [w, h] = [options.szPic.w, options.szPic.h] = [wa / cols, ha / rows];
 	return [rows, cols, w, h, options.or];
 }
+function _bestRowsColsSizeWH(items, wTotal, hTotal, options) {
+	let combis = _getSLCombis(items.length, options.isRegular, true);
+	//combis.map(x => console.log(x));
+
+	options.szPicTest = { w: options.szPic.w, h: options.szPic.h };
+	let bestCombi = safeLoop(_findBestCombiOrShrinkWH, [items, wTotal, hTotal, options, combis]);
+
+	//console.log('--------BEST:', bestCombi.rows, bestCombi.cols, options.szPic, options.szPicTest);
+	let [rows, cols, w, h] = [bestCombi.rows, bestCombi.cols, options.szPicTest.w, options.szPicTest.h]
+	delete options.szPicTest;
+	return [rows, cols, w, h, rows < cols ? 'L' : 'P'];
+}
+function _findBestCombiOrShrinkWH(items, wTotal, hTotal, options, combis) {
+	bestCombi = firstCond(combis, x => wTotal / x.cols > options.szPicTest.w && hTotal / x.rows > options.szPicTest.h);
+	if (isdef(bestCombi)) return bestCombi;
+	options.szPicTest = { w: .9 * options.szPicTest.w, h: .9 * options.szPicTest.h };//otherwise, have to reduce the size
+	return null;
+}
 function _bestRowsColsSize(items, options) {
 	let combis = _getSLCombis(items.length, options.isRegular, true);
 	//combis.map(x => console.log(x));
@@ -75,17 +93,19 @@ function _checkOverflowPixel(items, options, dGrid) {
 	console.log('exec...')
 	if (isOverflown(dGrid)) { _sizeByPixel(items, options, dGrid, -1); }
 
+
 }
+function _handleEvent(ev){ev.cancelBubble = true;return evToItem(ev);}
 function _standardHandler(handler) {
 	let f = isdef(handler) ?
-		ev => { ev.cancelBubble = true; let res = handler(evToItem(ev)); } //console.log('clicked', evToItem(ev).key, 'res', res); }
+		ev => { ev.cancelBubble = true; let res = handler(ev,evToItem(ev)); } //console.log('clicked', evToItem(ev).key, 'res', res); }
 		: ev => { ev.cancelBubble = true; console.log('clicked on', evToClosestId(ev), evToLive(ev), evToItem(ev)); };
 	return f;
 }
 function _extendOptions(options, defOptions) {
 	defOptions = {
 		wper: 96, hper: 96, dParent: dTable,
-		showPic: true, szPic: { w: 120, h: 120 }, bg: 'random', fg: 'white', margin:4, rounding:6,
+		showPic: true, szPic: { w: 120, h: 120 }, bg: 'random', fg: 'white', margin: 4, rounding: 6,
 		showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
 		fzText: 20, fzPic: 60,
 		padding: .025, gap: .1, isUniform: true, isRegular: false, fillArea: true,
@@ -98,9 +118,9 @@ function _extendOptions(options, defOptions) {
 	addKeys(defOptions, options);
 
 	if (nundef(options.dArea)) {
-		if (isdef(options.wArea) && isdef(options.hArea)){
-			options.dArea = getMainArea(options.dParent,{w:options.wArea,h:options.hArea});
-		}else 		if (isdef(options.areaPadding)) {
+		if (isdef(options.wArea) && isdef(options.hArea)) {
+			options.dArea = getMainArea(options.dParent, { w: options.wArea, h: options.hArea });
+		} else if (isdef(options.areaPadding)) {
 			options.dArea = getMainAreaPadding(options.dParent, padding = options.areaPadding);
 		} else options.dArea = getMainAreaPercent(options.dParent, null, options.wper, options.hper, getUID());
 	}
@@ -130,8 +150,10 @@ function _extendOptions(options, defOptions) {
 	let [w, h] = [options.szPic.w, options.szPic.h];
 	options.outerStyles = {
 		w: w, h: h, bg: options.bg, fg: options.fg,
-		display: 'inline-flex', 'flex-direction': 'column', 'place-content': 'center',
-		padding: 0, box: true, margin:options.margin, rounding: options.rounding,
+		display: 'inline-flex', 'flex-direction': 'column',
+		'justify-content': 'center', 'align-items': 'center',
+		//'place-content': 'center',
+		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
 	};
 
 	return options;
@@ -279,7 +301,7 @@ function _reduceFontsBy(tx, px, items, options) {
 }
 function _setTextFont(items, options, fz) {
 	options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
-	console.log('items',items)
+	console.log('items', items)
 	items.map(x => { let dl = x.live.dLabel; if (isdef(dl)) dl.style.fontSize = fz + 'px'; });
 	//console.log('fonts set to', fz);
 }
