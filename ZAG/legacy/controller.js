@@ -33,6 +33,8 @@ function startLevel() {
 	updateLabelSettings();
 	Speech.setLanguage(G.language);
 	G.instance.startLevel();
+
+	//return;
 	//console.log(G)
 	if (G.keys.length < G.numPics) { updateKeySettings(G.numPics + 5); }
 	startRound();
@@ -90,7 +92,7 @@ function evaluate() {
 	if (!IsAnswerCorrect && G.trialNumber < G.trials) { promptNextTrial(); return; }
 
 	//feedback
-	console.log(G)
+	//console.log(G)
 	if (IsAnswerCorrect) { DELAY = G.spokenFeedback ? 1500 : 300; G.successFunc(); }
 	else { DELAY = G.correctionFunc(); G.failFunc(); }
 	//return;

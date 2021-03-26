@@ -4,7 +4,6 @@ async function _start() {
 	addonFeatureInit(); //new API!
 	Speech = new SpeechAPI('E');
 	KeySets = getKeySets();
-
 	loadUser(); console.assert(isdef(G));
 
 	startUnit();

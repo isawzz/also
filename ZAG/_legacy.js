@@ -74,6 +74,161 @@
 // }
 //#endregion
 
+//#region badges
+var badges = [];
+function removeBadges(dParent, level) {
+	while (badges.length > level) {
+		let badge = badges.pop()
+		removeElem(badge.div);
+	}
+}
+function addBadge(dParent, level, clickHandler, animateRubberband = false) {
+	let fg = '#00000080';
+	let textColor = 'white';
+	//let stylesForLabelButton = { rounding: 8, margin: 4 };
+	//const picStyles = ['twitterText', 'twitterImage', 'openMojiText', 'openMojiImage', 'segoe', 'openMojiBlackText', 'segoeBlack'];
+	let isText = true; let isOmoji = false;
+	let i = level - 1;
+	let key = levelKeys[i];
+	let k = replaceAll(key, ' ', '-');
+
+	let item = getItem(k);
+	let label = item.label = "level " + i;
+	let h = window.innerHeight;
+	let sz = h / 14;
+	let options = _simpleOptions({ w: sz, h: sz, fz: sz / 4, fzPic: sz / 2, bg: levelColors[i], fg: textColor });
+	//console.log('options.....',options);
+	options.handler = clickHandler;
+	let d = makeItemDiv(item, options);
+	//console.log(d)
+	mAppend(dParent, d);
+
+	item.index = i;
+	badges.push(item);
+	return arrLast(badges);
+	// let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: levelColors[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+	// d1.id = 'dBadge_' + i;
+
+	// let info = Syms[k];
+	// let label = "level " + i;
+	// let h = window.innerHeight; let hBadge = h / 14;
+	// let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: levelColors[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+	// d1.id = 'dBadge_' + i;
+	// if (animateRubberband) mClass(d1, 'aniRubberBand');
+	// if (isdef(clickHandler)) d1.onclick = clickHandler;
+	// badges.push({ key: info.key, info: info, div: d1, id: d1.id, index: i });
+	// return arrLast(badges);
+}
+function showBadges(dParent, level, clickHandler) {
+	clearElement(dParent); badges = [];
+	for (let i = 1; i <= level; i++) {
+		addBadge(dParent, i, clickHandler);
+	}
+	//console.log(badges)
+}
+function showBadgesX(dParent, level, clickHandler, maxLevel) {
+	clearElement(dParent);
+	badges = [];
+	//console.log('maxlevel', maxLevel, 'level', level)
+	for (let i = 1; i <= maxLevel + 1; i++) {
+		if (i > level) {
+			let b = addBadge(dParent, i, clickHandler, false);
+			//console.log('badge', i, 'is', b)
+			b.live.div.style.opacity = .25;
+			b.achieved = false;
+		} else {
+			let b = addBadge(dParent, i, clickHandler, true);
+			b.achieved = true;
+		}
+	}
+	//console.log(badges)
+}
+function onClickBadgeX(ev) {
+	//console.log('haaaaaaaaaaaaaaaalo', ev)
+	interrupt(); //enterInterruptState();
+	let item = evToItem(ev);
+	setBadgeLevel(item.index);
+	userUpdate(['games', G.id, 'startLevel'], item.index);
+	auxOpen = false;
+	TOMain = setTimeout(startGame, 100);
+}
+function setBadgeLevel(i) {
+	//i is now correct level
+	//let userStartLevel = getUserStartLevel(G.id);
+	//if (userStartLevel > i) _updateStartLevelForUser(G.id, i);
+	G.level = i;
+	Score.levelChange = true;
+
+	//setBadgeOpacity
+	if (isEmpty(badges)) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
+
+	for (let iBadge = 0; iBadge < G.level; iBadge++) {
+		let d1 = iDiv(badges[iBadge]);
+		d1.style.opacity = .75;
+		d1.style.border = 'transparent';
+		// d1.children[1].innerHTML = '* ' + iBadge + ' *'; //style.color = 'white';
+		d1.children[1].innerHTML = '* ' + (iBadge + 1) + ' *'; //style.color = 'white';
+		d1.children[0].style.color = 'white';
+	}
+	let d = iDiv(badges[G.level]);
+	d.style.border = '1px solid #00000080';
+	d.style.opacity = 1;
+	// d.children[1].innerHTML = 'Level ' + G.level; //style.color = 'white';
+	d.children[1].innerHTML = 'Level ' + (G.level + 1); //style.color = 'white';
+	d.children[0].style.color = 'white';
+	for (let iBadge = G.level + 1; iBadge < badges.length; iBadge++) {
+		let d1 = iDiv(badges[iBadge]);
+		d1.style.border = 'transparent';
+		d1.style.opacity = .25;
+		// d1.children[1].innerHTML = 'Level ' + iBadge; //style.color = 'white';
+		d1.children[1].innerHTML = 'Level ' + (iBadge + 1); //style.color = 'white';
+		d1.children[0].style.color = 'black';
+	}
+}
+//#endregion
+
+//#region layouts
+function layoutGrid(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+	//console.log(elist, elist.length)
+	let dims = calcRowsCols(elist.length, rows, cols);
+	//console.log('dims', dims);
+
+	let parentStyle = jsCopy(containerStyles);
+	parentStyle.display = isInline ? 'inline-grid' : 'grid';
+	parentStyle['grid-template-columns'] = `repeat(${dims.cols}, auto)`;
+	parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+
+	//console.log('parentStyle', parentStyle)
+
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return { w: b.w, h: b.h };
+
+}
+function layoutFlex(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+	console.log(elist, elist.length)
+	let dims = calcRowsCols(elist.length, rows, cols);
+	console.log('dims', dims);
+
+	let parentStyle = jsCopy(containerStyles);
+	if (containerStyles.orientation == 'v') {
+		// console.log('vertical!');
+		// parentStyle['flex-flow']='row wrap';
+		parentStyle['writing-mode'] = 'vertical-lr';
+	}
+	parentStyle.display = 'flex';
+	parentStyle.flex = '0 0 auto';
+	parentStyle['flex-wrap'] = 'wrap';
+	// parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return { w: b.w, h: b.h };
+
+}
+
+//#endregion
+
 //#region pic helpers
 function picInfo(key) {
 	//#region doc 
@@ -316,12 +471,14 @@ function mpOver(d, dParent, fz, color, picStyle) {
 	return d;
 }
 function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc } = {}) {
-	//console.log('setKeys (legacy)',nMin,lang,key,keysets);
+	// console.log('setKeys (legacy)',nMin,lang,key,keysets,'\nfilterFunc',filterFunc);
 	//G.keys = setKeys({ nMin, lang: G.language, keysets: KeySets, key: G.vocab });
 
 	let keys = jsCopy(keysets[key]);
-	//console.log('setKeys (from',getFunctionsNameThatCalledThisFunction()+')',keys)
+	// console.log('setKeys (from',getFunctionsNameThatCalledThisFunction()+')',keys)
+	//if (isdef(filterFunc)) console.log('f',filterFunc);
 
+	// console.log('setKeys',keys)
 	if (isdef(nMin)) {
 		let diff = nMin - keys.length;
 		let additionalSet = diff > 0 ? firstCondDictKeys(keysets, k => k != key && keysets[k].length > diff) : null;
@@ -338,6 +495,7 @@ function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc 
 		let info = Syms[k];
 
 		info.best = Syms[k][lang];
+		//console.log(info.best)
 
 		if (nundef(info.best)) {
 			let ersatzLang = (lang == 'D' ? 'D' : 'E');
@@ -347,6 +505,7 @@ function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc 
 		}
 		//console.log(k,lang,lastOfLanguage(k,lang),info.best,info)
 		let isMatch = true;
+		//if (isdef(filterFunc)) console.log(filterFunc,filterFunc(k,info.best))
 		if (isdef(filterFunc)) isMatch = isMatch && filterFunc(k, info.best);
 		if (isdef(confidence)) isMatch = info[klang + 'Conf'] >= confidence;
 		if (isMatch) { primary.push(k); } else { spare.push(k); }
@@ -369,238 +528,6 @@ function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc 
 }
 
 
-//#region badges
-var badges = [];
-function removeBadges(dParent, level) {
-	while (badges.length > level) {
-		let badge = badges.pop()
-		removeElem(badge.div);
-	}
-}
-function addBadge(dParent, level, clickHandler, animateRubberband = false) {
-	let fg = '#00000080';
-	let textColor = 'white';
-	//let stylesForLabelButton = { rounding: 8, margin: 4 };
-	//const picStyles = ['twitterText', 'twitterImage', 'openMojiText', 'openMojiImage', 'segoe', 'openMojiBlackText', 'segoeBlack'];
-	let isText = true; let isOmoji = false;
-	let i = level - 1;
-	let key = levelKeys[i];
-	let k = replaceAll(key, ' ', '-');
-
-	let item = getItem(k);
-	let label = item.label = "level " + i;
-	let h = window.innerHeight;
-	let sz = h / 14;
-	let options = _simpleOptions({ w: sz, h: sz, fz: sz / 4, fzPic: sz / 2, bg: levelColors[i], fg: textColor });
-	//console.log('options.....',options);
-	options.handler = clickHandler;
-	let d = makeItemDiv(item, options);
-	//console.log(d)
-	mAppend(dParent, d);
-
-	item.index = i;
-	badges.push(item);
-	return arrLast(badges);
-	// let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: levelColors[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
-	// d1.id = 'dBadge_' + i;
-
-	// let info = Syms[k];
-	// let label = "level " + i;
-	// let h = window.innerHeight; let hBadge = h / 14;
-	// let d1 = mpBadge(info, label, { w: hBadge, h: hBadge, bg: levelColors[i], fgPic: fg, fgText: textColor }, null, dParent, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
-	// d1.id = 'dBadge_' + i;
-	// if (animateRubberband) mClass(d1, 'aniRubberBand');
-	// if (isdef(clickHandler)) d1.onclick = clickHandler;
-	// badges.push({ key: info.key, info: info, div: d1, id: d1.id, index: i });
-	// return arrLast(badges);
-}
-function showBadges(dParent, level, clickHandler) {
-	clearElement(dParent); badges = [];
-	for (let i = 1; i <= level; i++) {
-		addBadge(dParent, i, clickHandler);
-	}
-	//console.log(badges)
-}
-function showBadgesX(dParent, level, clickHandler, maxLevel) {
-	clearElement(dParent);
-	badges = [];
-	//console.log('maxlevel', maxLevel, 'level', level)
-	for (let i = 1; i <= maxLevel + 1; i++) {
-		if (i > level) {
-			let b = addBadge(dParent, i, clickHandler, false);
-			//console.log('badge', i, 'is', b)
-			b.live.div.style.opacity = .25;
-			b.achieved = false;
-		} else {
-			let b = addBadge(dParent, i, clickHandler, true);
-			b.achieved = true;
-		}
-	}
-	//console.log(badges)
-}
-function onClickBadgeX(ev) {
-	//console.log('haaaaaaaaaaaaaaaalo', ev)
-	interrupt(); //enterInterruptState();
-	let item = evToItem(ev);
-	setBadgeLevel(item.index);
-	userUpdate(['games', G.id, 'startLevel'], item.index);
-	auxOpen = false;
-	TOMain = setTimeout(startGame, 100);
-}
-function setBadgeLevel(i) {
-	//i is now correct level
-	//let userStartLevel = getUserStartLevel(G.id);
-	//if (userStartLevel > i) _updateStartLevelForUser(G.id, i);
-	G.level = i;
-	Score.levelChange = true;
-
-	//setBadgeOpacity
-	if (isEmpty(badges)) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
-
-	for (let iBadge = 0; iBadge < G.level; iBadge++) {
-		let d1 = iDiv(badges[iBadge]);
-		d1.style.opacity = .75;
-		d1.style.border = 'transparent';
-		// d1.children[1].innerHTML = '* ' + iBadge + ' *'; //style.color = 'white';
-		d1.children[1].innerHTML = '* ' + (iBadge + 1) + ' *'; //style.color = 'white';
-		d1.children[0].style.color = 'white';
-	}
-	let d = iDiv(badges[G.level]);
-	d.style.border = '1px solid #00000080';
-	d.style.opacity = 1;
-	// d.children[1].innerHTML = 'Level ' + G.level; //style.color = 'white';
-	d.children[1].innerHTML = 'Level ' + (G.level + 1); //style.color = 'white';
-	d.children[0].style.color = 'white';
-	for (let iBadge = G.level + 1; iBadge < badges.length; iBadge++) {
-		let d1 = iDiv(badges[iBadge]);
-		d1.style.border = 'transparent';
-		d1.style.opacity = .25;
-		// d1.children[1].innerHTML = 'Level ' + iBadge; //style.color = 'white';
-		d1.children[1].innerHTML = 'Level ' + (iBadge + 1); //style.color = 'white';
-		d1.children[0].style.color = 'black';
-	}
-}
-//#endregion
-
-//#region layouts
-function layoutGrid(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
-	//console.log(elist, elist.length)
-	let dims = calcRowsCols(elist.length, rows, cols);
-	//console.log('dims', dims);
-
-	let parentStyle = jsCopy(containerStyles);
-	parentStyle.display = isInline ? 'inline-grid' : 'grid';
-	parentStyle['grid-template-columns'] = `repeat(${dims.cols}, auto)`;
-	parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
-
-	//console.log('parentStyle', parentStyle)
-
-	mStyleX(dGrid, parentStyle);
-	let b = getRect(dGrid);
-	return { w: b.w, h: b.h };
-
-}
-function layoutFlex(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
-	console.log(elist, elist.length)
-	let dims = calcRowsCols(elist.length, rows, cols);
-	console.log('dims', dims);
-
-	let parentStyle = jsCopy(containerStyles);
-	if (containerStyles.orientation == 'v') {
-		// console.log('vertical!');
-		// parentStyle['flex-flow']='row wrap';
-		parentStyle['writing-mode'] = 'vertical-lr';
-	}
-	parentStyle.display = 'flex';
-	parentStyle.flex = '0 0 auto';
-	parentStyle['flex-wrap'] = 'wrap';
-	// parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
-
-	mStyleX(dGrid, parentStyle);
-	let b = getRect(dGrid);
-	return { w: b.w, h: b.h };
-
-}
-
-//#endregion
-
-//#region settings
-var SettingTypesCommon = {
-	samplesPerGame: true,
-	minutesPerUnit: true,
-	incrementLevelOnPositiveStreak: true,
-	decrementLevelOnNegativeStreak: true,
-	pictureLabels: true,
-	language: true,
-	vocab: true,
-	showTime: true,
-	spokenFeedback: true,
-	silentMode: true,
-	switchGame: true,
-	trials: false,
-	showHint: false,
-}
-
-function createSettingsUi(dParent) {
-	clearElement(dParent);
-	let ttag = 'h2';
-	mAppend(dParent, createElementFromHTML(`<${ttag}>Common G for ${Username}:</${ttag}>`));
-
-	let nGroupNumCommonAllGames = mInputGroup(dParent);
-	setzeEineZahl(nGroupNumCommonAllGames, 'samples', 25, ['samplesPerGame']);
-	setzeEineZahl(nGroupNumCommonAllGames, 'minutes', 1, ['minutesPerUnit']);
-	setzeEineZahl(nGroupNumCommonAllGames, 'correct streak', 5, ['incrementLevelOnPositiveStreak']);
-	setzeEineZahl(nGroupNumCommonAllGames, 'fail streak', 2, ['decrementLevelOnNegativeStreak']);
-	setzeEinOptions(nGroupNumCommonAllGames, 'show labels', ['toggle', 'always', 'never'], ['toggle', 'always', 'never'], 'toggle', ['pictureLabels']);
-	setzeEinOptions(nGroupNumCommonAllGames, 'language', ['E', 'D', 'S', 'F', 'C'], ['English', 'German','Spanish','French','Chinese'], 'E', ['language']);
-	setzeEinOptions(nGroupNumCommonAllGames, 'vocabulary', Object.keys(KeySets), Object.keys(KeySets), 'best25', ['vocab']);
-	setzeEineCheckbox(nGroupNumCommonAllGames, 'show time', false, ['showTime']);
-	setzeEineCheckbox(nGroupNumCommonAllGames, 'spoken feedback', true, ['spokenFeedback']);
-	setzeEineCheckbox(nGroupNumCommonAllGames, 'silent', false, ['silentMode']);
-	setzeEineCheckbox(nGroupNumCommonAllGames, 'switch game after level', false, ['switchGame']);
-
-
-	mLinebreak(dParent);
-	let g = DB.games[G.id];
-	if (nundef(g)) return;
-	mAppend(dParent, createElementFromHTML(`<${ttag}>G for <span style='color:${g.color}'>${g.friendly}</span></${ttag}>`));
-
-	let nGroupSpecific = mInputGroup(dParent);
-	setzeEineZahl(nGroupSpecific, 'trials', 3, ['trials']);
-	setzeEineCheckbox(nGroupSpecific, 'show hint', true, ['showHint']);
-
-}
-
-//settings: update G after ui change
-function appSpecificSettings() {
-	updateLabelSettings();
-	updateTimeSettings();
-	updateKeySettings();
-	updateSpeakmodeSettings();
-}
-
-function updateSpeakmodeSettings() {
-	if (G.silentMode && G.spokenFeedback) G.spokenFeedback = false;
-
-}
-function updateKeySettings(nMin) {
-	//console.log(G,KeySets);
-	if (nundef(G)) return;
-	G.keys = setKeys({ nMin, lang: G.language, keysets: KeySets, key: G.vocab });
-	//console.log('keyset:', G.keys);
-}
-function updateTimeSettings() {
-	let timeElem = mBy('time');
-	//console.log('updateTimeSettings',_getFunctionsNameThatCalledThisFunction())
-	if (G.showTime) { show(timeElem); startTime(timeElem); }
-	else hide(timeElem);
-}
-function updateLabelSettings() {
-	if (G.pictureLabels == 'toggle') G.showLabels = true; //true;
-	else G.showLabels = (G.pictureLabels == 'always');
-	//console.log('G.pictureLabels',G.pictureLabels,'labels has been set to',G.showLabels)
-}
-//#endregion
 
 
 

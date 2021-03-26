@@ -84,7 +84,7 @@ function myPresent(dArea, items, options) {
 		let dPic = mDiv(dOuter, { fz: fzPic, family: item.info.family });
 		dPic.innerHTML = item.info.text;
 		let dLabel;
-		console.log('showLabels ',options.showLabels)
+		//console.log('showLabels ',options.showLabels)
 		if (options.showLabels) dLabel = mText(item.label, dOuter, labelStyles);
 		iAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
 	}
@@ -115,7 +115,7 @@ function myShowPics(handler, ifs = {}, options = {}, keys, labels) {
 	//O
 	options = getOptionsMinimalistic(dTable, handler, window.innerWidth - 180, window.innerHeight - 220, ifs, options, G);
 	options.ifs = ifs;
-	console.log(options)
+	//console.log(options)
 	//I
 	if (nundef(keys)) keys = choose(G.keys, G.numPics);
 	let items = Pictures = genItemsFromKeys(keys, options);
@@ -163,7 +163,113 @@ class Game {
 		if (item.label == Goal.label) { return true; } else { return false; }
 	}
 }
+class GAbacus extends Game {
+	constructor(name) { super(name); }
+	startGame() { G.successFunc = successThumbsUp; G.failFunc = failThumbsDown; G.correctionFunc = this.showCorrectSequence.bind(this); }
+	showCorrectSequence() { let t = correctBlanks(); if (G.level<=1) showSayHint(3); return t + 1000; }
+	startLevel() { if (!isList(G.steps)) G.steps = [G.steps]; G.numPics = 2; }
+	prompt() {
+		mLinebreak(dTable, 2);
 
+		showHiddenThumbsUpDown({ sz: 110 });
+		mLinebreak(dTable);
+
+		G.seq = makeExpSequence();
+
+		//console.log('G.seq', G.seq);
+
+		let panel = mDiv(dTable, { bg: '#00000080', padding: 20, rounding: 10 });
+		//replace op in seq by wr
+		//arrReplace(G.seq,G.op,OPS[G.op].wr);
+		[G.words, G.letters] = showEquation(G.seq, panel);
+		setNumberSequenceGoal();
+		//console.log(G)
+
+		mLinebreak(dTable, 30);
+
+		let instr1 = (G.language == 'E' ? 'calculate' : "rechne");
+		//let s=G.seq;
+		let spOp = G.oop.sp; if (G.language == 'D') spOp = DD[spOp];
+		let instr2 = G.operand + ' ' + spOp + ' ' + G.step + ' ?';
+		//instr1 = arrTake(G.seq,3).join(' ');
+		showInstruction('', instr1, dTitle, true, instr2);
+
+		console.log('showHint',G.showHint);
+
+		if (G.level <= 1 && G.showHint) hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
+
+		activateUi();
+	}
+	trialPrompt() {
+		if (G.level <= 1 && G.showHint) hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
+		setTimeout(() => getWrongChars().map(x => unfillChar(x)), 500);
+		return 10;
+	}
+	activate() { onkeypress = this.interact; }
+	interact(ev) {
+		//console.log('key!');
+		clearFleetingMessage();
+		if (!canAct()) return;
+
+		let sel = Selected = onKeyWordInput(ev);
+		if (nundef(sel)) return;
+		//console.log('===>', sel);
+
+		//target,isMatch,isLastOfGroup,isVeryLast,ch
+		let lastInputCharFilled = sel.target;
+		console.assert(sel.isMatch == (lastInputCharFilled.letter == sel.ch), lastInputCharFilled, sel.ch);
+
+		//all cases aufschreiben und ueberlegen was passieren soll!
+		//TODO: multiple groups does NOT work!!!
+		if (sel.isMatch && sel.isVeryLast) {
+			deactivateFocusGroup();
+			evaluate(true);
+		} else if (sel.isMatch && sel.isLastOfGroup) {
+			//it has been filled
+			//remove this group from Goal.blankWords
+			sel.target.isBlank = false;
+			sel.target.group.hasBlanks = false;
+			removeInPlace(Goal.blankWords, sel.target.group);
+			removeInPlace(Goal.blankChars, sel.target);
+			deactivateFocusGroup();
+			console.log('haaaaaaaaaaaalo', Goal.isFocus)
+			//console.log('=>', Goal)
+		} else if (sel.isMatch) {
+			//a partial match
+			removeInPlace(Goal.blankChars, sel.target);
+			sel.target.isBlank = false;
+		} else if (sel.isVeryLast) {
+			Selected.words = getInputWords();
+			Selected.answer = getInputWordString();
+			Selected.req = getCorrectWordString();
+			deactivateFocusGroup();
+			//console.log('LAST ONE WRONG!!!')
+			evaluate(false);
+			//user entered last missing letter but it is wrong!
+			//can there be multiple errors in string?
+		} else if (sel.isLastOfGroup) {
+			//unfill last group
+
+			Selected.words = getInputWords();
+			Selected.answer = getInputWordString();
+			Selected.req = getCorrectWordString();
+			deactivateFocusGroup();
+			evaluate(false);
+			//user entered last missing letter but it is wrong!
+			//can there be multiple errors in string?
+		} else {
+			if (!G.silentMode) { writeSound(); playSound('incorrect1'); }
+			deactivateFocusGroup();
+			//unfillCharInput(Selected.target);
+			showFleetingMessage('does NOT fit: ' + Selected.ch, 0, { fz: 24 });
+			setTimeout(() => unfillCharInput(Selected.target), 500);
+		}
+		//
+	}
+
+	eval(isCorrect) { return isCorrect; }
+
+}
 class GAnagram extends Game {
 	constructor(name) {
 		super(name);
@@ -174,17 +280,23 @@ class GAnagram extends Game {
 	}
 	clear() { super.clear(); if (isdef(this.language)) G.language = this.language; }
 	startLevel() {
+		// console.log('____________ calling setKeys')
+
+		//let f = (k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
+		//console.log('f', f)
 		G.keys = setKeys({
 			lang: G.language, keysets: KeySets, key: 'all',
-			filterFunc: (k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
+			filterFunc: filterWordByLength, //(k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
 		});
+		//return;
+		// console.log(G.keys)
 		if (G.keys.length < 25) {
 			G.keys = setKeys({
 				lang: G.language, keysets: KeySets, key: 'all',
-				filterFunc: (k, w) => w.length <= (G.maxWordLength + 1) && w.length >= (G.minWordLength - 1) && !w.includes(' ')
+				filterFunc: filterWordByLength, //(k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
 			});
 		}
-
+		// console.log(G.keys)
 		//console.log('keys', G.keys)
 	}
 	prompt() {
@@ -211,74 +323,11 @@ class GAnagram extends Game {
 		return 10;
 	}
 	eval(w, word) {
-		Selected = { answer: w, reqAnswer: word, feedbackUI: Goal.div }; //this.inputs.map(x => x.div) };
+		Selected = { answer: w, reqAnswer: word, feedbackUI: iDiv(Goal) }; //this.inputs.map(x => x.div) };
 		//console.log(Selected);
 		return w == word;
 	}
 
-}
-class GElim extends Game {
-	constructor(name) { super(name); }
-	startGame() {
-		G.correctionFunc = () => { writeSound(); playSound('incorrect1'); return G.spokenFeedback ? 1800 : 300; };
-		G.successFunc = () => { Goal.pics.map(x => x.div.style.opacity = .3); successPictureGoal(); }
-	}
-	startLevel() {
-		G.keys = G.keys.filter(x => containsColorWord(x));
-	}
-	prompt() {
-		this.piclist = [];
-		let colorKeys = G.numColors > 1 ? choose(G.colors, G.numColors) : null;
-		let showRepeat = G.numRepeat > 1;
-		myShowPics(this.interact.bind(this), { contrast: G.contrast, },
-			{ showRepeat: showRepeat, colorKeys: colorKeys, repeat: G.numRepeat });
-
-		//console.log('G.colors', G.colors, 'colorKeys', colorKeys);
-		let [sSpoken, sWritten, piclist] = logicMulti(Pictures);
-		this.piclist = piclist;
-		Goal = { pics: this.piclist, sammler: [] };
-
-		showInstructionX(sWritten, dTitle, sSpoken, { fz: 22, voice: 'zira' });
-		activateUi();
-	}
-	trialPrompt() {
-		sayTryAgain();
-		let msg = G.language == 'D' ? 'noch einmal!' : 'try again!'
-		showFleetingMessage(msg, 0, { margin: -8, fz: 22 }, true);
-		return 1000;
-	}
-	activate() {
-		for (const p of this.piclist) { if (p.isSelected) toggleSelectionOfPicture(p); }
-		this.piclist = [];
-	}
-	interact(ev) {
-		ev.cancelBubble = true;
-		if (!canAct()) return;
-
-		let pic = findItemFromEvent(Pictures, ev);
-		// let id = evToClosestId(ev);
-		// let pic = firstCond(Pictures, x => x.div.id == id);
-		writeSound(); playSound('hit');
-
-		if (Goal.pics.includes(pic)) {
-			removePicture(pic);
-			//console.log('YES!!!!'); 
-			Goal.sammler.push(pic);
-		}
-
-
-		if (Goal.pics.length == Goal.sammler.length) evaluate(true);
-		else if (!Goal.pics.includes(pic)) { this.lastPic = pic; evaluate(false); }
-		// if (pic.label == Goal.label) evaluate(false);
-		// else { removePicture(pic);maLayout(Pictures,dTable) }
-
-	}
-	eval(isCorrect) {
-		//	console.log('eval', isCorrect);
-		// console.log('piclist', this.piclist)
-		Selected = { piclist: this.piclist, feedbackUI: isCorrect ? Goal.pics.map(x => x.div) : this.lastPic.div };
-		return isCorrect;
-	}
 }
 class GMem extends Game {
 	constructor(name) { super(name); }

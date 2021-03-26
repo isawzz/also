@@ -1270,6 +1270,20 @@ function jsonToYaml(o) {
 
 //#endregion
 
+//#region functions
+function getFunctionCallerName() {
+	// gets the text between whitespace for second part of stacktrace
+	return new Error().stack.match(/at (\S+)/g)[1].slice(3);
+}
+function getFunctionsNameThatCalledThisFunction() {
+	let c1 = getFunctionsNameThatCalledThisFunction.caller;
+	if (nundef(c1)) return 'no caller!';
+	let c2 = c1.caller;
+	if (nundef(c2)) return 'no caller!';
+	return c2.name;
+}
+//#endregion
+
 //#region loading DB, yaml, json, text
 async function dbInit(appName, dir = '../DATA/') {
 	let users = await route_path_yaml_dict(dir + '_users.yaml');
@@ -1827,6 +1841,14 @@ function removeInPlace(arr, el) {
 			return;
 		}
 	}
+}
+function sameList(l1, l2) {
+	// compares 2 lists of strings if have same strings in it
+	if (l1.length != l2.length) return false;
+	for (const s of l1) {
+		if (!l2.includes(s)) return false;
+	}
+	return true;
 }
 function shuffle(arr) { return fisherYates(arr); }
 function shuffleChildren(dParent) {
