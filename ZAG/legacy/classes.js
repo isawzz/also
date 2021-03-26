@@ -823,7 +823,7 @@ class GPremem extends Game {
 		}
 	}
 	eval(piclist) {
-		Selected = { piclist: piclist, feedbackUI: piclist.map(x => x.div), sz: getRect(piclist[0].div).h };
+		Selected = { piclist: piclist, feedbackUI: piclist.map(x => iDiv(x)), sz: getRect(iDiv(piclist[0])).h };
 		let req = Selected.reqAnswer = piclist[0].label;
 		Selected.answer = piclist[piclist.length - 1].label;
 		if (Selected.answer == req) { return true; } else { return false; }
