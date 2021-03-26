@@ -1,4 +1,4 @@
-var pictureSize, TOMain, TOTrial;
+var pictureSize, TOMain, TOTrial;//, TOLong;
 function canAct() {
 	//console.log('uiActivated',uiActivated,'auxOpen',auxOpen)
 	return uiActivated && !auxOpen && document.activeElement.id != 'spUser' && !isVisible('freezer2');
@@ -10,6 +10,7 @@ function stopGame() {
 }
 function startGame() {
 	//console.log('___________startGame_', G);
+	//console.log('TO',TO)
 
 	resetState(); pauseSound();
 
@@ -55,7 +56,7 @@ function startRound() {
 	TOMain = setTimeout(() => prompt(), 300);
 }
 function prompt() {
-	QuestionCounter += 1;
+	QContextCounter += 1;
 	//GroupCounter = 0;
 
 	//console.log('prompt: G.pictureLabels',G.pictureLabels,'labels has been set to',G.showLabels)
@@ -67,7 +68,7 @@ function prompt() {
 	G.instance.prompt();
 }
 function promptNextTrial() {
-	QuestionCounter += 1;
+	QContextCounter += 1;
 	clearTimeout(TOTrial);
 	uiActivated = false;
 	let delay = G.instance.trialPrompt(G.trialNumber);

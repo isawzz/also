@@ -10,7 +10,7 @@ function getOptionsMinimalistic(dParent, handler, w = 0, h = 0, ifs = {}, option
 
 	let defOptions = {
 		isRegular: true, hugeFont: true, szPic: { w: 200, h: 200 }, gap: 15,
-		showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
+		showPic: true, showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
 		w: w, h: h, fz: 24, fzText: 24, fzPic: 96, ifs: ifs, handler: handler, ifs: ifs, handler: handler,
 	};
 	addSimpleProps(g,options);

@@ -774,7 +774,7 @@ function logicMulti(n) {
 		let opp = arrMinus(allPics, pics);
 		if (opp.length <= maxPics) {
 			let lst = ['eliminate', 'all', 'EXCEPT'];
-			if (Settings.language == 'D') lst = lst.map(x => DD[x]);
+			if (G.language == 'D') lst = lst.map(x => DD[x]);
 			let prefix = lst.join(' ');
 			s = prefix + ' ' + s;
 			w = prefix + ' ' + w;
@@ -791,12 +791,12 @@ function logicMulti(n) {
 				s = s1 + ' ' + s;
 				w = w1 + ' ' + w;
 			} else if (arrLast(propsUsed) == 'label') {
-				let conn = Settings.language == 'E' ? ' with ' : ' mit ';
+				let conn = G.language == 'E' ? ' with ' : ' mit ';
 				s1 = s1.substring(s1.indexOf(' '));
 				w1 = w1.substring(w1.indexOf(' '));
 				s = s + conn + s1; w = w + conn + w1;
 			} else {
-				let conn = Settings.language == 'E' ? ' and ' : ' und ';
+				let conn = G.language == 'E' ? ' and ' : ' und ';
 				s1 = s1.substring(s1.indexOf(' '));
 				w1 = w1.substring(w1.indexOf(' '));
 				s = s + conn + s1; w = w + conn + w1;
@@ -809,7 +809,7 @@ function logicMulti(n) {
 	//console.log('fehler!')
 
 	let lst1 = ['eliminate', 'all'];
-	if (Settings.language == 'D') lst1 = lst1.map(x => DD[x]);
+	if (G.language == 'D') lst1 = lst1.map(x => DD[x]);
 	let prefix = lst1.join(' ');
 	s = prefix + ' ' + s;
 	w = prefix + ' ' + w;
@@ -836,11 +836,11 @@ function logicFilter(allPics, exceptProps) {
 
 	lstSpoken = [];
 	if (prop == 'label') {
-		lstSpoken.push(val);// + (Settings.language == 'E' ? 's' : ''));
+		lstSpoken.push(val);// + (G.language == 'E' ? 's' : ''));
 		lstWritten = [labelPrepper(val)];
 		piclist = allPics.filter(x => x.label == val);
 	} else if (prop == 'colorKey') {
-		lstSpoken = lstSpoken.concat(['with', props[prop].friendly, ColorDict[val][Settings.language]]);
+		lstSpoken = lstSpoken.concat(['with', props[prop].friendly, ColorDict[val][G.language]]);
 		lstWritten = ['with', props[prop].friendly, colorPrepper(val)];
 		piclist = allPics.filter(x => x[prop] == val);
 	} else if (prop == 'iRepeat') {
@@ -859,7 +859,7 @@ function logicFilter(allPics, exceptProps) {
 	let s = lstSpoken.join(' ');
 	let w = lstWritten.join(' ');
 	// console.log('w',w)
-	if (Settings.language == 'D') {
+	if (G.language == 'D') {
 		// let x=s.split(' ');
 		// console.log(x)
 		s = s.split(' ').map(x => translateToGerman(x)).join(' ');
@@ -874,7 +874,7 @@ function logicFilter(allPics, exceptProps) {
 
 function colorPrepper(val) {
 
-	return `<span style="color:${ColorDict[val].c}">${ColorDict[val][Settings.language].toUpperCase()}</span>`;
+	return `<span style="color:${ColorDict[val].c}">${ColorDict[val][G.language].toUpperCase()}</span>`;
 }
 function labelPrepper(val) { return `<b>${val.toUpperCase()}</b>`; }
 function logicCheck(pic) {
@@ -890,21 +890,21 @@ function logicReset() {
 function hintEngineStart(hintFunc, hintlist, initialDelay) {
 	//console.log('hint started',G.level,G.showHint)
 	G.hintFunc = hintFunc;
-	recShowHints(hintlist, QuestionCounter, initialDelay, d => initialDelay + 2000); //showNumSeqHint(G.trialNumber);
+	recShowHints(hintlist, QContextCounter, initialDelay, d => initialDelay + 2000); //showNumSeqHint(G.trialNumber);
 
 }
 function getOperationHintString(i) {
 	//return sSpoken,sWritten
 	//console.log('i', i, 'trial#', G.trialNumber);
 	if (i == 0) {
-		let spOp = G.oop.sp; if (Settings.language == 'D') spOp = DD[spOp];
+		let spOp = G.oop.sp; if (G.language == 'D') spOp = DD[spOp];
 		let sSpoken = [G.operand, spOp, G.step].join(' ');
 		let sWritten = visOperation(G.op, G.operand, G.step, null, '?');
 		return [sSpoken, sWritten];
 	} else {
 		let result = G.oop.f(G.operand, G.step);
 		let lstSpoken = i == 1 ? result == 0 ? [result] : ['count', 'the red dots'] : [G.operand, G.oop.sp, G.step, 'equals', result];
-		if (Settings.language == 'D') lstSpoken = lstSpoken.map(x => translateToGerman(x));
+		if (G.language == 'D') lstSpoken = lstSpoken.map(x => translateToGerman(x));
 		let sSpoken = lstSpoken.join(' ');
 		let sWritten = visOperation(G.op, G.operand, G.step, null);
 		return [sSpoken, sWritten];
@@ -941,7 +941,7 @@ function getNumSeqHintString(i) {
 		let iBlank = getNextIndexOfMissingNumber();
 		lstSpoken = ['enter', Goal.words[iBlank].word];
 	}
-	if (Settings.language == 'D') lstSpoken = lstSpoken.map(x => translateToGerman(x));
+	if (G.language == 'D') lstSpoken = lstSpoken.map(x => translateToGerman(x));
 	if (nundef(lstWritten)) lstWritten = lstSpoken;
 	return [lstSpoken.join(' '), lstWritten.join(' ')];
 }
@@ -960,7 +960,7 @@ function getNextIndexOfMissingNumber(iStart = 0) {
 	return null;
 }
 function recShowHints(ilist, rc, delay = 3000, fProgression = d => d * 1.5) {
-	if (isEmpty(ilist) || QuestionCounter != rc) return;
+	if (isEmpty(ilist) || QContextCounter != rc) return;
 	let i = ilist.shift();
 	// console.log('enlisting hint',i,ilist);
 	TOTrial = setTimeout(() => recShowHintsNext(i, ilist, rc, fProgression(delay), fProgression), delay);
@@ -974,7 +974,7 @@ function showSayHint(i) {
 function recShowHintsNext(i, ilist, rc, delay, fProgression) {
 	//console.log('showing hint #', i, 'trial#', G.trialNumber);
 	showSayHint(i);
-	if (QuestionCounter == rc) recShowHints(ilist, rc, delay, fProgression);
+	if (QContextCounter == rc) recShowHints(ilist, rc, delay, fProgression);
 	//if (i==0){setTimeout(()=>showNumSeqHint(10),6000);}
 }
 function correctBlanks() {
@@ -1038,8 +1038,12 @@ function showMouse() {
 }
 
 function turnCardsAfter(secs, removeBg = false) {
+	let qc = QContextCounter;
+	//console.log('hallo turnCardsAfter',secs)
 	for (const p of Pictures) { slowlyTurnFaceDown(p, secs - 1, removeBg); }
 	TOMain = setTimeout(() => {
+		//console.log('timeout fuer instruction show abgelaufen!!!',QContextCounter,qc);
+		//if (qc!=QContextCounter) return;
 		showInstruction(Goal.label, 'click', dTitle, true);
 		showMouse();
 		activateUi();
@@ -1069,7 +1073,7 @@ function slowlyTurnFaceDown(pic, secs = 5, removeBg = false) {
 //#region fail, hint, success
 function successThumbsUp(withComment = true) {
 	if (withComment && G.spokenFeedback) {
-		const comments = (Settings.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
+		const comments = (G.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
 		sayRandomVoice(chooseRandom(comments));
 	}
 	//console.log(Pictures)
@@ -1080,7 +1084,7 @@ function successThumbsUp(withComment = true) {
 }
 function failThumbsDown(withComment = false) {
 	if (withComment && G.spokenFeedback) {
-		const comments = (Settings.language == 'E' ? ['too bad'] : ["aber geh'"]);
+		const comments = (G.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
 	}
 	let p1 = firstCond(Pictures, x => x.key == 'thumbs down');
@@ -1093,7 +1097,7 @@ function successPictureGoal(withComment = true) {
 	//console.log(Selected)
 
 	if (withComment && G.spokenFeedback) {
-		const comments = (Settings.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
+		const comments = (G.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
 		sayRandomVoice(chooseRandom(comments));
 	}
 	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
@@ -1103,7 +1107,7 @@ function successPictureGoal(withComment = true) {
 		let sz = getRect(uilist[0]).h;
 		//console.log('in der succesfunc!!!!!!!', uilist)
 		for (const ui of uilist) {
-			let d=markerSuccess();
+			let d = markerSuccess();
 			//console.log('sz',sz,'ui',ui,'\nmarker',d);
 			mpOver(d, ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
 		}
@@ -1111,7 +1115,7 @@ function successPictureGoal(withComment = true) {
 }
 function failPictureGoal(withComment = false) {
 	if (withComment && G.spokenFeedback) {
-		const comments = (Settings.language == 'E' ? ['too bad'] : ["aber geh'"]);
+		const comments = (G.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
 	}
 	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
@@ -1122,7 +1126,7 @@ function failPictureGoal(withComment = false) {
 }
 function failSomePictures(withComment = false) {
 	if (withComment && G.spokenFeedback) {
-		const comments = (Settings.language == 'E' ? ['too bad'] : ["aber geh'"]);
+		const comments = (G.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
 	}
 	for (const p of Pictures) {
@@ -1173,7 +1177,7 @@ function showCorrectWords(sayit = true) {
 		TOList.correctWords.push(setTimeout(() => {
 			let div = mBy(goal.id);
 			mClass(div, anim);
-			if (speaking) sayRandomVoice((Settings.language == 'E' ? 'the ' : ' ') + goal.correctionPhrase);
+			if (speaking) sayRandomVoice((G.language == 'E' ? 'the ' : ' ') + goal.correctionPhrase);
 		}, to));
 		to += ms;
 	}
@@ -1244,7 +1248,7 @@ function fleetingMessage(msg, styles, fade = false) {
 function writeSound() { return; console.log('calling playSound'); }
 function gameOver(msg, silent = false) { TOMain = setTimeout(aniGameOver(msg, silent), DELAY); }
 function aniGameOver(msg, silent = false) {
-	if (!silent && !Settings.silentMode) { writeSound(); playSound('goodBye'); }
+	if (!silent && !G.silentMode) { writeSound(); playSound('goodBye'); }
 	enterInterruptState();
 	show('freezer2');
 
@@ -1275,6 +1279,21 @@ function aniGameOver(msg, silent = false) {
 //#endregion game over
 
 //#region card face up or down
+function toggleFaceSimple(pic) { if (pic.isFaceUp) turnFaceDownSimple(pic); else turnFaceUpSimple(pic); }
+function turnFaceDownSimple(pic) {
+	let ui = iDiv(pic);
+	ui.style.transition = null;
+	mRemoveClass(ui, 'frameOnHover');
+	for (const ch of ui.children) { ch.style.transition = null; ch.style.opacity = 0; }
+	pic.isFaceUp = false;
+}
+function turnFaceUpSimple(pic) {
+	let ui = iDiv(pic);
+	mRemoveClass(ui, 'frameOnHover');
+	ui.style.transition = null;
+	for (const ch of ui.children) { ch.style.transition = null; ch.style.opacity = 1; }
+	pic.isFaceUp = true;
+}
 function turnFaceDown(pic) {
 	let ui = iDiv(pic);
 	for (const p1 of ui.children) p1.style.opacity = 0; //hide(p1);
@@ -1282,10 +1301,10 @@ function turnFaceDown(pic) {
 	pic.isFaceUp = false;
 
 }
-function turnFaceUp(pic) {
+function turnFaceUp(pic, secTransition = 1) {
 	let div = iDiv(pic);
 	for (const ch of div.children) {
-		ch.style.transition = `opacity ${1}s ease-in-out`;
+		ch.style.transition = `opacity ${secTransition}s ease-in-out`;
 		ch.style.opacity = 1; //show(ch,true);
 		//if (!pic.isLabelVisible) break;
 	}
@@ -1350,23 +1369,6 @@ function getActualText(item) {
 	//if (isdef(item.pic)){return iDiv(item).children[1].innerHTML;} else {return iDiv(item).children[0].innerHTML;}
 }
 function getRandomKeysFromGKeys(n) { return getRandomKeys(n, G.keys); }
-function getGameValues(user, game, level) {
-	//console.log(user,game,level)
-	let di = { numColors: 1, numRepeat: 1, numPics: 1, numSteps: 1, trials: Settings.trials, colors: ColorList }; // general defaults
-	let oGame = lookup(DB.games, [game]);
-	if (isDict(oGame)) {
-		di = mergeOverride(di, oGame); //das ist die entry in settings.yaml
-		let levelInfo = lookup(di, ['levels', level]); //das sind specific values for this level
-		if (isdef(levelInfo)) { di = mergeOverride(di, levelInfo); }
-	}
-	if (nundef(di.numLabels)) di.numLabels = di.numPics * di.numRepeat * di.numColors;
-	delete di.levels;
-	delete di.color;
-	copyKeys(di, G);
-	//console.log('di', di, '\nlevelInfo', levelInfo, '\nG', G);
-	//console.log(di,G)
-
-}
 function getGameOrLevelInfo(k, defval) {
 	let val = lookup(DB.games, [G.id, 'levels', G.level, k]);
 	if (!val) val = lookupSet(DB.games, [G.id, k], defval);
@@ -1381,10 +1383,10 @@ function getDistinctVals(list, prop) {
 	return res;
 }
 function getGlobalColors() { return Object.keys(ColorDict).map(x => x.E); }
-function getOrdinal(i) { return G.numRepeat == 1 ? '' : Settings.language == 'E' ? ordinal_suffix_of(i) : '' + i + '. '; }
+function getOrdinal(i) { return G.numRepeat == 1 ? '' : G.language == 'E' ? ordinal_suffix_of(i) : '' + i + '. '; }
 function getColorLabelInstruction(cmd, color, label) {
 	if (nundef(color)) color = Goal.color;
-	let colorWord = color[Settings.language];
+	let colorWord = color[G.language];
 	let colorSpan = `<span style='color:${color.c}'>${colorWord.toUpperCase()}</span>`;
 	if (nundef(label)) label = Goal.label;
 	let labelSpan = `<b>${label.toUpperCase()}</b>`;
@@ -1395,7 +1397,7 @@ function getColorLabelInstruction(cmd, color, label) {
 	}
 	let eInstr = `${eCommand} ${colorWord} ${label}`;
 	let dInstr = `${dCommand} ${label} in ${colorWord}`;
-	let spoken = Settings.language == 'E' ? eInstr : dInstr;
+	let spoken = G.language == 'E' ? eInstr : dInstr;
 	let written = spoken.replace(colorWord, colorSpan).replace(label, labelSpan);
 	console.log('spoken', spoken, 'written', written);
 	return [written, spoken];
@@ -1406,8 +1408,8 @@ function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
 
 	let colorWord = '', colorSpan = '';
 	if (isdef(color)) {
-		colorWord = isdef(color) ? color[Settings.language] : '';
-		if (Settings.language == 'D' && !isEmpty(ordinal) && !['lila', 'rosa'].includes(colorWord)) colorWord += 'e';
+		colorWord = isdef(color) ? color[G.language] : '';
+		if (G.language == 'D' && !isEmpty(ordinal) && !['lila', 'rosa'].includes(colorWord)) colorWord += 'e';
 		colorSpan = `<span style='color:${color.c}'>${colorWord.toUpperCase()}</span>`;
 	}
 
@@ -1424,8 +1426,8 @@ function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
 	let ecorr = `${ordinal} ${colorWord} ${label}`
 	let dcorr = ordinal == '' ? `${label} ${colorWord == '' ? '' : 'in ' + colorWord}`
 		: `${ordinal} ${colorWord} ${label}`;
-	let corr = Settings.language == 'E' ? ecorr : dcorr;
-	let spoken = Settings.language == 'E' ? eInstr : dInstr;
+	let corr = G.language == 'E' ? ecorr : dcorr;
+	let spoken = G.language == 'E' ? eInstr : dInstr;
 	let written = spoken.replace(colorWord, colorSpan).replace(label, labelSpan);
 	//console.log('spoken', spoken, 'written', written);
 	return [written, spoken, corr];
@@ -1468,8 +1470,8 @@ function sayRandomVoice(e, g, voice = 'random') {
 	if (arguments.length == 1) voice = 'random';
 
 	let [r, p, v] = [.8, .9, 1];
-	//let voice = Settings.language == 'E' && (e.includes('<') || (e.includes('>')) ?'zira':'random';
-	if (!Settings.silentMode) Speech.say(Settings.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
+	//let voice = G.language == 'E' && (e.includes('<') || (e.includes('>')) ?'zira':'random';
+	if (!G.silentMode) Speech.say(G.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
 }
 function sayTryAgain() { sayRandomVoice('try again!', 'nochmal'); }
 function setBackgroundColor() { document.body.style.backgroundColor = G.color; }
@@ -1492,9 +1494,9 @@ function setMultiGoal(n, indices) {
 }
 function showHiddenThumbsUpDown(styles) {
 	styles.bg = ['transparent', 'transparent'];
-	Pictures = myShowPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']); 
+	Pictures = myShowPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']);
 	// Pictures = showPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']); //, ['bravo!', 'nope']);
-	for (const p of Pictures) { let d=iDiv(p); d.style.padding = d.style.margin = '6px 0px 0px 0px'; d.style.opacity = 0; }
+	for (const p of Pictures) { let d = iDiv(p); d.style.padding = d.style.margin = '6px 0px 0px 0px'; d.style.opacity = 0; }
 
 }
 function showInstruction(text, cmd, title, isSpoken, spoken, fz) {
@@ -1555,7 +1557,7 @@ function showScore() {
 	//console.log('===>_showScore!!! level:', G.level);
 	if (Score.gameChange) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
 
-	let scoreString = 'question: ' + (Score.nTotal + 1) + '/' + Settings.samplesPerGame;
+	let scoreString = 'question: ' + (Score.nTotal + 1) + '/' + G.samplesPerGame;
 
 	if (Score.levelChange) {
 		dScore.innerHTML = scoreString;

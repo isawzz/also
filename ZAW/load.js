@@ -54,7 +54,7 @@ async function _start0() {
 	DA={};Items={};
 	Speech = new SpeechAPI('E');
 	KeySets = getKeySets();
-	TO=new TimeoutManager();
+	TOMan=new TimeoutManager();
 
 	_start();
 

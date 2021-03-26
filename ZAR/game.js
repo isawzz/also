@@ -1,4 +1,4 @@
-var TOList, TOMain, TOTrial;
+//var TOList, TOMain, TOTrial;
 function clearTimeouts() {
 	clearTimeout(TOMain);
 	clearTimeout(TOFleetingMessage);
@@ -970,7 +970,7 @@ function logicReset() {
 //#region number sequence hints
 function hintEngineStart(hintFunc, hintlist, initialDelay) {
 	G.hintFunc = hintFunc;
-	recShowHints(hintlist, QuestionCounter, initialDelay, d => initialDelay + 2000); //showNumSeqHint(G.trialNumber);
+	recShowHints(hintlist, QContextCounter, initialDelay, d => initialDelay + 2000); //showNumSeqHint(G.trialNumber);
 
 }
 function getOperationHintString(i) {
@@ -1040,7 +1040,7 @@ function getNextIndexOfMissingNumber(iStart = 0) {
 	return null;
 }
 function recShowHints(ilist, rc, delay = 3000, fProgression = d => d * 1.5) {
-	if (isEmpty(ilist) || QuestionCounter != rc) return;
+	if (isEmpty(ilist) || QContextCounter != rc) return;
 	let i = ilist.shift();
 	// console.log('enlisting hint',i,ilist);
 	TOTrial = setTimeout(() => recShowHintsNext(i, ilist, rc, fProgression(delay), fProgression), delay);
@@ -1053,7 +1053,7 @@ function showSayHint(i) {
 function recShowHintsNext(i, ilist, rc, delay, fProgression) {
 	//console.log('showing hint #', i, 'trial#', G.trialNumber);
 	showSayHint(i);
-	if (QuestionCounter == rc) recShowHints(ilist, rc, delay, fProgression);
+	if (QContextCounter == rc) recShowHints(ilist, rc, delay, fProgression);
 	//if (i==0){setTimeout(()=>showNumSeqHint(10),6000);}
 }
 function correctBlanks() {

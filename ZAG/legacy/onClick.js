@@ -1,5 +1,6 @@
 function clearTimeouts() {
-	clearTimeout(TOMain);
+	clearTimeout(TOMain); //console.log('TOMain cleared')
+	//clearTimeout(TOLong); console.log('TOLong cleared')
 	clearTimeout(TOFleetingMessage);
 	clearTimeout(TOTrial);
 	if (isdef(TOList)) { for (const k in TOList) { TOList[k].map(x => clearTimeout(x)); } }
@@ -122,7 +123,7 @@ function onClickStopButton(b) { b.innerHTML = 'Run'; mStyleX(bRunStop, { bg: 'gr
 //#region freezers
 function onClickFreezer() { console.log('YEP! onClickFreezer!!!!!!!'); hide('freezer'); startUnit(); }
 function onClickFreezer2(ev) {
-	//if (Settings.flags.pressControlToUnfreeze && !ev.ctrlKey) { console.log('*** press control!!!!'); return; }
+	//if (G.flags.pressControlToUnfreeze && !ev.ctrlKey) { console.log('*** press control!!!!'); return; }
 	clearTable(); mRemoveClass(mBy('freezer2'), 'aniSlowlyAppear'); hide('freezer2'); auxOpen = false;
 	//if (Username == 'test') _changeUserTo();
 	//else _startUnit();

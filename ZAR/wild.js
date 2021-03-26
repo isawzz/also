@@ -23,6 +23,7 @@ function temple(dParent) {
 
 }
 function menu(dParent, list, handler) {
+	//console.log('hallo menu!')
 	show(dParent);
 	clearElement(dParent);
 	mCenterFlex(dParent);

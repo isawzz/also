@@ -80,6 +80,7 @@ function mLine3(dParent, index, ids, styles) {
 	mInsert(dParent, x, index);
 	return [mBy(ids[0]), mBy(ids[1]), mBy(ids[2])];
 }
+function mParent(elem) { return elem.parentNode; }
 function mRemove(elem) { mDestroy(elem); }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
 function mRemoveStyle(d, styles) { for (const k of styles) d.style[k] = null; }
@@ -1652,6 +1653,13 @@ function firstNCond(n, arr, func) {
 	}
 	return result;
 }
+function getIndicesCondi(arr, func) {
+	let res = [];
+	for (let i = 0; i < arr.length; i++) {
+		if (func(arr[i], i)) res.push(i);
+	}
+	return res;
+}
 function getObjectsWithSame(olist, props, o, up = true, breakWhenDifferent = true) {
 	let res = [];
 	let val = lookup(o, props);
@@ -1873,6 +1881,10 @@ function sortByFunc(arr, func) {
 function sortByFuncDescending(arr, func) {
 	arr.sort((a, b) => (func(a) > func(b) ? -1 : 1));
 }
+function sortNumbers(ilist) {
+	ilist.sort(function (a, b) { return a - b });
+	return ilist;
+}
 
 function takeFromStart(ad, n) {
 	if (isDict(ad)) {
@@ -2072,6 +2084,18 @@ function clearElement(elem) {
 	}
 	return elem;
 }
+function convertUmlaute(w) {
+	//ue ü, ae ä, oe ö
+
+	w = replaceAll(w, 'ue', 'ü');
+	w = replaceAll(w, 'ae', 'ä');
+	w = replaceAll(w, 'oe', 'ö');
+	w = replaceAll(w, 'UE', 'Ü');
+	w = replaceAll(w, 'AE', 'Ä');
+	w = replaceAll(w, 'OE', 'Ö');
+	w = replaceAll(w, 'ß', 'ss');
+	return w;
+}
 function createElementFromHTML(htmlString) {
 	//console.log('---------------',htmlString)
 	var div = document.createElement('div');
@@ -2174,6 +2198,10 @@ function isVisible(elem) { // Where el is the DOM element you'd like to test for
 	return (elem.style.display != 'none' || elem.offsetParent !== null);
 }
 function isWhiteSpace(ch) { return /\s/.test(ch) }
+function isWhiteSpace2(ch) {
+	const alphanum = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+	return !alphanum.includes(ch);
+}
 function isOverflown(element) {
 	return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
@@ -2186,6 +2214,14 @@ function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
 	if (nundef(nOrString)) return defaultVal;
 	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
 	return nOrString;
+}
+function normalize(text, language) {
+	if (isEmpty(text)) return '';
+	text = text.toLowerCase().trim();
+	if (language == 'D') {
+		text = convertUmlaute(text);
+	}
+	return text;
 }
 function nundef(x) { return x === null || x === undefined; }
 function purge(elem) {

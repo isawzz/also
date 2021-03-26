@@ -1,3 +1,61 @@
+function getGameValues(user, game, level) {
+	//console.log(user,game,level)
+	let di = { numColors: 1, numRepeat: 1, numPics: 1, numSteps: 1, trials: G.trials, colors: ColorList }; // general defaults
+	let oGame = lookup(DB.games, [game]);
+	if (isDict(oGame)) {
+		di = mergeOverride(di, oGame); //das ist die entry in settings.yaml
+		let levelInfo = lookup(di, ['levels', level]); //das sind specific values for this level
+		if (isdef(levelInfo)) { di = mergeOverride(di, levelInfo); }
+	}
+	if (nundef(di.numLabels)) di.numLabels = di.numPics * di.numRepeat * di.numColors;
+	delete di.levels;
+	delete di.color;
+	copyKeys(di, G);
+	//console.log('di', di, '\nlevelInfo', levelInfo, '\nG', G);
+	//console.log(di,G)
+
+}
+function makeItemDiv_Copy(item, options) {
+
+	//console.log('item',item,'options',options)
+
+	if (isdef(options.outerStyles) && isdef(options.ifs)) copyKeys(item, options.outerStyles, {}, Object.keys(options.ifs)); //options.ifs contains per item dynamic styles!!!!!
+	//console.log('item.id',item.id,item)
+	let dOuter = mCreate('div', options.outerStyles, item.id);
+
+	if (isdef(item.textShadowColor)) {
+		let sShade = '0 0 0 ' + item.textShadowColor;
+		if (options.showPic) {
+			options.picStyles['text-shadow'] = sShade;
+			options.picStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+		} else {
+			options.labelStyles['text-shadow'] = sShade;
+			options.labelStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+		}
+	}
+
+	let dLabel;
+	if (options.showLabels && options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+	let dPic;
+	if (options.showPic) {
+		dPic = mDiv(dOuter, { family: item.info.family });
+		dPic.innerHTML = item.info.text;
+		if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
+	}
+
+	if (options.showLabels && options.labelBottom == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+	if (isdef(options.handler)) dOuter.onclick = options.handler;
+
+	iAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
+
+	if (isdef(item.textShadowColor)) { applyColorkey(item, options); } //brauch ich garnicht?!?!?!?!?
+	return dOuter;
+
+}
+
+
 //#region refactor settings
 function initSettings(game) {
 	Settings = mergeOverride(DB.settings, U.settings);

@@ -136,8 +136,8 @@ test0:
       startLevel: 0
 gul:
   id: gul
-  avGames: [gCats, gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gElim
+  avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
+  lastGame: gMissingLetter
   settings:
     # settings common to all games
     samplesPerGame: 25
@@ -169,9 +169,8 @@ gul:
       startLevel: 0
     gMem:
       startLevel: 1
-      settings:
-        showHint: false
-        trials: 1
+      showHint: false
+      trials: 1
     gMissingNumber: 
       startLevel: 2
     gWritePic: 

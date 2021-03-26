@@ -1,6 +1,6 @@
 function interrupt(){
 	uiActivated = false;
-	TO.clear();
+	TOMan.clear();
 }
 
 function onClickTemple(){

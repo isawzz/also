@@ -1,24 +1,152 @@
-gTouchPic:
-  friendly: 'Pictures!'
-  logo: 'computer mouse'
-  color: deepskyblue
-  showLabels: true
+gAbacus:
+  friendly: 'Abacus'
+  logo: 'abacus'
+  color: mediumslateblue
   type: solitaire
+  numMissing: 1
+  minNum: 0
+  maxNum: 10
+  minFactor: 2
+  maxFactor: 3
+  posMissing: end
+  ops: [plus,minus,mult]
+  levels:
+    0:
+      ops: [plus,minus,mult]
+    1:
+      minNum: 2
+      maxNum: 5
+      minFactor: 2
+      maxFactor: 10
+      ops: [mult]
+    2:
+      minNum: 4
+      maxNum: 10
+      minFactor: 4
+      maxFactor: 10
+      ops: [mult]
+    3:
+      minNum: 20
+      maxNum: 99
+      maxFactor: 10
+      ops: [plus,minus]
+    4:
+      minNum: 5
+      maxNum: 10
+      ops: [mult]
+    5:
+      minNum: 50
+      maxNum: 100
+      minFactor: 1
+      maxFactor: 10
+      ops: [minus]
+    6:
+      minNum: 50
+      maxNum: 200
+      minFactor: 4
+      maxFactor: 20
+      ops: [minus,plus]
+    7:
+      minNum: 0
+      maxNum: 100
+      minFactor: 2
+      maxFactor: 10
+      ops: [plus,minus,mult]
+gAnagram:
+  friendly: 'Anagram!'
+  logo: 'ram'
+  color: rgb(0,152,105)
+  type: solitaire
+  minWordLength: 3
+  maxWordLength: 8
+  showLabel: true
+  levels:
+    0:
+      maxWordLength: 3
+    1:
+      minWordLength: 3
+      maxWordLength: 4
+    2:
+      minWordLength: 4
+      maxWordLength: 5
+    3:
+      minWordLength: 5
+      maxWordLength: 6
+    4:
+      minWordLength: 6
+      maxWordLength: 7
+    5:
+      minWordLength: 7
+      maxWordLength: 8
+    6:
+      minWordLength: 7
+      maxWordLength: 8
+      showLabel: false
+gElim:
+  friendly: 'Elim!'
+  logo: 'collision'
+  color: CRIMSON
+  type: solitaire
+  contrast: 0.22
+  colors: [blue, violet, lightgreen, pink, red, yellow]
+  levels:
+    0: 
+      numPics: 3
+      numColors: 3
+      numRepeat: 1
+    1: 
+      numPics: 3
+      numColors: 1
+      numRepeat: 3
+    2: 
+      numPics: 2
+      numColors: 2
+      numRepeat: 2
+    3: 
+      numPics: 3
+      numColors: 4
+      numRepeat: 2
+    4: 
+      pictureLabels: false
+      numPics: 3
+      numColors: 4
+      numRepeat: 3
+gMem:
+  friendly: 'Memory!'
+  logo: 'memory'
+  color: GREEN
+  type: solitaire
+  showLabels: true
+  showHint: false
   levels:
     0: 
       numPics: 2
+      numRepeat: 1
     1: 
       numPics: 4
+      numRepeat: 1
     2: 
       numPics: 9
+      numRepeat: 1
     3: 
-      numPics: 15
+      numPics: 2
+      numRepeat: 1
     4: 
-      numPics: 24
+      numPics: 3
+      numRepeat: 1
     5: 
-      numPics: 35
+      numPics: 4
+      numRepeat: 1
     6: 
-      numPics: 35
+      numPics: 6
+      numRepeat: 1
+    7: 
+      numPics: 6
+      numRepeat: 1
+      showLabels: false
+    8: 
+      numPics: 9
+      numRepeat: 1
       showLabels: false
 gMissingLetter:
   friendly: 'Letters!'
@@ -91,6 +219,125 @@ gMissingNumber:
       maxNum: 100
       steps: [3,4,5,6,7,8,9,10]
       ops: [plus,minus]
+gNamit:
+  friendly: 'Name it!'
+  logo: 'bee'
+  color: rgb(152,0,105)
+  type: solitaire
+  levels:
+    0: 
+      numPics: 2
+    1: 
+      numPics: 3
+    2: 
+      numPics: 4
+    3: 
+      numPics: 5
+    4: 
+      numPics: 6
+gPremem:
+  friendly: 'Premem!'
+  logo: 'hammer and wrench'
+  color: RED
+  type: solitaire
+  trials: 1
+  sameBackground: true
+  showLabels: true
+  levels:
+    0: 
+      numPics: 2
+      numRepeat: 2
+    1: 
+      numPics: 3
+      numRepeat: 3
+    2: 
+      numPics: 6
+      numRepeat: 2
+    3: 
+      numPics: 8
+      numRepeat: 2
+    4: 
+      numPics: 12
+      numRepeat: 2
+    5: 
+      numPics: 14
+      numRepeat: 2
+      showLabels: false
+    6: 
+      numPics: 14
+      numRepeat: 2
+      showLabels: false
+      sameBackground: false
+    7: 
+      numPics: 12
+      numRepeat: 4
+      showLabels: false
+      sameBackground: false
+gTouchColors:
+  friendly: 'Colors!'
+  logo: 'artist palette'
+  color: LIGHTGREEN
+  type: solitaire
+  contrast: 0.32
+  showLabels: true
+  shuffle: false
+  colors:
+    - red
+    - blue
+    - yellow
+    - green
+  levels:
+    0: 
+      numPics: 2
+      numColors: 2
+    1: 
+      numPics: 3
+      numColors: 3
+    2: 
+      numPics: 4
+      numColors: 3
+    3: 
+      numPics: 4
+      numColors: 4
+    4: 
+      numPics: 5
+      numColors: 4
+    5: 
+      numPics: 5
+      numColors: 4
+      showLabels: false
+    6: 
+      shuffle: true
+      numPics: 5
+      numColors: 4
+      showLabels: false
+gTouchPic:
+  friendly: 'Pictures!'
+  logo: 'computer mouse'
+  color: deepskyblue
+  showLabels: true
+  type: solitaire
+  levels:
+    0: 
+      numPics: 2
+    1: 
+      numPics: 4
+    2: 
+      numPics: 9
+    3: 
+      numPics: 15
+    4: 
+      numPics: 24
+    5: 
+      numPics: 35
+    6: 
+      numPics: 35
+      showLabels: false
+gSayPic:
+  friendly: 'Speak up!'
+  logo: 'microphone'
+  color: BLUE
+  type: solitaire
 gSteps:
   friendly: 'Steps!'
   logo: 'stairs'
@@ -139,191 +386,6 @@ gSteps:
       numColors: 4
       numRepeat: 3
       numSteps: 3
-gSet:
-  friendly: 'Set!'
-  logo: 'stairs'
-  color: PURPLE
-  type: solitaire
-  contrast: 0.22
-  colors: [blue, violet, lightgreen, pink, red, yellow]
-  levels:
-    0: 
-      numPics: 3
-      numColors: 4
-      numRepeat: 2
-      numSteps: 2
-    1: 
-      numPics: 4
-      numColors: 1
-      numRepeat: 4
-      numSteps: 2
-    2: 
-      numPics: 2
-      numColors: 4
-      numRepeat: 3
-      numSteps: 2
-gElim:
-  friendly: 'Elim!'
-  logo: 'collision'
-  color: CRIMSON
-  type: solitaire
-  contrast: 0.22
-  colors: [blue, violet, lightgreen, pink, red, yellow]
-  levels:
-    0: 
-      numPics: 3
-      numColors: 3
-      numRepeat: 1
-    1: 
-      numPics: 3
-      numColors: 1
-      numRepeat: 3
-    2: 
-      numPics: 2
-      numColors: 2
-      numRepeat: 2
-    3: 
-      numPics: 3
-      numColors: 4
-      numRepeat: 2
-    4: 
-      numPics: 3
-      numColors: 4
-      numRepeat: 3
-gTouchColors:
-  friendly: 'Colors!'
-  logo: 'artist palette'
-  color: LIGHTGREEN
-  type: solitaire
-  contrast: 0.32
-  showLabels: true
-  shuffle: false
-  colors:
-    - red
-    - blue
-    - yellow
-    - green
-  levels:
-    0: 
-      numPics: 2
-      numColors: 2
-    1: 
-      numPics: 3
-      numColors: 3
-    2: 
-      numPics: 4
-      numColors: 3
-    3: 
-      numPics: 4
-      numColors: 4
-    4: 
-      numPics: 5
-      numColors: 4
-    5: 
-      numPics: 5
-      numColors: 4
-      showLabels: false
-    6: 
-      shuffle: true
-      numPics: 5
-      numColors: 4
-      showLabels: false
-gPremem:
-  friendly: 'Premem!'
-  logo: 'hammer and wrench'
-  color: RED
-  type: solitaire
-  trials: 1
-  sameBackground: true
-  showLabels: true
-  levels:
-    0: 
-      numPics: 2
-      numRepeat: 2
-    1: 
-      numPics: 3
-      numRepeat: 3
-    2: 
-      numPics: 6
-      numRepeat: 2
-    3: 
-      numPics: 8
-      numRepeat: 2
-    4: 
-      numPics: 12
-      numRepeat: 2
-    5: 
-      numPics: 14
-      numRepeat: 2
-      showLabels: false
-    6: 
-      numPics: 14
-      numRepeat: 2
-      showLabels: false
-      sameBackground: false
-    7: 
-      numPics: 12
-      numRepeat: 4
-      showLabels: false
-      sameBackground: false
-gMem:
-  friendly: 'Memory!'
-  logo: 'memory'
-  color: GREEN
-  type: solitaire
-  showLabels: true
-  levels:
-    0: 
-      numPics: 2
-      numRepeat: 1
-    1: 
-      numPics: 4
-      numRepeat: 1
-    2: 
-      numPics: 9
-      numRepeat: 1
-    3: 
-      numPics: 2
-      numRepeat: 1
-    4: 
-      numPics: 3
-      numRepeat: 1
-    5: 
-      numPics: 4
-      numRepeat: 1
-    6: 
-      numPics: 6
-      numRepeat: 1
-    7: 
-      numPics: 6
-      numRepeat: 1
-      showLabels: false
-    8: 
-      numPics: 9
-      numRepeat: 1
-      showLabels: false
-gSayPic:
-  friendly: 'Speak up!'
-  logo: 'microphone'
-  color: BLUE
-  type: solitaire
-gInno:
-  friendly: 'Innovate!'
-  logo: 'horse'
-  color: silver
-  levels:
-    0:
-      maxWordLength: 3
-    1:
-      maxWordLength: 4
-    2:
-      maxWordLength: 5
-    3:
-      maxWordLength: 6
-    4:
-      maxWordLength: 7
-    5:
-      maxWordLength: 8
 gWritePic:
   friendly: 'Type it!'
   logo: 'keyboard'
@@ -360,6 +422,48 @@ gWritePic:
       showLabels: false
       instruction: noGoal
       trials: 3
+#bis hier sind echte solitaires!
+gSet:
+  friendly: 'Set!'
+  logo: 'stairs'
+  color: PURPLE
+  type: solitaire
+  contrast: 0.22
+  colors: [blue, violet, lightgreen, pink, red, yellow]
+  levels:
+    0: 
+      numPics: 3
+      numColors: 4
+      numRepeat: 2
+      numSteps: 2
+    1: 
+      numPics: 4
+      numColors: 1
+      numRepeat: 4
+      numSteps: 2
+    2: 
+      numPics: 2
+      numColors: 4
+      numRepeat: 3
+      numSteps: 2
+#bis hier sind echte solitaires!
+gInno:
+  friendly: 'Innovate!'
+  logo: 'horse'
+  color: silver
+  levels:
+    0:
+      maxWordLength: 3
+    1:
+      maxWordLength: 4
+    2:
+      maxWordLength: 5
+    3:
+      maxWordLength: 6
+    4:
+      maxWordLength: 7
+    5:
+      maxWordLength: 8
 gReverse:
   friendly: 'Reverse!'
   logo: 'keyboard'
@@ -396,90 +500,6 @@ gReverse:
       showLabels: false
       instruction: noGoal
       trials: 3
-gAnagram:
-  friendly: 'Anagram!'
-  logo: 'ram'
-  color: rgb(0,152,105)
-  type: solitaire
-  minWordLength: 3
-  maxWordLength: 8
-  showLabel: true
-  levels:
-    0:
-      maxWordLength: 3
-    1:
-      minWordLength: 3
-      maxWordLength: 4
-    2:
-      minWordLength: 4
-      maxWordLength: 5
-    3:
-      minWordLength: 5
-      maxWordLength: 6
-    4:
-      minWordLength: 6
-      maxWordLength: 7
-    5:
-      minWordLength: 7
-      maxWordLength: 8
-    6:
-      minWordLength: 7
-      maxWordLength: 8
-      showLabel: false
-gAbacus:
-  friendly: 'Abacus'
-  logo: 'abacus'
-  color: mediumslateblue
-  type: solitaire
-  numMissing: 1
-  minNum: 0
-  maxNum: 10
-  minFactor: 2
-  maxFactor: 3
-  posMissing: end
-  ops: [plus,minus,mult]
-  levels:
-    0:
-      ops: [plus,minus,mult]
-    1:
-      minNum: 2
-      maxNum: 5
-      minFactor: 2
-      maxFactor: 10
-      ops: [mult]
-    2:
-      minNum: 4
-      maxNum: 10
-      minFactor: 4
-      maxFactor: 10
-      ops: [mult]
-    3:
-      minNum: 20
-      maxNum: 99
-      maxFactor: 10
-      ops: [plus,minus]
-    4:
-      minNum: 5
-      maxNum: 10
-      ops: [mult]
-    5:
-      minNum: 50
-      maxNum: 100
-      minFactor: 1
-      maxFactor: 10
-      ops: [minus]
-    6:
-      minNum: 50
-      maxNum: 200
-      minFactor: 4
-      maxFactor: 20
-      ops: [minus,plus]
-    7:
-      minNum: 0
-      maxNum: 100
-      minFactor: 2
-      maxFactor: 10
-      ops: [plus,minus,mult]
 gPasscode:
   friendly: 'Passcode!'
   logo: 'lock'
@@ -504,22 +524,6 @@ gPasscode:
     5: 
       passcodeLength: 2
       numPics: 15
-gNamit:
-  friendly: 'Name it!'
-  logo: 'bee'
-  color: rgb(152,0,105)
-  type: solitaire
-  levels:
-    0: 
-      numPics: 2
-    1: 
-      numPics: 3
-    2: 
-      numPics: 4
-    3: 
-      numPics: 5
-    4: 
-      numPics: 6
 gStory:
   friendly: 'Story'
   logo: 'blue book'

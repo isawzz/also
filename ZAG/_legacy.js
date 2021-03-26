@@ -407,8 +407,8 @@ function getGameValues() {
 	if (isdef(U.settings)) settings = mergeOverride(settings, U.settings);
 	if (isdef(DB.games[game])) settings = mergeOverride(settings, DB.games[game]);
 	let next = lookup(DB.games, [game, 'levels', level]); if (next) settings = mergeOverride(settings, next);
-	next = lookup(U, ['gameSettings', game]); if (next) settings = mergeOverride(settings, next);
-	next = lookup(U, ['gameSettings', game, 'levels', level]); if (next) settings = mergeOverride(settings, next);
+	next = lookup(U, ['games', game]); if (next) settings = mergeOverride(settings, next);
+	next = lookup(U, ['games', game, 'levels', level]); if (next) settings = mergeOverride(settings, next);
 
 	//console.log(settings);
 	delete settings.levels;

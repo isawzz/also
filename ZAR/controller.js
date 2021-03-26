@@ -64,7 +64,7 @@ class Trial0 extends GameClass {
 	}
 	prompt() {
 		//console.log('___________prompt_', this);
-		QuestionCounter += 1;
+		QContextCounter += 1;
 		//GroupCounter = 0;
 
 		showStats();
@@ -76,7 +76,7 @@ class Trial0 extends GameClass {
 		//console.log('___________prompt 1_', this);
 	}
 	promptNextTrial() {
-		QuestionCounter += 1;
+		QContextCounter += 1;
 		clearTimeout(TOTrial);
 		uiActivated = false;
 		let delay = this.instance.trialPrompt(this.trialNumber);

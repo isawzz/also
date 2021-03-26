@@ -62,10 +62,11 @@ function myPresent2(dArea, items, options) {
 	mStyleX(dArea, { h: 'auto', bg: 'red' });
 }
 function myPresent(dArea, items, options) {
+	//console.log(options, items)
 	let w = options.w; //window.innerWidth-70;
 	let h = options.h; //window.innerHeight-150;
 	let [wi, hi, rows, cols] = calcRowsColsSizeAbWo(items.length, w, h, options.showLabels);
-	let gap=wi*.1;	wi-=gap;hi-=gap;
+	let gap = wi * .1; wi -= gap; hi -= gap;
 	let fzPic = options.fzPic = Math.min(wi * .8, G.showLabels ? hi * .6 : hi * .75);
 	//console.log('fzPic',fzPic,G.showLabels)
 	let fz = options.fz = idealFontSize(options.wLongest, wi, hi / 3);
@@ -73,19 +74,32 @@ function myPresent(dArea, items, options) {
 	//console.log(items[0]);
 	//console.log('dims', w, h, wi, hi, rows, cols, fzPic, fz);
 	let outerStyles = {
-		w: wi, h: hi, margin:gap/2, rounding:6,
-		bg: valf(options.ifs.bg,'random'), fg: 'contrast', display: 'inline-flex', 'flex-direction': 'column',
+		w: wi, h: hi, margin: gap / 2, rounding: 6,
+		bg: valf(options.ifs.bg, 'random'), fg: 'contrast', display: 'inline-flex', 'flex-direction': 'column',
 		'justify-content': 'center', 'align-items': 'center',
 	};
+	let picStyles = { fz: fzPic };
 	let labelStyles = { fz: fz };
 	for (const item of items) {
+		for (const k in options.ifs) if (isdef(item[k])) outerStyles[k] = item[k];
+		if (isdef(item.textShadowColor)) {
+			let sShade = '0 0 0 ' + item.textShadowColor;
+			if (options.showPic) {
+				picStyles['text-shadow'] = sShade;
+				picStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+			} else {
+				labelStyles['text-shadow'] = sShade;
+				labelStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+			}
+		}
 		let dOuter = mCreate('div', outerStyles, item.id);
 		dOuter.onclick = options.handler;
-		let dPic = mDiv(dOuter, { fz: fzPic, family: item.info.family });
-		dPic.innerHTML = item.info.text;
-		let dLabel;
+		picStyles.family = item.info.family;
+		let dLabel,dPic;
+		if (options.showPic) {dPic = mDiv(dOuter, picStyles);		dPic.innerHTML = item.info.text;}
 		//console.log('showLabels ',options.showLabels)
 		if (options.showLabels) dLabel = mText(item.label, dOuter, labelStyles);
+		if (options.showRepeat) addRepeatInfo(dOuter, item.iRepeat, wi);		
 		iAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
 	}
 	items.map(x => mAppend(dArea, iDiv(x)));
@@ -105,7 +119,7 @@ function myShowPics3(handler, ifs = {}, options = {}, keys, labels) {
 	let dArea = dTable; //options.dArea; //let rect = getRect(dArea); console.log('items', items, 'rect', rect.w, rect.h);
 	//L
 	//myPresent2(dArea,items,options);
-	myPresent(dArea,items,options);
+	myPresent(dArea, items, options);
 
 
 	return items;
@@ -124,7 +138,7 @@ function myShowPics(handler, ifs = {}, options = {}, keys, labels) {
 		for (let i = 0; i < items.length; i++) item[i].label = labels[i % labels.length];
 	}
 	//L
-	myPresent(dTable,items,options);
+	myPresent(dTable, items, options);
 	return items;
 }
 
@@ -166,7 +180,7 @@ class Game {
 class GAbacus extends Game {
 	constructor(name) { super(name); }
 	startGame() { G.successFunc = successThumbsUp; G.failFunc = failThumbsDown; G.correctionFunc = this.showCorrectSequence.bind(this); }
-	showCorrectSequence() { let t = correctBlanks(); if (G.level<=1) showSayHint(3); return t + 1000; }
+	showCorrectSequence() { let t = correctBlanks(); if (G.level <= 1) showSayHint(3); return t + 1000; }
 	startLevel() { if (!isList(G.steps)) G.steps = [G.steps]; G.numPics = 2; }
 	prompt() {
 		mLinebreak(dTable, 2);
@@ -194,7 +208,7 @@ class GAbacus extends Game {
 		//instr1 = arrTake(G.seq,3).join(' ');
 		showInstruction('', instr1, dTitle, true, instr2);
 
-		console.log('showHint',G.showHint);
+		console.log('showHint', G.showHint);
 
 		if (G.level <= 1 && G.showHint) hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
 
@@ -329,6 +343,69 @@ class GAnagram extends Game {
 	}
 
 }
+class GElim extends Game {
+	constructor(name) { super(name); }
+	startGame() {
+		G.correctionFunc = () => { writeSound(); playSound('incorrect1'); return G.spokenFeedback ? 1800 : 300; };
+		G.successFunc = () => { Goal.pics.map(x => iDiv(x).style.opacity = .3); successPictureGoal(); }
+	}
+	startLevel() {
+		G.keys = G.keys.filter(x => containsColorWord(x));
+	}
+	prompt() {
+		this.piclist = [];
+		let colorKeys = G.numColors > 1 ? choose(G.colors, G.numColors) : null;
+		let showRepeat = G.numRepeat > 1;
+		myShowPics(this.interact.bind(this), { bg: 'white' },// { contrast: G.contrast, },
+			{ showRepeat: showRepeat, colorKeys: colorKeys, numRepeat: G.numRepeat, contrast: G.contrast });
+
+		//console.log('G.colors', G.colors, 'colorKeys', colorKeys);
+		let [sSpoken, sWritten, piclist] = logicMulti(Pictures);
+		this.piclist = piclist;
+		Goal = { pics: this.piclist, sammler: [] };
+
+		showInstructionX(sWritten, dTitle, sSpoken, { fz: 22, voice: 'zira' });
+		activateUi();
+	}
+	trialPrompt() {
+		sayTryAgain();
+		let msg = G.language == 'D' ? 'noch einmal!' : 'try again!'
+		showFleetingMessage(msg, 0, { margin: -8, fz: 22 }, true);
+		return 1000;
+	}
+	activate() {
+		for (const p of this.piclist) { if (p.isSelected) toggleSelectionOfPicture(p); }
+		this.piclist = [];
+	}
+	interact(ev) {
+		ev.cancelBubble = true;
+		if (!canAct()) return;
+
+		let pic = findItemFromEvent(Pictures, ev);
+		// let id = evToClosestId(ev);
+		// let pic = firstCond(Pictures, x => iDiv(x).id == id);
+		writeSound(); playSound('hit');
+
+		if (Goal.pics.includes(pic)) {
+			removePicture(pic);
+			//console.log('YES!!!!'); 
+			Goal.sammler.push(pic);
+		}
+
+
+		if (Goal.pics.length == Goal.sammler.length) evaluate(true);
+		else if (!Goal.pics.includes(pic)) { this.lastPic = pic; evaluate(false); }
+		// if (pic.label == Goal.label) evaluate(false);
+		// else { removePicture(pic);maLayout(Pictures,dTable) }
+
+	}
+	eval(isCorrect) {
+		//	console.log('eval', isCorrect);
+		// console.log('piclist', this.piclist)
+		Selected = { piclist: this.piclist, feedbackUI: isCorrect ? Goal.pics.map(x => iDiv(x)) : iDiv(this.lastPic) };
+		return isCorrect;
+	}
+}
 class GMem extends Game {
 	constructor(name) { super(name); }
 	clear() { clearTimeout(this.TO); showMouse(); }
@@ -336,14 +413,12 @@ class GMem extends Game {
 		let showLabels = G.showLabels == true && G.labels == true;
 		myShowPics(this.interact.bind(this),
 			{ border: '3px solid #ffffff80' },
-			{ repeat: G.numRepeat, sameBackground: true, showLabels: showLabels });
+			{ numRepeat: G.numRepeat, sameBackground: true, showLabels: showLabels });
 		setGoal();
 
 		if (G.level > 2) { showInstruction('', G.language == 'E' ? 'remember all' : 'merke dir alle', dTitle, true); }
 		else { showInstruction(Goal.label, G.language == 'E' ? 'remember' : 'merke dir', dTitle, true); }
-
 		let secs = calcMemorizingTime(G.numPics, G.level > 2);
-
 		hideMouse();
 		TOMain = setTimeout(() => turnCardsAfter(secs), 300, G.level >= 5); //needed fuer ui update! sonst verschluckt er last label
 
@@ -353,6 +428,17 @@ class GMem extends Game {
 		ev.cancelBubble = true;
 		if (!canAct()) return;
 		let pic = findItemFromEvent(Pictures, ev);
+		turnFaceUpSimple(pic);
+		if (G.trialNumber == G.trials - 1) turnFaceUpSimple(Goal);
+		TOMain = setTimeout(() => evaluate(ev), 300);
+	}
+
+	interact_orig(ev) {
+		//console.log('interact!', ev);
+		ev.cancelBubble = true;
+		if (!canAct()) return;
+		//console.log('halloooooooooooooo')
+		let pic = findItemFromEvent(Pictures, ev);
 		toggleFace(pic);
 
 		if (G.trialNumber == G.trials - 1) {
@@ -361,134 +447,7 @@ class GMem extends Game {
 		} else evaluate(ev);
 	}
 }
-class GMissingLetter extends Game {
-	constructor(name) { super(name); }
-	startLevel() {
-		// G.numMissing = getGameOrLevelInfo('numMissing', 1);
-		// let pos = getGameOrLevelInfo('posMissing', 'random');
-		G.maxPosMissing = G.posMissing == 'start' ? G.numMissing - 1 : 100;
-	}
-	prompt() {
-		myShowPics(() => fleetingMessage('just enter the missing letter!'));
-		setGoal();
 
-		showInstruction(Goal.label, G.language == 'E' ? 'complete' : "ergänze", dTitle, true);
-
-		mLinebreak(dTable);
-
-		// create sequence of letter ui
-		let style = { margin: 6, fg: 'white', display: 'inline', bg: 'transparent', align: 'center', border: 'transparent', outline: 'none', family: 'Consolas', fz: 80 };
-		let d = createLetterInputs(Goal.label.toUpperCase(), dTable, style); // acces children: d.children
-
-		// randomly choose 1-G.numMissing alphanumeric letters from Goal.label
-		let indices = getIndicesCondi(Goal.label, (x, i) => isAlphaNum(x) && i <= G.maxPosMissing);
-		this.nMissing = Math.min(indices.length, G.numMissing);
-		//console.log('nMissing is', this.nMissing, G.numPosMissing, G.maxPosMissing, indices, indices.length)
-		let ilist = choose(indices, this.nMissing); sortNumbers(ilist);
-
-		this.inputs = [];
-		for (const idx of ilist) {
-			let inp = d.children[idx];
-			inp.innerHTML = '_';
-			mClass(inp, 'blink');
-			this.inputs.push({ letter: Goal.label[idx].toUpperCase(), div: inp, index: idx });
-		}
-
-		mLinebreak(dTable);
-
-		let msg = this.composeFleetingMessage();
-		//console.log('msg,msg', msg)
-		showFleetingMessage(msg, 3000);
-		activateUi();
-
-	}
-	trialPrompt() {
-		let selinp = Selected.inp;
-		sayTryAgain();
-		setTimeout(() => {
-			let d = selinp.div;
-			d.innerHTML = '_';
-			mClass(d, 'blink');
-		}, 1500);
-
-		showFleetingMessage(this.composeFleetingMessage(), 3000);
-		return 10;
-	}
-	activate() {
-		onkeypress = ev => {
-			clearFleetingMessage();
-			if (!canAct()) return;
-			let charEntered = ev.key.toString();
-			if (!isAlphaNum(charEntered)) return;
-
-			Selected = { lastLetterEntered: charEntered.toUpperCase() };
-			//console.log(inputs[0].div.parentNode)
-
-			if (this.nMissing == 1) {
-				let d = Selected.feedbackUI = this.inputs[0].div;
-				Selected.positiveFeedbackUI = Goal.div;
-				Selected.lastIndexEntered = this.inputs[0].index;
-				Selected.inp = this.inputs[0];
-				d.innerHTML = Selected.lastLetterEntered;
-				mRemoveClass(d, 'blink');
-				let result = buildWordFromLetters(mParent(d));
-
-				evaluate(result);
-			} else {
-				let ch = charEntered.toUpperCase();
-				for (const inp of this.inputs) {
-					if (inp.letter == ch) {
-						Selected.lastIndexEntered = inp.index;
-						Selected.inp = inp;
-						let d = Selected.feedbackUI = inp.div;
-						d.innerHTML = ch;
-						mRemoveClass(d, 'blink');
-						removeInPlace(this.inputs, inp);
-						this.nMissing -= 1;
-						break;
-					}
-				}
-				if (nundef(Selected.lastIndexEntered)) {
-					//the user entered a non existing letter!!!
-					showFleetingMessage('you entered ' + Selected.lastLetterEntered);
-					sayRandomVoice('try a different letter!', 'anderer Buchstabe!')
-				}
-				showFleetingMessage(this.composeFleetingMessage(), 3000);
-				//if get to this place that input did not match!
-				//ignore for now!
-			}
-		}
-
-	}
-	eval(word) {
-		//console.log('word',word,Goal)
-		let answer = normalize(word, G.language);
-		let reqAnswer = normalize(Goal.label, G.language);
-
-		Selected.reqAnswer = reqAnswer;
-		Selected.answer = answer;
-
-		//console.log(answer, reqAnswer)
-		if (answer == reqAnswer) return true;
-		else if (G.language == 'D' && fromUmlaut(answer) == fromUmlaut(reqAnswer)) {
-			//console.log('hhhhhhhhhhhhhhhhhhh')
-			return true;
-		} else {
-			return false;
-		}
-	}
-	composeFleetingMessage() {
-		//console.log('this', this)
-		let lst = this.inputs;
-		//console.log(this.inputs)
-		let msg = lst.map(x => x.letter).join(',');
-		let edecl = lst.length > 1 ? 's ' : ' ';
-		let ddecl = lst.length > 1 ? 'die' : 'den';
-		let s = (G.language == 'E' ? 'Type the letter' + edecl : 'Tippe ' + ddecl + ' Buchstaben ');
-		return s + msg;
-	}
-
-}
 class GMissingNumber extends Game {
 	constructor(name) { super(name); }
 	startGame() {
@@ -824,7 +783,7 @@ class GPremem extends Game {
 		let showLabels = G.showLabels == true && G.labels == true;
 		myShowPics(this.interact.bind(this),
 			{ border: '3px solid #ffffff80' }, // border: '3px solid #ffffff80'
-			{ repeat: G.numRepeat, sameBackground: G.sameBackground, showLabels: showLabels }), //, showLabels: false });
+			{ numRepeat: G.numRepeat, sameBackground: G.sameBackground, showLabels: showLabels }), //, showLabels: false });
 			showInstruction('', G.language == 'E' ? 'click any picture' : 'click irgendein Bild', dTitle, true);
 		activateUi();
 	}
@@ -883,7 +842,7 @@ class GSteps extends Game {
 		let showRepeat = G.numRepeat > 1;
 
 		myShowPics(this.interact.bind(this), { contrast: G.contrast, },
-			{ showRepeat: showRepeat, colorKeys: colorKeys, repeat: G.numRepeat });
+			{ showRepeat: showRepeat, colorKeys: colorKeys, numRepeat: G.numRepeat });
 
 		setMultiGoal(G.numSteps);
 		// console.log(Goal)
@@ -976,7 +935,7 @@ class GPasscode extends Game {
 			let keys = getRandomKeysFromGKeys(G.passcodeLength);
 			myShowPics(null,
 				{ border: '3px solid #ffffff80' },
-				{ repeat: G.numRepeat, sameBackground: true }, keys);
+				{ numRepeat: G.numRepeat, sameBackground: true }, keys);
 
 			//console.log(Pictures)
 			Goal = Pictures[0];
@@ -1014,6 +973,52 @@ class GStory extends Game {
 		showInstruction(Goal.label, 'click', dTitle, true);
 		activateUi();
 	}
+}
+class GCats extends Game {
+	constructor(name) { super(name); }
+	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
+	prompt() {
+
+		G.Categories = {};
+
+		myShowPics(null, {}, { rows: 1, showLabels: false });
+
+		Goal = { pics: Pictures };
+
+		showInstruction('', G.language == 'E' ? 'drag pictures into categories' : "ordne die bilder den kategorien zu", dTitle, true);
+		mLinebreak(dTable);
+
+		setDropZones(Pictures, () => { });
+		mLinebreak(dTable, 50);
+
+		this.letters = createDragWords(Pictures, evaluate);
+		mLinebreak(dTable, 50);
+
+		mButton('Done!', evaluate, dTable, { fz: 32, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+
+		activateUi();
+	}
+	trialPrompt() {
+		sayTryAgain();
+		setTimeout(() => { Pictures.map(x => removeLabel(x)) }, 1500);
+		return 10;
+	}
+	eval() {
+		this.piclist = Pictures;
+		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => x.div), sz: getRect(this.piclist[0].div).height };
+		let isCorrect = true;
+		for (const p of Pictures) {
+			let label = p.label;
+			if (nundef(p.div.children[1])) {
+				p.isCorrect = isCorrect = false;
+			} else {
+				let text = getActualText(p);
+				if (text != label) { p.isCorrect = isCorrect = false; } else p.isCorrect = true;
+			}
+		}
+		return isCorrect;
+	}
+
 }
 
 

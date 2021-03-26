@@ -5,6 +5,15 @@ function addLabels(items, lang = 'E', luc = 'c') {
 		item.label = luc == 'c' ? toNoun(label) : luc == 'l' ? label : label.toUpperCase();
 	}
 }
+function addRepeatInfo(dPic, iRepeat, wpic) {
+	//console.log(dPic,iRepeat,szPic)
+	let szi = Math.max(Math.floor(wpic / 8), 8);
+	//console.log(szi);
+	dPic.style.position = 'relative';
+	let d2 = mText('' + iRepeat, dPic, { fz: szi, weight: 'bold', fg: 'contrast', position: 'absolute', left: szi / 2, top: szi / 2 - 2 });
+	// let d3 = mText('col:' + col, dPic, { fz: szi, color: 'black', position: 'absolute', left: szi, top: (szi / 2 + szi + 2) })
+	return d2;
+}
 function applyColorkey(item) {
 	//console.log('halllllllllllll')
 	let l = item.live;
@@ -71,7 +80,7 @@ function _extendItemsAndOptions(items, options) {
 	}
 	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
 
-	if (options.repeat > 1) { items = zRepeatEachItem(items, options.repeat, options.shufflePositions); }
+	if (options.numRepeat > 1) { items = zRepeatEachItem(items, options.numRepeat, options.shufflePositions); }
 	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
 
 	options.N = items.length;
@@ -179,6 +188,7 @@ function modifyColorkey(item) {
 	//console.log('colorkey', colorkey)
 	applyColorkey(item);
 }
+function makeItemDivs(items, options) { for (let i = 0; i < items.length; i++) { makeItemDiv(items[i], options) } }
 function makeItemDiv(item, options) {
 
 	//console.log('item',item,'options',options)
@@ -218,7 +228,6 @@ function makeItemDiv(item, options) {
 	return dOuter;
 
 }
-function makeItemDivs(items, options) { for (let i = 0; i < items.length; i++) { makeItemDiv(items[i], options) } }
 function makeItemDivs_dep(items, options) {
 	for (let i = 0; i < items.length; i++) {
 		let item = items[i];

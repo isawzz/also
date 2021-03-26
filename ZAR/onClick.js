@@ -1,6 +1,8 @@
 function interrupt(){
+	//console.log('iiiiiiiiiiiiiiiiiiiiiiii')
 	uiActivated = false;
-	TO.clear();
+	clearTimeouts(); //legacy
+	TOMan.clear();
 }
 
 function onClickTemple(){
@@ -9,7 +11,7 @@ function onClickTemple(){
 }
 
 function onClickBadgeX(ev) {
-	console.log('haaaaaaaaaaaaaaaalo',ev)
+	//console.log('haaaaaaaaaaaaaaaalo',ev)
 	interrupt(); //enterInterruptState();
 	let item = evToItem(ev);
 	setBadgeLevel(item.index);

@@ -125,7 +125,7 @@ class APasscode extends AddonClass {
 
 		let dParent = this.dContent;
 		let d_title = mDiv(dParent);
-		showInstruction(this.goal.label, Settings.language == 'E' ? 'the passcode is' : 'das Codewort ist', d_title, true);
+		showInstruction(this.goal.label, G.language == 'E' ? 'the passcode is' : 'das Codewort ist', d_title, true);
 																																																
 		let d_pics = mDiv(dParent);
 		presentItems(this.pictures, d_pics, options.rows);
@@ -142,7 +142,7 @@ class APasscode extends AddonClass {
 		//[this.pictures, this.rows] = getPictureItems(this.processInput.bind(this), undefined, { rows: 2, showLabels: true }, keys);
 		this.goal = this.pictures[iGoal];
 
-		showInstruction('', 'click ' + (Settings.language == 'E' ? 'the passcode' : 'das Codewort'), this.dInstruction, true);
+		showInstruction('', 'click ' + (G.language == 'E' ? 'the passcode' : 'das Codewort'), this.dInstruction, true);
 
 		presentItems(this.pictures, this.dMain, options.rows);
 
@@ -167,18 +167,18 @@ class APasscode extends AddonClass {
 			spoken = 'click ' + this.passcode.toUpperCase() + '!!!';
 		} else if (this.trialNumber > this.passcode.length * 2 - 1) {
 			hintLength = this.passcode.length;
-			spoken = (Settings.language == 'E' ? 'REMEMBER ' : 'MERKE DIR ') + this.passcode.toUpperCase() + '!!!';
+			spoken = (G.language == 'E' ? 'REMEMBER ' : 'MERKE DIR ') + this.passcode.toUpperCase() + '!!!';
 		} else if (this.trialNumber > this.passcode.length) {
 			hintLength = (this.trialNumber - this.passcode.length);
 			let letters = this.passcode.substring(0, hintLength);
 			let letters1 = letters.split();
 			//console.log('letters', letters, 'letters1', letters1);
 			//console.log('===>', letters1.join(' '));
-			spoken = (Settings.language == 'E' ? 'the passcode starts with' : 'das Codewort beginnt mit') + ' ' + letters1.join(', ');
-			// spoken = Settings.language == 'E' ? 'look at the hint!' : 'hier ein Tipp!'
+			spoken = (G.language == 'E' ? 'the passcode starts with' : 'das Codewort beginnt mit') + ' ' + letters1.join(', ');
+			// spoken = G.language == 'E' ? 'look at the hint!' : 'hier ein Tipp!'
 		} else {
 			hintLength = this.trialNumber;
-			spoken = null;// Settings.language == 'E' ? 'look at the hint!' : 'hier ein Tipp!'
+			spoken = null;// G.language == 'E' ? 'look at the hint!' : 'hier ein Tipp!'
 		}
 		return [this.passcode.substring(0, hintLength), spoken];
 	}
@@ -188,7 +188,7 @@ class AAddress extends APasscode {
 		//console.log('______________',k)
 		super(k, dbInfo, userInfo);
 	}
-	clear() { super.clear(); Speech.setLanguage(Settings.language); window.onclick = null; }
+	clear() { super.clear(); Speech.setLanguage(G.language); window.onclick = null; }
 	presentInit() {
 		this.msgPrompt='enter your address';
 		this.lastHintPrompt = 'please complete entering address!';

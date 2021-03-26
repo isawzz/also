@@ -93,9 +93,9 @@ function createStandardItems(onClickPictureHandler, ifs = {}, options = {}, keys
 	//#region prelim: default ifs and options, keys & infos
 	//console.log('ifs', jsCopy(ifs)); console.log('options', jsCopy(options));
 
-	// let showLabels = Settings.labels == true;
+	// let showLabels = G.labels == true;
 	if (nundef(Settings)) Settings = {};// language: 'E' };
-	let infos = keys.map(k => (isdef(Settings.language) ? getRandomSetItem(Settings.language, k) : symbolDict[k]));
+	let infos = keys.map(k => (isdef(G.language) ? getRandomSetItem(G.language, k) : symbolDict[k]));
 
 	//correct for language!!!! take best from Syms[k]
 
@@ -103,7 +103,7 @@ function createStandardItems(onClickPictureHandler, ifs = {}, options = {}, keys
 	let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
 	let fg = (i, info, item) => colorIdealText(item.bg);
 	let defIfs = { bg: bg, fg: fg, label: isdef(labels) ? labels : (i, info) => info.best, contrast: .32, fz: 20, padding: 3 };
-	let defOptions = { showLabels: Settings.labels == true, shufflePositions: true, sameBackground: true, 
+	let defOptions = { showLabels: G.labels == true, shufflePositions: true, sameBackground: true, 
 		showRepeat: false, repeat: 1, onclick: onClickPictureHandler, iStart: 0 };
 	ifs = mergeOverride(defIfs, ifs);
 	options = mergeOverride(defOptions, options);
@@ -271,8 +271,8 @@ function getPicsS(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
 }
 function createStandardItemsS(onClickPictureHandler, ifs = {}, options = {}, keys, labels) {
 	if (nundef(Settings)) Settings = {};
-	let lang = isdef(Settings.language) ? Settings.language : 'E';
-	let defShowLabels = isdef(Settings.labels) && Settings.labels == true;
+	let lang = isdef(G.language) ? G.language : 'E';
+	let defShowLabels = isdef(G.labels) && G.labels == true;
 
 	let infos = keys.map(k => Syms[k]);
 	infos.map(x => x.best = x['best' + lang]);
