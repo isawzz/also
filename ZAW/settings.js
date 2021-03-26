@@ -55,7 +55,7 @@ function appSpecificSettings() {
 }
 
 function updateSpeakmodeSettings() {
-	if (Settings.silentMode && Settings.spokenFeedback) Settings.spokenFeedback = false;
+	if (Settings.silentMode && G.spokenFeedback) G.spokenFeedback = false;
 
 }
 function updateKeySettings(nMin) {

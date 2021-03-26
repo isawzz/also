@@ -1077,7 +1077,7 @@ function numberSequenceCorrectionAnimation(stringFunc) {
 
 	let t1 = setTimeout(removeMarkers, 1000);
 	let t2 = setTimeout(() => wrong.map(x => { correctWordInput(x); animate(x.div, 'komisch', 1300); }), 1000);
-	t4 = setTimeout(() => { if (Settings.spokenFeedback) sayRandomVoice(msg); }, 500);
+	t4 = setTimeout(() => { if (G.spokenFeedback) sayRandomVoice(msg); }, 500);
 	TOList.numseq = [t1, t2, t4];//, t3, t4];//, t4];
 
 	return 2800;
@@ -1147,7 +1147,7 @@ function slowlyTurnFaceDown(pic, secs = 5, removeBg = false) {
 
 //#region fail, hint, success
 function successThumbsUp(withComment = true) {
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
 		sayRandomVoice(chooseRandom(comments));
 	}
@@ -1158,7 +1158,7 @@ function successThumbsUp(withComment = true) {
 	p2.div.style.display = 'none';
 }
 function failThumbsDown(withComment = false) {
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
 	}
@@ -1171,7 +1171,7 @@ function successPictureGoal(withComment = true) {
 
 	//console.log(Selected)
 
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
 		sayRandomVoice(chooseRandom(comments));
 	}
@@ -1185,7 +1185,7 @@ function successPictureGoal(withComment = true) {
 	}
 }
 function failPictureGoal(withComment = false) {
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
 	}
@@ -1196,7 +1196,7 @@ function failPictureGoal(withComment = false) {
 	}
 }
 function failSomePictures(withComment = false) {
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
 	}
@@ -1213,36 +1213,36 @@ function failSomePictures(withComment = false) {
 	// }
 }
 function showCorrectWord(sayit = true) {
-	let anim = Settings.spokenFeedback ? 'onPulse' : 'onPulse1';
+	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
 	let div = mBy(Goal.id);
 	mClass(div, anim);
 
-	if (!sayit || !Settings.spokenFeedback) Settings.spokenFeedback ? 3000 : 300;
+	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
 
 	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
 	sayRandomVoice(correctionPhrase);
-	return Settings.spokenFeedback ? 3000 : 300;
+	return G.spokenFeedback ? 3000 : 300;
 }
 function showCorrectWordInTitle(sayit = true) {
-	let anim = Settings.spokenFeedback ? 'onPulse' : 'onPulse1';
+	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
 	clearElement(dInstruction);
 	let d1 = mText(`<b>${Goal.label}</b>`, dInstruction, { fz: 36, display: 'inline-block' });
 	//dInstruction.innerHTML = `<b>${Goal.label}</b>`;
 	mClass(dInstruction, anim);
 	showFleetingMessage(Goal.label);
 
-	if (!sayit || !Settings.spokenFeedback) Settings.spokenFeedback ? 3000 : 300;
+	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
 
 	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
 	sayRandomVoice(correctionPhrase);
-	return Settings.spokenFeedback ? 3000 : 300;
+	return G.spokenFeedback ? 3000 : 300;
 }
 function showCorrectWords(sayit = true) {
 	if (nundef(TOList)) TOList = {};
 	TOList.correctWords = [];
 	let anim = 'onPulse2';
 	let to = 0;
-	let speaking = sayit && Settings.spokenFeedback;
+	let speaking = sayit && G.spokenFeedback;
 	let ms = speaking ? 2000 : 1000;
 	for (const goal of Goal.pics) {
 		TOList.correctWords.push(setTimeout(() => {
@@ -1253,7 +1253,7 @@ function showCorrectWords(sayit = true) {
 		to += ms;
 	}
 
-	if (!sayit || !Settings.spokenFeedback) return to;
+	if (!sayit || !G.spokenFeedback) return to;
 
 	return to + ms;
 }
@@ -1262,15 +1262,15 @@ function showCorrectPictureLabels(sayit = true) {
 	for (const p of Pictures) { replacePicAndLabel(p, p.key); }
 	Goal = { pics: Pictures };
 
-	let anim = Settings.spokenFeedback ? 'onPulse' : 'onPulse1';
+	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
 	let div = Selected.feedbackUI;
 	mClass(div, anim);
 
-	if (!sayit || !Settings.spokenFeedback) Settings.spokenFeedback ? 3000 : 300;
+	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
 
 	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
 	sayRandomVoice(correctionPhrase);
-	return Settings.spokenFeedback ? 3000 : 300;
+	return G.spokenFeedback ? 3000 : 300;
 }
 function shortHintPicRemove() {
 	mRemoveClass(mBy(Goal.id), 'onPulse1');

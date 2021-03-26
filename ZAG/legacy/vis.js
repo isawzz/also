@@ -86,7 +86,7 @@ function _visualizeNumber(n, dParent, color,or='h') {
 	items.map(x => mAppend(dGrid, x.div));
 	let gridStyles = { 'place-content': 'center', gap: 4, margin: 4, padding: 4, bg: 'white', rounding: 10 };
 	let gridSize = layoutGrid(items, dGrid, gridStyles, { rows: options.rows, isInline: true });
-	//console.log('size of grid', gridSize, 'table', getBounds(dTable))
+	//console.log('size of grid', gridSize, 'table', getRect(dTable))
 	//#endregion
 
 	//console.log('*** THE END ***');

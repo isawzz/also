@@ -15,6 +15,15 @@ function mButton(caption, handler, dParent, styles, classes) {
 function mBy(id) { return document.getElementById(id); }
 function mCenterCenterFlex(d) { mCenterFlex(d, true, true, true); }
 function mCenterFlexNowrap(d) { mCenterFlex(d, true, true, false); }
+function mFlexWrap(d) { mFlex(d, 'w'); }
+function mFlex(d, or = 'h') {
+	d.style.display = 'flex';
+	d.style.flexFlow = (or == 'v' ? 'column' : 'row') + ' ' + (or == 'w' ? 'wrap' : 'nowrap');
+	// d.style.alignItems = 'stretch';
+	// d.style.alignContent = 'stretch';
+	// d.style.justiifyItems = 'stretch';
+	// d.style.justifyContent = 'stretch';
+}
 function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	let styles = { display: 'flex' };
 	if (hCenter) styles['justify-content'] = 'center';
@@ -24,6 +33,7 @@ function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
+function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
 function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDivid(id, dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
@@ -70,6 +80,7 @@ function mLine3(dParent, index, ids, styles) {
 	mInsert(dParent, x, index);
 	return [mBy(ids[0]), mBy(ids[1]), mBy(ids[2])];
 }
+function mRemove(elem) { mDestroy(elem); }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
 function mRemoveStyle(d, styles) { for (const k of styles) d.style[k] = null; }
 function mReveal(d) { d.style.opacity = 1; }
@@ -283,7 +294,7 @@ function iParentBounds(i) {
 function iResize(i, w, h) { return isList(i) ? i.map(x => iSize(x, w, h)) : iSize(i, w, h); }
 function iSize(i, w, h) { i.w = w; i.h = h; mSize(i.div, w, h); }
 function isItem(i) { return isdef(i.live) || isdef(i.div); }
-function iDiv(i) { return isItem(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
+function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
 function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
 function iRegister(item) { let uid = getUID(); Items[uid] = item; return uid; }
 function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ovUnit = '%', createHand = true, rememberFunc = true) {
@@ -466,7 +477,107 @@ function bestContrastingColor(color, colorlist) {
 	}
 	//console.log(contrast,result)
 	return result;
-} function colorBlend(zero1, c0, c1, log = true) {
+} 
+function helleFarbe(contrastTo, minDiff = 25, mod = 30, start = 0) {
+	let wheel = getHueWheel(contrastTo, minDiff, mod, start);
+	//console.log('wheel',wheel)
+	let hue = chooseRandom(wheel);
+	let hsl = colorHSLBuild(hue, 100, 50);
+	return hsl;
+}
+function getHueWheel(contrastTo, minDiff = 25, mod = 30, start = 0) {
+	let hc = colorHue(contrastTo);
+	let wheel = [];
+	while (start < 360) {
+		let d1 = Math.abs((start + 360) - hc);
+		let d2 = Math.abs((start) - hc);
+		let d3 = Math.abs((start - 360) - hc);
+		let min = Math.min(d1, d2, d3);
+		if (min > minDiff) wheel.push(start);
+		start += mod;
+	}
+	return wheel;
+}
+function colorHue(cAny) {
+	let hsl = colorHSL(cAny, true);
+	return hsl.h;
+} //ok
+function colorHSL(cAny, asObject = false) {
+	//returns { h:[0,360], s:[0,1], l:[0,1]}
+	let res = anyColorToStandardString(cAny, undefined, true);
+	//console.log(res)
+	let shsl = res;
+	if (res[0] == '#') {
+		//res is a hex string
+		if (res.length == 9) {
+			shsl = hexAToHSLA(res);
+		} else if (res.length == 7) {
+			shsl = hexToHSL(res);
+		}
+	} else if (res[0] == 'r') {
+		if (res[3] == 'a') {
+			shsl = RGBAToHSLA(res);
+		} else {
+			shsl = RGBToHSL(res);
+		}
+	}
+	//console.log(shsl);
+	let n = allNumbers(shsl);
+	//console.log(n);
+	if (asObject) {
+		return { h: n[0], s: n[1] / 100, l: n[2] / 100, a: n.length > 3 ? n[3] : 1 };
+	} else {
+		return shsl;
+	}
+} //ok
+function hexToHSL(H) {
+	let ex = /^#([\da-f]{3}){1,2}$/i;
+	if (ex.test(H)) {
+		// convert hex to RGB first
+		let r = 0,
+			g = 0,
+			b = 0;
+		if (H.length == 4) {
+			r = '0x' + H[1] + H[1];
+			g = '0x' + H[2] + H[2];
+			b = '0x' + H[3] + H[3];
+		} else if (H.length == 7) {
+			r = '0x' + H[1] + H[2];
+			g = '0x' + H[3] + H[4];
+			b = '0x' + H[5] + H[6];
+		}
+		// then to HSL
+		r /= 255;
+		g /= 255;
+		b /= 255;
+		let cmin = Math.min(r, g, b),
+			cmax = Math.max(r, g, b),
+			delta = cmax - cmin,
+			h = 0,
+			s = 0,
+			l = 0;
+
+		if (delta == 0) h = 0;
+		else if (cmax == r) h = ((g - b) / delta) % 6;
+		else if (cmax == g) h = (b - r) / delta + 2;
+		else h = (r - g) / delta + 4;
+
+		h = Math.round(h * 60);
+
+		if (h < 0) h += 360;
+
+		l = (cmax + cmin) / 2;
+		s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+		s = +(s * 100).toFixed(1);
+		l = +(l * 100).toFixed(1);
+
+		return 'hsl(' + h + ',' + s + '%,' + l + '%)';
+	} else {
+		return 'Invalid input color';
+	}
+} //ok
+function colorHSLBuild(hue, sat, lum) { let result = "hsl(" + hue + ',' + sat + '%,' + lum + '%)'; return result; }
+function colorBlend(zero1, c0, c1, log = true) {
 	c0 = anyColorToStandardString(c0);
 	c1 = anyColorToStandardString(c1);
 	return pSBC(zero1, c0, c1, log);
@@ -1270,7 +1381,8 @@ function getRect(elem, relto) {
 	}
 	return { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
 }
-function idealFontsize(txt, wmax, hmax, fz, fzmin, weight) {
+function idealFontSize(txt, wmax, hmax, fz=22, fzmin=6, weight) {return idealFontDims(...arguments).fz;}
+function idealFontDims(txt, wmax, hmax, fz=22, fzmin=6, weight) {
 	let tStyles = { fz: fz, family: 'arial' };
 	if (isdef(weight)) tStyles.weight = weight;
 	while (true) {
@@ -1409,7 +1521,15 @@ function mergeOverride(base, drueber) { return _deepMerge(base, drueber, { array
 function addIf(arr, el) {
 	if (!arr.includes(el)) arr.push(el);
 }
+function addByKey(oNew, oOld, except) {
+	for (const k in oNew) {
+		let val = oNew[k];
+		if (isdef(except) && except.includes(k) || !isNumber(val)) continue;
+		oOld[k] = isdef(oOld[k]) ? oOld[k] + val : val;
+	}
+}
 function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; }
+function addSimpleProps(ofrom, oto = {}) { for (const k in ofrom) { if (nundef(oto[k]) && isLiteral(k)) oto[k] = ofrom[k]; } return oto; }
 function addIfDict(key, val, dict) { if (!(key in dict)) { dict[key] = [val]; } }
 function any(arr, cond) { return !isEmpty(arr.filter(cond)); }
 function anyStartsWith(arr, prefix) { return any(arr, el => startsWith(el, prefix)); }
@@ -1464,7 +1584,8 @@ function copyKeys(ofrom, oto, except = {}, only) {
 		oto[k] = ofrom[k];
 	}
 }
-function createClassByName(name,...a) {
+function copySimpleProps(ofrom, oto = {}) { for (const k in ofrom) { if (isLiteral(k)) oto[k] = ofrom[k]; } return oto; }
+function createClassByName(name, ...a) {
 	var c = eval(name);
 	return new c(...a);
 }
@@ -1804,7 +1925,7 @@ function allIntegers(s) {
 	return s.match(/\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => {
 		return +v;
 	});
-}function allNumbers(s) {
+} function allNumbers(s) {
 	//returns array of all numbers within string s
 	let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
 	if (m) return m.map(v => Number(v)); else return null;
@@ -2045,7 +2166,27 @@ function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
 	return nOrString;
 }
 function nundef(x) { return x === null || x === undefined; }
-function show(elem, isInline = false) {
+function purge(elem) {
+	var a = elem.attributes, i, l, n;
+	if (a) {
+		for (i = a.length - 1; i >= 0; i -= 1) {
+			n = a[i].name;
+			if (typeof elem[n] === 'function') {
+				elem[n] = null;
+			}
+		}
+	}
+	a = elem.childNodes;
+	if (a) {
+		l = a.length;
+		// for (i = 0; i < l; i += 1) {
+		for (i = a.length - 1; i >= 0; i -= 1) {
+			//console.log(elem.id, a, elem.childNodes[i]);
+			purge(elem.childNodes[i]);
+		}
+	}
+	elem.remove(); //elem.parentNode.removeChild(elem);
+} function show(elem, isInline = false) {
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (isSvg(elem)) {
 		elem.setAttribute('style', 'visibility:visible');

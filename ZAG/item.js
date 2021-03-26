@@ -5,17 +5,6 @@ function addLabels(items, lang = 'E', luc = 'c') {
 		item.label = luc == 'c' ? toNoun(label) : luc == 'l' ? label : label.toUpperCase();
 	}
 }
-function addLabels_dep(items, lang = 'E', luc = 'c') {
-	let max = 0;
-	for (const item of items) {
-		let label = item.info[lang];
-		//console.log(':::::::::',item,item.info,lang,label)
-		if (label.length > max) { max = label.length; }
-		item.label = luc == 'c' ? toNoun(label) : luc == 'l' ? label : label.toUpperCase();
-		//console.log(':::::::::::::',item.label)
-	}
-	return max;
-}
 function applyColorkey(item) {
 	//console.log('halllllllllllll')
 	let l = item.live;
@@ -58,73 +47,47 @@ function calcLongestLabel(items, options) {
 	// items.map(x=>console.log(x.label,x.label.length));
 	options.labelSum = arrSum(items, ['label', 'length']);
 }
+function _extendItemsAndOptions(items, options) {
+	calcLongestLabel(items, options);
+
+	//hier koennt ich die ifs machen!
+	let ifs = options.ifs;
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+		item.index = i;
+		//item.ifs = jsCopy(options.ifs);
+		let val;
+		for (const propName in ifs) {
+			let prop = ifs[propName];
+			//console.log('___________',ifs[propName])
+			//console.log('TYPE OF', propName, 'IS', typeof prop, prop, isLiteral(prop))
+			if (isLiteral(prop)) val = prop;
+			else if (isList(prop)) val = prop[i % prop.length];
+			else if (typeof (prop) == 'function') val = prop(i, item, options, items);
+			else val = null;
+			if (isdef(val)) item[propName] = val;
+			//console.log('ifs prop:',propName,item[propName]);
+		}
+	}
+	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
+
+	if (options.repeat > 1) { items = zRepeatEachItem(items, options.repeat, options.shufflePositions); }
+	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
+
+	options.N = items.length;
+	//console.log(items)
+	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
+	return items;
+}
+function evToItem(ev) { let id = evToClosestId(ev); return isdef(id) ? Items[id] : null; }
+function evToItemC(ev) { ev.cancelBubble = true; return evToItem(ev); }
+function findItemFromEvent(items, ev) { return evToItemC(ev); }
+function findItemFromElem(items, elem) { let item = firstCond(items, x => iDiv(x) == elem); return item; }
+function findItemFromKey(items, key) { return firstCond(items, x => x.key == key); }
+
 function registeredItemCopy(orig) { let item = jsCopy(orig); item.id = iRegister(item); return item; }
 function registerAsNewItem(item) { item.id = iRegister(item); return item; }
 
-function zRepeatEachItem(items, repeat, shufflePositions = false) {
-	//repeat items: repeat & shufflePositions
-	let orig = items;
-	let itRepeat = items;
-	for (let i = 1; i < repeat; i++) { itRepeat = itRepeat.concat(orig.map(x => registeredItemCopy(x))); }
-	if (shufflePositions) { shuffle(itRepeat); }
-	//weil die items schon geshuffled wurden muss ich iRepeat neu setzen in den reihenfolge in der sie in itRepeat vorkommen!
-	let labelRepeat = {};
-	let idx = 0;
-	for (const item of itRepeat) {
-		let iRepeat = labelRepeat[item.label];
-		if (nundef(iRepeat)) iRepeat = 1; else iRepeat += 1;
-		item.iRepeat = iRepeat;
-		item.index = idx; idx += 1;
-		labelRepeat[item.label] = iRepeat;
-	}
-	return itRepeat;
-}
-function zRepeatInColorEachItem(items, colorKeys) {
-	//colorKeys: copy colorKeys.length times into different colors
-	let itColors = [];
-	for (let i = 0; i < colorKeys.length; i++) {
-		let newItems;
-		if (i > 0) { newItems = jsCopy(items); newItems.map(x => registerAsNewItem(x)); }
-		else newItems = items;
-		itColors = itColors.concat(newItems);
-	}
-
-	for (let i = 0; i < colorKeys.length; i++) {
-		let colorKey = colorKeys[i];
-		let textShadowColor = ColorDict[colorKey].c;
-		for (let j = 0; j < items.length; j++) {
-			let index = i * items.length + j;
-			//console.log('schau', index, colorKey);
-			let x = itColors[index];
-			x.index = index;
-			x.textShadowColor = textShadowColor;
-			x.color = ColorDict[colorKey];
-			x.colorKey = colorKey;
-		}
-		//newItems.map(x => { x.textShadowColor = textShadowColor; x.color = ColorDict[colorKey]; x.colorKey = colorKey; });
-	}
-	//for (let i = 0; i < itColors.length; i++) itColors[i].index = i;
-	//console.log(itColors[0])
-	return itColors;
-}
-function getItem(k) { return infoToItem(Syms[k]); }
-
-//new API:
-function genKeys(n, options) {
-	let [maxlen, lang, keySet] = [options.maxlen, options.lang, options.keySet];
-	let cond = isdef(maxlen) ? ((x) => x[lang].length <= maxlen) : null;
-	let keys = _getKeysCond(n, cond, keySet);
-	return keys;
-}
-function _getKeysCond(n, cond, keySet = 'all') {
-	//console.log('n', n, 'cond', cond, 'keySet', keySet)
-	if (isString(keySet)) keySet = KeySets[keySet];
-	let keys = isdef(cond) ? isString(cond) ?
-		isdef(KeySets[cond]) ? KeySets[cond] : keySet.filter(x => x.includes(cond))
-		: keySet.filter(x => cond(Syms[x])) : keySet;
-	keys = n >= keys.length ? keys : choose(keys, n);
-	return keys;
-}
 function genItems(n, options) { let keys = genKeys(n, options); let items = genItemsFromKeys(keys, options); return items; }
 function genItemsFromKeys(keys, options) {
 	//console.log('keys',keys)
@@ -159,40 +122,22 @@ function genItemsFromObjects(list, keyProp, labelProp, options) {
 	items = _extendItemsAndOptions(items, options);
 	return items;
 }
-function _extendItemsAndOptions(items, options) {
-	calcLongestLabel(items, options);
-
-	//hier koennt ich die ifs machen!
-	let ifs = options.ifs;
-	for (let i = 0; i < items.length; i++) {
-		let item = items[i];
-		item.index = i;
-		//item.ifs = jsCopy(options.ifs);
-		let val;
-		for (const propName in ifs) {
-			let prop = ifs[propName];
-			//console.log('___________',ifs[propName])
-			//console.log('TYPE OF', propName, 'IS', typeof prop, prop, isLiteral(prop))
-			if (isLiteral(prop)) val = prop;
-			else if (isList(prop)) val = prop[i % prop.length];
-			else if (typeof (prop) == 'function') val = prop(i, item, options, items);
-			else val = null;
-			if (isdef(val)) item[propName] = val;
-			//console.log('ifs prop:',propName,item[propName]);
-		}
-	}
-	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
-
-	if (options.repeat > 1) { items = zRepeatEachItem(items, options.repeat, options.shufflePositions); }
-	if (isdef(options.colorKeys)) items = zRepeatInColorEachItem(items, options.colorKeys);
-
-	options.N = items.length;
-	//console.log(items)
-	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
-	return items;
+function genKeys(n, options) {
+	let [maxlen, lang, keySet] = [options.maxlen, options.lang, options.keySet];
+	let cond = isdef(maxlen) ? ((x) => x[lang].length <= maxlen) : null;
+	let keys = _getKeysCond(n, cond, keySet);
+	return keys;
 }
-
-//#older code
+function _getKeysCond(n, cond, keySet = 'all') {
+	//console.log('n', n, 'cond', cond, 'keySet', keySet)
+	if (isString(keySet)) keySet = KeySets[keySet];
+	let keys = isdef(cond) ? isString(cond) ?
+		isdef(KeySets[cond]) ? KeySets[cond] : keySet.filter(x => x.includes(cond))
+		: keySet.filter(x => cond(Syms[x])) : keySet;
+	keys = n >= keys.length ? keys : choose(keys, n);
+	return keys;
+}
+function getItem(k) { return infoToItem(Syms[k]); }
 function getAllItems(cond, keySet = 'all') { return getItems(10000, cond, keySet); }
 function getItems(n, cond, keySet = 'all') {
 	//n ... number, key list, info list or item list
@@ -225,21 +170,6 @@ function infoToItem(x) {
 	//console.log('iiiiiii'); 
 	let item = { info: x, key: x.key }; item.id = iRegister(item); return item;
 }
-function evToItem(ev) { let id = evToClosestId(ev); return isdef(id) ? Items[id] : null; }
-function evToItemC(ev) { ev.cancelBubble = true; return evToItem(ev); }
-function findItemFromEvent(items, ev) {
-	let id = evToClosestId(ev);
-	let item = firstCond(items, x => x.div.id == id);
-	return item;
-
-}
-function findItemFromElem(items, elem) {
-	let item = firstCond(items, x => x.div == elem);
-	return item;
-
-}
-function findItemFromKey(items, key) { return firstCond(items, x => x.key == key); }
-
 function modifyColorkey(item) {
 	let colorkey = chooseRandom(Object.keys(ColorDict));
 	let textShadowColor = ColorDict[colorkey].c;
@@ -356,5 +286,55 @@ function toggleItemSelection(item, selectedItems) {
 		}
 	}
 }
+
+
+function zRepeatEachItem(items, repeat, shufflePositions = false) {
+	//repeat items: repeat & shufflePositions
+	let orig = items;
+	let itRepeat = items;
+	for (let i = 1; i < repeat; i++) { itRepeat = itRepeat.concat(orig.map(x => registeredItemCopy(x))); }
+	if (shufflePositions) { shuffle(itRepeat); }
+	//weil die items schon geshuffled wurden muss ich iRepeat neu setzen in den reihenfolge in der sie in itRepeat vorkommen!
+	let labelRepeat = {};
+	let idx = 0;
+	for (const item of itRepeat) {
+		let iRepeat = labelRepeat[item.label];
+		if (nundef(iRepeat)) iRepeat = 1; else iRepeat += 1;
+		item.iRepeat = iRepeat;
+		item.index = idx; idx += 1;
+		labelRepeat[item.label] = iRepeat;
+	}
+	return itRepeat;
+}
+function zRepeatInColorEachItem(items, colorKeys) {
+	//colorKeys: copy colorKeys.length times into different colors
+	let itColors = [];
+	for (let i = 0; i < colorKeys.length; i++) {
+		let newItems;
+		if (i > 0) { newItems = jsCopy(items); newItems.map(x => registerAsNewItem(x)); }
+		else newItems = items;
+		itColors = itColors.concat(newItems);
+	}
+
+	for (let i = 0; i < colorKeys.length; i++) {
+		let colorKey = colorKeys[i];
+		let textShadowColor = ColorDict[colorKey].c;
+		for (let j = 0; j < items.length; j++) {
+			let index = i * items.length + j;
+			//console.log('schau', index, colorKey);
+			let x = itColors[index];
+			x.index = index;
+			x.textShadowColor = textShadowColor;
+			x.color = ColorDict[colorKey];
+			x.colorKey = colorKey;
+		}
+		//newItems.map(x => { x.textShadowColor = textShadowColor; x.color = ColorDict[colorKey]; x.colorKey = colorKey; });
+	}
+	//for (let i = 0; i < itColors.length; i++) itColors[i].index = i;
+	//console.log(itColors[0])
+	return itColors;
+}
+
+
 
 

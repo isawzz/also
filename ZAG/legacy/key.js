@@ -145,7 +145,7 @@ function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc 
 	//console.log(primary)
 	return primary;
 }
-//function infoToItem(x) { return { info: x, key: x.key }; }
+
 
 function getAllItems(cond,baseSet='all'){	return getItems(10000,cond,baseSet);}
 function getItems(n, cond, baseSet = 'all') {

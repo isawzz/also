@@ -8,7 +8,7 @@ nil:
     minutesPerUnit: 20
     incrementLevelOnPositiveStreak: 4
     decrementLevelOnNegativeStreak: 4
-    showLabels: toggle #always never toggle (=remove labels after half level)
+    pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: D
     vocab: lifePlus
     showTime: true
@@ -73,7 +73,7 @@ guest0:
     minutesPerUnit: 10
     incrementLevelOnPositiveStreak: 10
     decrementLevelOnNegativeStreak: 5
-    showLabels: toggle #always never toggle (=remove labels after half level)
+    pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: E
     vocab: best25
     showTime: false
@@ -96,7 +96,7 @@ test0:
     minutesPerUnit: 10
     incrementLevelOnPositiveStreak: 10
     decrementLevelOnNegativeStreak: 5
-    showLabels: toggle #always never toggle (=remove labels after half level)
+    pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: E
     vocab: best25
     showTime: false
@@ -144,7 +144,7 @@ gul:
     minutesPerUnit: 20
     incrementLevelOnPositiveStreak: 10
     decrementLevelOnNegativeStreak: 5
-    showLabels: toggle #always never toggle (=remove labels after half level)
+    pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: D
     vocab: lifePlus
     showTime: true

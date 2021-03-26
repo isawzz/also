@@ -129,7 +129,7 @@ function setDropZones(items, handler) {
 	DropZones = [];
 	DropZoneItems = [];
 	for (let i = 0; i < items.length; i++) {
-		let d = items[i].div;
+		let d = iDiv(items[i]);
 		d.onmouseup = () => handler(items[i]);
 		mClass(d, 'dropzone');
 		DropZones.push(d);
@@ -140,14 +140,10 @@ function createDropInputs() {
 	let fz = 120; let word = Goal.label.toUpperCase(); let wlen = word.length;
 	let dpEmpty = createLetterInputsX(word, dTable, { pabottom: 5, bg: 'grey', display: 'inline-block', fz: fz, w: fz, h: fz * 1.1, margin: 4 }); //,w:40,h:80,margin:10});
 	let inputs = blankInputs(dpEmpty, range(0, wlen - 1), false);
-
-	// this.inputs.map(x => mClass(x.div,'dropzone'));
-
-	// this.inputs.map(x => x.div.onclick = () => x.div.innerHTML = '_');
 	//console.log(this.inputs);
 	DropZones = [];
 	for (let i = 0; i < inputs.length; i++) {
-		let l = inputs[i].div;
+		let l = iDiv(inputs[i]);
 		l.onmousedown = onMouseDownOnLetter;
 		l.onclick = l.innerHTML = '_';
 		mClass(l, 'dropzone');
@@ -172,7 +168,7 @@ function createDragLetters() {
 function createDragClone(ev, items, onRelease) {
 	DragSourceItems = items;
 	DragSourceItem = findItemFromEvent(items, ev);
-	let elem = DragSource = DragSourceItem.div;
+	let elem = DragSource = iDiv(DragSourceItem);
 	var clone = DragElem = elem.cloneNode(true);
 	clone.id = DragElem.id + '_' + clone;
 	DragSource = elem;
@@ -203,7 +199,7 @@ function dropAndEval(ev) {
 	cancelBubble = true;
 	let els = allElementsFromPoint(ev.clientX, ev.clientY);
 	if (nundef(DragElem)) return;
-	let targetItem = DropZoneItem = firstCond(DropZoneItems, x => els.includes(x.div));//DropZones.includes(x));
+	let targetItem = DropZoneItem = firstCond(DropZoneItems, x => els.includes(iDiv(x)));//DropZones.includes(x));
 	//let targetItem = findItemFromElem(Pictures,targetElem);
 
 	if (nundef(targetItem)) { cancelDD(); return; }
@@ -232,9 +228,9 @@ function createDragWords(items, handler) {
 
 	titems = showLbls(null, undefined, { rows: 1, showLabels: true }, keys);
 	//let [titems, rows] = getTextItems(null, undefined, { rows: 2, showLabels: true }, keys);
-	titems.map(x => x.div.style.cursor = 'pointer');//mClass(x.div, 'draggable'));
+	titems.map(x => iDiv(x).style.cursor = 'pointer');//mClass(iDiv(x), 'draggable'));
 	//presentItems(titems, dTable, 1);
-	titems.map(x => x.div.onmousedown = (ev) => {
+	titems.map(x => iDiv(x).onmousedown = (ev) => {
 		// let source = findItemFromEvent(titems, ev);
 		// let target = findItemFromKey(Pictures, source.key);
 		createDragClone(ev, titems, dropAndEval);
@@ -619,7 +615,7 @@ function blankWordInputs(wi, n, pos = 'random') {
 		indivInputs = indivInputs.concat(el.charInputs);
 		el.hasBlanks = true;
 		el.nMissing = el.charInputs.length;
-		if (n > 1) el.div.onclick = onClickWordInput;
+		if (n > 1) iDiv(el).onclick = onClickWordInput;
 
 		//console.log('.....remel',el.hasBlanks)
 		//console.log('.....word',wi[el.iWord].hasBlanks)
@@ -692,14 +688,15 @@ function onKeyWordInput(ev) {
 }
 function unfillWord(winp) { winp.charInputs.map(x => unfillCharInput(x)); }
 function unfillCharInput(inp) {
-	let d = inp.div;
+	console.log(inp)
+	let d = iDiv(inp);
 	d.innerHTML = '_';
 	mClass(d, 'blink');
 	inp.isBlank = true;
 }
 function unfillChar(inp) { unfillCharInput(inp); }
 function fillCharInput(inp, ch) {
-	let d = inp.div;
+	let d = iDiv(inp);
 	d.innerHTML = ch;
 	mRemoveClass(d, 'blink');
 }
@@ -707,8 +704,8 @@ function correctWordInput(winp) { winp.charInputs.map(x => refillCharInput(x, x.
 function refillCharInput(inp, ch) { fillCharInput(inp, ch); }
 function getInputStringOfWordi(iWord) { return getInputStringOfWord(Goal.words[iWord]); }
 function getInputStringOfChari(index) { return getInputStringOfChar(Goal.chars[index]); }
-function getInputStringOfWord(winp) { return winp.charInputs.map(x => x.div.innerHTML).join(''); }
-function getInputStringOfChar(inp) { return inp.div.innerHTML; }
+function getInputStringOfWord(winp) { return winp.charInputs.map(x => iDiv(x).innerHTML).join(''); }
+function getInputStringOfChar(inp) { return iDiv(inp).innerHTML; }
 function getInputWords() { return Goal.words.map(x => getInputStringOfWord(x)); }
 
 function getQWords() { return Goal.qWordIndices.map(x => Goal.words[x]); }
@@ -891,6 +888,7 @@ function logicReset() {
 
 //#region number sequence hints
 function hintEngineStart(hintFunc, hintlist, initialDelay) {
+	//console.log('hint started',G.level,G.showHint)
 	G.hintFunc = hintFunc;
 	recShowHints(hintlist, QuestionCounter, initialDelay, d => initialDelay + 2000); //showNumSeqHint(G.trialNumber);
 
@@ -968,6 +966,7 @@ function recShowHints(ilist, rc, delay = 3000, fProgression = d => d * 1.5) {
 	TOTrial = setTimeout(() => recShowHintsNext(i, ilist, rc, fProgression(delay), fProgression), delay);
 }
 function showSayHint(i) {
+	console.log(G)
 	let [spoken, written] = G.hintFunc(i);
 	if (spoken) sayRandomVoice(spoken); //setTimeout(() => sayRandomVoice(spoken), 300+ms);
 	if (written) showFleetingMessage(written, 0, { fz: 40 });
@@ -981,10 +980,10 @@ function recShowHintsNext(i, ilist, rc, delay, fProgression) {
 function correctBlanks() {
 	let wrong = getWrongWords();
 	if (nundef(TOList)) TOList = {};
-	Selected.feedbackUI = wrong.map(x => x.div);
+	Selected.feedbackUI = wrong.map(x => iDiv(x));
 	failPictureGoal();
 	let t1 = setTimeout(removeMarkers, 1000);
-	let t2 = setTimeout(() => wrong.map(x => { correctWordInput(x); animate(x.div, 'komisch', 1300); }), 1000);
+	let t2 = setTimeout(() => wrong.map(x => { correctWordInput(x); animate(iDiv(x), 'komisch', 1300); }), 1000);
 	TOList.correction = [t1, t2];
 	return 2500;
 }
@@ -994,12 +993,12 @@ function numberSequenceCorrectionAnimation(stringFunc) {
 	if (nundef(TOList)) TOList = {};
 	let msg = stringFunc();
 	showFleetingMessage(msg, 0, { fz: 32 }); //return;
-	Selected.feedbackUI = wrong.map(x => x.div);
+	Selected.feedbackUI = wrong.map(x => iDiv(x));
 	failPictureGoal();
 
 	let t1 = setTimeout(removeMarkers, 1000);
-	let t2 = setTimeout(() => wrong.map(x => { correctWordInput(x); animate(x.div, 'komisch', 1300); }), 1000);
-	t4 = setTimeout(() => { if (Settings.spokenFeedback) sayRandomVoice(msg); }, 500);
+	let t2 = setTimeout(() => wrong.map(x => { correctWordInput(x); animate(iDiv(x), 'komisch', 1300); }), 1000);
+	t4 = setTimeout(() => { if (G.spokenFeedback) sayRandomVoice(msg); }, 500);
 	TOList.numseq = [t1, t2, t4];//, t3, t4];//, t4];
 
 	return 2800;
@@ -1017,8 +1016,8 @@ function hideMouse() {
 	var x = dTable.getElementsByTagName("DIV");
 	for (const el of x) { el.prevCursor = el.style.cursor; }
 	for (const p of Pictures) {
-		mRemoveClass(p.div, 'frameOnHover'); p.div.style.cursor = 'none';
-		for (const ch of p.div.children) ch.style.cursor = 'none';
+		mRemoveClass(iDiv(p), 'frameOnHover'); iDiv(p).style.cursor = 'none';
+		for (const ch of iDiv(p).children) ch.style.cursor = 'none';
 	}
 	for (const el of x) { mClass(el, 'noCursor'); }
 }
@@ -1032,10 +1031,10 @@ function showMouse() {
 	} //.style.cursor = 'none';
 	for (const el of x) { el.style.cursor = el.prevCursor; }
 	for (const p of Pictures) {
-		mRemoveClass(p.div, 'noCursor');
-		mClass(p.div, 'frameOnHover'); p.div.style.cursor = 'pointer';
-		for (const ch of p.div.children) ch.style.cursor = 'pointer';
-	} //p.divmClass.style.cursor = 'none';}
+		mRemoveClass(iDiv(p), 'noCursor');
+		mClass(iDiv(p), 'frameOnHover'); iDiv(p).style.cursor = 'pointer';
+		for (const ch of iDiv(p).children) ch.style.cursor = 'pointer';
+	} //iDiv(p)mClass.style.cursor = 'none';}
 }
 
 function turnCardsAfter(secs, removeBg = false) {
@@ -1049,7 +1048,7 @@ function turnCardsAfter(secs, removeBg = false) {
 }
 
 function slowlyTurnFaceDown(pic, secs = 5, removeBg = false) {
-	let ui = pic.div;
+	let ui = iDiv(pic);
 	for (const p1 of ui.children) {
 		p1.style.transition = `opacity ${secs}s ease-in-out`;
 		//p1.style.transition = `opacity ${secs}s ease-in-out, background-color ${secs}s ease-in-out`;
@@ -1069,31 +1068,31 @@ function slowlyTurnFaceDown(pic, secs = 5, removeBg = false) {
 
 //#region fail, hint, success
 function successThumbsUp(withComment = true) {
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
 		sayRandomVoice(chooseRandom(comments));
 	}
 	//console.log(Pictures)
 	let p1 = firstCond(Pictures, x => x.key == 'thumbs up');
-	p1.div.style.opacity = 1;
+	iDiv(p1).style.opacity = 1;
 	let p2 = firstCond(Pictures, x => x.key == 'thumbs down');
-	p2.div.style.display = 'none';
+	iDiv(p2).style.display = 'none';
 }
 function failThumbsDown(withComment = false) {
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
 	}
 	let p1 = firstCond(Pictures, x => x.key == 'thumbs down');
-	p1.div.style.opacity = 1;
+	iDiv(p1).style.opacity = 1;
 	let p2 = firstCond(Pictures, x => x.key == 'thumbs up');
-	p2.div.style.display = 'none';
+	iDiv(p2).style.display = 'none';
 }
 function successPictureGoal(withComment = true) {
 
 	//console.log(Selected)
 
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
 		sayRandomVoice(chooseRandom(comments));
 	}
@@ -1101,70 +1100,74 @@ function successPictureGoal(withComment = true) {
 		let uilist;
 		if (isdef(Selected.positiveFeedbackUI)) uilist = [Selected.positiveFeedbackUI];
 		else uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
-		let sz = getBounds(uilist[0]).height;
+		let sz = getRect(uilist[0]).h;
 		//console.log('in der succesfunc!!!!!!!', uilist)
-		for (const ui of uilist) mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
+		for (const ui of uilist) {
+			let d=markerSuccess();
+			//console.log('sz',sz,'ui',ui,'\nmarker',d);
+			mpOver(d, ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
+		}
 	}
 }
 function failPictureGoal(withComment = false) {
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
 	}
 	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
 		let uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
-		let sz = getBounds(uilist[0]).height;
+		let sz = getRect(uilist[0]).h;
 		for (const ui of uilist) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 	}
 }
 function failSomePictures(withComment = false) {
-	if (withComment && Settings.spokenFeedback) {
+	if (withComment && G.spokenFeedback) {
 		const comments = (Settings.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
 	}
 	for (const p of Pictures) {
-		let ui = p.div;
+		let ui = iDiv(p);
 		let sz = p.sz;
 		if (p.isCorrect == false) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 		else mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
 	}
 	// if (isdef(Selected) && isdef(Selected.feedbackUI)) {
 	// 	let uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
-	// 	let sz = getBounds(uilist[0]).height;
+	// 	let sz = getRect(uilist[0]).h;
 	// 	for (const ui of uilist) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 	// }
 }
 function showCorrectWord(sayit = true) {
-	let anim = Settings.spokenFeedback ? 'onPulse' : 'onPulse1';
+	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
 	let div = mBy(Goal.id);
 	mClass(div, anim);
 
-	if (!sayit || !Settings.spokenFeedback) Settings.spokenFeedback ? 3000 : 300;
+	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
 
 	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
 	sayRandomVoice(correctionPhrase);
-	return Settings.spokenFeedback ? 3000 : 300;
+	return G.spokenFeedback ? 3000 : 300;
 }
 function showCorrectWordInTitle(sayit = true) {
-	let anim = Settings.spokenFeedback ? 'onPulse' : 'onPulse1';
+	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
 	clearElement(dInstruction);
 	let d1 = mText(`<b>${Goal.label}</b>`, dInstruction, { fz: 36, display: 'inline-block' });
 	//dInstruction.innerHTML = `<b>${Goal.label}</b>`;
 	mClass(dInstruction, anim);
 	showFleetingMessage(Goal.label);
 
-	if (!sayit || !Settings.spokenFeedback) Settings.spokenFeedback ? 3000 : 300;
+	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
 
 	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
 	sayRandomVoice(correctionPhrase);
-	return Settings.spokenFeedback ? 3000 : 300;
+	return G.spokenFeedback ? 3000 : 300;
 }
 function showCorrectWords(sayit = true) {
 	if (nundef(TOList)) TOList = {};
 	TOList.correctWords = [];
 	let anim = 'onPulse2';
 	let to = 0;
-	let speaking = sayit && Settings.spokenFeedback;
+	let speaking = sayit && G.spokenFeedback;
 	let ms = speaking ? 2000 : 1000;
 	for (const goal of Goal.pics) {
 		TOList.correctWords.push(setTimeout(() => {
@@ -1175,7 +1178,7 @@ function showCorrectWords(sayit = true) {
 		to += ms;
 	}
 
-	if (!sayit || !Settings.spokenFeedback) return to;
+	if (!sayit || !G.spokenFeedback) return to;
 
 	return to + ms;
 }
@@ -1184,15 +1187,15 @@ function showCorrectPictureLabels(sayit = true) {
 	for (const p of Pictures) { replacePicAndLabel(p, p.key); }
 	Goal = { pics: Pictures };
 
-	let anim = Settings.spokenFeedback ? 'onPulse' : 'onPulse1';
+	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
 	let div = Selected.feedbackUI;
 	mClass(div, anim);
 
-	if (!sayit || !Settings.spokenFeedback) Settings.spokenFeedback ? 3000 : 300;
+	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
 
 	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
 	sayRandomVoice(correctionPhrase);
-	return Settings.spokenFeedback ? 3000 : 300;
+	return G.spokenFeedback ? 3000 : 300;
 }
 function shortHintPicRemove() {
 	mRemoveClass(mBy(Goal.id), 'onPulse1');
@@ -1273,14 +1276,14 @@ function aniGameOver(msg, silent = false) {
 
 //#region card face up or down
 function turnFaceDown(pic) {
-	let ui = pic.div;
+	let ui = iDiv(pic);
 	for (const p1 of ui.children) p1.style.opacity = 0; //hide(p1);
 	ui.style.backgroundColor = 'dimgray';
 	pic.isFaceUp = false;
 
 }
 function turnFaceUp(pic) {
-	let div = pic.div;
+	let div = iDiv(pic);
 	for (const ch of div.children) {
 		ch.style.transition = `opacity ${1}s ease-in-out`;
 		ch.style.opacity = 1; //show(ch,true);
@@ -1297,7 +1300,7 @@ function toggleSelectionOfPicture(pic, selectedPics) {
 
 	//	console.log(pic)
 
-	let ui = pic.div;
+	let ui = iDiv(pic);
 	//if (pic.isSelected){pic.isSelected=false;mRemoveClass(ui,)}
 	//console.log('pic selected?',pic.isSelected);
 	pic.isSelected = !pic.isSelected;
@@ -1341,22 +1344,10 @@ function containsColorWord(s) {
 	}
 	return true;
 }
-function findItemFromEvent(items, ev) {
-	let id = evToClosestId(ev);
-	let item = firstCond(items, x => x.div.id == id);
-	return item;
-
-}
-function findItemFromElem(items, elem) {
-	let item = firstCond(items, x => x.div == elem);
-	return item;
-
-}
-function findItemFromKey(items, key) { return firstCond(items, x => x.key == key); }
 function getActualText(item) {
 	//console.log(item)
-	if (isdef(item.text)) return item.text.div.innerHTML;
-	//if (isdef(item.pic)){return item.div.children[1].innerHTML;} else {return item.div.children[0].innerHTML;}
+	if (isdef(item.text)) return item.live.dLabel.innerHTML;
+	//if (isdef(item.pic)){return iDiv(item).children[1].innerHTML;} else {return iDiv(item).children[0].innerHTML;}
 }
 function getRandomKeysFromGKeys(n) { return getRandomKeys(n, G.keys); }
 function getGameValues(user, game, level) {
@@ -1442,18 +1433,18 @@ function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
 function removePicture(pic, reorder = false) {
 	removeInPlace(Pictures, pic);
 	if (reorder) {
-		pic.div.remove();
+		iDiv(pic).remove();
 		maLayout(Pictures, dTable);
 	} else {
-		pic.div.style.opacity = 0;
+		iDiv(pic).style.opacity = 0;
 	}
 }
 function resetRound() {
-	console.log('...')
+	//console.log('...')
 	clearTimeouts();
 	clearFleetingMessage();
 	clearTable();
-	updateLabelSettings();
+	//updateLabelSettings();
 
 }
 function resetScore() {
@@ -1481,36 +1472,6 @@ function sayRandomVoice(e, g, voice = 'random') {
 	if (!Settings.silentMode) Speech.say(Settings.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
 }
 function sayTryAgain() { sayRandomVoice('try again!', 'nochmal'); }
-function setBadgeLevel(i) {
-	//i is now correct level
-	//let userStartLevel = getUserStartLevel(G.id);
-	//if (userStartLevel > i) _updateStartLevelForUser(G.id, i);
-	G.level = i;
-	Score.levelChange = true;
-
-	//setBadgeOpacity
-	if (isEmpty(badges)) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
-
-	for (let iBadge = 0; iBadge < G.level; iBadge++) {
-		badges[iBadge].div.style.opacity = .75;
-		badges[iBadge].div.style.border = 'transparent';
-		// badges[iBadge].div.children[1].innerHTML = '* ' + iBadge + ' *'; //style.color = 'white';
-		badges[iBadge].div.children[1].innerHTML = '* ' + (iBadge + 1) + ' *'; //style.color = 'white';
-		badges[iBadge].div.children[0].style.color = 'white';
-	}
-	badges[G.level].div.style.border = '1px solid #00000080';
-	badges[G.level].div.style.opacity = 1;
-	// badges[G.level].div.children[1].innerHTML = 'Level ' + G.level; //style.color = 'white';
-	badges[G.level].div.children[1].innerHTML = 'Level ' + (G.level + 1); //style.color = 'white';
-	badges[G.level].div.children[0].style.color = 'white';
-	for (let iBadge = G.level + 1; iBadge < badges.length; iBadge++) {
-		badges[iBadge].div.style.border = 'transparent';
-		badges[iBadge].div.style.opacity = .25;
-		// badges[iBadge].div.children[1].innerHTML = 'Level ' + iBadge; //style.color = 'white';
-		badges[iBadge].div.children[1].innerHTML = 'Level ' + (iBadge + 1); //style.color = 'white';
-		badges[iBadge].div.children[0].style.color = 'black';
-	}
-}
 function setBackgroundColor() { document.body.style.backgroundColor = G.color; }
 function setGoal(index) {
 	if (nundef(index)) {
@@ -1531,11 +1492,9 @@ function setMultiGoal(n, indices) {
 }
 function showHiddenThumbsUpDown(styles) {
 	styles.bg = ['transparent', 'transparent'];
-
-	//console.log('styles', jsCopy(styles))
-	Pictures = showPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']); //, ['bravo!', 'nope']);
-	//console.log('hallo', Pictures[0])
-	for (const p of Pictures) { p.div.style.padding = p.div.style.margin = '6px 0px 0px 0px'; p.div.style.opacity = 0; }
+	Pictures = myShowPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']); 
+	// Pictures = showPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']); //, ['bravo!', 'nope']);
+	for (const p of Pictures) { let d=iDiv(p); d.style.padding = d.style.margin = '6px 0px 0px 0px'; d.style.opacity = 0; }
 
 }
 function showInstruction(text, cmd, title, isSpoken, spoken, fz) {

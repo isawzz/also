@@ -95,14 +95,14 @@ function _checkOverflowPixel(items, options, dGrid) {
 
 
 }
-function _handleEvent(ev){ev.cancelBubble = true;return evToItem(ev);}
+function _handleEvent(ev) { ev.cancelBubble = true; return evToItem(ev); }
 function _standardHandler(handler) {
 	let f = isdef(handler) ?
-		ev => { ev.cancelBubble = true; let res = handler(ev,evToItem(ev)); } //console.log('clicked', evToItem(ev).key, 'res', res); }
+		ev => { ev.cancelBubble = true; let res = handler(ev, evToItem(ev)); } //console.log('clicked', evToItem(ev).key, 'res', res); }
 		: ev => { ev.cancelBubble = true; console.log('clicked on', evToClosestId(ev), evToLive(ev), evToItem(ev)); };
 	return f;
 }
-function _extendOptions(options, defOptions) {
+function _extendOptions(options, defOptions, createArea = true) {
 	defOptions = {
 		wper: 96, hper: 96, dParent: dTable,
 		showPic: true, szPic: { w: 120, h: 120 }, bg: 'random', fg: 'white', margin: 4, rounding: 6,
@@ -117,17 +117,17 @@ function _extendOptions(options, defOptions) {
 
 	addKeys(defOptions, options);
 
-	if (nundef(options.dArea)) {
+	if (createArea && nundef(options.dArea)) {
 		if (isdef(options.wArea) && isdef(options.hArea)) {
 			options.dArea = getMainArea(options.dParent, { w: options.wArea, h: options.hArea });
 		} else if (isdef(options.areaPadding)) {
 			options.dArea = getMainAreaPadding(options.dParent, padding = options.areaPadding);
 		} else options.dArea = getMainAreaPercent(options.dParent, null, options.wper, options.hper, getUID());
+		options.area = getRect(options.dArea);
+		options.idArea = options.dArea.id;
+		options.aRatio = options.area.w / options.area.h;
+		options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
 	}
-	options.area = getRect(options.dArea);
-	options.idArea = options.dArea.id;
-	options.aRatio = options.area.w / options.area.h;
-	options.containerShape = options.area.w > options.area.h ? 'L' : 'P';
 
 	if (options.repeat > 1 && nundef(options.ifs.bg)) {
 		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
@@ -461,7 +461,7 @@ function _setRowsColsSize(options) {
 	let fz = options.showLabels == true ? (wn / options.longestLabelLen) * (options.luc != 'u' ? 1.9 : 1.7) : 0; //set font size for uniform: needs to match longest label
 	let fzPic = Math.min(wn / 1.3, (hn - fz * 1.2) / 1.3);
 	if (fzPic < fz * 2) { fz = Math.floor(hn / 4); fzPic = fz * 2; }
-	let fzTest = Math.min(hn / 3, idealFontsize(options.longestLabel, wn, hn - fzPic, fz, 4).fz);//set font size for uniform: needs to match longest label
+	let fzTest = Math.min(hn / 3, idealFontDims(options.longestLabel, wn, hn - fzPic, fz, 4).fz);//set font size for uniform: needs to match longest label
 	options.fzPic = options.picStyles.fz = Math.floor(fzPic)
 	options.fzText = options.labelStyles.fz = options.isUniform ? Math.min(Math.floor(fz), Math.floor(fzTest)) : Math.floor(fz);
 

@@ -131,49 +131,27 @@ function saveUser() {
 	dbSave('boardGames'); //saveSIMA();
 }
 function setGame(game, level) {
-
 	cleanupOldGame();
-	//set new game: friendly,logo,color,key,maxLevel,level 
-	//console.log('set game to', game)
 	if (isdef(G) && G.id != game) Score.gameChange = true;
-
-	//console.log(game,DB)
 	Settings = G = jsCopy(DB.games[game]); //jsCopy(DB.games[game]);
-	//console.log('color', G.color, ColorDict[G.color], window[G.color])
-
-	//let c = firstCondDict(ColorDict,x=>x.c == )
 	G.color = getColorDictColor(G.color); //isdef(ColorDict[G.color]) ? ColorDict[G.color].c : G.color;
-	// G.color = isdef(ColorDict[G.color])?ColorDict[G.color]:isdef(window[G.color])?window[G.color]:G.color;
-	//console.log('_________setGame: color',G.color);
-
-	//initSettings(game);
-
+	G.id = game;
+	if (nundef(U.games[game]) && G.type == 'solitaire') {
+		U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 };
+	}
+	saveUser();
 	let levels = lookup(DB.games, [game, 'levels']);
 	G.maxLevel = isdef(levels) ? Object.keys(levels).length - 1 : 0;
-
-	G.id = game;
-
-	//if (isCal) supdateStartLevelForUser(game, 0);
-
 	if (isdef(level)) G.level = level;
 	else { G.level = getUserStartLevel(game); }
-
-	//console.log('setGame:', game, Username, getUserStartLevel(game));
-
 	if (G.level > G.maxLevel) G.level = G.maxLevel;
-
-	if (nundef(U.games[game])) {
-		U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0, byLevel: {} };
-	}
-
-	saveUser();
-
 	let x = getGameValues(Username, G.id, G.level);
 	copyKeys(x, G);
 	updateSettings();
 	//console.log('game',game,'level',level)
 
 }
+
 function setNextGame() {
 	let game = G.id;
 	let i = U.avGames.indexOf(game);

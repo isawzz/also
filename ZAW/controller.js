@@ -104,7 +104,7 @@ class Trial0 extends GameClass {
 
 		//feedback
 		if (calibrating()) { DELAY = 300; if (IsAnswerCorrect) this.successFunc(false); else this.failFunc(); }
-		else if (IsAnswerCorrect) { DELAY = Settings.spokenFeedback ? 1500 : 300; this.successFunc(); }
+		else if (IsAnswerCorrect) { DELAY = G.spokenFeedback ? 1500 : 300; this.successFunc(); }
 		else { DELAY = this.correctionFunc(); this.failFunc(); }
 		setTimeout(removeMarkers, 1500);
 

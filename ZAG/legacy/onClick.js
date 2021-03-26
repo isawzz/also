@@ -31,7 +31,7 @@ function closeAux() {
 	if (SettingsChanged) {
 		updateSettings();
 		//console.log('...saving because closeAux SettingsChanged!!!!')
-		saveSIMA();
+		dbSave('boardGames');
 	}
 	SettingsChanged = false;
 	auxOpen = false;

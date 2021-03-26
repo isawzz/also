@@ -195,8 +195,8 @@ function _zPicPaddingAddedToSize(infokey, dParent, styles = {}, isText = true, i
 		i = 1; console.log('iiiiiii', i, family, info.family);
 	}
 	info.fz=100;
-	let wInfo= (nundef(info.w))? 125: info.w[i]; 
-	let hInfo= (nundef(info.h))? 110: info.h[i]; 
+	let wInfo= (nundef(info.w))? 125: isList(info.w)? info.w[i]: info.w; 
+	let hInfo= (nundef(info.h))? 110: isList(info.h)? info.h[i]: info.h; 
 
 	if (info.type == 'icon' && hInfo == 133) hInfo = 110;
 
@@ -307,7 +307,7 @@ function calcDimsAndSize1(n, lines, cols, dParent, wmax, hmax) {
 	//berechne outer dims
 	let ww, wh, hpercent, wpercent;
 	if (isdef(dParent)) {
-		let b = getBounds(dParent);
+		let b = getRect(dParent);
 		ww = b.width;
 		wh = b.height;
 		hpercent = .9;

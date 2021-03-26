@@ -436,7 +436,7 @@ function _setRowsColsSize(options) {
 	let fz = options.showLabels == true ? (wn / options.longestLabelLen) * (options.luc != 'u' ? 1.9 : 1.7) : 0; //set font size for uniform: needs to match longest label
 	let fzPic = Math.min(wn / 1.3, (hn - fz * 1.2) / 1.3);
 	if (fzPic < fz * 2) { fz = Math.floor(hn / 4); fzPic = fz * 2; }
-	let fzTest = Math.min(hn / 3, idealFontsize(options.longestLabel, wn, hn - fzPic, fz, 4).fz);//set font size for uniform: needs to match longest label
+	let fzTest = Math.min(hn / 3, idealFontDims(options.longestLabel, wn, hn - fzPic, fz, 4).fz);//set font size for uniform: needs to match longest label
 	options.fzPic = options.picStyles.fz = Math.floor(fzPic)
 	options.fzText = options.labelStyles.fz = options.isUniform ? Math.min(Math.floor(fz), Math.floor(fzTest)) : Math.floor(fz);
 

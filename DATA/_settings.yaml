@@ -2,7 +2,7 @@
 minutesPerUnit: 15
 samplesPerGame: 10
 trials:  3
-showLabels: toggle #always never toggle(=first half of level: labels, second half of level: no labels)
+pictureLabels: toggle #always never toggle(=first half of level: labels, second half of level: no labels)
 incrementLevelOnPositiveStreak: 5
 decrementLevelOnNegativeStreak: 3
 language: E

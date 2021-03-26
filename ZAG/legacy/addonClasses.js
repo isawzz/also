@@ -151,7 +151,7 @@ class APasscode extends AddonClass {
 		ev.cancelBubble = true;
 		let item = findItemFromEvent(this.pictures, ev);
 
-		Selected = { pic: item, feedbackUI: item.div, sz: getBounds(item.div).height };
+		Selected = { pic: item, feedbackUI: iDiv(item), sz: getRect(iDiv(item)).height };
 		Selected.reqAnswer = this.goal.label;
 		Selected.answer = item.label;
 

@@ -259,8 +259,21 @@ function getGameValues() {
 	delete settings.levels;
 	Speech.setLanguage(settings.language);
 
-	Settings = settings;
 	return settings;
+}
+function getParamsForMaPicStyle(desc = 'segoeBlack') {
+	desc = desc.toLowerCase();
+	switch (desc) {
+		case 'twittertext': return { isText: true, isOmoji: false };
+		case 'twitterimage': return { isText: false, isOmoji: false };
+		case 'openmojitext': return { isText: true, isOmoji: true };
+		case 'openmojiimage': return { isText: false, isOmoji: true };
+		case 'openmojiblacktext': return { isText: true, isOmoji: 'openmoBlack' };
+		case 'segoe': return { isText: true, isOmoji: 'segoe ui emoji' };
+		case 'segoeblack': return { isText: true, isOmoji: 'segoe ui symbol' };
+		default: return { isText: true, isOmoji: false };
+	}
+
 }
 function mHasClass(el, className) {
 	if (el.classList) return el.classList.contains(className);
@@ -280,9 +293,31 @@ function mLinebreak(dParent, gap) {
 
 	return d;
 }
+function mpOver(d, dParent, fz, color, picStyle) {
+	//maPicOver
+	//d is pos fixed!!!
+	//console.log('dParent',dParent)
+	let b = getRect(dParent);
+
+	let cx = b.w / 2 + b.x;
+	let cy = b.h / 2 + b.y;
+	//console.log('picStyle')
+	d.style.top = picStyle == 'segoeBlack' ? ((cy - fz * 2 / 3) + 'px') : ((cy - fz / 2) + 'px');
+	d.style.left = picStyle == 'segoeBlack' ? ((cx - fz / 3) + 'px') : ((cx - fz * 1.2 / 2) + 'px');
+
+	//console.log(b);
+	// d.style.top = picStyle == 'segoeBlack' ? (b.y + 60 - fz / 2 + 'px') : (b.y + 100 - fz / 2 + 'px');
+	// d.style.left = picStyle == 'segoeBlack' ? (b.x + 120 - fz / 2 + 'px') : (b.x + 100 - fz / 2 + 'px');
+	d.style.color = color;
+	d.style.fontSize = fz + 'px';
+	d.style.display = 'block';
+	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
+	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
+	return d;
+}
 function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc } = {}) {
-	console.log('setKeys (legacy)',nMin,lang,key,keysets);
-	//G.keys = setKeys({ nMin, lang: Settings.language, keysets: KeySets, key: Settings.vocab });
+	//console.log('setKeys (legacy)',nMin,lang,key,keysets);
+	//G.keys = setKeys({ nMin, lang: G.language, keysets: KeySets, key: G.vocab });
 
 	let keys = jsCopy(keysets[key]);
 	//console.log('setKeys (from',getFunctionsNameThatCalledThisFunction()+')',keys)
@@ -447,13 +482,55 @@ function setBadgeLevel(i) {
 }
 //#endregion
 
+//#region layouts
+function layoutGrid(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+	//console.log(elist, elist.length)
+	let dims = calcRowsCols(elist.length, rows, cols);
+	//console.log('dims', dims);
+
+	let parentStyle = jsCopy(containerStyles);
+	parentStyle.display = isInline ? 'inline-grid' : 'grid';
+	parentStyle['grid-template-columns'] = `repeat(${dims.cols}, auto)`;
+	parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+
+	//console.log('parentStyle', parentStyle)
+
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return { w: b.w, h: b.h };
+
+}
+function layoutFlex(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
+	console.log(elist, elist.length)
+	let dims = calcRowsCols(elist.length, rows, cols);
+	console.log('dims', dims);
+
+	let parentStyle = jsCopy(containerStyles);
+	if (containerStyles.orientation == 'v') {
+		// console.log('vertical!');
+		// parentStyle['flex-flow']='row wrap';
+		parentStyle['writing-mode'] = 'vertical-lr';
+	}
+	parentStyle.display = 'flex';
+	parentStyle.flex = '0 0 auto';
+	parentStyle['flex-wrap'] = 'wrap';
+	// parentStyle['box-sizing'] = 'border-box'; // TODO: koennte ev problematisch sein, leave for now!
+
+	mStyleX(dGrid, parentStyle);
+	let b = getRect(dGrid);
+	return { w: b.w, h: b.h };
+
+}
+
+//#endregion
+
 //#region settings
 var SettingTypesCommon = {
 	samplesPerGame: true,
 	minutesPerUnit: true,
 	incrementLevelOnPositiveStreak: true,
 	decrementLevelOnNegativeStreak: true,
-	showLabels: true,
+	pictureLabels: true,
 	language: true,
 	vocab: true,
 	showTime: true,
@@ -467,14 +544,14 @@ var SettingTypesCommon = {
 function createSettingsUi(dParent) {
 	clearElement(dParent);
 	let ttag = 'h2';
-	mAppend(dParent, createElementFromHTML(`<${ttag}>Common Settings for ${Username}:</${ttag}>`));
+	mAppend(dParent, createElementFromHTML(`<${ttag}>Common G for ${Username}:</${ttag}>`));
 
 	let nGroupNumCommonAllGames = mInputGroup(dParent);
 	setzeEineZahl(nGroupNumCommonAllGames, 'samples', 25, ['samplesPerGame']);
 	setzeEineZahl(nGroupNumCommonAllGames, 'minutes', 1, ['minutesPerUnit']);
 	setzeEineZahl(nGroupNumCommonAllGames, 'correct streak', 5, ['incrementLevelOnPositiveStreak']);
 	setzeEineZahl(nGroupNumCommonAllGames, 'fail streak', 2, ['decrementLevelOnNegativeStreak']);
-	setzeEinOptions(nGroupNumCommonAllGames, 'show labels', ['toggle', 'always', 'never'], ['toggle', 'always', 'never'], 'toggle', ['showLabels']);
+	setzeEinOptions(nGroupNumCommonAllGames, 'show labels', ['toggle', 'always', 'never'], ['toggle', 'always', 'never'], 'toggle', ['pictureLabels']);
 	setzeEinOptions(nGroupNumCommonAllGames, 'language', ['E', 'D', 'S', 'F', 'C'], ['English', 'German','Spanish','French','Chinese'], 'E', ['language']);
 	setzeEinOptions(nGroupNumCommonAllGames, 'vocabulary', Object.keys(KeySets), Object.keys(KeySets), 'best25', ['vocab']);
 	setzeEineCheckbox(nGroupNumCommonAllGames, 'show time', false, ['showTime']);
@@ -486,7 +563,7 @@ function createSettingsUi(dParent) {
 	mLinebreak(dParent);
 	let g = DB.games[G.id];
 	if (nundef(g)) return;
-	mAppend(dParent, createElementFromHTML(`<${ttag}>Settings for <span style='color:${g.color}'>${g.friendly}</span></${ttag}>`));
+	mAppend(dParent, createElementFromHTML(`<${ttag}>G for <span style='color:${g.color}'>${g.friendly}</span></${ttag}>`));
 
 	let nGroupSpecific = mInputGroup(dParent);
 	setzeEineZahl(nGroupSpecific, 'trials', 3, ['trials']);
@@ -494,9 +571,8 @@ function createSettingsUi(dParent) {
 
 }
 
-//#region update Settings after ui change
+//settings: update G after ui change
 function appSpecificSettings() {
-	console.log('....',G.showLabels,'init')
 	updateLabelSettings();
 	updateTimeSettings();
 	updateKeySettings();
@@ -504,25 +580,37 @@ function appSpecificSettings() {
 }
 
 function updateSpeakmodeSettings() {
-	if (Settings.silentMode && Settings.spokenFeedback) Settings.spokenFeedback = false;
+	if (G.silentMode && G.spokenFeedback) G.spokenFeedback = false;
 
 }
 function updateKeySettings(nMin) {
 	//console.log(G,KeySets);
 	if (nundef(G)) return;
-	G.keys = setKeys({ nMin, lang: Settings.language, keysets: KeySets, key: Settings.vocab });
+	G.keys = setKeys({ nMin, lang: G.language, keysets: KeySets, key: G.vocab });
 	//console.log('keyset:', G.keys);
 }
 function updateTimeSettings() {
 	let timeElem = mBy('time');
 	//console.log('updateTimeSettings',_getFunctionsNameThatCalledThisFunction())
-	if (Settings.showTime) { show(timeElem); startTime(timeElem); }
+	if (G.showTime) { show(timeElem); startTime(timeElem); }
 	else hide(timeElem);
 }
 function updateLabelSettings() {
-	console.log('....',G.showLabels,Settings,G)
-	console.assert(G==Settings,'Settings is NOT G!!!!!')
-	console.assert(isdef(Score.labels), 'Score not set!!!!!');
-	if (Settings.showLabels == 'toggle') Settings.labels = Score.labels == true; //true;
-	else Settings.labels = (Settings.showLabels == 'always');
+	if (G.pictureLabels == 'toggle') G.showLabels = true; //true;
+	else G.showLabels = (G.pictureLabels == 'always');
+	//console.log('G.pictureLabels',G.pictureLabels,'labels has been set to',G.showLabels)
 }
+//#endregion
+
+
+
+
+
+
+
+
+
+
+
+
+

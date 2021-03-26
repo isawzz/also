@@ -1,14 +1,4 @@
-function saveSettings(){
 
-}
-function initSettings(game) {
-	Settings = mergeOverride(DB.settings, U.settings);
-	delete Settings.games;
-	let gsSettings = lookup(U, ['games', game, 'settings']);
-	if (isdef(gsSettings)) Settings = mergeOverride(Settings, gsSettings);
-	updateSettings();
-
-}
 
 function updateSettings() {
 

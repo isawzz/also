@@ -28,7 +28,7 @@ function _createDivs(items, ifs, options) {
 		let oneWord = longestLabel.label.replace(' ', '_');
 
 		let maxTextHeight = options.showPics ? hNet / 2 : hNet;
-		textStyles = idealFontsize(oneWord, hNet, maxTextHeight, 22, 8);
+		textStyles = idealFontDims(oneWord, hNet, maxTextHeight, 22, 8);
 		hText = textStyles.h;
 
 		pictureSize = hNet - hText;
@@ -171,7 +171,7 @@ function presentItems(items, dParent, rows) {
 	items.map(x => mAppend(dGrid, x.div));
 	let gridStyles = { 'place-content': 'center', gap: 4, margin: 4, padding: 4 };
 	let gridSize = layoutGrid(items, dGrid, gridStyles, { rows: rows, isInline: true });
-	// console.log('size of grid',gridSize,'table',getBounds(dTable))
+	// console.log('size of grid',gridSize,'table',getRect(dTable))
 
 	//#endregion
 
@@ -187,7 +187,7 @@ function replacePicAndLabel(item, key, label) {
 	//if item has onlt text, resize it and add both pic and label
 	//if label param is missing, use default label param from key
 	//console.log('item',item,'key',key,'label',label)
-	let div = item.div;
+	let div = iDiv(item);
 	//console.log(item);
 	let newItem = getPic(key, item.sz, item.bg, label);
 	clearElement(div);
@@ -199,7 +199,7 @@ function replacePicAndLabel(item, key, label) {
 function addLabel(item, label) { }
 function removeLabel(item) {
 	//console.log('old item',item);
-	let div = item.div;
+	let div = iDiv(item);
 	let newItem = getPic(item.key, item.sz, item.bg);
 	//console.log('newItem',newItem);
 	clearElement(div);
@@ -208,7 +208,7 @@ function removeLabel(item) {
 	delete item.text;
 }
 function addPic(item, key) {
-	let div = item.div;
+	let div = iDiv(item);
 	//console.log(item);
 	let newItem = getPic(key, item.sz, item.bg, item.label);
 	clearElement(div);
@@ -220,7 +220,7 @@ function addPic(item, key) {
 }
 function removePic(item) {
 	//if item does not have a label, add the label for its key
-	let div = item.div;
+	let div = iDiv(item);
 	//console.log(item);
 	let newItem = getLbl(item.key, item.sz, item.bg, item.label);
 	clearElement(div);
@@ -316,7 +316,7 @@ function _createDivsS(items, ifs, options) {
 		let oneWord = longestLabel.label.replace(' ', '_');
 
 		let maxTextHeight = options.showPics ? hNet / 2 : hNet;
-		textStyles = idealFontsize(oneWord, hNet, maxTextHeight, 22, 8);
+		textStyles = idealFontDims(oneWord, hNet, maxTextHeight, 22, 8);
 		hText = textStyles.h;
 
 		pictureSize = hNet - hText;
@@ -367,7 +367,7 @@ function _createDivsS(items, ifs, options) {
 		item.id = d.id;
 		item.row = Math.floor(item.index / options.cols);
 		item.col = item.index % options.cols;
-		item.div = d;
+		iDiv(item) = d;
 		if (isdef(pic)) { item.pic = pic; item.fzPic = pic.innerDims.fz; }
 		if (isdef(text)) item.text = text;
 		item.isSelected = false;

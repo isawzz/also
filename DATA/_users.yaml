@@ -8,7 +8,7 @@ nil:
     minutesPerUnit: 20
     incrementLevelOnPositiveStreak: 4
     decrementLevelOnNegativeStreak: 4
-    showLabels: toggle #always never toggle (=remove labels after half level)
+    pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: D
     vocab: lifePlus
     showTime: true
@@ -73,7 +73,7 @@ guest0:
     minutesPerUnit: 10
     incrementLevelOnPositiveStreak: 10
     decrementLevelOnNegativeStreak: 5
-    showLabels: toggle #always never toggle (=remove labels after half level)
+    pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: E
     vocab: best25
     showTime: false
@@ -96,7 +96,7 @@ test0:
     minutesPerUnit: 10
     incrementLevelOnPositiveStreak: 10
     decrementLevelOnNegativeStreak: 5
-    showLabels: toggle #always never toggle (=remove labels after half level)
+    pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: E
     vocab: best25
     showTime: false
@@ -137,14 +137,14 @@ test0:
 gul:
   id: gul
   avGames: [gCats, gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gTouchPic
+  lastGame: gAnagram
   settings:
     # settings common to all games
     samplesPerGame: 25
     minutesPerUnit: 20
-    incrementLevelOnPositiveStreak: 10
+    incrementLevelOnPositiveStreak: 4
     decrementLevelOnNegativeStreak: 5
-    showLabels: true #always never toggle (=remove labels after half level)
+    pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: E
     vocab: lifePlus
     showTime: true
@@ -181,7 +181,7 @@ gul:
     gElim: 
       startLevel: 2
     gAbacus:
-      startLevel: 2
+      startLevel: 0
     gPasscode:
       startLevel: 0
     gNamit:

@@ -64,12 +64,12 @@ function present00(items,options){
 	hi = Math.min(200, hi); hi = Math.round(hi);
 	let fzMax, fpMax;
 	if (options.showLabels) {
-		// fzMax = Math.floor(idealFontsize(options.longestLabel, wi - 2 * Math.ceil(options.padding), hi, 24).fz);
-		fzMax = Math.floor(idealFontsize(options.wLongest, wi - 2 * options.padding, hi, 24).fz); //or longestLabel!
+		// fzMax = Math.floor(idealFontDims(options.longestLabel, wi - 2 * Math.ceil(options.padding), hi, 24).fz);
+		fzMax = Math.floor(idealFontDims(options.wLongest, wi - 2 * options.padding, hi, 24).fz); //or longestLabel!
 		fpMax = options.showPic ? Math.min(hi / 2, wi * 2 / 3, hi - fzMax) : 0;
 	} else { fzMax = 1; fpMax = options.showPic ? Math.min(hi * 2 / 3, wi * 2 / 3) : 0; }
 	//let fpMax = Math.min(hi / 2, wi * 2 / 3, hi - fzMax);
-	//console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
+	//console.log('===>pad', options.padding, 'wi', wi, idealFontDims(options.longestLabel, wi, hi, 24));
 	//console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
 
 	options.fzPic = options.picStyles.fz = fpMax; //Math.floor(fzPic)
@@ -91,7 +91,7 @@ function present00(items,options){
 		console.log('OVERFLOWN!!!!!!!!!!!! vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
 		w = options.szPic.w * factor;
 		h = options.szPic.h * factor;
-		fz = options.fzText * factor; // idealFontsize(options.longestLabel, w, h, 22).fz; //options.fzText;// * factor;
+		fz = options.fzText * factor; // idealFontDims(options.longestLabel, w, h, 22).fz; //options.fzText;// * factor;
 		fzPic = options.fzPic * factor;
 		options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
 		options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
@@ -151,12 +151,12 @@ function sample_idealGridLayout(showLabels = true, showPic = true) {
 	hi = Math.min(200, hi); hi = Math.round(hi);
 	let fzMax, fpMax;
 	if (options.showLabels) {
-		// fzMax = Math.floor(idealFontsize(options.longestLabel, wi - 2 * Math.ceil(options.padding), hi, 24).fz);
-		fzMax = Math.floor(idealFontsize(options.wLongest, wi - 2 * options.padding, hi, 24).fz); //or longestLabel!
+		// fzMax = Math.floor(idealFontDims(options.longestLabel, wi - 2 * Math.ceil(options.padding), hi, 24).fz);
+		fzMax = Math.floor(idealFontDims(options.wLongest, wi - 2 * options.padding, hi, 24).fz); //or longestLabel!
 		fpMax = options.showPic ? Math.min(hi / 2, wi * 2 / 3, hi - fzMax) : 0;
 	} else { fzMax = 1; fpMax = options.showPic ? Math.min(hi * 2 / 3, wi * 2 / 3) : 0; }
 	//let fpMax = Math.min(hi / 2, wi * 2 / 3, hi - fzMax);
-	//console.log('===>pad', options.padding, 'wi', wi, idealFontsize(options.longestLabel, wi, hi, 24));
+	//console.log('===>pad', options.padding, 'wi', wi, idealFontDims(options.longestLabel, wi, hi, 24));
 	//console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
 
 	options.fzPic = options.picStyles.fz = fpMax; //Math.floor(fzPic)
@@ -178,7 +178,7 @@ function sample_idealGridLayout(showLabels = true, showPic = true) {
 		console.log('OVERFLOWN!!!!!!!!!!!! vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
 		w = options.szPic.w * factor;
 		h = options.szPic.h * factor;
-		fz = options.fzText * factor; // idealFontsize(options.longestLabel, w, h, 22).fz; //options.fzText;// * factor;
+		fz = options.fzText * factor; // idealFontDims(options.longestLabel, w, h, 22).fz; //options.fzText;// * factor;
 		fzPic = options.fzPic * factor;
 		options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
 		options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);

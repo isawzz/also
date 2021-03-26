@@ -310,7 +310,7 @@ function getSizeAndOptions2(items, dParent, options = {}) {
 
 	// }
 	// maxItemSize,maxFontSize
-	// idealItemSize,idealFontSize
+	// idealItemSize,idealFontDims
 	// minItemSize,minFontSize 
 	// canItemWidthGrow
 	// canItemHeighGrow
@@ -589,7 +589,7 @@ function getSizeAndOptions1(items, dParent, options = {}) {
 
 	// }
 	// maxItemSize,maxFontSize
-	// idealItemSize,idealFontSize
+	// idealItemSize,idealFontDims
 	// minItemSize,minFontSize 
 	// canItemWidthGrow
 	// canItemHeighGrow

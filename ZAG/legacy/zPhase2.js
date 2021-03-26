@@ -82,7 +82,7 @@ function calcRowsColsSize(n, rows, cols, dParent, wmax, hmax, minsz = 50, maxsz 
 	//berechne outer dims
 	let ww, wh, hpercent, wpercent;
 	if (isdef(dParent)) {
-		let b = getBounds(dParent);
+		let b = getRect(dParent);
 		ww = b.width;
 		wh = b.height;
 		hpercent = .9;
@@ -134,7 +134,7 @@ function _prep1_dep(items, ifs, options) {
 		let longestLabel = findLongestLabel(items);
 		let oneWord = longestLabel.label.replace(' ', '_');
 
-		textStyles = idealFontsize(oneWord, szNet, szNet / 2, 22, 8); //, 'bold');	textStyles.weight='bold'
+		textStyles = idealFontDims(oneWord, szNet, szNet / 2, 22, 8); //, 'bold');	textStyles.weight='bold'
 		hText = textStyles.h;
 
 		pictureSize = szNet - hText;
@@ -179,7 +179,7 @@ function _prep1_dep(items, ifs, options) {
 		item.id = d.id;
 		item.row = Math.floor(item.index / options.cols);
 		item.col = item.index % options.cols;
-		item.div = d;
+		iDiv(item) = d;
 		item.pic = pic;
 		if (isdef(text)) item.text=text;
 		item.isSelected = false;
@@ -187,7 +187,7 @@ function _prep1_dep(items, ifs, options) {
 		item.dims = parseDims(sz, sz, d.style.padding);
 		//console.log('index', item.index, 'row', item.row, 'col', item.col)
 		if (options.showRepeat) addRepeatInfo(d, item.iRepeat, sz);
-		let fzPic = firstNumber(item.div.children[0].children[0].style.fontSize);
+		let fzPic = firstNumber(iDiv(item).children[0].children[0].style.fontSize);
 		let docfz = item.pic.innerDims.fz;
 		console.assert(docfz == fzPic, 'fzPic is ' + fzPic + ', docfz is ' + docfz);
 		if (docfz != fzPic) {

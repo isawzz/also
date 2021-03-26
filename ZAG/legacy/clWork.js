@@ -29,7 +29,7 @@ class GCats extends Game {
 	}
 	eval() {
 		this.piclist = Pictures;
-		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => x.div), sz: getBounds(this.piclist[0].div).height };
+		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => x.div), sz: getRect(this.piclist[0].div).height };
 		let isCorrect = true;
 		for (const p of Pictures) {
 			let label = p.label;

@@ -163,7 +163,7 @@ function zItemsForViewer(keys, labelFunc, { sz, padding = 4 }, iStart = 0) {
 
 	//als erstes das label produzieren und checken wieviel platz es braucht
 	//console.log(longestLabel)
-	let textStyles = idealFontsize(longestLabel, szNet, szNet / 2, 20, 4);
+	let textStyles = idealFontDims(longestLabel, szNet, szNet / 2, 20, 4);
 
 	let hText = textStyles.h;
 	let hPic = szNet - hText; //Math.max(sz - hText,sz/4);
@@ -198,7 +198,7 @@ function zItemsForViewer(keys, labelFunc, { sz, padding = 4 }, iStart = 0) {
 		d.id = 'pic' + (i + iStart);
 
 		//complete item info
-		item.div = d;
+		iDiv(item) = d;
 		item.pic = pic;
 		if (labeled) item.text = text;
 		item.isSelected = false;
@@ -302,7 +302,7 @@ function visualizeNumber(n,dParent, color) {
 	items.map(x => mAppend(dGrid, x.div));
 	let gridStyles = { 'place-content': 'center', gap: 4, margin: 4, padding: 4, bg:'white', rounding:10 };
 	let gridSize = layoutGrid(items, dGrid, gridStyles, { rows: options.rows, isInline: true });
-	//console.log('size of grid', gridSize, 'table', getBounds(dTable))
+	//console.log('size of grid', gridSize, 'table', getRect(dTable))
 	//#endregion
 
 	//console.log('*** THE END ***');
@@ -323,7 +323,7 @@ function visualizeAritOp(op,a,b){
 	//d3=visualizeNumber(result,dx,'red');
 	let d3=b==0?zText(result,dx,{fg:'white',fz:64}):visualizeNumber(result,dx,'red');
 
-	// console.log('_________',getBounds(d3));
+	// console.log('_________',getRect(d3));
 	//dop und deq muessen size adjusted werden!!!
 	//brauch das extra!!!!
 	//d3=joinDivs(d1,d2);
@@ -339,7 +339,7 @@ function visualizeAddition(a,b){
 	deq=zText('=',dx,{fg:'white',fz:64});
 	d2=visualizeNumber(a+b,dx,'red');
 
-	console.log('_________',getBounds(d2));
+	console.log('_________',getRect(d2));
 	//dop und deq muessen size adjusted werden!!!
 	//brauch das extra!!!!
 	//d3=joinDivs(d1,d2);

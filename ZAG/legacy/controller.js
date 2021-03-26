@@ -1,7 +1,7 @@
 var pictureSize, TOMain, TOTrial;
 function canAct() {
 	//console.log('uiActivated',uiActivated,'auxOpen',auxOpen)
-	return uiActivated && !auxOpen && document.activeElement.id != 'spUser' && !isVisible2('freezer2');
+	return uiActivated && !auxOpen && document.activeElement.id != 'spUser' && !isVisible('freezer2');
 }
 
 function stopGame() {
@@ -26,33 +26,37 @@ function startGame() {
 }
 function startLevel() {
 
-	let x=getGameValues(Username, G.id, G.level);
+	let x = getGameValues(Username, G.id, G.level);
 	//console.log('gameValues',x);
-	copyKeys(x,G);
+	copyKeys(x, G);
 
+	updateLabelSettings();
 	Speech.setLanguage(G.language);
 	G.instance.startLevel();
-	console.log(G)
+	//console.log(G)
 	if (G.keys.length < G.numPics) { updateKeySettings(G.numPics + 5); }
 	startRound();
 }
 function startRound() {
-	if (G.addonActive != true && isTimeForAddon()) { 
-		G.addonActive=true;
+	//console.log('...new round:',G.showLabels)
+
+	if (G.addonActive != true && isTimeForAddon()) {
+		G.addonActive = true;
 		//console.log('time for addon!!!')
-		exitToAddon(startRound); return; 
-	}else G.addonActive = false;
+		exitToAddon(startRound); return;
+	} else G.addonActive = false;
 
 	resetRound();
 	uiActivated = false;
 	G.instance.startRound();
+	//console.log('...new round:',G.showLabels)
 	TOMain = setTimeout(() => prompt(), 300);
 }
 function prompt() {
 	QuestionCounter += 1;
 	//GroupCounter = 0;
 
-	console.log(G.level)
+	//console.log('prompt: G.pictureLabels',G.pictureLabels,'labels has been set to',G.showLabels)
 	showStats();
 	G.trialNumber = 0;
 
@@ -78,16 +82,18 @@ function evaluate() {
 	uiActivated = false; clearTimeouts();
 
 	IsAnswerCorrect = G.instance.eval(...arguments);
+	//console.log('Selected',Selected)
 	if (IsAnswerCorrect === undefined) { promptNextTrial(); return; }
 	//console.log('answer is', IsAnswerCorrect ? 'correct' : 'WRONG!!!')
 
 	G.trialNumber += 1;
-	if (!IsAnswerCorrect && G.trialNumber < G.trials && !calibrating()) { promptNextTrial(); return; }
+	if (!IsAnswerCorrect && G.trialNumber < G.trials) { promptNextTrial(); return; }
 
 	//feedback
-	if (calibrating()) { DELAY = 300; if (IsAnswerCorrect) G.successFunc(false); else G.failFunc(); }
-	else if (IsAnswerCorrect) { DELAY = Settings.spokenFeedback ? 1500 : 300; G.successFunc(); }
+	console.log(G)
+	if (IsAnswerCorrect) { DELAY = G.spokenFeedback ? 1500 : 300; G.successFunc(); }
 	else { DELAY = G.correctionFunc(); G.failFunc(); }
+	//return;
 	setTimeout(removeMarkers, 1500);
 
 	let nextLevel = scoring(IsAnswerCorrect);

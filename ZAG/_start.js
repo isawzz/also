@@ -1,16 +1,15 @@
 async function _start() {
 
-	initLive();
-
-	initTable();
-
-	initSidebar();  initAux(); initScore(); initSymbolTableForGamesAddons(); //creates Daat
+	initLive();	initTable();	initSidebar();  initAux(); initScore(); initSymbolTableForGamesAddons(); //creates Daat
 	addonFeatureInit(); //new API!
 	Speech = new SpeechAPI('E');
 	KeySets = getKeySets();
 
 	loadUser(); console.assert(isdef(G));
 
+	startUnit();
+}
+function startUnit(){
 	restartTime();
 	U.session = {};
 	if (PROD_START) { PROD_START = false; onClickTemple(); } else startGame();

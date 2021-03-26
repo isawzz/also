@@ -1,3 +1,16 @@
+//#region refactor settings
+function initSettings(game) {
+	Settings = mergeOverride(DB.settings, U.settings);
+	delete Settings.games;
+	let gsSettings = lookup(U, ['games', game, 'settings']);
+	if (isdef(gsSettings)) Settings = mergeOverride(Settings, gsSettings);
+	updateSettings();
+
+}
+
+
+
+//#region vorher
 function getItemsCat_dep(n, cat) {
 	let keys = KeySets.all;
 	keys = KeySets.all.filter(x => firstCond(Syms[x].cats, x => x.includes(cat)));
