@@ -149,9 +149,12 @@ function interrupt(){
 	TOMan.clear();
 }
 
-function onClickTemple(){
-	interrupt();
-	menu();
+function onClickTemple(){	interrupt();	menu();}
+function onClickTemple() {
+	//console.log('opening menu: ui will be interrupted!!!')
+	openAux();
+	hide('dTemple');
+	createMenuUi(dAux);
 }
 
 function onClickBadgeX(ev) {

@@ -1,3 +1,32 @@
+function _simpleOptions(options) {
+	//_simpleOptions({w:sz,h:sz,fz:sz/4,fzPic:sz/2,bg:levelColors[i], fg: textColor});	
+	options.showPic = isdef(options.fzPic);
+	options.showLabels = isdef(options.fz);
+	options.szPic = { w: options.w, h: options.h };
+	//options.ifs = { bg: options.bg, fg: options.fg };
+	options.fzText = options.fz;
+
+	if (nundef(options.rounding)) options.rounding = 4;
+	if (nundef(options.margin)) options.margin = 4;
+	if (nundef(options.padding)) options.padding = 0;
+
+	if (nundef(options.labelStyles)) options.labelStyles = {};
+
+	if (options.showLabels) { if (nundef(options.labelPos)) options.labelBottom = true; options.labelStyles.fz = options.fzText; }
+
+	options.picStyles = { fz: options.fzPic };
+
+	let [w, h] = [options.szPic.w, options.szPic.h];
+	options.outerStyles = {
+		w: w, h: h, bg: options.bg, fg: options.fg,
+		display: 'inline-flex', 'flex-direction': 'column',
+		'justify-content': 'center', 'align-items': 'center',
+		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
+	};
+
+	return options;
+}
+
 function detectArea(dParent, w, h) {
 	let rect = isdef(dParent) ? getRect(dParent) : null;
 	if (nundef(w)) { w = rect ? rect.w : window.innerWidth; }
