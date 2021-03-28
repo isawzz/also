@@ -335,7 +335,7 @@ function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ov
 	let x = y = gap;
 
 	// call splayout primitive!!!
-	let sz = splayout(items.map(x => x.div), dParent, w, h, x, y, overlap, splay);
+	let sz = splayout(items.map(x => iDiv(x)), dParent, w, h, x, y, overlap, splay);
 
 	dParent.style.width = '' + sz.w + 'px';
 	dParent.style.height = '' + sz.h + 'px';
