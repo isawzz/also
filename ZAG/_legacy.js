@@ -342,6 +342,27 @@ function picSet(setname) {
 }
 //#endregion
 
+//#region user - UNUSED bis auf saveUser
+function changeUser(username, dParent) {
+	saveUser();
+	loadUser(username, dParent);
+}
+function loadUser_new(username, dParent) {
+	U = DB.users[username];
+	U.live = {};
+	mInner('user: ' + username, dParent);
+	//console.log('User', U)
+}
+function userUpdate(proplist, val) {
+	lookupSetOverride(U, proplist, val);
+	saveUser();
+}
+function saveUser() {
+	//was muss von U.live uebernommen werden?
+	delete U.live;
+	dbSave('boardGames');
+}
+//#endregion
 
 function calcRowsColsX(num, rows, cols) {
 	const tableOfDims = {
@@ -396,6 +417,11 @@ function calcRowsCols(num, rows, cols) {
 	}
 	//console.log(rows, cols, shape);
 	return { rows: rows, cols: cols, recommendedShape: shape };
+}
+function filterWordByLength(k, w, spacesAllowed = false) {
+	//console.log('k',k,'w',w,'max',G.maxWordLength,'min',G.minWordLength)
+	if (nundef(G.minWordLength)) G.minWordLength = 0;
+	return w.length <= G.maxWordLength && w.length >= G.minWordLength && (!w.includes(' ') || spacesAllowed);
 }
 function getGameValues() {
 	let user = U.id;

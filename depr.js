@@ -1,3 +1,167 @@
+function addLabel3(item, label, replaceOld = true) {
+	//console.log(item);
+	item.label = label;
+	item.live.options.showLabels = true;
+	let newItem = makeItemDiv(item, item.live.options); //getPic(key, item.sz, item.bg, label);
+	clearElement(div);
+	let d = iDiv(newItem);
+	mAppend(div, d.children[0]);
+	//mAppend(div, d.children[0]);
+	item.live.dPic = newItem.pic;
+	item.live.dLabel = newItem.text;
+	return div;
+}
+function addLabel2(item, label) {
+
+	let dLabel = item.live.dLabel;
+	if (nundef(dLabel)) {
+		dLabel = item.live.dLabel = mDiv(iDiv(item), { fz: 20 });
+		dLabel.innerHTML = label
+
+
+	} else console.log('dLabel', dLabel);
+
+	return dLabel;
+	if (isdef(item.live.dLabel)) { removeLabel(item); }
+	item.label = label;
+	let div = iDiv(item);
+	let rect = getRect(div);
+	dLabel = item.live.dLabel = mText(item.label, div, item.live.options.labelStyles);
+	let fzPic = getStandardFzPic(rect.w, rect.h, true);
+	let opt = item.live.options;
+	let fz = getStandardFz(rect.w, rect.h, opt.showPic, opt.showLabels, opt.wLongest);
+
+	//wie wird
+	mStyleX(item.live.dPic, { fz, fzPic });
+	mStyleX(item.live.dLabel, { fz, fz });
+	return dLabel;
+}
+
+function makeItemDivs_dep(items, options) {
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+
+		if (isdef(options.outerStyles)) copyKeys(item, options.outerStyles, {}, Object.keys(options.ifs)); //options.ifs contains per item dynamic styles!!!!!
+		let dOuter = mCreate('div', options.outerStyles, getUID());
+
+		if (isdef(item.textShadowColor)) {
+			//console.log('halllllllllllll')
+			let sShade = '0 0 0 ' + item.textShadowColor;
+			if (options.showPic) {
+				options.picStyles['text-shadow'] = sShade;
+				options.picStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+			} else {
+				options.labelStyles['text-shadow'] = sShade;
+				options.labelStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+			}
+		}
+
+		let dLabel;
+		if (options.showLabels && options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		let dPic;
+		if (options.showPic) {
+			dPic = mDiv(dOuter, { family: item.info.family });
+			dPic.innerHTML = item.info.text;
+			if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
+		}
+
+		if (options.showLabels && options.labelBottom == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
+
+		if (isdef(options.handler)) dOuter.onclick = options.handler;
+
+		lAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
+
+		if (isdef(item.textShadowColor)) { applyColorkey(item, options); }
+
+
+	}
+
+}
+
+function myShowPics_orig(handler, ifs = {}, options = {}, keys, labels) {
+	if (nundef(keys)) keys = choose(G.keys, G.numPics);
+	// keys=['house','socks','hammer'];
+	console.log(keys);
+	Pictures = showPics(handler, ifs, options, keys, labels);
+}
+function myShowPics1(handler, ifs = {}, options = {}, keys, labels) {
+	if (nundef(keys)) keys = choose(G.keys, G.numPics);
+	//keys[0]='tamale';	//keys[1]='safety pin';	//keys[2]='beaver';	//keys=['eye'];//['toolbox','tiger']; //keys[0] = 'butterfly'; //keys[0]='man in manual wheelchair';	//keys=['sun with face'];	// keys=['house','socks','hammer'];
+	//console.log('keys',keys);
+
+	options.ifs = ifs; options.handler = handler; _extendOptions(options); //console.log(options);
+
+	let items = genItemsFromKeys(keys, options); items.map(x => makeItemDiv(x, options));
+
+	items.map(x => mAppend(dTable, iDiv(x)));
+	return items;
+
+	//Pictures = showPics(handler, ifs, options, keys, labels);
+
+}
+function myShowPics2(handler, ifs = {}, options = {}, keys, labels) {
+	if (nundef(keys)) keys = choose(G.keys, G.numPics);
+
+	let w = window.innerWidth * .82;
+	let h = window.innerHeight * .6;
+	let dArea = getArea(dTable, { w: w, h: h });
+
+	let defOptions = { isRegular: true, hugeFont: true, szPic: { w: 200, h: 200 }, gap: 15, dArea: dArea, fzText: 24, fzPic: 96, ifs: ifs, handler: handler };
+
+	copyKeys(defOptions, options);
+	_extendOptions(options); console.log(options);
+
+	let items = Pictures = genItemsFromKeys(keys, options); console.log('items', items, 'rect', w, h);
+	if (isdef(labels)) {
+		options.showLabels = true;
+		for (let i = 0; i < items.length; i++) item[i].label = labels[i % labels.length];
+	}
+	//items.map(x => makeItemDiv(x, options));	
+
+	present00(items, options);
+	dArea.style.height = null;
+
+	// [options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSizeWH(items, w, h, options);
+	// console.log('present00: rows', options.rows, 'cols', options.cols);
+
+	// _setRowsColsSize(options);
+	// makeItemDivs(items, options);
+	// let dGrid = mDiv(options.dArea, { gap: options.gap, layout: 'g_' + options.cols, fz: 2, padding: options.gap }, getUID());
+	// for (const item of items) { mAppend(dGrid, iDiv(item)); }
+
+	// // items.map(x => mAppend(dTable, iDiv(x)));
+
+	return items;
+}
+function myPresent2(dArea, items, options) {
+	present00(items, options);	//dArea.style.height = null;
+	mStyleX(dArea, { h: 'auto', bg: 'red' });
+}
+function myShowPics3(handler, ifs = {}, options = {}, keys, labels) {
+	//O
+	options = getOptionsNoArea(dTable, handler, window.innerWidth - 180, window.innerHeight - 220);
+	//I
+	if (nundef(keys)) keys = choose(G.keys, G.numPics);
+	let items = Pictures = genItemsFromKeys(keys, options);
+	if (isdef(labels)) {
+		options.showLabels = true;
+		for (let i = 0; i < items.length; i++) item[i].label = labels[i % labels.length];
+	}
+	//A
+	mRemove(options.dArea)
+	let dArea = dTable; //options.dArea; //let rect = getRect(dArea); console.log('items', items, 'rect', rect.w, rect.h);
+	//L
+	//myPresent2(dArea,items,options);
+	myPresent(dArea, items, options);
+
+
+	return items;
+
+}
+
+
+
 function getGameValues(user, game, level) {
 	//console.log(user,game,level)
 	let di = { numColors: 1, numRepeat: 1, numPics: 1, numSteps: 1, trials: G.trials, colors: ColorList }; // general defaults

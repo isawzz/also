@@ -151,7 +151,7 @@ function _extendOptions(options, defOptions, createArea = true) {
 	options.outerStyles = {
 		w: w, h: h, bg: options.bg, fg: options.fg,
 		display: 'inline-flex', 'flex-direction': 'column',
-		'justify-content': 'center', 'align-items': 'center',
+		'justify-content': 'center', 'align-items': 'center','vertical-align':'top',
 		//'place-content': 'center',
 		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
 	};

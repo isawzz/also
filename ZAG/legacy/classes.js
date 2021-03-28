@@ -2,146 +2,6 @@
 function getInstance(G) {
 	return new (Daat.GameClasses[G.id])(G.id);
 }
-function myShowPics_orig(handler, ifs = {}, options = {}, keys, labels) {
-	if (nundef(keys)) keys = choose(G.keys, G.numPics);
-	// keys=['house','socks','hammer'];
-	console.log(keys);
-	Pictures = showPics(handler, ifs, options, keys, labels);
-}
-function myShowPics1(handler, ifs = {}, options = {}, keys, labels) {
-	if (nundef(keys)) keys = choose(G.keys, G.numPics);
-	//keys[0]='tamale';	//keys[1]='safety pin';	//keys[2]='beaver';	//keys=['eye'];//['toolbox','tiger']; //keys[0] = 'butterfly'; //keys[0]='man in manual wheelchair';	//keys=['sun with face'];	// keys=['house','socks','hammer'];
-	//console.log('keys',keys);
-
-	options.ifs = ifs; options.handler = handler; _extendOptions(options); //console.log(options);
-
-	let items = genItemsFromKeys(keys, options); items.map(x => makeItemDiv(x, options));
-
-	items.map(x => mAppend(dTable, iDiv(x)));
-	return items;
-
-	//Pictures = showPics(handler, ifs, options, keys, labels);
-
-}
-function myShowPics2(handler, ifs = {}, options = {}, keys, labels) {
-	if (nundef(keys)) keys = choose(G.keys, G.numPics);
-
-	let w = window.innerWidth * .82;
-	let h = window.innerHeight * .6;
-	let dArea = getArea(dTable, { w: w, h: h });
-
-	let defOptions = { isRegular: true, hugeFont: true, szPic: { w: 200, h: 200 }, gap: 15, dArea: dArea, fzText: 24, fzPic: 96, ifs: ifs, handler: handler };
-
-	copyKeys(defOptions, options);
-	_extendOptions(options); console.log(options);
-
-	let items = Pictures = genItemsFromKeys(keys, options); console.log('items', items, 'rect', w, h);
-	if (isdef(labels)) {
-		options.showLabels = true;
-		for (let i = 0; i < items.length; i++) item[i].label = labels[i % labels.length];
-	}
-	//items.map(x => makeItemDiv(x, options));	
-
-	present00(items, options);
-	dArea.style.height = null;
-
-	// [options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSizeWH(items, w, h, options);
-	// console.log('present00: rows', options.rows, 'cols', options.cols);
-
-	// _setRowsColsSize(options);
-	// makeItemDivs(items, options);
-	// let dGrid = mDiv(options.dArea, { gap: options.gap, layout: 'g_' + options.cols, fz: 2, padding: options.gap }, getUID());
-	// for (const item of items) { mAppend(dGrid, iDiv(item)); }
-
-	// // items.map(x => mAppend(dTable, iDiv(x)));
-
-	return items;
-}
-function myPresent2(dArea, items, options) {
-	present00(items, options);	//dArea.style.height = null;
-	mStyleX(dArea, { h: 'auto', bg: 'red' });
-}
-function myPresent(dArea, items, options) {
-	//console.log(options, items)
-	let w = options.w; //window.innerWidth-70;
-	let h = options.h; //window.innerHeight-150;
-	let [wi, hi, rows, cols] = calcRowsColsSizeAbWo(items.length, w, h, options.showLabels);
-	let gap = wi * .1; wi -= gap; hi -= gap;
-	let fzPic = options.fzPic = Math.min(wi * .8, G.showLabels ? hi * .6 : hi * .75);
-	//console.log('fzPic',fzPic,G.showLabels)
-	let fz = options.fz = idealFontSize(options.wLongest, wi, hi / 3);
-	options.szPic = { w: wi, h: hi };
-	//console.log(items[0]);
-	//console.log('dims', w, h, wi, hi, rows, cols, fzPic, fz);
-	let outerStyles = {
-		w: wi, h: hi, margin: gap / 2, rounding: 6,
-		bg: valf(options.ifs.bg, 'random'), fg: 'contrast', display: 'inline-flex', 'flex-direction': 'column',
-		'justify-content': 'center', 'align-items': 'center',
-	};
-	let picStyles = { fz: fzPic };
-	let labelStyles = { fz: fz };
-	for (const item of items) {
-		for (const k in options.ifs) if (isdef(item[k])) outerStyles[k] = item[k];
-		if (isdef(item.textShadowColor)) {
-			let sShade = '0 0 0 ' + item.textShadowColor;
-			if (options.showPic) {
-				picStyles['text-shadow'] = sShade;
-				picStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
-			} else {
-				labelStyles['text-shadow'] = sShade;
-				labelStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
-			}
-		}
-		let dOuter = mCreate('div', outerStyles, item.id);
-		dOuter.onclick = options.handler;
-		picStyles.family = item.info.family;
-		let dLabel,dPic;
-		if (options.showPic) {dPic = mDiv(dOuter, picStyles);		dPic.innerHTML = item.info.text;}
-		//console.log('showLabels ',options.showLabels)
-		if (options.showLabels) dLabel = mText(item.label, dOuter, labelStyles);
-		if (options.showRepeat) addRepeatInfo(dOuter, item.iRepeat, wi);		
-		iAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
-	}
-	items.map(x => mAppend(dArea, iDiv(x)));
-}
-function myShowPics3(handler, ifs = {}, options = {}, keys, labels) {
-	//O
-	options = getOptionsNoArea(dTable, handler, window.innerWidth - 180, window.innerHeight - 220);
-	//I
-	if (nundef(keys)) keys = choose(G.keys, G.numPics);
-	let items = Pictures = genItemsFromKeys(keys, options);
-	if (isdef(labels)) {
-		options.showLabels = true;
-		for (let i = 0; i < items.length; i++) item[i].label = labels[i % labels.length];
-	}
-	//A
-	mRemove(options.dArea)
-	let dArea = dTable; //options.dArea; //let rect = getRect(dArea); console.log('items', items, 'rect', rect.w, rect.h);
-	//L
-	//myPresent2(dArea,items,options);
-	myPresent(dArea, items, options);
-
-
-	return items;
-
-}
-function myShowPics(handler, ifs = {}, options = {}, keys, labels) {
-	//O
-	options = getOptionsMinimalistic(dTable, handler, window.innerWidth - 180, window.innerHeight - 220, ifs, options, G);
-	options.ifs = ifs;
-	//console.log(options)
-	//I
-	if (nundef(keys)) keys = choose(G.keys, G.numPics);
-	let items = Pictures = genItemsFromKeys(keys, options);
-	if (isdef(labels)) {
-		options.showLabels = true;
-		for (let i = 0; i < items.length; i++) item[i].label = labels[i % labels.length];
-	}
-	//L
-	myPresent(dTable, items, options);
-	return items;
-}
-
 class Game {
 	constructor(name) { this.name = name; }
 	clear() { clearTimeout(this.TO); clearFleetingMessage(); }
@@ -686,48 +546,60 @@ class GMissingNumber extends Game {
 	eval(isCorrect) { return isCorrect; }
 
 }
-class GNamit extends Game {
-	constructor(name) { super(name); }
-	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
+class GPremem extends Game {
+	constructor() { super(); this.piclist = []; }
 	prompt() {
-		myShowPics(null, {}, { rows: 1, showLabels: false });
-
-		Goal = { pics: Pictures };
-
-		showInstruction('', G.language == 'E' ? 'drag labels to pictures' : "ordne die texte den bildern zu", dTitle, true);
-		mLinebreak(dTable);
-
-		setDropZones(Pictures, () => { });
-		mLinebreak(dTable, 50);
-
-		this.letters = createDragWords(Pictures, evaluate);
-		mLinebreak(dTable, 50);
-
-		mButton('Done!', evaluate, dTable, { fz: 32, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
-
+		this.piclist = [];
+		G.showLabels = false;
+		myShowPics(this.interact.bind(this),
+			{ border: '3px solid #ffffff80' }, // border: '3px solid #ffffff80'
+			{ }); //, showLabels: false });
+			// { showLabels: false }); //, showLabels: false });
+			// { numRepeat: G.numRepeat, sameBackground: G.sameBackground, showLabels: false }); //, showLabels: false });
+		showInstruction('', G.language == 'E' ? 'click any picture' : 'click irgendein Bild', dTitle, true);
 		activateUi();
 	}
 	trialPrompt() {
-		sayTryAgain();
-		setTimeout(() => { Pictures.map(x => removeLabel(x)) }, 1500);
+		for (const p of this.piclist) { toggleSelectionOfPicture(p); }
+		this.piclist = [];
+		showInstruction('', 'try again: click any picture', dTitle, true);
 		return 10;
 	}
-	eval() {
-		this.piclist = Pictures;
-		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => x.div), sz: getRect(this.piclist[0].div).h };
-		let isCorrect = true;
-		for (const p of Pictures) {
-			let label = p.label;
-			if (nundef(p.div.children[1])) {
-				p.isCorrect = isCorrect = false;
-			} else {
-				let text = getActualText(p);
-				if (text != label) { p.isCorrect = isCorrect = false; } else p.isCorrect = true;
-			}
-		}
-		return isCorrect;
-	}
+	interact(ev) {
+		ev.cancelBubble = true;
+		if (!canAct()) return;
 
+		let pic = findItemFromEvent(Pictures, ev);
+		// let id = evToClosestId(ev);
+		// let i = firstNumber(id);
+		// let pic = Pictures[i];
+		//let div = pic.div;
+		if (!isEmpty(this.piclist) && this.piclist.length < G.numRepeat - 1 && this.piclist[0].label != pic.label) return;
+		toggleSelectionOfPicture(pic, this.piclist);
+		//console.log('clicked', pic.key, this.piclist);//,piclist, GPremem.PicList);
+		if (isEmpty(this.piclist)) {
+			showInstruction('', G.language == 'E' ? 'click any picture' : 'click irgendein Bild', dTitle, true);
+		} else if (this.piclist.length < G.numRepeat - 1) {
+			//set incomplete: more steps are needed!
+			//frame the picture
+			showInstruction(pic.label, G.language == 'E' ? 'click another' : 'click ein andres Bild mit', dTitle, true);
+		} else if (this.piclist.length == G.numRepeat - 1) {
+			// look for last picture with x that is not in the set
+			let picGoal = firstCond(Pictures, x => x.label == pic.label && !x.isSelected);
+			setGoal(picGoal.index);
+			showInstruction(picGoal.label, G.language == 'E' ? 'click the ' + (G.numRepeat == 2 ? 'other' : 'last')
+				: 'click das ' + (G.numRepeat == 2 ? 'andere' : 'letzte') + ' Bild mit', dTitle, true);
+		} else {
+			//set is complete: eval
+			evaluate(this.piclist);
+		}
+	}
+	eval(piclist) {
+		Selected = { piclist: piclist, feedbackUI: piclist.map(x => iDiv(x)), sz: getRect(iDiv(piclist[0])).h };
+		let req = Selected.reqAnswer = piclist[0].label;
+		Selected.answer = piclist[piclist.length - 1].label;
+		if (Selected.answer == req) { return true; } else { return false; }
+	}
 }
 class GTouchPic extends Game {
 	constructor(name) { super(name); }

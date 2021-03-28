@@ -34,7 +34,7 @@ function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
-function mDiv(dParent = null, styles, id) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
+function mDiv(dParent = null, styles, id, inner) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; if (isdef(inner)) d.innerHTML=inner; return d; }
 function mDivid(id, dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
 function mEditableOnEdited(id, dParent, label, initialVal, onEdited, onOpening) {
@@ -353,6 +353,7 @@ function aRotateAccel(d, ms) { return d.animate({ transform: `rotate(1200deg)` }
 //#endregion
 
 //#region color
+var colorDict = null; //for color names, initialized when calling anyColorToStandardStyle first time
 function anyColorToStandardString(cAny, a, allowHsl = false) {
 	//if allowHsl is false: only return rgb,rgba,or hex7,hex9 string! >pBSC algo!!!
 	//if a is undefined, leaves a as it is in cAny, otherwise modifies to a
@@ -592,6 +593,17 @@ function colorDarker(c, zero1 = .8, log = true) {
 	c = anyColorToStandardString(c);
 	return pSBC(-zero1, c, undefined, !log);
 } //ok
+function colorPalShadeX(color, n) {
+	//assumes pSBC compatible color format (hex,rgb strings)
+	let res = [];
+	let step = 1.6 / (n - 1);
+	for (let frac = -0.8; frac <= 0.8; frac += step) { //0.2) {
+		//darkest -0.8 -0.6 -0.4 -0.2 0=color 0.2 0.4 0.6 0.8 lightest
+		let c = pSBC(frac, color, undefined, true); //colorShade(frac,color);
+		res.push(c);
+	}
+	return res;
+}
 function colorShade(plusMinus1, color, log = true) {
 	let c = anyColorToStandardString(color);
 	return pSBC(plusMinus1, c, undefined, !log);
@@ -1934,6 +1946,28 @@ function chooseRandom(arr, condFunc = null) {
 	return arr[idx];
 }
 function chooseKeys(dict, n, except) { let keys = Object.keys(dict); let ind = except.map(x => keys.indexOf(x)); return choose(keys, n, ind); }
+function getRandomNumberSequence(n, minStart, maxStart, fBuild, exceptStart) { //{op,step,fBuild}) {
+	let nStart = randomNumber(minStart, maxStart - n + 1);
+	if (exceptStart) {
+		let att = 10;
+		while (att >= 0 && nStart == exceptStart) { att -= 1; nStart = randomNumber(minStart, maxStart - n + 1); }
+	}
+	if (isNumber(fBuild)) return range(nStart, nStart + (n - 1) * fBuild, fBuild);
+	else {
+		let res = [], x = nStart;
+		for (let i = 0; i < n; i++) {
+			res.push(x);
+			x = fBuild(x);
+		}
+		return res;
+	}
+
+
+}
+function nRandomNumbers(n, from, to, step) {
+	let arr = range(from, to, step);
+	return choose(arr, n);
+}
 function randomColor(s, l, a) { return isdef(s) ? randomHslaColor(s, l, a) : randomHexColor(); }
 function randomHslaColor(s = 100, l = 70, a = 1) {
 	//s,l in percent, a in [0,1], returns hsla string

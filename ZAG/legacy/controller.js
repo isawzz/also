@@ -85,9 +85,9 @@ function evaluate() {
 	uiActivated = false; clearTimeouts();
 
 	IsAnswerCorrect = G.instance.eval(...arguments);
-	//console.log('Selected',Selected)
+	console.log('Selected',Selected)
 	if (IsAnswerCorrect === undefined) { promptNextTrial(); return; }
-	//console.log('answer is', IsAnswerCorrect ? 'correct' : 'WRONG!!!')
+	console.log('answer is', IsAnswerCorrect ? 'correct' : 'WRONG!!!')
 
 	G.trialNumber += 1;
 	if (!IsAnswerCorrect && G.trialNumber < G.trials) { promptNextTrial(); return; }

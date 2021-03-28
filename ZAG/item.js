@@ -228,47 +228,6 @@ function makeItemDiv(item, options) {
 	return dOuter;
 
 }
-function makeItemDivs_dep(items, options) {
-	for (let i = 0; i < items.length; i++) {
-		let item = items[i];
-
-		if (isdef(options.outerStyles)) copyKeys(item, options.outerStyles, {}, Object.keys(options.ifs)); //options.ifs contains per item dynamic styles!!!!!
-		let dOuter = mCreate('div', options.outerStyles, getUID());
-
-		if (isdef(item.textShadowColor)) {
-			//console.log('halllllllllllll')
-			let sShade = '0 0 0 ' + item.textShadowColor;
-			if (options.showPic) {
-				options.picStyles['text-shadow'] = sShade;
-				options.picStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
-			} else {
-				options.labelStyles['text-shadow'] = sShade;
-				options.labelStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
-			}
-		}
-
-		let dLabel;
-		if (options.showLabels && options.labelTop == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
-
-		let dPic;
-		if (options.showPic) {
-			dPic = mDiv(dOuter, { family: item.info.family });
-			dPic.innerHTML = item.info.text;
-			if (isdef(options.picStyles)) mStyleX(dPic, options.picStyles);
-		}
-
-		if (options.showLabels && options.labelBottom == true) { dLabel = mText(item.label, dOuter, options.labelStyles); }
-
-		if (isdef(options.handler)) dOuter.onclick = options.handler;
-
-		lAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
-
-		if (isdef(item.textShadowColor)) { applyColorkey(item, options); }
-
-
-	}
-
-}
 function newItemSelection(item, items, onSelectSelected = null) {
 
 	console.log('===>', item, items)
@@ -277,7 +236,28 @@ function newItemSelection(item, items, onSelectSelected = null) {
 	else if (onSelectSelected && selectedItem) { onSelectSelected(item); }
 	toggleItemSelection(item);
 }
+function addLabel1(item, label, replaceOld = true) {
+	let div = iDiv(item);
+	mStyleX(div, { 'vertical-align': 'top' });
+	//console.log('div', div);
+	if (isdef(item.live.dLabel)) mRemove(item.live.dLabel);
+	let dLabel = item.live.dLabel = mDiv(div, { fz: 20 }, null, label);
 
+	return div;
+}
+function removeLabel(item) {
+	//console.log('old item',item);
+	if (isdef(item.live.dLabel)) {
+		item.live.dLabel.remove();
+		delete item.live.dLabel;
+		// let div = iDiv(item);
+		// let rect = getRect(div);
+		// //wie wird
+		// let fzPic = getStandardFzPic(rect.w, rect.h, false);
+		// mStyleX(item.live.dPic, { fz, fPic });
+	}
+	return item;
+}
 function toggleItemSelection(item, selectedItems) {
 	//console.log('===>',item)
 	let ui = iDiv(item);

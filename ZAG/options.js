@@ -20,7 +20,7 @@ function _simpleOptions(options) {
 	options.outerStyles = {
 		w: w, h: h, bg: options.bg, fg: options.fg,
 		display: 'inline-flex', 'flex-direction': 'column',
-		'justify-content': 'center', 'align-items': 'center',
+		'justify-content': 'center', 'align-items': 'center','vertical-align':'top',
 		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
 	};
 
@@ -38,12 +38,18 @@ function getOptionsMinimalistic(dParent, handler, w = 0, h = 0, ifs = {}, option
 	[w, h] = detectArea(dParent, w, h);
 
 	let defOptions = {
-		isRegular: true, hugeFont: true, szPic: { w: 200, h: 200 }, gap: 15,
+		isRegular: true, hugeFont: true, szPic: { w: 200, h: 200 }, gap: 15, shufflePositions: true,
 		showPic: true, showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
 		w: w, h: h, fz: 24, fzText: 24, fzPic: 96, ifs: ifs, handler: handler, ifs: ifs, handler: handler,
 	};
-	addSimpleProps(g,options);
+	addSimpleProps(g, options);
 	addKeys(defOptions, options);
+	if (options.numRepeat > 1 && nundef(options.ifs.bg)) {
+		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
+		let fg = isdef(options.colorKeys) ? 'black' : 'contrast';
+		options.ifs.bg = bg;
+		options.ifs.fg = fg;
+	}
 	return options;
 
 }
@@ -84,16 +90,19 @@ function getOptions1(dParent, handler, g, options, ifs) { // w = .9, h = .6, wIt
 	if (nundef(options.w)) options.w = rect.w;
 	if (nundef(options.h)) options.h = rect.h;
 	return options;
-
-
 }
-function calcRowsColsSizeAbWo(n, wmax, hmax, showLabels, wimax = 200, himax = 200, hper = 1, wper = 1) {
-	let rows = n > 35 ? 6 : n > 28 ? 5 : n > 24 & !showLabels || n > 21 ? 4 : n > 8 ? 3 : n > 3 ? 2 : 1;
+function calcRowsColsSizeAbWo(n, wmax, hmax, showLabels, wimax = 200, himax = 200, fw = 1, fh = 1) {
+	let rows = n > 35 ? 6 : n > 28 ? 5 : n > 24 && !showLabels || n > 21 ? 4 : n > 8 ? 3 : n > 3 ? 2 : 1;
 	let cols = Math.ceil(n / rows);
-	let hi = hmax * hper / rows;
-	let wi = wmax * wper / cols;
-	hi = Math.min(hi, himax);
+	return calcSizeAbWo(n,rows, cols, wmax, hmax, wimax, himax, fw, fh);
+}
+function calcSizeAbWo(n,rows, cols, wmax, hmax, wimax=200, himax=200, fw=1, fh=1) {
+	//assumes either cols or rows MUST exist!!!!
+	if (nundef(cols)) cols = Math.ceil(n / rows); else if (nundef(rows)) rows = Math.ceil(n / cols);
+	let wi = wmax * fw / cols;
+	let hi = hmax * fh / rows;
 	wi = Math.min(wi, wimax);
+	hi = Math.min(hi, himax);
 	return [wi, hi, rows, cols];
 }
 

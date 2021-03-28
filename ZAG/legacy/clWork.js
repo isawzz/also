@@ -1,56 +1,46 @@
-class GPremem extends Game {
-	constructor() { super(); this.piclist = []; }
+class GNamit extends Game {
+	constructor(name) { super(name); }
+	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
 	prompt() {
-		this.piclist = [];
-		//console.log(G)
-		let showLabels = G.showLabels == true && G.pictureLabels == true;
-		myShowPics(this.interact.bind(this),
-			{ border: '3px solid #ffffff80' }, // border: '3px solid #ffffff80'
-			{ numRepeat: G.numRepeat, sameBackground: G.sameBackground, showLabels: showLabels }), //, showLabels: false });
-			showInstruction('', G.language == 'E' ? 'click any picture' : 'click irgendein Bild', dTitle, true);
+		G.showLabels = false;
+		myShowPics(null, {}, { rows: 1 });
+		//console.assert(false,'THE END')
+		Goal = { pics: Pictures };
+
+		showInstruction('', G.language == 'E' ? 'drag labels to pictures' : "ordne die texte den bildern zu", dTitle, true);
+		mLinebreak(dTable);
+
+		setDropZones(Pictures, () => { });
+		mLinebreak(dTable, 50);
+
+		this.letters = createDragWords(Pictures, evaluate);
+		mLinebreak(dTable, 50);
+
+		mButton('Done!', evaluate, dTable, { fz: 32, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+
 		activateUi();
 	}
 	trialPrompt() {
-		for (const p of this.piclist) { toggleSelectionOfPicture(p); }
-		this.piclist = [];
-		showInstruction('', 'try again: click any picture', dTitle, true);
+		sayTryAgain();
+		setTimeout(() => { Pictures.map(x => removeLabel(x)) }, 1500);
 		return 10;
 	}
-	interact(ev) {
-		ev.cancelBubble = true;
-		if (!canAct()) return;
-
-		let pic = findItemFromEvent(Pictures, ev);
-		// let id = evToClosestId(ev);
-		// let i = firstNumber(id);
-		// let pic = Pictures[i];
-		//let div = pic.div;
-		if (!isEmpty(this.piclist) && this.piclist.length < G.numRepeat - 1 && this.piclist[0].label != pic.label) return;
-		toggleSelectionOfPicture(pic, this.piclist);
-		//console.log('clicked', pic.key, this.piclist);//,piclist, GPremem.PicList);
-		if (isEmpty(this.piclist)) {
-			showInstruction('', G.language == 'E' ? 'click any picture' : 'click irgendein Bild', dTitle, true);
-		} else if (this.piclist.length < G.numRepeat - 1) {
-			//set incomplete: more steps are needed!
-			//frame the picture
-			showInstruction(pic.label, G.language == 'E' ? 'click another' : 'click ein andres Bild mit', dTitle, true);
-		} else if (this.piclist.length == G.numRepeat - 1) {
-			// look for last picture with x that is not in the set
-			let picGoal = firstCond(Pictures, x => x.label == pic.label && !x.isSelected);
-			setGoal(picGoal.index);
-			showInstruction(picGoal.label, G.language == 'E' ? 'click the ' + (G.numRepeat == 2 ? 'other' : 'last')
-				: 'click das ' + (G.numRepeat == 2 ? 'andere' : 'letzte') + ' Bild mit', dTitle, true);
-		} else {
-			//set is complete: eval
-			evaluate(this.piclist);
+	eval() {
+		this.piclist = Pictures;
+		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => iDiv(x)), sz: getRect(iDiv(this.piclist[0])).h };
+		let isCorrect = true;
+		for (const p of Pictures) {
+			let label = p.label;
+			if (nundef(iDiv(p).children[1])) {
+				p.isCorrect = isCorrect = false;
+			} else {
+				let text = getActualText(p);
+				if (text != label) { p.isCorrect = isCorrect = false; } else p.isCorrect = true;
+			}
 		}
+		return isCorrect;
 	}
-	eval(piclist) {
-		Selected = { piclist: piclist, feedbackUI: piclist.map(x => iDiv(x)), sz: getRect(iDiv(piclist[0])).h };
-		let req = Selected.reqAnswer = piclist[0].label;
-		Selected.answer = piclist[piclist.length - 1].label;
-		if (Selected.answer == req) { return true; } else { return false; }
-	}
+
 }
 
 

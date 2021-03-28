@@ -205,7 +205,7 @@ function dropAndEval(ev) {
 	if (nundef(targetItem)) { cancelDD(); return; }
 
 	let droppedItem = DragSourceItem;
-	replacePicAndLabel(targetItem, targetItem.key, droppedItem.label);
+	addLabel1(targetItem, droppedItem.label);
 	//console.log('__________DragSource', DragSource); return7//;
 
 	cancelDD();
@@ -226,7 +226,9 @@ function createDragWords(items, handler) {
 	let keys = items.map(x => x.key);
 	shuffle(keys);
 
-	titems = showLbls(null, undefined, { rows: 1, showLabels: true }, keys);
+	G.showLabels = true;
+	titems = myShowLabels(null, undefined, { rows: 1, showLabels: true }, keys);
+	//titems = showLbls(null, undefined, { rows: 1, showLabels: true }, keys);
 	//let [titems, rows] = getTextItems(null, undefined, { rows: 2, showLabels: true }, keys);
 	titems.map(x => iDiv(x).style.cursor = 'pointer');//mClass(iDiv(x), 'draggable'));
 	//presentItems(titems, dTable, 1);
@@ -1114,6 +1116,7 @@ function successPictureGoal(withComment = true) {
 	}
 }
 function failPictureGoal(withComment = false) {
+	//console.log('failPictureGoal')
 	if (withComment && G.spokenFeedback) {
 		const comments = (G.language == 'E' ? ['too bad'] : ["aber geh'"]);
 		sayRandomVoice(chooseRandom(comments));
@@ -1121,6 +1124,7 @@ function failPictureGoal(withComment = false) {
 	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
 		let uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
 		let sz = getRect(uilist[0]).h;
+		//console.log('failFunc:',uilist,sz)
 		for (const ui of uilist) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 	}
 }
@@ -1131,7 +1135,7 @@ function failSomePictures(withComment = false) {
 	}
 	for (const p of Pictures) {
 		let ui = iDiv(p);
-		let sz = p.sz;
+		let sz = getRect(ui).h;
 		if (p.isCorrect == false) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 		else mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
 	}
@@ -1365,7 +1369,7 @@ function containsColorWord(s) {
 }
 function getActualText(item) {
 	//console.log(item)
-	if (isdef(item.text)) return item.live.dLabel.innerHTML;
+	if (isdef(item.live.dLabel)) return item.live.dLabel.innerHTML;
 	//if (isdef(item.pic)){return iDiv(item).children[1].innerHTML;} else {return iDiv(item).children[0].innerHTML;}
 }
 function getRandomKeysFromGKeys(n) { return getRandomKeys(n, G.keys); }
@@ -1474,7 +1478,7 @@ function sayRandomVoice(e, g, voice = 'random') {
 	if (!G.silentMode) Speech.say(G.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
 }
 function sayTryAgain() { sayRandomVoice('try again!', 'nochmal'); }
-function setBackgroundColor() { document.body.style.backgroundColor = G.color; }
+function setBackgroundColor() { document.body.style.backgroundColor = getColorDictColor(G.color);}
 function setGoal(index) {
 	if (nundef(index)) {
 		let rnd = G.numPics < 2 ? 0 : randomNumber(0, G.numPics - 2);
