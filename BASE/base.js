@@ -1873,7 +1873,7 @@ function sameList(l1, l2) {
 function shuffle(arr) { return fisherYates(arr); }
 function shuffleChildren(dParent) {
 	let arr = arrChildren(dParent);
-	console.log(arr);
+	//console.log(arr);
 	arr.map(x => x.remove());
 	//return;
 	shuffle(arr);
@@ -2016,6 +2016,20 @@ function firstNumber(s) {
 	return null;
 }
 function includesAnyOf(s, slist) { for (const l of slist) { if (s.includes(l)) return true; } return false; }
+function ordinal_suffix_of(i) {
+	var j = i % 10,
+		k = i % 100;
+	if (j == 1 && k != 11) {
+		return i + "st";
+	}
+	if (j == 2 && k != 12) {
+		return i + "nd";
+	}
+	if (j == 3 && k != 13) {
+		return i + "rd";
+	}
+	return i + "th";
+}
 function replaceAll(str, sSub, sBy) {
 	let regex = new RegExp(sSub, 'g');
 	return str.replace(regex, sBy);

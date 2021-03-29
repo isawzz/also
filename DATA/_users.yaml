@@ -137,7 +137,7 @@ test0:
 gul:
   id: gul
   avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gTouchColors
+  lastGame: gAbacus
   settings:
     # settings common to all games
     samplesPerGame: 25
@@ -149,7 +149,7 @@ gul:
     vocab: lifePlus
     showTime: true
     spokenFeedback: true
-    silentMode: false
+    silentMode: true
     switchGame: true
     #indiv game settings default
     trials:  2
@@ -164,7 +164,7 @@ gul:
     gMissingLetter: 
       startLevel: 2
     gSteps: 
-      startLevel: 0
+      startLevel: 2
     gSayPic: 
       startLevel: 0
     gMem:

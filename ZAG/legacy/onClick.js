@@ -79,7 +79,7 @@ function onClickGo(ev) {
 		let item = evToItemC(ev);
 		let gKey = nundef(ev) ? SelectedMenuKey : isString(ev) ? ev : item.o.id; // divKeyFromEv(ev);
 
-		console.log('==>gKey', gKey, SelectedMenuKey);
+		//console.log('==>gKey', gKey, SelectedMenuKey);
 
 		if (gKey != SelectedMenuKey) {
 			if (isdef(SelectedMenuKey)) toggleItemSelection(SelectedMenuItem);

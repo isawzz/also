@@ -43,6 +43,8 @@ function myPresent(dArea, items, options) {
 	let w = options.w * valf(options.fw, .9); //window.innerWidth-70;
 	let h = options.h * valf(options.fh, .7); //window.innerHeight-150;
 
+	//console.log('rows are',options.rows)
+
 	let wi, hi, rows, cols;
 	if (isdef(options.rows) || isdef(options.cols)) {
 		[wi, hi, rows, cols] = calcSizeAbWo(items.length, options.rows, options.cols, w, h, options.wimax, options.himax);
@@ -91,7 +93,13 @@ function myPresent(dArea, items, options) {
 		if (options.showRepeat) addRepeatInfo(dOuter, item.iRepeat, wi);
 		iAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
 	}
+
+	if (isdef(options.numColors) && options.numColors > 1){
+		mStyleX(dArea, { display: 'inline-grid',gap:gap, 'grid-template-columns': `repeat(${cols},${wi}px)` });
+	}
+	//mStyleX(dArea, { w:w, display: 'inline-grid'});
 	items.map(x => mAppend(dArea, iDiv(x)));
+	//console.log('rows',rows,cols)
 	return getRect(dArea);
 }
 

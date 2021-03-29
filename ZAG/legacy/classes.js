@@ -9,7 +9,7 @@ class Game {
 	startLevel() { }
 	startRound() { }
 	prompt() {
-		Pictures = myShowPics(evaluate);
+		myShowPics(evaluate);
 		//showPicturesSpeechTherapyGames(evaluate);
 		setGoal();
 		showInstruction(Goal.label, 'click', dTitle, true);
@@ -36,113 +36,6 @@ class Game {
 
 		if (item.label == Goal.label) { return true; } else { return false; }
 	}
-}
-class GAbacus extends Game {
-	constructor(name) { super(name); }
-	startGame() { G.successFunc = successThumbsUp; G.failFunc = failThumbsDown; G.correctionFunc = this.showCorrectSequence.bind(this); }
-	showCorrectSequence() { let t = correctBlanks(); if (G.level <= 1) showSayHint(3); return t + 1000; }
-	startLevel() { if (!isList(G.steps)) G.steps = [G.steps]; G.numPics = 2; }
-	prompt() {
-		mLinebreak(dTable, 2);
-
-		showHiddenThumbsUpDown({ sz: 110 });
-		mLinebreak(dTable);
-
-		G.seq = makeExpSequence();
-
-		//console.log('G.seq', G.seq);
-
-		let panel = mDiv(dTable, { bg: '#00000080', padding: 20, rounding: 10 });
-		//replace op in seq by wr
-		//arrReplace(G.seq,G.op,OPS[G.op].wr);
-		[G.words, G.letters] = showEquation(G.seq, panel);
-		setNumberSequenceGoal();
-		//console.log(G)
-
-		mLinebreak(dTable, 30);
-
-		let instr1 = (G.language == 'E' ? 'calculate' : "rechne");
-		//let s=G.seq;
-		let spOp = G.oop.sp; if (G.language == 'D') spOp = DD[spOp];
-		let instr2 = G.operand + ' ' + spOp + ' ' + G.step + ' ?';
-		//instr1 = arrTake(G.seq,3).join(' ');
-		showInstruction('', instr1, dTitle, true, instr2);
-
-		console.log('showHint', G.showHint);
-
-		if (G.level <= 1 && G.showHint) hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
-
-		activateUi();
-	}
-	trialPrompt() {
-		if (G.level <= 1 && G.showHint) hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
-		setTimeout(() => getWrongChars().map(x => unfillChar(x)), 500);
-		return 10;
-	}
-	activate() { onkeypress = this.interact; }
-	interact(ev) {
-		//console.log('key!');
-		clearFleetingMessage();
-		if (!canAct()) return;
-
-		let sel = Selected = onKeyWordInput(ev);
-		if (nundef(sel)) return;
-		//console.log('===>', sel);
-
-		//target,isMatch,isLastOfGroup,isVeryLast,ch
-		let lastInputCharFilled = sel.target;
-		console.assert(sel.isMatch == (lastInputCharFilled.letter == sel.ch), lastInputCharFilled, sel.ch);
-
-		//all cases aufschreiben und ueberlegen was passieren soll!
-		//TODO: multiple groups does NOT work!!!
-		if (sel.isMatch && sel.isVeryLast) {
-			deactivateFocusGroup();
-			evaluate(true);
-		} else if (sel.isMatch && sel.isLastOfGroup) {
-			//it has been filled
-			//remove this group from Goal.blankWords
-			sel.target.isBlank = false;
-			sel.target.group.hasBlanks = false;
-			removeInPlace(Goal.blankWords, sel.target.group);
-			removeInPlace(Goal.blankChars, sel.target);
-			deactivateFocusGroup();
-			console.log('haaaaaaaaaaaalo', Goal.isFocus)
-			//console.log('=>', Goal)
-		} else if (sel.isMatch) {
-			//a partial match
-			removeInPlace(Goal.blankChars, sel.target);
-			sel.target.isBlank = false;
-		} else if (sel.isVeryLast) {
-			Selected.words = getInputWords();
-			Selected.answer = getInputWordString();
-			Selected.req = getCorrectWordString();
-			deactivateFocusGroup();
-			//console.log('LAST ONE WRONG!!!')
-			evaluate(false);
-			//user entered last missing letter but it is wrong!
-			//can there be multiple errors in string?
-		} else if (sel.isLastOfGroup) {
-			//unfill last group
-
-			Selected.words = getInputWords();
-			Selected.answer = getInputWordString();
-			Selected.req = getCorrectWordString();
-			deactivateFocusGroup();
-			evaluate(false);
-			//user entered last missing letter but it is wrong!
-			//can there be multiple errors in string?
-		} else {
-			if (!G.silentMode) { writeSound(); playSound('incorrect1'); }
-			deactivateFocusGroup();
-			//unfillCharInput(Selected.target);
-			showFleetingMessage('does NOT fit: ' + Selected.ch, 0, { fz: 24 });
-			setTimeout(() => unfillCharInput(Selected.target), 500);
-		}
-		//
-	}
-
-	eval(isCorrect) { return isCorrect; }
-
 }
 class GAnagram extends Game {
 	constructor(name) {
@@ -216,8 +109,12 @@ class GElim extends Game {
 		this.piclist = [];
 		let colorKeys = G.numColors > 1 ? choose(G.colors, G.numColors) : null;
 		let showRepeat = G.numRepeat > 1;
+		let rows = G.numColors > 1 ? G.numColors : undefined;
 		myShowPics(this.interact.bind(this), { bg: 'white' },// { contrast: G.contrast, },
-			{ showRepeat: showRepeat, colorKeys: colorKeys, numRepeat: G.numRepeat, contrast: G.contrast });
+			{
+				showRepeat: showRepeat, colorKeys: colorKeys, numRepeat: G.numRepeat,
+				contrast: G.contrast, rows: rows
+			});
 
 		//console.log('G.colors', G.colors, 'colorKeys', colorKeys);
 		let [sSpoken, sWritten, piclist] = logicMulti(Pictures);
@@ -372,7 +269,7 @@ class GMissingLetter extends Game {
 
 			if (this.nMissing == 1) {
 				let d = Selected.feedbackUI = this.inputs[0].div;
-				Selected.positiveFeedbackUI = Goal.div;
+				Selected.positiveFeedbackUI = iDiv(Goal);
 				Selected.lastIndexEntered = this.inputs[0].index;
 				Selected.inp = this.inputs[0];
 				d.innerHTML = Selected.lastLetterEntered;
@@ -597,9 +494,9 @@ class GPremem extends Game {
 		G.showLabels = false;
 		myShowPics(this.interact.bind(this),
 			{ border: '3px solid #ffffff80' }, // border: '3px solid #ffffff80'
-			{ }); //, showLabels: false });
-			// { showLabels: false }); //, showLabels: false });
-			// { numRepeat: G.numRepeat, sameBackground: G.sameBackground, showLabels: false }); //, showLabels: false });
+			{}); //, showLabels: false });
+		// { showLabels: false }); //, showLabels: false });
+		// { numRepeat: G.numRepeat, sameBackground: G.sameBackground, showLabels: false }); //, showLabels: false });
 		showInstruction('', G.language == 'E' ? 'click any picture' : 'click irgendein Bild', dTitle, true);
 		activateUi();
 	}
@@ -650,7 +547,7 @@ class GTouchPic extends Game {
 	prompt() {
 		//console.log('showLabels',showLabels,G.showLabels)
 		//console.log(G.showLabels, G.labels, showLabels)
-		Pictures = myShowPics(evaluate);
+		myShowPics(evaluate);
 		setGoal();
 		showInstruction(Goal.label, 'click', dTitle, true);
 		activateUi();
@@ -722,7 +619,7 @@ class GWritePic extends Game {
 		let answer = normalize(this.inputBox.value, G.language);
 		let reqAnswer = normalize(Goal.label, G.language);
 
-		Selected = { reqAnswer: reqAnswer, answer: answer, feedbackUI: Goal.div };
+		Selected = { reqAnswer: reqAnswer, answer: answer, feedbackUI: iDiv(Goal) };
 		if (answer == reqAnswer) {
 			showFleetingMessage(Goal.label);
 			return true;
@@ -732,56 +629,6 @@ class GWritePic extends Game {
 		}
 	}
 
-}
-class GSayPic extends Game {
-	constructor(name) { super(name); }
-	clear() { Speech.stopRecording(); }
-	prompt() {
-
-		myShowPics();
-		setGoal();
-
-		showInstruction(Goal.label, G.language == 'E' ? 'say:' : "sage: ", dTitle);
-		animate(dInstruction, 'pulse800' + bestContrastingColor(G.color, ['yellow', 'red']), 900);
-
-		mLinebreak(dTable);
-		MicrophoneUi = mMicrophone(dTable, G.color);
-		//console.log('MicrophoneUi',MicrophoneUi)
-		MicrophoneHide();
-
-		TOMain = setTimeout(activateUi, 200);
-
-	}
-	trialPrompt(nTrial) {
-		sayRandomVoice(nTrial < 2 ? 'speak UP!!!' : 'Louder!!!', 'LAUTER!!!');
-		animate(dInstruction, 'pulse800' + bestContrastingColor(G.color, ['yellow', 'red']), 500);
-		return 10;
-	}
-	activate() {
-		//console.log('hallo')
-		if (Speech.isSpeakerRunning()) {
-			TOMain = setTimeout(this.activate.bind(this), 200);
-		} else {
-			TOMain = setTimeout(() => Speech.startRecording(G.language, evaluate), 100);
-		}
-
-	}
-	eval(isfinal, speechResult, confidence, sessionId) {
-
-		//console.log(Goal);
-		//console.log('===>',sessionId,SessionId);
-		if (sessionId != SessionId) {
-			alert('NOT THIS BROWSER!!!!!!'); return undefined;
-		}
-		let answer = Goal.answer = normalize(speechResult, G.language);
-		let reqAnswer = Goal.reqAnswer = normalize(Goal.label, G.language);
-
-		Selected = { reqAnswer: reqAnswer, answer: answer, feedbackUI: Goal.div };
-
-		if (isEmpty(answer)) return false;
-		else return isSimilar(answer, reqAnswer) || isList(Goal.info.valid) && firstCond(Goal.info.valid, x => x.toUpperCase() == answer.toUpperCase());
-
-	}
 }
 class GSteps extends Game {
 	constructor(name) { super(name); }
@@ -793,10 +640,16 @@ class GSteps extends Game {
 	prompt() {
 		this.piclist = [];
 		let colorKeys = G.numColors > 1 ? choose(G.colors, G.numColors) : null;
+		let bg = G.numColors > 1 || G.numRepeat > 1 ? 'white' : 'random';
+		let rows = G.numColors > 1 ? G.numColors : undefined;
 		let showRepeat = G.numRepeat > 1;
 
-		myShowPics(this.interact.bind(this), { contrast: G.contrast, },
-			{ showRepeat: showRepeat, colorKeys: colorKeys, numRepeat: G.numRepeat });
+		myShowPics(this.interact.bind(this), { bg: bg },// { contrast: G.contrast, },
+			{ rows: rows, showRepeat: showRepeat, colorKeys: colorKeys, numRepeat: G.numRepeat, contrast: G.contrast });
+
+
+		// myShowPics(this.interact.bind(this), { contrast: G.contrast, },
+		// 	{ showRepeat: showRepeat, colorKeys: colorKeys, numRepeat: G.numRepeat });
 
 		setMultiGoal(G.numSteps);
 		// console.log(Goal)
@@ -977,3 +830,153 @@ class GCats extends Game {
 }
 
 
+class GTouchColors extends Game {
+	constructor(name) { super(name); }
+	startLevel() {
+		G.keys = G.keys.filter(x => containsColorWord(x));
+	}
+	prompt() {
+		//console.log(G.pictureLabels,G.showLabels)
+		let colorKeys = choose(G.colors, G.numColors);
+		//let showLabels = G.showLabels == true && G.labels == true;
+		let rows = G.numColors;
+		myShowPics(evaluate,  { bg: 'white' },// { contrast: G.contrast, },
+		{ showLabels: G.showLabels, colorKeys: colorKeys, rows: rows });
+			
+			//{ contrast: G.contrast }, { colorKeys: colorKeys, showLabels: showLabels });
+		if (G.shuffle == true) {
+			//console.log('HAAAAAAAAAAAAAAAAAAAAAAAALO')
+			//shuffle(Pictures);
+			let dParent = iDiv(Pictures[0]).parentNode;
+			shuffleChildren(dParent);
+		}
+		//showPicturesSpeechTherapyGames(evaluate, { contrast: G.contrast }, { colorKeys: colorKeys });
+		//Pictures.map(x => x.color = ColorDict[x.textShadowColor]);
+
+		setGoal(randomNumber(0, Pictures.length - 1));
+
+		let [written, spoken] = getOrdinalColorLabelInstruction('click'); //getColorLabelInstruction('click');
+		showInstructionX(written, dTitle, spoken);
+
+		activateUi();
+	}
+	eval(ev) {
+		ev.cancelBubble = true;
+		// let id = evToClosestId(ev);		let i = firstNumber(id);		let item = Pictures[i];
+		let item = findItemFromEvent(Pictures, ev);
+		Selected = { pic: item, feedbackUI: iDiv(item) };
+		Selected.reqAnswer = Goal.label;
+		Selected.answer = item.label;
+
+		if (item == Goal) { return true; } else { return false; }
+	}
+}
+
+class GAbacus extends Game {
+	constructor(name) { super(name); }
+	startGame() { G.successFunc = successThumbsUp; G.failFunc = failThumbsDown; G.correctionFunc = this.showCorrectSequence.bind(this); }
+	showCorrectSequence() { let t = correctBlanks(); if (G.level <= 1 && (G.step<=3||G.op!='mult')) showSayHint(3); return t + 1000; }
+	startLevel() { if (!isList(G.steps)) G.steps = [G.steps]; G.numPics = 2; }
+	prompt() {
+		mLinebreak(dTable, 2);
+
+		showHiddenThumbsUpDown({ sz: 110 });
+		mLinebreak(dTable);
+
+		G.seq = makeExpSequence();
+
+
+		//console.log('G.seq', G.seq);
+
+		let panel = mDiv(dTable, { bg: '#00000080', padding: 20, rounding: 10 });
+		//replace op in seq by wr
+		//arrReplace(G.seq,G.op,OPS[G.op].wr);
+		[G.words, G.letters] = showEquation(G.seq, panel);
+		setNumberSequenceGoal();
+		//console.log(G)
+
+		mLinebreak(dTable, 30);
+
+		let instr1 = (G.language == 'E' ? 'calculate' : "rechne");
+		//let s=G.seq;
+		let spOp = G.oop.sp; if (G.language == 'D') spOp = DD[spOp];
+		let instr2 = G.operand + ' ' + spOp + ' ' + G.step + ' ?';
+		//instr1 = arrTake(G.seq,3).join(' ');
+		showInstruction('', instr1, dTitle, true, instr2);
+
+		//console.log('showHint', G.showHint);
+
+		if (G.level <= 1 && G.showHint && (G.step<=3||G.op!='mult')) hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
+
+		activateUi();
+	}
+	trialPrompt() {
+		if (G.level <= 1 && G.showHint && (G.step<=3||G.op!='mult')) hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
+		setTimeout(() => getWrongChars().map(x => unfillChar(x)), 500);
+		return 10;
+	}
+	activate() { onkeypress = this.interact; }
+	interact(ev) {
+		//console.log('key!');
+		clearFleetingMessage();
+		if (!canAct()) return;
+
+		let sel = Selected = onKeyWordInput(ev);
+		if (nundef(sel)) return;
+		//console.log('===>', sel);
+
+		//target,isMatch,isLastOfGroup,isVeryLast,ch
+		let lastInputCharFilled = sel.target;
+		console.assert(sel.isMatch == (lastInputCharFilled.letter == sel.ch), lastInputCharFilled, sel.ch);
+
+		//all cases aufschreiben und ueberlegen was passieren soll!
+		//TODO: multiple groups does NOT work!!!
+		if (sel.isMatch && sel.isVeryLast) {
+			deactivateFocusGroup();
+			evaluate(true);
+		} else if (sel.isMatch && sel.isLastOfGroup) {
+			//it has been filled
+			//remove this group from Goal.blankWords
+			sel.target.isBlank = false;
+			sel.target.group.hasBlanks = false;
+			removeInPlace(Goal.blankWords, sel.target.group);
+			removeInPlace(Goal.blankChars, sel.target);
+			deactivateFocusGroup();
+			console.log('haaaaaaaaaaaalo', Goal.isFocus)
+			//console.log('=>', Goal)
+		} else if (sel.isMatch) {
+			//a partial match
+			removeInPlace(Goal.blankChars, sel.target);
+			sel.target.isBlank = false;
+		} else if (sel.isVeryLast) {
+			Selected.words = getInputWords();
+			Selected.answer = getInputWordString();
+			Selected.req = getCorrectWordString();
+			deactivateFocusGroup();
+			//console.log('LAST ONE WRONG!!!')
+			evaluate(false);
+			//user entered last missing letter but it is wrong!
+			//can there be multiple errors in string?
+		} else if (sel.isLastOfGroup) {
+			//unfill last group
+
+			Selected.words = getInputWords();
+			Selected.answer = getInputWordString();
+			Selected.req = getCorrectWordString();
+			deactivateFocusGroup();
+			evaluate(false);
+			//user entered last missing letter but it is wrong!
+			//can there be multiple errors in string?
+		} else {
+			if (!G.silentMode) { writeSound(); playSound('incorrect1'); }
+			deactivateFocusGroup();
+			//unfillCharInput(Selected.target);
+			showFleetingMessage('does NOT fit: ' + Selected.ch, 0, { fz: 24 });
+			setTimeout(() => unfillCharInput(Selected.target), 500);
+		}
+		//
+	}
+
+	eval(isCorrect) { return isCorrect; }
+
+}

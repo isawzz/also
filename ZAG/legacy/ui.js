@@ -65,7 +65,7 @@ function initLineBottom() {
 	dLineBottom = mDiv(dLineBottomOuter); dLineBottom.id = 'lineBottom';
 	dLineBottomLeft = mDiv(dLineBottom); dLineBottomLeft.id = 'lineBottomLeft';
 	dLineBottomRight = mDiv(dLineBottom); dLineBottomRight.id = 'lineBottomRight';
-	dLineBottomMiddle = mDiv(dLineBottom); dLineBottomMiddle.id = 'lineBottomMiddle';
+	dLineBottom = mDiv(dLineBottom); dLineBottom.id = 'lineBottomMiddle';
 
 	mLinebreak(table);
 }

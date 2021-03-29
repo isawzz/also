@@ -20,7 +20,7 @@ function createMenuUi(dParent) {
 }
 
 function menu(dParent, list, handler) {
-	console.log('hallo menu!', dParent)
+	//console.log('hallo menu!', dParent)
 	show(dParent);
 	clearElement(dParent);
 	mCenterFlex(dParent);

@@ -24,8 +24,8 @@ function aniInstruction(spoken) {
 }
 function aniFadeInOut(elem, secs) {
 	mClass(elem, 'transopaOn');
-	//dLineBottomMiddle.opacity=0;
-	//mClass(dLineBottomMiddle,'aniFadeInOut');
+	//dLineBottom.opacity=0;
+	//mClass(dLineBottom,'aniFadeInOut');
 	setTimeout(() => { mRemoveClass(elem, 'transopaOn'); mClass(elem, 'transopaOff'); }, secs * 1000);
 }
 function aniPulse(elem, ms) { animate(elem, 'onPulse', ms); }
@@ -690,7 +690,7 @@ function onKeyWordInput(ev) {
 }
 function unfillWord(winp) { winp.charInputs.map(x => unfillCharInput(x)); }
 function unfillCharInput(inp) {
-	console.log(inp)
+	//console.log(inp)
 	let d = iDiv(inp);
 	d.innerHTML = '_';
 	mClass(d, 'blink');
@@ -968,7 +968,7 @@ function recShowHints(ilist, rc, delay = 3000, fProgression = d => d * 1.5) {
 	TOTrial = setTimeout(() => recShowHintsNext(i, ilist, rc, fProgression(delay), fProgression), delay);
 }
 function showSayHint(i) {
-	console.log(G)
+	//console.log(G)
 	let [spoken, written] = G.hintFunc(i);
 	if (spoken) sayRandomVoice(spoken); //setTimeout(() => sayRandomVoice(spoken), 300+ms);
 	if (written) showFleetingMessage(written, 0, { fz: 40 });
@@ -1082,6 +1082,7 @@ function successThumbsUp(withComment = true) {
 	let p1 = firstCond(Pictures, x => x.key == 'thumbs up');
 	iDiv(p1).style.opacity = 1;
 	let p2 = firstCond(Pictures, x => x.key == 'thumbs down');
+	//console.log('p2',p2)
 	iDiv(p2).style.display = 'none';
 }
 function failThumbsDown(withComment = false) {
@@ -1219,7 +1220,7 @@ var TOFleetingMessage;
 function clearFleetingMessage() {
 	//console.log('HIER!');//, getFunctionsNameThatCalledThisFunction());
 	clearTimeout(TOFleetingMessage);
-	clearElement(dLineBottomMiddle);
+	clearElement(dLineBottom);
 }
 function showFleetingMessage(msg, msDelay, styles = {}, fade = false) {
 
@@ -1237,14 +1238,14 @@ function showFleetingMessage(msg, msDelay, styles = {}, fade = false) {
 	}
 }
 function fleetingMessage(msg, styles, fade = false) {
-	let d = mDiv(dLineBottomMiddle);
+	let d = mDiv(dLineBottom);
 	if (isString(msg)) {
 		d.innerHTML = msg;
 		mStyleX(d, styles)
 	} else {
 		mAppend(d, msg);
 	}
-	if (fade) TOMain = aniFadeInOut(dLineBottomMiddle, 1);
+	if (fade) TOMain = aniFadeInOut(dLineBottom, 1);
 }
 //#endregion fleetingMessage
 
@@ -1498,7 +1499,7 @@ function setMultiGoal(n, indices) {
 }
 function showHiddenThumbsUpDown(styles) {
 	styles.bg = ['transparent', 'transparent'];
-	Pictures = myShowPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']);
+	myShowPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']);
 	// Pictures = showPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']); //, ['bravo!', 'nope']);
 	for (const p of Pictures) { let d = iDiv(p); d.style.padding = d.style.margin = '6px 0px 0px 0px'; d.style.opacity = 0; }
 

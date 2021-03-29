@@ -116,7 +116,7 @@ gMem:
   logo: 'memory'
   color: GREEN
   type: solitaire
-  showLabels: true
+  pictureLabels: toggle
   showHint: false
   levels:
     0: 
@@ -143,16 +143,17 @@ gMem:
     7: 
       numPics: 6
       numRepeat: 1
-      showLabels: false
+      pictureLabels: false
     8: 
       numPics: 9
       numRepeat: 1
-      showLabels: false
+      pictureLabels: false
 gMissingLetter:
   friendly: 'Letters!'
   logo: 'black nib'
   color: gold
   type: solitaire
+  pictureLabels: never
   levels:
     0:
       numMissing: 1
@@ -242,7 +243,7 @@ gPremem:
   type: solitaire
   trials: 1
   sameBackground: true
-  showLabels: true
+  pictureLabels: toggle
   levels:
     0: 
       numPics: 2
@@ -262,16 +263,16 @@ gPremem:
     5: 
       numPics: 24
       numRepeat: 2
-      showLabels: false
+      pictureLabels: false
     6: 
       numPics: 14
       numRepeat: 2
-      showLabels: false
+      pictureLabels: false
       sameBackground: false
     7: 
       numPics: 12
       numRepeat: 4
-      showLabels: false
+      pictureLabels: false
       sameBackground: false
 gTouchColors:
   friendly: 'Colors!'
@@ -279,7 +280,7 @@ gTouchColors:
   color: LIGHTGREEN
   type: solitaire
   contrast: 0.32
-  showLabels: true
+  pictureLabels: toggle
   shuffle: false
   colors:
     - red
@@ -303,19 +304,19 @@ gTouchColors:
       numPics: 5
       numColors: 4
     5: 
-      numPics: 5
+      numPics: 6
       numColors: 4
-      showLabels: false
+      pictureLabels: false
     6: 
       shuffle: true
       numPics: 5
       numColors: 4
-      showLabels: false
+      pictureLabels: false
 gTouchPic:
   friendly: 'Pictures!'
   logo: 'computer mouse'
   color: deepskyblue
-  showLabels: true
+  pictureLabels: toggle
   type: solitaire
   levels:
     0: 
@@ -332,7 +333,7 @@ gTouchPic:
       numPics: 35
     6: 
       numPics: 35
-      showLabels: false
+      pictureLabels: false
 gSayPic:
   friendly: 'Speak up!'
   logo: 'microphone'
@@ -391,7 +392,7 @@ gWritePic:
   logo: 'keyboard'
   color: orange
   type: solitaire
-  showLabels: true
+  pictureLabels: toggle
   instruction: all
   minWordLength: 3
   levels:
@@ -409,17 +410,17 @@ gWritePic:
     4: 
       minWordLength: 7
       maxWordLength: 100
-      showLabels: false
+      pictureLabels: false
     5: 
       minWordLength: 3
       maxWordLength: 100
-      showLabels: false
+      pictureLabels: false
       instruction: spokenGoal
       trials: 3
     6: 
       minWordLength: 3
       maxWordLength: 100
-      showLabels: false
+      pictureLabels: false
       instruction: noGoal
       trials: 3
 #bis hier sind echte solitaires!
@@ -469,7 +470,7 @@ gReverse:
   logo: 'keyboard'
   color: orange
   type: solitaire
-  showLabels: true
+  pictureLabels: toggle
   instruction: all
   minWordLength: 3
   levels:
@@ -487,17 +488,17 @@ gReverse:
     4: 
       minWordLength: 3
       maxWordLength: 4
-      showLabels: false
+      pictureLabels: false
     5: 
       minWordLength: 3
       maxWordLength: 5
-      showLabels: false
+      pictureLabels: false
       instruction: spokenGoal
       trials: 3
     6: 
       minWordLength: 3
       maxWordLength: 5
-      showLabels: false
+      pictureLabels: false
       instruction: noGoal
       trials: 3
 gPasscode:
