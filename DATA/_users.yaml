@@ -136,14 +136,14 @@ test0:
       startLevel: 0
 gul:
   id: gul
-  avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gAbacus
+  avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gWritePic, gCats, gAnagram, gElim, gAbacus]
+  lastGame: gCats
   settings:
     # settings common to all games
     samplesPerGame: 25
     minutesPerUnit: 20
-    incrementLevelOnPositiveStreak: 4
-    decrementLevelOnNegativeStreak: 5
+    incrementLevelOnPositiveStreak: 10
+    decrementLevelOnNegativeStreak: 6
     pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: E
     vocab: lifePlus
@@ -160,15 +160,15 @@ gul:
     gPremem:
       startLevel: 5
     gTouchColors: 
-      startLevel: 4
+      startLevel: 5
     gMissingLetter: 
-      startLevel: 2
+      startLevel: 3
     gSteps: 
       startLevel: 2
     gSayPic: 
       startLevel: 0
     gMem:
-      startLevel: 1
+      startLevel: 3
       showHint: false
       trials: 1
     gMissingNumber: 
@@ -184,7 +184,7 @@ gul:
     gPasscode:
       startLevel: 0
     gNamit:
-      startLevel: 0
+      startLevel: 4
     gStory:
       startLevel: 0
   avAddons: [aPasscode, aAddress, aPassword]

@@ -168,10 +168,11 @@ function getItemsMaxWordLength(n, len, keySet = 'all', lang = 'E', luc = 'c') {
 function getNItemsPerKeylist(n, keylists, options = {}) {
 	let items = [];
 	for (const list of keylists) {
-		options.keySet = list;
+		options.keySet = list.keys;
+		let cat = list.cat;
 		//console.log('list',list)
 		let newItems = genItems(n, options);
-		newItems.map(x => items.push(x));
+		newItems.map(x => {x.cat=cat;items.push(x)});
 	}
 	return items;
 }

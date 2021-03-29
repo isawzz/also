@@ -59,7 +59,7 @@ gAnagram:
   type: solitaire
   minWordLength: 3
   maxWordLength: 8
-  showLabel: true
+  pictureLabels: never
   levels:
     0:
       maxWordLength: 3
@@ -81,7 +81,24 @@ gAnagram:
     6:
       minWordLength: 7
       maxWordLength: 8
-      showLabel: false
+gCats:
+  friendly: 'Category'
+  logo: 'bookmark tabs'
+  color: deeppink
+  type: solitaire
+  showHint: false
+  trials: 1
+  levels:
+    0:
+      numPics: 2
+    1:
+      numPics: 3
+    2:
+      numPics: 4
+    3:
+      numPics: 5
+    4:
+      numPics: 6
 gElim:
   friendly: 'Elim!'
   logo: 'collision'
@@ -107,7 +124,7 @@ gElim:
       numColors: 4
       numRepeat: 2
     4: 
-      pictureLabels: false
+      pictureLabels: never
       numPics: 3
       numColors: 4
       numRepeat: 3
@@ -143,11 +160,11 @@ gMem:
     7: 
       numPics: 6
       numRepeat: 1
-      pictureLabels: false
+      pictureLabels: never
     8: 
       numPics: 9
       numRepeat: 1
-      pictureLabels: false
+      pictureLabels: never
 gMissingLetter:
   friendly: 'Letters!'
   logo: 'black nib'
@@ -173,53 +190,6 @@ gMissingLetter:
     5:
       numMissing: 5
       posMissing: random
-gMissingNumber:
-  friendly: 'Sequence!'
-  logo: 'fleur-de-lis'
-  color: deeppink
-  type: solitaire
-  numMissing: 1
-  minNum: 0
-  maxNum: 99
-  steps: 1
-  posMissing: end
-  ops: [plus]
-  seqLen: 5
-  levels:
-    0:
-      maxNum: 25
-    1:
-      maxNum: 25
-      ops: [minus]
-    2:
-      maxNum: 50
-      ops: [plus,minus]
-    3:
-      maxNum: 100
-      steps: [1,2]
-      ops: [plus]
-    4:
-      maxNum: 200
-      steps: [1,2]
-      ops: [plus,minus]
-    5:
-      maxNum: 100
-      steps: [1,2,3]
-      ops: [plus,minus]
-    6:
-      posMissing: notStart
-      maxNum: 200
-      ops: [plus,minus]
-    7:
-      posMissing: notStart
-      maxNum: 100
-      steps: [1,2,3,4,5]
-      ops: [plus,minus]
-    8:
-      posMissing: notStart
-      maxNum: 100
-      steps: [3,4,5,6,7,8,9,10]
-      ops: [plus,minus]
 gNamit:
   friendly: 'Name it!'
   logo: 'bee'
@@ -263,16 +233,16 @@ gPremem:
     5: 
       numPics: 24
       numRepeat: 2
-      pictureLabels: false
+      pictureLabels: never
     6: 
       numPics: 14
       numRepeat: 2
-      pictureLabels: false
+      pictureLabels: never
       sameBackground: false
     7: 
       numPics: 12
       numRepeat: 4
-      pictureLabels: false
+      pictureLabels: never
       sameBackground: false
 gTouchColors:
   friendly: 'Colors!'
@@ -306,12 +276,12 @@ gTouchColors:
     5: 
       numPics: 6
       numColors: 4
-      pictureLabels: false
+      pictureLabels: never
     6: 
       shuffle: true
       numPics: 5
       numColors: 4
-      pictureLabels: false
+      pictureLabels: never
 gTouchPic:
   friendly: 'Pictures!'
   logo: 'computer mouse'
@@ -333,7 +303,7 @@ gTouchPic:
       numPics: 35
     6: 
       numPics: 35
-      pictureLabels: false
+      pictureLabels: never
 gSayPic:
   friendly: 'Speak up!'
   logo: 'microphone'
@@ -410,20 +380,67 @@ gWritePic:
     4: 
       minWordLength: 7
       maxWordLength: 100
-      pictureLabels: false
+      pictureLabels: never
     5: 
       minWordLength: 3
       maxWordLength: 100
-      pictureLabels: false
+      pictureLabels: never
       instruction: spokenGoal
       trials: 3
     6: 
       minWordLength: 3
       maxWordLength: 100
-      pictureLabels: false
+      pictureLabels: never
       instruction: noGoal
       trials: 3
-#bis hier sind echte solitaires!
+#unused:
+gMissingNumber:
+  friendly: 'Sequence!'
+  logo: 'fleur-de-lis'
+  color: deeppink
+  type: solitaire
+  numMissing: 1
+  minNum: 0
+  maxNum: 99
+  steps: 1
+  posMissing: end
+  ops: [plus]
+  seqLen: 5
+  levels:
+    0:
+      maxNum: 25
+    1:
+      maxNum: 25
+      ops: [minus]
+    2:
+      maxNum: 50
+      ops: [plus,minus]
+    3:
+      maxNum: 100
+      steps: [1,2]
+      ops: [plus]
+    4:
+      maxNum: 200
+      steps: [1,2]
+      ops: [plus,minus]
+    5:
+      maxNum: 100
+      steps: [1,2,3]
+      ops: [plus,minus]
+    6:
+      posMissing: notStart
+      maxNum: 200
+      ops: [plus,minus]
+    7:
+      posMissing: notStart
+      maxNum: 100
+      steps: [1,2,3,4,5]
+      ops: [plus,minus]
+    8:
+      posMissing: notStart
+      maxNum: 100
+      steps: [3,4,5,6,7,8,9,10]
+      ops: [plus,minus]
 gSet:
   friendly: 'Set!'
   logo: 'stairs'
@@ -447,7 +464,6 @@ gSet:
       numColors: 4
       numRepeat: 3
       numSteps: 2
-#bis hier sind echte solitaires!
 gInno:
   friendly: 'Innovate!'
   logo: 'horse'
@@ -488,17 +504,17 @@ gReverse:
     4: 
       minWordLength: 3
       maxWordLength: 4
-      pictureLabels: false
+      pictureLabels: never
     5: 
       minWordLength: 3
       maxWordLength: 5
-      pictureLabels: false
+      pictureLabels: never
       instruction: spokenGoal
       trials: 3
     6: 
       minWordLength: 3
       maxWordLength: 5
-      pictureLabels: false
+      pictureLabels: never
       instruction: noGoal
       trials: 3
 gPasscode:
@@ -592,22 +608,6 @@ gGuess:
   color: midnightblue #YELLOW
   type: word
   numPlayers: 2
-gCats:
-  friendly: 'Category'
-  logo: 'bookmark tabs'
-  color: BROWN
-  type: solitaire
-  levels:
-    0:
-      numPics: 2
-    1:
-      numPics: 3
-    2:
-      numPics: 4
-    3:
-      numPics: 5
-    4:
-      numPics: 6
 gAristo:
   friendly: 'Aristocracy'
   logo: 'crown'

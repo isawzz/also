@@ -3,7 +3,6 @@
 
 function initLive() { Live = {}; }
 
-
 class LiveObject {
 	static States = { none: 0, gettingReady: 1, ready: 2, running: 3, on: 3, off: 4 }
 	constructor(k) { //a live object gets an id at birth

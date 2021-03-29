@@ -16519,11 +16519,9 @@ running shirt:
     - object
     - action
     - objectPlus
-    - actionPlus
-    - activities
-    - sport
-  group: Activities
-  subgroup: sport
+    - clothing
+  group: Objects
+  subgroup: clothing
 running shoe:
   key: running shoe
   hexcode: 1F45F

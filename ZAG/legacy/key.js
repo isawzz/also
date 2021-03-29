@@ -27,7 +27,6 @@ function allWordsAndKeysLowerCase() {
 	}
 	downloadAsYaml(newSyms, 'syms1');
 }
-
 function catFiltered(cats, name, best) {
 	//console.log(cats, name)
 	let keys = setCategories(cats);
@@ -144,6 +143,14 @@ function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc 
 	if (isdef(nMin)) console.assert(primary.length >= nMin);
 	//console.log(primary)
 	return primary;
+}
+function genCats() {
+	let di = {
+		sport: ByGroupSubgroup['Activities']['sport'],
+		mammal: ByGroupSubgroup['Animals & Nature']['animal-mammal'],
+		job: ByGroupSubgroup['People & Body']['job'],
+	};
+	return di;
 }
 
 

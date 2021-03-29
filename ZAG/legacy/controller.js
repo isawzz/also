@@ -1,7 +1,7 @@
 var pictureSize, TOMain, TOTrial;//, TOLong;
 function canAct() {
-	//console.log('uiActivated',uiActivated,'auxOpen',auxOpen)
-	return uiActivated && !auxOpen && document.activeElement.id != 'spUser' && !isVisible('freezer2');
+	console.log('uiActivated',uiActivated,'auxOpen',auxOpen)
+	return uiActivated && !auxOpen; // && document.activeElement.id != 'spUser' && !isVisible('freezer2');
 }
 
 function stopGame() {
@@ -96,7 +96,6 @@ function evaluate() {
 	//console.log(G)
 	if (IsAnswerCorrect) { DELAY = G.spokenFeedback ? 1500 : 300; G.successFunc(); }
 	else { DELAY = G.correctionFunc(); G.failFunc(); }
-	//return;
 	setTimeout(removeMarkers, 1500);
 
 	let nextLevel = scoring(IsAnswerCorrect);

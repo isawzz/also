@@ -6,6 +6,8 @@ async function _start() {
 	KeySets = getKeySets();
 	loadUser(); console.assert(isdef(G));
 
+	//TEST let data = genCats();	let sample = new CatsApp(data);	uiActivated = true;	sample.prompt(dTable);
+
 	startUnit();
 }
 function startUnit(){

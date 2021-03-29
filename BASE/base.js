@@ -1123,7 +1123,7 @@ function addDDSource(source, isCopy = true) {
 }
 function enableDD(sources, targets, dropHandler, isCopy) {
 	DDInfo = { sources: sources, targets: targets, dropHandler: dropHandler };
-	let sourceDivs = getDivs(sources);
+	let sourceDivs = sources.map(x=>iDiv(x));
 	for (let i = 0; i < sources.length; i++) {
 		let source = sources[i];
 		let d = sourceDivs[i];
@@ -1137,7 +1137,7 @@ function ddStart(ev, source, isCopy = true) {
 	//console.log('ev',ev,'source',source);
 
 	DDInfo.source = source;
-	let d = getDiv(source);
+	let d = iDiv(source);
 	var clone = DragElem = DDInfo.clone = d.cloneNode(true);
 	// clone.eliminateSource = !isCopy;
 	clone.isCopy = isCopy;
@@ -1162,7 +1162,7 @@ function onReleaseClone(ev) {
 	let els = allElementsFromPoint(ev.clientX, ev.clientY);
 	//console.log('_________',els);
 	let source = DDInfo.source;
-	let dSource = getDiv(source);
+	let dSource = iDiv(source);
 	let dropHandler = DDInfo.dropHandler;
 	for (const target of DDInfo.targets) {
 		let dTarget = getDiv(target);
