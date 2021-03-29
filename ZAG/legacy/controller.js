@@ -5,7 +5,6 @@ function canAct() {
 }
 
 function stopGame() {
-
 	resetState();
 }
 function startGame() {
@@ -43,12 +42,8 @@ function startLevel() {
 function startRound() {
 	//console.log('...new round:',G.showLabels)
 
-	if (G.addonActive != true && isTimeForAddon()) {
-		G.addonActive = true;
-		//console.log('time for addon!!!')
-		exitToAddon(startRound); return;
-	} else G.addonActive = false;
-
+	//if (G.addonActive != true && isTimeForAddon()) {		G.addonActive = true;		exitToAddon(startRound); return;	} else G.addonActive = false;	
+	
 	resetRound();
 	uiActivated = false;
 	G.instance.startRound();

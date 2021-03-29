@@ -137,12 +137,12 @@ test0:
 gul:
   id: gul
   avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gWritePic, gCats, gAnagram, gElim, gAbacus]
-  lastGame: gCats
+  lastGame: gTouchPic
   settings:
     # settings common to all games
     samplesPerGame: 25
     minutesPerUnit: 20
-    incrementLevelOnPositiveStreak: 10
+    incrementLevelOnPositiveStreak: 12
     decrementLevelOnNegativeStreak: 6
     pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: E
@@ -168,7 +168,7 @@ gul:
     gSayPic: 
       startLevel: 0
     gMem:
-      startLevel: 3
+      startLevel: 4
       showHint: false
       trials: 1
     gMissingNumber: 

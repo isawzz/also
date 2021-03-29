@@ -7892,10 +7892,10 @@ goal net:
   text: '&#129349;'
   type: emo
   isDuplicate: false
-  E: goal
-  D: tor
-  F: objectif
-  S: objetivo
+  E: soccer goal
+  D: fussballtor
+  F: foutbol
+  S: futbol 
   C: 目標
   cats:
     - huge
@@ -7905,7 +7905,6 @@ goal net:
     - action
     - objectPlus
     - actionPlus
-    - activities
     - sport
   group: Activities
   subgroup: sport
@@ -16517,7 +16516,6 @@ running shirt:
     - all
     - nemo
     - object
-    - action
     - objectPlus
     - clothing
   group: Objects

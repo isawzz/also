@@ -1,7 +1,9 @@
 async function _start() {
 
-	initLive();	initTable();	initSidebar();  initAux(); initScore(); initSymbolTableForGamesAddons(); //creates Daat
-	addonFeatureInit(); //new API!
+	// initLive();	
+	//Daat={};
+	initTable();	initSidebar();  initAux(); initScore(); initSymbolTableForGamesAddons(); //creates Daat
+	// addonFeatureInit(); //new API!
 	Speech = new SpeechAPI('E');
 	KeySets = getKeySets();
 	loadUser(); console.assert(isdef(G));
