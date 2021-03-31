@@ -1,6 +1,6 @@
 var pictureSize, TOMain, TOTrial;//, TOLong;
 function canAct() {
-	console.log('uiActivated',uiActivated,'auxOpen',auxOpen)
+	//console.log('uiActivated',uiActivated,'auxOpen',auxOpen)
 	return uiActivated && !auxOpen; // && document.activeElement.id != 'spUser' && !isVisible('freezer2');
 }
 

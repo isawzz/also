@@ -13,17 +13,11 @@ function getKeySets() {
 		}
 	}
 	localStorage.setItem('KeySets', JSON.stringify(res));
-
+	makeCategories();
 
 	return res;
 
 }
-function getGroup(friendlyName) {
-	console.log(ByGroupSubgroup);
-
-
-}
-
 function getGSGElements(gCond, sCond) {
 	let keys = [];
 	let byg = ByGroupSubgroup;
@@ -38,9 +32,8 @@ function getGSGElements(gCond, sCond) {
 	}
 	return keys.sort();
 }
-
 function makeCategories() {
-	console.log(ByGroupSubgroup);
+	//console.log(ByGroupSubgroup);
 	let keys = Categories = {
 		animal: getGSGElements(g => g == 'Animals & Nature', s => startsWith(s, 'animal')),
 		clothing: getGSGElements(g => g == 'Objects', s => s == 'clothing'),
@@ -59,54 +52,44 @@ function makeCategories() {
 		transport: getGSGElements(g => g == 'Travel & Places', s => startsWith(s, 'transport')),
 	};
 
-	let incompatible = {
+	let incompatible = Daat.incompatibleCats = {
 		animal: ['mammal'],
 		clothing: ['object'],
-		feeling: ['gesture'],
+		emotion: ['gesture'],
 		food: ['plant', 'animal'],
 		'game/toy': ['object', 'music'],
-		gestures: ['emotion'],
+		gesture: ['emotion'],
 		job: ['sport'],
 		mammal: ['animal'],
+		music: ['object', 'game/toy'],
 		object: ['music', 'clothing', 'game/toy', 'tool'],
 		place: [],
 		plant: ['food'],
 		sport: ['job'],
 		tool: ['object'],
-		transport: []
+		transport: [],
 	}
-	console.log('categories', keys);
+	//console.log('categories', keys);
 
 }
 
-function genCats() {
-	let di = {
-		sport: ByGroupSubgroup['Activities']['sport'],
-		mammal: ByGroupSubgroup['Animals & Nature']['animal-mammal'],
-		job: ByGroupSubgroup['People & Body']['job'],
-	};
-	return di;
-}
-function genCategories(n) {
-	console.log('hallo!!!!!!!!!!!!!!', ByGroupSubgroup)
-	let gsg = ByGroupSubgroup;
-	let groups = Object.keys(gsg);
-	console.log(groups)
-	let gs = choose(groups, n);
-	console.log('groups', gs); //return;
-	let di = {};
-	for (const g of gs) {
-		let sgs = Object.keys(gsg[g]);
-		let sg = chooseRandom(sgs);
-		let title = stringAfter(sg, '-');
-		let keys = lookup(gsg, [g, sg]);
-		di[title] = keys;
-		console.log('group', g, 'subgroups', sgs, 'title', title, 'keys', gsg[g][sg])
+
+function genCats(n){
+	//console.log('???????',Daat.incompatibleCats)
+	let di={};
+	let cats = Object.keys(Categories);
+	//console.log('cats available:',cats)
+	for(let i=0;i<n;i++){
+		let cat = chooseRandom(cats);
+		let incompat=Daat.incompatibleCats[cat];
+		//console.log('cats',cats,'\ncat',cat,'\nincompat',incompat)
+		cats = arrMinus(cats,incompat);
+		removeInPlace(cats,cat);
+		//console.log('cats after minus',cats);
+		di[cat]=Categories[cat];
 	}
 	return di;
 }
-
-
 function extendByGSGToObjects() {
 	// let bgsg = {};
 	// let flatByFriendly = {};
@@ -149,27 +132,15 @@ function repairSubgroups() {
 }
 
 
-
-const GSG = {
-	sport: { f: x => x.group == 'Activities' && x.subgroup == 'sport', ov: ['object', 'clothing'] },
-	animal: { f: x => startsWith(x.subgroup, 'anim'), ov: ['nature'] },
-	nature: { f: x => startsWith(x.group, 'Anim'), ov: ['animal', 'food'] },
-	plant: { f: x => startsWith(x.subgroup, 'plant'), ov: ['nature', 'food'] },
-	food: { f: x => startsWith(x.subgroup, 'food'), ov: ['nature', 'plant', 'animal'] }
-
+//#region old stuff: DELETE? keys: KeySets, Categories, 
+function genCats_sample() {
+	let di = {
+		sport: ByGroupSubgroup['Activities']['sport'],
+		mammal: ByGroupSubgroup['Animals & Nature']['animal-mammal'],
+		job: ByGroupSubgroup['People & Body']['job'],
+	};
+	return di;
 }
-function getGSG(k) {
-	let set = [];
-	let gsg = GSG[k];
-	for (const k in Syms) {
-		let info = Syms[k];
-		//console.log(info.group)
-		if (gsg.f(info)) set.push(k);
-	}
-	return set;
-}
-
-//#region keys: KeySets, Categories, 
 function getEmoSets_orig() {
 	var emoSets = {
 		nosymbols: { name: 'nosymbols', f: o => o.group != 'symbols' && o.group != 'flags' && o.group != 'clock' },
@@ -293,7 +264,6 @@ function getEmoSets() {
 	};
 	return emoSets;
 }
-
 function getCatSets() {
 	CatSets = {};
 	let emoSets = getEmoSets();
@@ -312,17 +282,11 @@ function getCatSets() {
 	}
 	//console.log(CatSets);
 }
-
 function getKeysIn(group, subgroup) {
 	let gsublower = lookup(ByGroupSubgroup, [group.toLowerCase(), subgroup]);
 	let gsub = lookup(ByGroupSubgroup, [group, subgroup]);
 	return gsub.filter(x => isdef(Syms[x]));
 }
-
-function getGroupInfo() {
-
-}
-
 async function loadGroupsAndCategories() {
 	console.log('haaaaaaaaaaaaaaaaaa')
 	let s_info = await route_path_yaml_dict('../assets/s_info.yaml');
@@ -381,8 +345,6 @@ async function loadGroupsAndCategories() {
 	downloadAsYaml(symsCorrected, 'symsCorrected');
 	downloadAsYaml(ds, 'byGSG');
 }
-
-
 async function loadGroupsAndCategories_orig() {
 	let s_info = await route_path_yaml_dict('../assets/s_info.yaml');
 	let all = {}, groups = [], subgroups = [], gdi = {}, gsCount = {}, subgroupEmotion = [], byCateg = {}, categByKey = {};

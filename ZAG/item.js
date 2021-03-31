@@ -22,42 +22,9 @@ function applyColorkey(item) {
 	let ui = l.options.showPic ? l.dPic : l.dLabel;
 	mStyleX(ui, item.shadeStyles);
 }
-function calcLongestLabel(items, options) {
-	let mimi = arrMinMax(items, x => x.label.length);
-	let max = options.longestLabelLen = mimi.max;
-	let longest = items.filter(x => x.label.length == max);
-
-	options.labelSum = arrSum(items, ['label', 'length']);
-	if (options.hugeFont) {
-		let item = longest[0];
-		options.longestLabel = item.label;
-		options.indexOfLongestLabelItem = item.index;
-		options.wLongest = item.label + 'n';
-		return;
-	}
-
-	//console.log('longest items:', longest)
-	let bestItem = longest[0], maxmw = 0;
-	for (const item of longest) {
-		let w = item.label.toLowerCase();
-		let cntmw = 0;
-		for (let i = 0; i < w.length; i++) if (w == 'm' || w == 'w') cntmw += 1;
-		if (cntmw > maxmw) { cntmw = maxmw; bestItem = item; }
-	}
-
-	options.longestLabel = bestItem.label; // items[mimi.imax].label;
-
-	options.wLongest = replaceAll(options.longestLabel, 'i', 'w');
-	options.wLongest = replaceAll(options.wLongest, 'l', 'w');
-	options.wLongest = replaceAll(options.wLongest, 't', 'n');
-	options.wLongest = replaceAll(options.wLongest, 'r', 'n');
-	options.indexOfLongestLabelItem = bestItem.index;
-	//console.log('longest item label is', options.longestLabel)
-	// items.map(x=>console.log(x.label,x.label.length));
-	options.labelSum = arrSum(items, ['label', 'length']);
-}
 function _extendItemsAndOptions(items, options) {
-	calcLongestLabel(items, options);
+	options.longestLabel = findLongestWord(items.map(x => x.label));
+	options.wLongest = extendWidth(options.longestLabel);
 
 	//hier koennt ich die ifs machen!
 	let ifs = options.ifs;
@@ -165,14 +132,29 @@ function getItemsMaxWordLength(n, len, keySet = 'all', lang = 'E', luc = 'c') {
 	addLabels(items, lang, luc);
 	return items;
 }
+
 function getNItemsPerKeylist(n, keylists, options = {}) {
 	let items = [];
+	// let nRandom = nTotal - (keylists.length*n);
+	// let indices = range(0,keylists.length-1);
+	// shuffle(indices);
+	// console.log('indices',indices);
+	// for(const i of indices){
+	// 	let list = keylists[i];
+	// 	options.keySet = list.keys;
+	// 	let cat = list.cat;
+	// 	//console.log('list',list)
+	// 	let newItems = genItems(n, options);
+	// 	newItems.map(x => {x.cat=cat;items.push(x)});
+	// }
+	// return items;
 	for (const list of keylists) {
 		options.keySet = list.keys;
 		let cat = list.cat;
 		//console.log('list',list)
 		let newItems = genItems(n, options);
 		newItems.map(x => {x.cat=cat;items.push(x)});
+		
 	}
 	return items;
 }

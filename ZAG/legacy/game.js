@@ -1368,7 +1368,18 @@ function containsColorWord(s) {
 	}
 	return true;
 }
-function getActualText(item) {
+function createContainers(list, dArea, styles) {
+	let i = 0;
+	let containers = [];
+	let defStyles = { w: 150, h: 200, bg: 'random', rounding: 12, display: 'inline-block', margin: 12 };
+	addKeys(defStyles, styles);
+	for (const cat of list) {
+		let cont = mTitledDiv(cat, dArea, styles, {}, 'c' + i);
+		i += 1;
+		containers.push({ label: cat, div: cont });
+	}
+	return containers;
+} function getActualText(item) {
 	//console.log(item)
 	if (isdef(item.live.dLabel)) return item.live.dLabel.innerHTML;
 	//if (isdef(item.pic)){return iDiv(item).children[1].innerHTML;} else {return iDiv(item).children[0].innerHTML;}
@@ -1479,7 +1490,7 @@ function sayRandomVoice(e, g, voice = 'random') {
 	if (!G.silentMode) Speech.say(G.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
 }
 function sayTryAgain() { sayRandomVoice('try again!', 'nochmal'); }
-function setBackgroundColor() { document.body.style.backgroundColor = getColorDictColor(G.color);}
+function setBackgroundColor() { document.body.style.backgroundColor = getColorDictColor(G.color); }
 function setGoal(index) {
 	if (nundef(index)) {
 		let rnd = G.numPics < 2 ? 0 : randomNumber(0, G.numPics - 2);

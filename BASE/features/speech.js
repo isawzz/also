@@ -1,3 +1,4 @@
+const MASTERVOLUME = 0.1;
 var RecogOutput = false;
 var RecogOutputError = true;
 var RecogHighPriorityOutput = true;
@@ -36,7 +37,7 @@ class SpeechAPI {
 		this.recorder.stop();
 	}
 
-	say(text, r = .5, p = .8, v = .5, voicekey, callback, lang) {
+	say(text, r = .5, p = .8, v = MASTERVOLUME, voicekey, callback, lang) {
 
 		//what happens if change lang in the middle of speaking???
 		if (isdef(lang)) this.speaker.setLanguage(lang);
@@ -178,7 +179,7 @@ class Speaker {
 		this.q = [];
 	}
 
-	utter(text, r = .5, p = .8, v = .5, voicekey, callback = null) {
+	utter(text, r = .5, p = .8, v = MASTERVOLUME, voicekey, callback = null) {
 
 
 		speechSynthesis.cancel();
@@ -189,6 +190,7 @@ class Speaker {
 		u.text = sepWords(text, vkey);// 'Hi <silence msec="2000" /> Flash!'; //text.toLowerCase();
 		u.rate = r;
 		u.pitch = p;
+		//console.log('volume is',v);
 		u.volume = v;
 		u.voice = voice;
 

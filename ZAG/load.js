@@ -32,6 +32,7 @@ async function addGroupInfo() {
 	// symbolDict = await localOrRoute('symbolDict', '../assets/symbolDict.yaml');
 }
 async function _loader() {
+	Daat={};
 	if (CLEAR_LOCAL_STORAGE) localStorage.clear();
 
 	C52 = await localOrRoute('C52', '../assets/c52.yaml');

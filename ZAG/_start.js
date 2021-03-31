@@ -9,7 +9,7 @@ async function _start() {
 	loadUser(); console.assert(isdef(G));
 
 	//TEST let data = genCats();	let sample = new CatsApp(data);	uiActivated = true;	sample.prompt(dTable);
-
+	//makeCategories(); return; //console.log([3,6,1,2].sort()); return;
 	startUnit();
 }
 function startUnit(){
@@ -19,12 +19,11 @@ function startUnit(){
 
 }
 
-
 function initSymbolTableForGamesAddons() {
 	//console.log('Daat', Daat);//yes this is an empty dict!
 	if (nundef(Daat)) Daat={};
 	Daat.GameClasses = {
-		gTouchPic: GTouchPic, gNamit: GNamit, gStory: GStory,
+		gTouchPic: GTouchPic, gNamit: GNamit, gStory: GStory, gSentence: GSentence,
 		gTouchColors: GTouchColors, gPremem: GPremem, gMem: GMem, gMissingLetter: GMissingLetter,
 		gMissingNumber: GMissingNumber, gWritePic: GWritePic, gSayPic: GSayPic, gSteps: GSteps, gElim: GElim,
 		gAnagram: GAnagram, gAbacus: GAbacus, gPasscode: GPasscode, gCats: GCats,

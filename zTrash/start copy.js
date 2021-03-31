@@ -303,7 +303,7 @@ function startUnit() {
 function initSymbolTableForGamesAddons() {
 	//console.log('DA', DA);//yes this is an empty dict!
 	DA.GameClasses = {
-		gTouchPic: GTouchPic, gNamit: GNamit,
+		gTouchPic: GTouchPic, gNamit: GNamit, gSentence: GSentence,
 		gTouchColors: GTouchColors, gPremem: GPremem, gMem: GMem, gMissingLetter: GMissingLetter,
 		gMissingNumber: GMissingNumber, gWritePic: GWritePic, gSayPic: GSayPic, gSteps: GSteps, gElim: GElim,
 		gAnagram: GAnagram, gAbacus: GAbacus, gPasscode: GPasscode

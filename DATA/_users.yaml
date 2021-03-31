@@ -137,7 +137,7 @@ test0:
 gul:
   id: gul
   avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gWritePic, gCats, gAnagram, gElim, gAbacus]
-  lastGame: gTouchPic
+  lastGame: gCats
   settings:
     # settings common to all games
     samplesPerGame: 25
@@ -149,44 +149,49 @@ gul:
     vocab: lifePlus
     showTime: true
     spokenFeedback: true
-    silentMode: true
+    silentMode: false
     switchGame: true
     #indiv game settings default
     trials:  2
     showHint: true
   games:
-    gTouchPic:
+    gAbacus:
       startLevel: 0
-    gPremem:
-      startLevel: 5
-    gTouchColors: 
-      startLevel: 5
-    gMissingLetter: 
-      startLevel: 3
-    gSteps: 
+    gAnagram: 
+      startLevel: 4
+    gCats:
+      startLevel: 0
+      trials: 2
+    gElim: 
       startLevel: 2
-    gSayPic: 
-      startLevel: 0
     gMem:
       startLevel: 4
       showHint: false
       trials: 1
+    gMissingLetter: 
+      startLevel: 3
     gMissingNumber: 
       startLevel: 2
-    gWritePic: 
-      startLevel: 2
-    gAnagram: 
-      startLevel: 1
-    gElim: 
-      startLevel: 2
-    gAbacus:
+    gNamit:
       startLevel: 0
     gPasscode:
       startLevel: 0
-    gNamit:
-      startLevel: 4
+    gPremem:
+      startLevel: 5
+    gSayPic: 
+      startLevel: 0
+    gSentence:
+      startLevel: 0
+    gSteps: 
+      startLevel: 2
     gStory:
       startLevel: 0
+    gTouchColors: 
+      startLevel: 5
+    gTouchPic:
+      startLevel: 0
+    gWritePic: 
+      startLevel: 2
   avAddons: [aPasscode, aAddress, aPassword]
   addons:
     aPasscode:

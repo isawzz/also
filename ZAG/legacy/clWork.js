@@ -1,119 +1,61 @@
-class GCats extends Game {
-	constructor(name) { super(name); }
-	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
-
-	startLevel() {
-		let data = genCats();
-		let options = this.options = {};
-		this.keysByCat = data;
-		this.cats = Object.keys(this.keysByCat);
-		this.lists = Object.values(this.keysByCat);
-		this.keylists = [];
-		for (const k in this.keysByCat) { this.keylists.push({ keys: data[k], cat: k }); }
-		// this.keylists = Object.values(this.keysByCat);
-		_extendOptions(options);
-	}
-	dropHandler(source, target, isCopy = true) {
-		let dSource = iDiv(source);
-		let dTarget = iDiv(target);
-
-		if (!isCopy) {
-			mAppend(dTarget, dSource);
-		} else {
-			let dNew = mText(dSource.innerHTML, dTarget, { wmin: 100, fz: 20, padding: 4, margin: 4, display: 'inline-block' });
-			addDDSource(dNew, false);
+class GSentence extends Game {
+	constructor(name) {
+		super(name);
+		if (G.language == 'C') {
+			this.realLanguage = G.language;
+			G.language = chooseRandom('E', 'S', 'F', 'D');
 		}
-
-		//evaluate();
-		//relayout sources in target
 	}
+	clear() { super.clear(); if (isdef(this.language)) G.language = this.language; }
+	startLevel() {
+		// console.log('____________ calling setKeys')
 
+		//let f = (k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
+		//console.log('f', f)
+		G.keys = setKeys({
+			lang: G.language, keysets: KeySets, key: 'all',
+			filterFunc: filterWordByLength, //(k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
+		});
+		//return;
+		// console.log(G.keys)
+		if (G.keys.length < 25) {
+			G.keys = setKeys({
+				lang: G.language, keysets: KeySets, key: 'all',
+				filterFunc: filterWordByLength, //(k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
+			});
+		}
+		// console.log(G.keys)
+		//console.log('keys', G.keys)
+	}
 	prompt() {
-		//OIL for category boxes
-		//clearElement(dParent);
-		showInstruction('', G.language == 'E' ? 'drag words to categories' : "ordne die texte in kategorien", dTitle, true);
+		myShowPics(() => fleetingMessage('drag and drop the letters to form the word!'), {}, { });
+		setGoal();
+		showInstruction(Goal.label, G.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
 		mLinebreak(dTable);
 
-		let dArea = mDiv(dTable, { display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
-		let containers = this.containers = createContainers(this.cats, dArea); //['animals', 'sport', 'transport'], dArea);
-		mLinebreak(dArea);
-		console.log('lists', this.keylists);
-		let items = Pictures = getNItemsPerKeylist(1, this.keylists, this.options);
-		shuffle(items);
-		for (const item of items) { // ['horse', 'soccer', 'bird']) {
-			let d = mText(item.label, dArea, { bg: 'orange', rounding: 4, margin: 8, wmin: 70, padding: 2 });
-			iAdd(item, { div: d });
-		}
+		this.inputs = createDropInputs();
+		let x = mLinebreak(dTable, 50);//x.style.background='red'
+		this.letters = createDragLetters();
 
-		enableDD(items, containers, this.dropHandler.bind(this), false);
-
-		mLinebreak(dTable, 50);
-		mButton('Done!', evaluate, dTable, { fz: 32, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 		activateUi();
-		//add a submit button that triggers evaluation
+
 	}
-	eval() {
-		//console.log('containers', this.containers);
-		let isCorrect = true;
-		let correctList = [], incorrectList = [];
-		for (const p of Pictures) {
-			//console.log('item', p)
-			//console.log('parent', iDiv(p).parentNode);
-			let cont = iDiv(p).parentNode;
-			p.classified = false;
-			for (const c of this.containers) {
-				if (iDiv(c) == cont) {
-					p.classified = true;
-					if (p.cat == c.label) correctList.push(p);
-					else { isCorrect = false; incorrectList.push(p); }
-					break;
-				}
-			}
-			if (!p.classified) isCorrect = false;
-		}
-		console.log('correct', correctList.map(x => x.label));
-		console.log('incorrect', incorrectList.map(x => x.label));
-		console.log('isCorrect', isCorrect);
-		console.log('items',Pictures);
-		return isCorrect;
+	trialPrompt() {
+		sayTryAgain();
+		setTimeout(() => {
+			this.inputs.map(x => iDiv(x).innerHTML = '_')
+			// mClass(d, 'blink');
+		}, 1500);
+
+		return 10;
 	}
-	eval_dep() {
-		console.log('containers', this.containers);
-		let isCorrect = true;
-		let correctList = [], incorrectList = [];
-		for (const p of Pictures) {
-			console.log('item', p)
-			console.log('parent', iDiv(p).parentNode);
-			let cont = iDiv(p).parentNode;
-			for (const c of this.containers) {
-				if (iDiv(c) == cont) {
-					if (!belongsToCategory(p, c.label)) {
-						isCorrect = false;
-						incorrectList.push(p);
-						//p is in container c
-						//how can I find out if this picture belongs to this category?
-					} else correctList.push(p);
-					break;
-				}
-			}
-			//break;
-		}
-		console.log('correct', correctList.map(x => x.label));
-		console.log('incorrect', incorrectList.map(x => x.label));
-		console.log('isCorrect', isCorrect);
-		return isCorrect;
+	eval(w, word) {
+		Selected = { answer: w, reqAnswer: word, feedbackUI: iDiv(Goal) }; //this.inputs.map(x => iDiv(x)) };
+		//console.log(Selected);
+		return w == word;
 	}
-}
-function belongsToCategory(item, cat) {
-	let info = item.info;
-	cat = cat.toLowerCase();
-	if (isdef(info.cats) && info.cats.includes(cat)) return true;
-	if (isdef(info.group) && info.group.toLowerCase().includes(cat)) return true;
-	if (isdef(info.subgroup) && info.group.toLowerCase().includes(cat)) return true;
-	return false;
 
 }
-
 
 
 

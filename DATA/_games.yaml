@@ -84,21 +84,25 @@ gAnagram:
 gCats:
   friendly: 'Category'
   logo: 'bookmark tabs'
-  color: deeppink
+  color: BROWN
   type: solitaire
   showHint: false
-  trials: 1
+  numCats: 3
+  numPics: 1
+  pickRandom: false
   levels:
     0:
-      numPics: 2
+      numCats: 2
     1:
-      numPics: 3
+      numCats: 2
+      numPics: 2
     2:
-      numPics: 4
+      numPics: 1
     3:
-      numPics: 5
+      numPics: 2
     4:
-      numPics: 6
+      numPics: 7
+      pickRandom: true
 gElim:
   friendly: 'Elim!'
   logo: 'collision'
@@ -308,6 +312,12 @@ gSayPic:
   friendly: 'Speak up!'
   logo: 'microphone'
   color: BLUE
+  type: solitaire
+gSentence:
+  friendly: 'Sentence!'
+  logo: 'bison'
+  language: 'E'
+  color: BLUEGREEN
   type: solitaire
 gSteps:
   friendly: 'Steps!'

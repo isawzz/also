@@ -16,7 +16,7 @@ var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup; //, CatSets, Symbo
 var DB;
 
 var U;
-var Pictures, Goal, Selected, Score, uiActivated = false, auxOpen, TO, QContextCounter = 0,Live,Daat,G;
+var Pictures, Goal, Selected, Score, uiActivated = false, auxOpen, TO, QContextCounter = 0, Live, Daat, G;
 var Settings, SettingsChanged; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 
 
@@ -102,7 +102,7 @@ const DD = {
 	'divide the previous number by': 'dividiere die vorhergehende zahl durch',
 	'the previous number': 'die vorhergehende zahl', is: 'ist', what: 'was', equals: 'ist gleich', enter: "tippe",
 	'to the power of': 'hoch', or: 'oder', less: 'kleiner', greater: 'grösser', than: 'als', equal: 'gleich', and: 'und',
-	not: 'nicht', click: 'click', press: 'tippe', quite: 'ziemlich', 'not quite': 'nicht ganz', 
+	not: 'nicht', click: 'click', press: 'tippe', quite: 'ziemlich', 'not quite': 'nicht ganz',
 	say: 'sage', write: 'schreibe', complete: 'ergänze', 'unequal': 'ungleich', except: 'ausser', EXCEPT: 'AUSSER',
 	number: 'Zahl', color: 'farbe', eliminate: 'eliminiere', all: 'alle', with: 'mit', true: 'wahr', false: 'falsch',
 	build: 'bilde', count: 'zähle', 'the red dots': 'die roten Punkte',
@@ -130,3 +130,42 @@ const OPS = { //die muessen vals in settings.games[game] sein!
 	'xor': { cmd: 'true or false?', link: 'xor', wr: 'xor', sp: 'xor', f: (a, b) => (a && !b || !a && b) },
 }
 
+EnglishSentences = [
+	'the cat stretched',
+	'Jacob stood on his tiptoes',
+	'the car turned the corner',
+	'Kelly twirled in circles',
+	'she opened the door',
+	'Aaron made a picture',
+	'I am sorry',
+	'I danced',
+	'Gunter is a Microsoft employee',
+	'it is raining',
+	'Gunter is going to the store',
+	'Felix loves Innovation',
+	'Amanda likes playing video games',
+	'let us take a walk',
+	'Gunter is sleeping',
+	'Tom got a new bike',
+	'open the jar carefully',
+	'read the directions',
+	'do not cry',
+	'use common sense',
+	'make the best of things',
+	'Sarah and Ira drove to the store',
+	'Jenny and I opened all the gifts',
+	'the cat and dog ate',
+	'my parents and I went to a movie',
+	'Felix and Lauren are dancing gracefully',
+	'Samantha, Elizabeth, and Joan are on the committee',
+	'the ham, green beans, mashed potatoes, and corn are gluten-free',
+	'the paper and pencil sat idle on the desk',
+	'Misha walked and looked around',
+	'he was eating and talking',
+	'I rinsed and dried the dishes',
+	'Joe stood up and spoke to the crowd',
+	'you are in the right place',
+	'turn around',
+	'take a left at the corner',
+
+];

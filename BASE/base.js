@@ -123,9 +123,9 @@ function mStyleX(elem, styles, unit = 'px') {
 		styles.margin = styles.vmargin + unit + ' ' + styles.hmargin + unit;
 		console.log('::::::::::::::', styles.margin)
 	}
-	if (isdef(styles.vpadding) && isdef(styles.hpadding)) {
+	if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
 
-		styles.padding = styles.vpadding + unit + ' ' + styles.hpadding + unit;
+		styles.padding = valf(styles.vpadding,0) + unit + ' ' + valf(styles.hpadding,0) + unit;
 		//console.log('::::::::::::::', styles.vpadding, styles.hpadding)
 	}
 	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
@@ -1165,7 +1165,7 @@ function onReleaseClone(ev) {
 	let dSource = iDiv(source);
 	let dropHandler = DDInfo.dropHandler;
 	for (const target of DDInfo.targets) {
-		let dTarget = getDiv(target);
+		let dTarget = iDiv(target);
 		if (els.includes(dTarget)) {
 			if (isdef(dropHandler)) {
 				dropHandler(source, target, DragElem.isCopy);
@@ -1437,6 +1437,7 @@ function getSizeWithStyles(text, styles) {
 	d.parentNode.removeChild(d);
 	return { w: Math.round(width), h: Math.round(height) };
 }
+function measureWord(w,fz){	let styles = {fz:fz,family:'arial'};	return getSizeWithStyles(w,styles);}
 function percentOf(elem, percentW, percentH) {
 	if (nundef(percentH)) percentH = percentW;
 	if (nundef(percentW)) percentW = percentH = 100;
@@ -1584,6 +1585,7 @@ function arrPlus(a, b) { let res = a.concat(b); return res; }
 function arrWithout(a, b) { return arrMinus(a, b); }
 function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
 function arrMinMax(arr, func) {
+	//console.log('====arr',arr)
 	if (nundef(func)) func = x => x;
 	let min = func(arr[0]), max = func(arr[0]), imin = 0, imax = 0;
 	//console.log('arr', arr, '\nmin', min, 'max', max)
@@ -1879,24 +1881,11 @@ function shuffleChildren(dParent) {
 	shuffle(arr);
 	for (const elem of arr) { mAppend(dParent, elem) }
 }
-function sortBy(arr, key) {
-	//console.log(jsCopy(arr))
-	arr.sort((a, b) => (a[key] < b[key] ? -1 : 1));
-}
-function sortByDescending(arr, key) {
-	//console.log(jsCopy(arr))
-	arr.sort((a, b) => (a[key] > b[key] ? -1 : 1));
-}
-function sortByFunc(arr, func) {
-	arr.sort((a, b) => (func(a) < func(b) ? -1 : 1));
-}
-function sortByFuncDescending(arr, func) {
-	arr.sort((a, b) => (func(a) > func(b) ? -1 : 1));
-}
-function sortNumbers(ilist) {
-	ilist.sort(function (a, b) { return a - b });
-	return ilist;
-}
+function sortBy(arr, key) {	arr.sort((a, b) => (a[key] < b[key] ? -1 : 1)); return arr;}
+function sortByDescending(arr, key) {	arr.sort((a, b) => (a[key] > b[key] ? -1 : 1)); return arr;}
+function sortByFunc(arr, func) {	arr.sort((a, b) => (func(a) < func(b) ? -1 : 1));return arr;}
+function sortByFuncDescending(arr, func) {	arr.sort((a, b) => (func(a) > func(b) ? -1 : 1));return arr;}
+function sortNumbers(ilist) {	ilist.sort(function (a, b) { return a - b });	return ilist;}
 
 function takeFromStart(ad, n) {
 	if (isDict(ad)) {
@@ -1993,7 +1982,8 @@ function allIntegers(s) {
 	return s.match(/\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => {
 		return +v;
 	});
-} function allNumbers(s) {
+} 
+function allNumbers(s) {
 	//returns array of all numbers within string s
 	let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
 	if (m) return m.map(v => Number(v)); else return null;
@@ -2004,6 +1994,7 @@ function capitalize(s) {
 	return s.charAt(0).toUpperCase() + s.slice(1);
 }
 function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
+function extendWidth(w){return replaceEvery(w,'w',2);}
 function firstNumber(s) {
 	// returns first number in string s
 	if (s) {
@@ -2035,6 +2026,22 @@ function replaceAll(str, sSub, sBy) {
 	return str.replace(regex, sBy);
 }
 function replaceAllSpecialChars(str, sSub, sBy) { return str.split(sSub).join(sBy); }
+function replaceEvery(w,letter,nth){
+	let res='';
+	for(let i=1;i<w.length;i+=2){
+		res+=letter;
+		res+=w[i];
+	}
+	if (w.length%2) res+=w[0];
+	return res;
+}
+function replaceFractionOfWordBy(w,letter='w',fr=.5){
+	let len =Math.ceil(w.length*fr);
+	let len1=Math.floor(w.length*fr);
+	let sub=letter.repeat(len); 
+	w = sub + w.substring(0,len1);
+	return w;
+}
 function reverseString(s) {
 	return toLetterList(s).reverse().join('');
 }
