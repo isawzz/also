@@ -78,8 +78,8 @@ class GAbacus extends Game {
 	}
 	trialPrompt() {
 		if (G.level <= 1 && G.showHint && (G.step <= 3 || G.op != 'mult')) hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
-		setTimeout(() => getWrongChars().map(x => unfillChar(x)), 500);
-		return 10;
+		TOMain = setTimeout(() => getWrongChars().map(x => unfillChar(x)), 500);
+		return 600;
 	}
 	activate() { onkeypress = this.interact; }
 	interact(ev) {
@@ -156,24 +156,9 @@ class GAnagram extends Game {
 	}
 	clear() { super.clear(); if (isdef(this.language)) G.language = this.language; }
 	startLevel() {
-		// console.log('____________ calling setKeys')
-
-		//let f = (k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
-		//console.log('f', f)
-		G.keys = setKeys({
-			lang: G.language, keysets: KeySets, key: 'all',
-			filterFunc: filterWordByLength, //(k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
-		});
-		//return;
-		// console.log(G.keys)
-		if (G.keys.length < 25) {
-			G.keys = setKeys({
-				lang: G.language, keysets: KeySets, key: 'all',
-				filterFunc: filterWordByLength, //(k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
-			});
-		}
-		// console.log(G.keys)
-		//console.log('keys', G.keys)
+		G.keys = setKeysG(G, filterWordByLength, 25);
+		if (G.keys.length < 25) { G.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
+		console.log(G.keys)
 	}
 	prompt() {
 		myShowPics(() => fleetingMessage('drag and drop the letters to form the word!'), {}, {});
@@ -277,33 +262,33 @@ class GCats extends Game {
 
 		let fz = 24, padding = 4;
 		let wmin = measureWord(wLongest, fz).w;
-		let wWin=window.innerWidth*.75;
-		let hWin=window.innerHeight*.4;
+		let wWin = window.innerWidth * .75;
+		let hWin = window.innerHeight * .4;
 		//console.log('wLongest',wLongest,'wmin',wmin)
 
 		//show categories:
 		let dArea = mDiv(dTable, { display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
-		let containers,dWordArea;
-		if (this.showPics){
+		let containers, dWordArea;
+		if (this.showPics) {
 			if (this.cats.includes('music')) { this.options.showLabels = false; }
-			let wCont=wWin/G.numCats; //Math.max(150, wmin + 2 * padding);
-			let hCont=hWin;
-			containers = this.containers = createContainers(this.cats, dArea, { fz:24, fg: 'contrast', w: wCont, h: hCont }); //['animals', 'sport', 'transport'], dArea);
-		}else{
+			let wCont = wWin / G.numCats; //Math.max(150, wmin + 2 * padding);
+			let hCont = hWin;
+			containers = this.containers = createContainers(this.cats, dArea, { fz: 24, fg: 'contrast', w: wCont, h: hCont }); //['animals', 'sport', 'transport'], dArea);
+		} else {
 			containers = this.containers = createContainers(this.cats, dArea, { fg: 'contrast', w: Math.max(150, wmin + 2 * padding) }); //['animals', 'sport', 'transport'], dArea);
 		}
 		mLinebreak(dTable);
 
 		//show words:
 		dWordArea = this.dWordArea = mDiv(dTable, { h: 70, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
-		if (this.showPics){
-			let w=this.options.w=window.innerWidth-100;
-			let h=this.options.h=120;
-			mStyleX(dWordArea,{h:h});
-			this.options.rows=1;
+		if (this.showPics) {
+			let w = this.options.w = window.innerWidth - 100;
+			let h = this.options.h = 120;
+			mStyleX(dWordArea, { h: h });
+			this.options.rows = 1;
 			//this.options.outerStyles.padding=12;
-			let rect=myPresent(dWordArea, items, this.options);
-			items.map(x=>mStyleX(iDiv(x),{w:'auto',padding:8}))
+			let rect = myPresent(dWordArea, items, this.options);
+			items.map(x => mStyleX(iDiv(x), { w: 'auto', padding: 8 }))
 		} else {
 			for (const item of items) { // ['horse', 'soccer', 'bird']) {
 
@@ -321,8 +306,8 @@ class GCats extends Game {
 	}
 	trialPrompt() {
 		sayTryAgain();
-		setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))) }, 1500);
-		return 10;
+		TOMain = setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))) }, 1200);
+		return 1500;
 	}
 	eval() {
 		this.piclist = Pictures;
@@ -507,8 +492,6 @@ class GMem extends Game {
 class GMissingLetter extends Game {
 	constructor(name) { super(name); }
 	startLevel() {
-		// G.numMissing = getGameOrLevelInfo('numMissing', 1);
-		// let pos = getGameOrLevelInfo('posMissing', 'random');
 		G.maxPosMissing = G.posMissing == 'start' ? G.numMissing - 1 : 100;
 	}
 	prompt() {
@@ -548,14 +531,14 @@ class GMissingLetter extends Game {
 	trialPrompt() {
 		let selinp = Selected.inp;
 		sayTryAgain();
-		setTimeout(() => {
+		TOMain = setTimeout(() => {
 			let d = selinp.div;
 			d.innerHTML = '_';
 			mClass(d, 'blink');
-		}, 1500);
+		}, 1200);
 
 		showFleetingMessage(this.composeFleetingMessage(), 3000);
-		return 10;
+		return 1500;
 	}
 	activate() {
 		onkeypress = ev => {
@@ -656,8 +639,8 @@ class GNamit extends Game {
 	}
 	trialPrompt() {
 		sayTryAgain();
-		setTimeout(() => { Pictures.map(x => removeLabel(x)) }, 1500);
-		return 10;
+		TOMain = setTimeout(() => { Pictures.map(x => removeLabel(x)) }, 1200);
+		return 1500;
 	}
 	eval() {
 		this.piclist = Pictures;
@@ -753,7 +736,7 @@ class GSayPic extends Game {
 	trialPrompt(nTrial) {
 		sayRandomVoice(nTrial < 2 ? 'speak UP!!!' : 'Louder!!!', 'LAUTER!!!');
 		animate(dInstruction, 'pulse800' + bestContrastingColor(G.color, ['yellow', 'red']), 500);
-		return 10;
+		return 600;
 	}
 	activate() {
 		//console.log('hallo')
@@ -780,6 +763,128 @@ class GSayPic extends Game {
 		else return isSimilar(answer, reqAnswer) || isList(Goal.info.valid) && firstCond(Goal.info.valid, x => x.toUpperCase() == answer.toUpperCase());
 
 	}
+}
+class GSentence extends Game {
+	constructor(name) {
+		super(name);
+		this.prevLanguage = G.language;
+		G.language = 'E';
+	}
+	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
+	clear() { super.clear(); G.language = this.prevLanguage; }
+	startLevel() {
+		G.sentences = EnglishSentences.map(x => x.split(' ')).filter(x => x.length <= G.maxWords);
+	}
+	dropHandler(source, target, isCopy = false, clearTarget = false) {
+		let prevTarget = source.target;
+		source.target = target;
+		let dSource = iDiv(source);
+		let dTarget = iDiv(target);
+
+
+		if (clearTarget) {
+			//if this target is empty, remove _
+			let ch = dTarget.children[0];
+			let chSource = firstCond(Pictures, x => iDiv(x) == ch);
+			if (chSource) {
+				if (isdef(prevTarget)) {
+					mAppend(iDiv(prevTarget), ch);
+					chSource.target = prevTarget;
+				} else {
+					mAppend(this.dWordArea, ch);
+					delete chSource.target;
+				}
+			}
+			clearElement(dTarget);
+
+			//find out previous target! (parentNode of dSource in a drop target?)
+		}
+		if (isCopy) {
+			let dNew = mText(dSource.innerHTML, dTarget, { wmin: 100, fz: 20, padding: 4, margin: 4, display: 'inline-block' });
+			addDDSource(dNew, isCopy, clearTarget);
+		} else {
+			mAppend(dTarget, dSource);
+		}
+
+		//evaluate();
+		//relayout sources in target
+	}
+	prompt() {
+
+		//choose a random sentence
+
+		let words = G.sentence = chooseRandom(G.sentences);
+
+		showInstruction('', 'drag words into blanks', dTitle, true);
+		mLinebreak(dTable);
+
+		let fz = 32;
+		let h = fz * 1.25, wmin = fz * 1.25;
+
+		let items = Pictures = [];
+		let containers = [];
+		let options = _simpleOptions({ fz: fz, bg: 'transparent', fg: 'white', showPic: false, showLabels: true }, { wmin: wmin });
+
+		console.log('words', words);
+
+		let dArea = mDiv(dTable, { h: 150, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
+		mLinebreak(dTable);
+		let dWordArea = this.dWordArea = mDiv(dTable, { h: 70, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
+
+		let i = 0;
+		for (const word of words) {
+			let item = { label: word, index: i };
+			let container = { label: word, index: i };
+			i += 1;
+			let d = makeItemDiv(item, options);
+			let dCont = mDiv(dArea, { wmin: wmin + 12, hmin: h + 10, bg: colorTrans('beige', .25), fg: 'black', margin: 12 });
+			container.div = dCont;
+
+			//console.log(item,container);
+			items.push(item);
+			containers.push(container);
+		}
+
+		shuffle(items);
+		items.map(x => { mAppend(dWordArea, iDiv(x)); mStyleX(iDiv(x), { h: h, w: 'auto' }); });
+
+		//console.assert(false)
+		enableDD(items, containers, this.dropHandler.bind(this), false, true);
+
+		mLinebreak(dTable, 50);
+		mButton('Done!', evaluate, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		// myShowPics(() => fleetingMessage('drag and drop the letters to form the word!'), {}, { });
+		// setGoal();
+		// showInstruction(Goal.label, G.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
+		// mLinebreak(dTable);
+
+		// this.inputs = createDropInputs();
+		// let x = mLinebreak(dTable, 50);//x.style.background='red'
+		// this.letters = createDragLetters();
+
+		activateUi();
+
+	}
+	trialPrompt() {
+		sayTryAgain();
+		TOMain = setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))); }, 1200);
+		return 1500;
+	}
+	eval() {
+
+		let i = 0;
+		let isCorrect = true;
+		for (const p of Pictures) {
+			let cont = p.target;
+			if (nundef(cont)) p.isCorrect = isCorrect = false;
+			else if (p.index != cont.index) p.isCorrect = isCorrect = false;
+			else p.isCorrect = true;
+		}
+
+		Selected = { piclist: Pictures, feedbackUI: Pictures.map(x => iDiv(x)), sz: getRect(iDiv(Pictures[0])).h + 10 };
+		return isCorrect;
+	}
+
 }
 class GSteps extends Game {
 	constructor(name) { super(name); }
@@ -938,11 +1043,9 @@ class GWritePic extends Game {
 		}
 	}
 	startLevel() {
-		G.keys = setKeys({
-			lang: G.language, keysets: KeySets, key: G.instruction == 'all' ? 'all' : G.vocab,
-			filterFunc: (k, w) => w.length <= G.maxWordLength && w.length >= G.minWordLength && !w.includes(' ')
-		});
-
+		G.keys = setKeysG(G, filterWordByLength, 25);
+		if (G.keys.length < 25) { G.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
+		console.log(G.keys)
 	}
 	prompt() {
 		console.log('showLabels: G', G.showLabels, G.labels);
@@ -1049,8 +1152,8 @@ class GMissingNumber extends Game {
 	trialPrompt() {
 		let hintlist = G.trialNumber >= 4 ? [G.trialNumber] : range(G.trialNumber, 4);
 		if (G.showHint) hintEngineStart(getNumSeqHintString, hintlist, 3000 + G.level * 1000);
-		setTimeout(() => getWrongChars().map(x => unfillChar(x)), 500);
-		return 10;
+		TOMain = setTimeout(() => getWrongChars().map(x => unfillChar(x)), 500);
+		return 600;
 	}
 	activate() { onkeypress = this.interact; }
 	interact(ev) {

@@ -315,10 +315,33 @@ gSayPic:
   type: solitaire
 gSentence:
   friendly: 'Sentence!'
-  logo: 'bison'
+  logo: 'top hat'
   language: 'E'
   color: BLUEGREEN
   type: solitaire
+  levels:
+    0:
+      maxWords: 4
+    1:
+      maxWords: 6
+    2:
+      maxWords: 20
+gSwap:
+  friendly: 'Swap!'
+  logo: 'fleur-de-lis'
+  color: deeppink
+  type: solitaire
+  minWordLength: 2
+  maxWordLength: 10
+  levels:
+    0:
+      maxWordLength: 4
+    1:
+      maxWordLength: 6
+    2:
+      maxWordLength: 8
+    3:
+      maxWordLength: 10
 gSteps:
   friendly: 'Steps!'
   logo: 'stairs'

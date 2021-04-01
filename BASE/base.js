@@ -35,7 +35,6 @@ function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
 function mDiv(dParent = null, styles, id, inner) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; if (isdef(inner)) d.innerHTML=inner; return d; }
-function mDivid(id, dParent = null, styles) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
 function mEditableOnEdited(id, dParent, label, initialVal, onEdited, onOpening) {
 	let inp = mEditableInput(dParent, label, initialVal);
@@ -1090,6 +1089,160 @@ function pSBC(p, c0, c1, l) {
 	if (h) return 'rgb' + (f ? 'a(' : '(') + r + ',' + g + ',' + b + (f ? ',' + m(a * 1000) / 1000 : '') + ')';
 	else return '#' + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2);
 } //ok SUPER COOL!!!!
+function HSLToRGB(hsl, isPct) {
+	//if isPct == true, will output 'rgb(xx%,xx%,xx%)' umgerechnet in % von 255
+	let ex = /^hsl\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}|(\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2})\)$/i;
+	if (ex.test(hsl)) {
+		let sep = hsl.indexOf(',') > -1 ? ',' : ' ';
+		hsl = hsl
+			.substr(4)
+			.split(')')[0]
+			.split(sep);
+		isPct = isPct === true;
+
+		let h = hsl[0],
+			s = hsl[1].substr(0, hsl[1].length - 1) / 100,
+			l = hsl[2].substr(0, hsl[2].length - 1) / 100;
+
+		// strip label and convert to degrees (if necessary)
+		if (h.indexOf('deg') > -1) h = h.substr(0, h.length - 3);
+		else if (h.indexOf('rad') > -1) h = Math.round((h.substr(0, h.length - 3) / (2 * Math.PI)) * 360);
+		else if (h.indexOf('turn') > -1) h = Math.round(h.substr(0, h.length - 4) * 360);
+		// keep hue fraction of 360 if ending up over
+		if (h >= 360) h %= 360;
+
+		let c = (1 - Math.abs(2 * l - 1)) * s,
+			x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
+			m = l - c / 2,
+			r = 0,
+			g = 0,
+			b = 0;
+
+		if (0 <= h && h < 60) {
+			r = c;
+			g = x;
+			b = 0;
+		} else if (60 <= h && h < 120) {
+			r = x;
+			g = c;
+			b = 0;
+		} else if (120 <= h && h < 180) {
+			r = 0;
+			g = c;
+			b = x;
+		} else if (180 <= h && h < 240) {
+			r = 0;
+			g = x;
+			b = c;
+		} else if (240 <= h && h < 300) {
+			r = x;
+			g = 0;
+			b = c;
+		} else if (300 <= h && h < 360) {
+			r = c;
+			g = 0;
+			b = x;
+		}
+
+		r = Math.round((r + m) * 255);
+		g = Math.round((g + m) * 255);
+		b = Math.round((b + m) * 255);
+
+		if (isPct) {
+			r = +((r / 255) * 100).toFixed(1);
+			g = +((g / 255) * 100).toFixed(1);
+			b = +((b / 255) * 100).toFixed(1);
+		}
+
+		return 'rgb(' + (isPct ? r + '%,' + g + '%,' + b + '%' : +r + ',' + +g + ',' + +b) + ')';
+	} else {
+		return 'Invalid input color';
+	}
+} //ok
+function HSLAToRGBA(hsla, isPct) {
+	//if isPct == true, will output 'rgb(xx%,xx%,xx%)' umgerechnet in % von 255
+	let ex = /^hsla\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)(((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2},\s?)|((\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}\s\/\s))((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
+	if (ex.test(hsla)) {
+		let sep = hsla.indexOf(',') > -1 ? ',' : ' ';
+		hsla = hsla
+			.substr(5)
+			.split(')')[0]
+			.split(sep);
+
+		// strip the slash if using space-separated syntax
+		if (hsla.indexOf('/') > -1) hsla.splice(3, 1);
+
+		isPct = isPct === true;
+
+		// must be fractions of 1
+		let h = hsla[0],
+			s = hsla[1].substr(0, hsla[1].length - 1) / 100,
+			l = hsla[2].substr(0, hsla[2].length - 1) / 100,
+			a = hsla[3];
+
+		// strip label and convert to degrees (if necessary)
+		if (h.indexOf('deg') > -1) h = h.substr(0, h.length - 3);
+		else if (h.indexOf('rad') > -1) h = Math.round((h.substr(0, h.length - 3) / (2 * Math.PI)) * 360);
+		else if (h.indexOf('turn') > -1) h = Math.round(h.substr(0, h.length - 4) * 360);
+		if (h >= 360) h %= 360;
+
+		let c = (1 - Math.abs(2 * l - 1)) * s,
+			x = c * (1 - Math.abs(((h / 60) % 2) - 1)),
+			m = l - c / 2,
+			r = 0,
+			g = 0,
+			b = 0;
+
+		if (0 <= h && h < 60) {
+			r = c;
+			g = x;
+			b = 0;
+		} else if (60 <= h && h < 120) {
+			r = x;
+			g = c;
+			b = 0;
+		} else if (120 <= h && h < 180) {
+			r = 0;
+			g = c;
+			b = x;
+		} else if (180 <= h && h < 240) {
+			r = 0;
+			g = x;
+			b = c;
+		} else if (240 <= h && h < 300) {
+			r = x;
+			g = 0;
+			b = c;
+		} else if (300 <= h && h < 360) {
+			r = c;
+			g = 0;
+			b = x;
+		}
+
+		r = Math.round((r + m) * 255);
+		g = Math.round((g + m) * 255);
+		b = Math.round((b + m) * 255);
+
+		let pctFound = a.indexOf('%') > -1;
+
+		if (isPct) {
+			r = +((r / 255) * 100).toFixed(1);
+			g = +((g / 255) * 100).toFixed(1);
+			b = +((b / 255) * 100).toFixed(1);
+			if (!pctFound) {
+				a *= 100;
+			} else {
+				a = a.substr(0, a.length - 1);
+			}
+		} else if (pctFound) {
+			a = a.substr(0, a.length - 1) / 100;
+		}
+
+		return 'rgba(' + (isPct ? r + '%,' + g + '%,' + b + '%,' + a + '%' : +r + ',' + +g + ',' + +b + ',' + +a) + ')';
+	} else {
+		return 'Invalid input color';
+	}
+} //ok
 
 //#endregion
 
@@ -1116,21 +1269,21 @@ function safeLoop(func, params) {
 //#region drag drop
 var DragElem = null; //is the clone of HTML element from which drag started
 var DDInfo = null;
-function addDDSource(source, isCopy = true) {
+function addDDSource(source, isCopy = true, clearTarget = false) {
 	DDInfo.sources.push(source);
-	let d = getDiv(source);
-	d.onmousedown = (ev) => ddStart(ev, source, isCopy);
+	let d = iDiv(source);
+	d.onmousedown = (ev) => ddStart(ev, source, isCopy, clearTarget);
 }
-function enableDD(sources, targets, dropHandler, isCopy) {
+function enableDD(sources, targets, dropHandler, isCopy, clearTarget) {
 	DDInfo = { sources: sources, targets: targets, dropHandler: dropHandler };
 	let sourceDivs = sources.map(x=>iDiv(x));
 	for (let i = 0; i < sources.length; i++) {
 		let source = sources[i];
 		let d = sourceDivs[i];
-		d.onmousedown = (ev) => ddStart(ev, source, isCopy);
+		d.onmousedown = (ev) => ddStart(ev, source, isCopy, clearTarget);
 	}
 }
-function ddStart(ev, source, isCopy = true) {
+function ddStart(ev, source, isCopy = true, clearTarget = false) {
 	if (!canAct()) return;
 	ev.preventDefault();
 
@@ -1141,6 +1294,7 @@ function ddStart(ev, source, isCopy = true) {
 	var clone = DragElem = DDInfo.clone = d.cloneNode(true);
 	// clone.eliminateSource = !isCopy;
 	clone.isCopy = isCopy;
+	clone.clearTarget = clearTarget;
 	mAppend(document.body, clone);//mClass(clone, 'letter')
 	mClass(clone, 'dragelem');//der clone muss class 'dragelem' sein
 	mStyleX(clone, { left: ev.clientX - ev.offsetX, top: ev.clientY - ev.offsetY });//der clone wird richtig plaziert
@@ -1167,8 +1321,9 @@ function onReleaseClone(ev) {
 	for (const target of DDInfo.targets) {
 		let dTarget = iDiv(target);
 		if (els.includes(dTarget)) {
+			//if (DragElem.clearTarget) clearElement(dTarget);
 			if (isdef(dropHandler)) {
-				dropHandler(source, target, DragElem.isCopy);
+				dropHandler(source, target, DragElem.isCopy, DragElem.clearTarget);
 			} else console.log('dropped', source, 'on', target);
 			//console.log('yes, we are over',dTarget);
 			// dTarget.innerHTML = DragElem.innerHTML;

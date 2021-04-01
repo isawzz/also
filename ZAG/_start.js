@@ -23,7 +23,7 @@ function initSymbolTableForGamesAddons() {
 	//console.log('Daat', Daat);//yes this is an empty dict!
 	if (nundef(Daat)) Daat={};
 	Daat.GameClasses = {
-		gTouchPic: GTouchPic, gNamit: GNamit, gStory: GStory, gSentence: GSentence,
+		gTouchPic: GTouchPic, gNamit: GNamit, gStory: GStory, gSentence: GSentence, gSwap: GSwap,
 		gTouchColors: GTouchColors, gPremem: GPremem, gMem: GMem, gMissingLetter: GMissingLetter,
 		gMissingNumber: GMissingNumber, gWritePic: GWritePic, gSayPic: GSayPic, gSteps: GSteps, gElim: GElim,
 		gAnagram: GAnagram, gAbacus: GAbacus, gPasscode: GPasscode, gCats: GCats,

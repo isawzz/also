@@ -1,4 +1,4 @@
-function _simpleOptions(options) {
+function _simpleOptions(options={},defsOuter={}) {
 	//_simpleOptions({w:sz,h:sz,fz:sz/4,fzPic:sz/2,bg:levelColors[i], fg: textColor});	
 	options.showPic = isdef(options.fzPic);
 	options.showLabels = isdef(options.fz);
@@ -23,6 +23,7 @@ function _simpleOptions(options) {
 		'justify-content': 'center', 'align-items': 'center','vertical-align':'top',
 		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
 	};
+	if (isdef(defsOuter)) copyKeys(defsOuter,options.outerStyles);
 
 	return options;
 }

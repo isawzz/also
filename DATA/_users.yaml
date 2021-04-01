@@ -16,7 +16,7 @@ nil:
     silentMode: true
     switchGame: true
     #indiv game settings default
-    trials:  1
+    trials: 1
     showHint: true
     # activity animal body drink emotion food fruit game gesture kitchen object person place plant role sport time transport vegetable nosymemo nosymbols
     categories: [nosymemo]
@@ -25,30 +25,30 @@ nil:
     levelBadges: false
   games:
     gNamit:
-      #vocab: 
+      #vocab:
       startLevel: 4
     gTouchPic:
-      #vocab: 
+      #vocab:
       startLevel: 1
     gPremem:
       startLevel: 3
-    gTouchColors: 
+    gTouchColors:
       startLevel: 0
-    gMissingLetter: 
+    gMissingLetter:
       startLevel: 2
-    gSteps: 
+    gSteps:
       startLevel: 0
-    gSayPic: 
+    gSayPic:
       startLevel: 0
     gMem:
       startLevel: 1
-    gMissingNumber: 
+    gMissingNumber:
       startLevel: 2
-    gWritePic: 
+    gWritePic:
       startLevel: 2
-    gAnagram: 
+    gAnagram:
       startLevel: 0
-    gElim: 
+    gElim:
       startLevel: 2
     gAbacus:
       startLevel: 0
@@ -81,7 +81,7 @@ guest0:
     silentMode: false
     switchGame: true
     #indiv game settings default
-    trials:  2
+    trials: 2
     showHint: true
   games:
     gTouchPic:
@@ -104,31 +104,31 @@ test0:
     silentMode: false
     switchGame: true
     #indiv game settings default
-    trials:  2
+    trials: 2
     showHint: true
   games:
     gTouchPic:
-      #vocab: 
+      #vocab:
       startLevel: 3
     gPremem:
       startLevel: 0
-    gTouchColors: 
+    gTouchColors:
       startLevel: 0
-    gMissingLetter: 
+    gMissingLetter:
       startLevel: 2
-    gSteps: 
+    gSteps:
       startLevel: 0
-    gSayPic: 
+    gSayPic:
       startLevel: 0
     gMem:
       startLevel: 1
-    gMissingNumber: 
+    gMissingNumber:
       startLevel: 2
-    gWritePic: 
+    gWritePic:
       startLevel: 2
-    gAnagram: 
+    gAnagram:
       startLevel: 3
-    gElim: 
+    gElim:
       startLevel: 0
     gAbacus:
       startLevel: 0
@@ -136,8 +136,8 @@ test0:
       startLevel: 0
 gul:
   id: gul
-  avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gWritePic, gCats, gAnagram, gElim, gAbacus]
-  lastGame: gCats
+  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gMem, gSwap, gWritePic, gSteps, gCats, gAnagram, gAbacus]
+  lastGame: gSwap
   settings:
     # settings common to all games
     samplesPerGame: 25
@@ -149,28 +149,28 @@ gul:
     vocab: lifePlus
     showTime: true
     spokenFeedback: true
-    silentMode: false
+    silentMode: true
     switchGame: true
     #indiv game settings default
-    trials:  2
+    trials: 2
     showHint: true
   games:
     gAbacus:
       startLevel: 0
-    gAnagram: 
+    gAnagram:
       startLevel: 4
     gCats:
       startLevel: 0
       trials: 2
-    gElim: 
+    gElim:
       startLevel: 2
     gMem:
       startLevel: 4
       showHint: false
       trials: 1
-    gMissingLetter: 
+    gMissingLetter:
       startLevel: 3
-    gMissingNumber: 
+    gMissingNumber:
       startLevel: 2
     gNamit:
       startLevel: 0
@@ -178,19 +178,19 @@ gul:
       startLevel: 0
     gPremem:
       startLevel: 5
-    gSayPic: 
+    gSayPic:
       startLevel: 0
     gSentence:
       startLevel: 0
-    gSteps: 
+    gSteps:
       startLevel: 2
     gStory:
       startLevel: 0
-    gTouchColors: 
+    gTouchColors:
       startLevel: 5
     gTouchPic:
       startLevel: 0
-    gWritePic: 
+    gWritePic:
       startLevel: 2
   avAddons: [aPasscode, aAddress, aPassword]
   addons:

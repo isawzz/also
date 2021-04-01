@@ -76,7 +76,7 @@ function onClickGo(ev) {
 
 	} else {
 		//console.log(ev)
-		let item = evToItemC(ev);
+		let item = isdef(ev)?evToItemC(ev):null;
 		let gKey = nundef(ev) ? SelectedMenuKey : isString(ev) ? ev : item.o.id; // divKeyFromEv(ev);
 
 		//console.log('==>gKey', gKey, SelectedMenuKey);

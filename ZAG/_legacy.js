@@ -418,10 +418,11 @@ function calcRowsCols(num, rows, cols) {
 	//console.log(rows, cols, shape);
 	return { rows: rows, cols: cols, recommendedShape: shape };
 }
-function filterWordByLength(k, w, spacesAllowed = false) {
+function filterWordByLength(g, k, w, spacesAllowed = false) {
 	//console.log('k',k,'w',w,'max',G.maxWordLength,'min',G.minWordLength)
-	if (nundef(G.minWordLength)) G.minWordLength = 0;
-	return w.length <= G.maxWordLength && w.length >= G.minWordLength && (!w.includes(' ') || spacesAllowed);
+	if (nundef(g.minWordLength)) g.minWordLength = 0;
+	if (nundef(g.maxWordLength)) g.maxWordLength = 50;
+	return w.length <= g.maxWordLength && w.length >= g.minWordLength && (!w.includes(' ') || spacesAllowed);
 }
 function getGameValues() {
 	let user = U.id;
@@ -496,7 +497,7 @@ function mpOver(d, dParent, fz, color, picStyle) {
 	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
 	return d;
 }
-function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc } = {}) {
+function setKeys({ nMin, lang, key, keysets, filterFunc, param, confidence, sortByFunc } = {}) {
 	// console.log('setKeys (legacy)',nMin,lang,key,keysets,'\nfilterFunc',filterFunc);
 	//G.keys = setKeys({ nMin, lang: G.language, keysets: KeySets, key: G.vocab });
 
@@ -532,7 +533,7 @@ function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc 
 		//console.log(k,lang,lastOfLanguage(k,lang),info.best,info)
 		let isMatch = true;
 		//if (isdef(filterFunc)) console.log(filterFunc,filterFunc(k,info.best))
-		if (isdef(filterFunc)) isMatch = isMatch && filterFunc(k, info.best);
+		if (isdef(filterFunc)) isMatch = isMatch && filterFunc(param, k, info.best);
 		if (isdef(confidence)) isMatch = info[klang + 'Conf'] >= confidence;
 		if (isMatch) { primary.push(k); } else { spare.push(k); }
 	}
@@ -553,8 +554,9 @@ function setKeys({ nMin, lang, key, keysets, filterFunc, confidence, sortByFunc 
 	return primary;
 }
 
-
-
+function setKeysG(g,filterFunc,nmin,key) {
+	return setKeys({ nmin: valf(nmin,25), lang: g.language, key: valf(key,g.vocab), keysets: KeySets, filterFunc: filterFunc, param:g });
+}
 
 
 
