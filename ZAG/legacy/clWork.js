@@ -44,20 +44,26 @@ class GSwap extends Game {
 		//relayout sources in target
 	}
 	prompt() {
-
-		//choose a random sentence
-
-		let words = G.sentence = chooseRandom(G.sentences);
-
-		showInstruction('', 'drag words into blanks', dTitle, true);
+		let words = G.words = choose(G.keys,2);
+		showInstruction('', 'swap 2 letters to form valid words', dTitle, true);
 		mLinebreak(dTable);
 
 		let fz = 32;
 		let h = fz * 1.25, wmin = fz * 1.25;
-
-		let items = Pictures = [];
-		let containers = [];
 		let options = _simpleOptions({ fz: fz, bg: 'transparent', fg: 'white', showPic: false, showLabels: true }, { wmin: wmin });
+
+		let diWords={};
+		let items = Pictures = genItemsFromKeys(G.words,options);
+
+		//take 1 letter out of first item, remember letter and index
+		for(const item of items){
+			let i = randomNumber(0, item.key.length-1); item.iLetter
+			let letter = item.key[i];
+			console.log('i',i,'letter',letter);
+		}
+		
+
+		let containers = [];
 
 		console.log('words', words);
 
