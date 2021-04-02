@@ -112,15 +112,26 @@ class GSwap extends Game {
 	}
 	eval() {
 		let n = Pictures.length;
-		let indices = Pictures.map(x => getBlinkingLetter(x).i);
-		console.log('indices', indices);
+		let indices = [];//Pictures.map(x => {let l=getBlinkingLetter(x); if (isdef(l)) return l.i; else return null;});
+
+		for(let i=0;i<n;i++){
+			let p=Pictures[i];
+			let blinking = getBlinkingLetter(p);
+			indices.push({i:i,blinking:blinking});
+		}
+		console.log('indices', indices.map(x=>x.blinking));
 		for (let i = 0; i < n; i++) {
-			let iblink = indices[i];
+			let iblink = indices[i].blinking;
+			if (!iblink) continue;
 			let p = Pictures[i];
 			stopBlinking(p.letters[iblink]);
 			//console.log('indices',indices);
 		}
-		let hLetter = Pictures[0].label[indices[0]];
+
+		let item0=Pictures[0];
+		let label0=item0.label;
+		let hLetter = label0[item0.iLetter];
+		// let hLetter = Pictures[0].label[indices[0]];
 		console.log('hLetter', hLetter);
 		for (let i = 0; i < n - 1; i++) {
 			let item1 = Pictures[i];
