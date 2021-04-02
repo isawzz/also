@@ -186,6 +186,8 @@ gul:
       startLevel: 2
     gStory:
       startLevel: 0
+    gSwap:
+      startLevel: 3
     gTouchColors:
       startLevel: 5
     gTouchPic:

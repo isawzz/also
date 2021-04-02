@@ -1,14 +1,27 @@
+var Dictionary;
+function isWord(w) { return isdef(Dictionary[G.language][w]); }
 class GSwap extends Game {
 	constructor(name) {
 		super(name);
 		if (G.language == 'C') { this.prevLanguage = G.language; G.language = chooseRandom('E', 'D'); }
+		if (nundef(Dictionary)) { Dictionary = { E: {}, S: {}, F: {}, C: {}, D: {} } };
+		for (const k in Syms) {
+			for (const lang of ['E', 'D', 'F', 'C', 'S']) {
+				let w = Syms[k][lang];
+				if (nundef(w)) continue;
+				Dictionary[lang][w.toLowerCase()] = Dictionary[lang][w.toUpperCase()] = k;
+			}
+		}
+		//console.log('dict', Dictionary);
 	}
-	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
+	startGame() { G.correctionFunc = showCorrectPictureLabels; }
 	clear() { super.clear(); if (isdef(this.prevLanguage)) G.language = this.prevLanguage; }
 	startLevel() {
 		G.keys = setKeysG(G, filterWordByLength, 25);
 		if (G.keys.length < 25) { G.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
-		console.log(G.keys)
+		G.trials=4;
+		//console.log('keys', G.keys.length);
+		//console.log('words', G.keys.map(x => Syms[x].E))
 	}
 	dropHandler(source, target, isCopy = false, clearTarget = false) {
 		let prevTarget = source.target;
@@ -44,84 +57,102 @@ class GSwap extends Game {
 		//relayout sources in target
 	}
 	prompt() {
-		let words = G.words = choose(G.keys,2);
-		showInstruction('', 'swap 2 letters to form valid words', dTitle, true);
+		showInstruction('', 'swap letter to form words', dTitle, true);
 		mLinebreak(dTable);
 
 		let fz = 32;
-		let h = fz * 1.25, wmin = fz * 1.25;
-		let options = _simpleOptions({ fz: fz, bg: 'transparent', fg: 'white', showPic: false, showLabels: true }, { wmin: wmin });
+		let options = _simpleOptions({ w: 200, h: 200, keySet: G.keys, luc: 'u', fz: fz, bg: 'random', fg: 'white', showLabels: true });
+		// console.log(options)
 
-		let diWords={};
-		let items = Pictures = genItemsFromKeys(G.words,options);
+		let n = 2;
+		let items = gatherItems(n, options);
+		console.log('items', items);
 
-		//take 1 letter out of first item, remember letter and index
-		for(const item of items){
-			let i = randomNumber(0, item.key.length-1); item.iLetter
-			let letter = item.key[i];
-			console.log('i',i,'letter',letter);
-		}
-		
-
-		let containers = [];
-
-		console.log('words', words);
-
-		let dArea = mDiv(dTable, { h: 150, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
-		mLinebreak(dTable);
-		let dWordArea = this.dWordArea = mDiv(dTable, { h: 70, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
-
-		let i = 0;
-		for (const word of words) {
-			let item = { label: word, index: i };
-			let container = { label: word, index: i };
-			i += 1;
-			let d = makeItemDiv(item, options);
-			let dCont = mDiv(dArea, { wmin: wmin + 12, hmin: h + 10, bg: colorTrans('beige', .25), fg: 'black', margin: 12 });
-			container.div = dCont;
-
-			//console.log(item,container);
-			items.push(item);
-			containers.push(container);
+		let style = { margin: 3, fg: 'white', display: 'inline', bg: 'transparent', align: 'center', border: 'transparent', outline: 'none', family: 'Consolas', fz: 80 };
+		for (const item of items) {
+			let d1 = item.container = mDiv(dTable, { hmin: 250 });
+			let d = item.div = createLetterInputs(item.label, d1, style);
+			let letters = item.letters = [];
+			for (let i = 0; i < arrChildren(d).length; i++) {
+				let ch = d.children[i];
+				let l = { item: item, div: ch, i: i, letter: item.label[i] };
+				letters.push(l);
+				ch.onclick = () => { console.log('clicked', d); startBlinking(l, item.letters, true) };
+			}
+			mStyleX(d, { margin: 35 })
 		}
 
-		shuffle(items);
-		items.map(x => { mAppend(dWordArea, iDiv(x)); mStyleX(iDiv(x), { h: h, w: 'auto' }); });
 
-		//console.assert(false)
-		enableDD(items, containers, this.dropHandler.bind(this), false, true);
-
+		// enableDD(items, containers, this.dropHandler.bind(this), false, true);
 		mLinebreak(dTable, 50);
 		mButton('Done!', evaluate, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
-		// myShowPics(() => fleetingMessage('drag and drop the letters to form the word!'), {}, { });
-		// setGoal();
-		// showInstruction(Goal.label, G.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
-		// mLinebreak(dTable);
-
-		// this.inputs = createDropInputs();
-		// let x = mLinebreak(dTable, 50);//x.style.background='red'
-		// this.letters = createDragLetters();
-
 		activateUi();
 
 	}
 	trialPrompt() {
+		//hint 1: click one letter in each word to swap them
+		//hint 2: group
+		//hint 3: subgroup
+		//hint 4: pic
 		sayTryAgain();
-		TOMain = setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))); }, 1200);
+		for (const item of Pictures) {
+			//clear hint area
+			let d1 = item.container;
+			if (isdef(item.dHint)) mRemove(item.dHint);
+			console.log(G);
+			if (G.trialNumber < 3) {
+				let hint = G.trialNumber == 1 ? item.info.group : item.info.subgroup;
+				let dHint = item.dHint = mText('(' + hint + ')', d1);
+			} else {
+				let dHint = mPic(item, d1);
+			}
+		}
+		//TOMain = setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))); }, 1200);
 		return 1500;
 	}
 	eval() {
+		let n = Pictures.length;
+		let indices = Pictures.map(x => getBlinkingLetter(x).i);
+		console.log('indices', indices);
+		for (let i = 0; i < n; i++) {
+			let iblink = indices[i];
+			let p = Pictures[i];
+			stopBlinking(p.letters[iblink]);
+			//console.log('indices',indices);
+		}
+		let hLetter = Pictures[0].label[indices[0]];
+		console.log('hLetter', hLetter);
+		for (let i = 0; i < n - 1; i++) {
+			let item1 = Pictures[i];
+			let item2 = Pictures[i + 1];
 
-		let i = 0;
+			let i1 = indices[i];
+			let i2 = indices[i + 1];
+
+			//item1 must get letter that is currently at position i2 in item2.label
+			let test = item1.testLabel = replaceAt(item1.label, i1, item2.label[i2]);
+			console.log('test', test);
+		}
+		let item = Pictures[n - 1];
+		item.testLabel = replaceAt(item.label, indices[n - 1], hLetter);
+
+
+		console.log('test', item.testLabel); //false, 'und was jetzt???????????')
+
 		let isCorrect = true;
 		for (const p of Pictures) {
-			let cont = p.target;
-			if (nundef(cont)) p.isCorrect = isCorrect = false;
-			else if (p.index != cont.index) p.isCorrect = isCorrect = false;
-			else p.isCorrect = true;
+			if (p.testLabel != p.origLabel) {
+				console.log('fehler:', p.origLabel, p.testLabel);
+				isCorrect = false;
+			}
 		}
 
-		Selected = { piclist: Pictures, feedbackUI: Pictures.map(x => iDiv(x)), sz: getRect(iDiv(Pictures[0])).h + 10 };
+		let feedbackList = [];
+		for (let i = 0; i < n; i++) {
+			let d = Pictures[i].letters[indices[i]].div;
+			feedbackList.push(d);
+		}
+		Selected = { piclist: Pictures, feedbackUI: feedbackList, sz: getRect(iDiv(Pictures[0])).h };
 		return isCorrect;
 	}
 

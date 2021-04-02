@@ -1,3 +1,121 @@
+class GSwap extends Game {
+	constructor(name) {
+		super(name);
+		if (G.language == 'C') { this.prevLanguage = G.language; G.language = chooseRandom('E', 'D'); }
+		if (nundef(Dictionary)) { Dictionary = { E: {}, S: {}, F: {}, C: {}, D: {} } };
+		for (const k in Syms) {
+			for (const lang of ['E', 'D', 'F', 'C', 'S']) {
+				let w = Syms[k][lang];
+				if (nundef(w)) continue;
+				Dictionary[lang][w.toLowerCase()] = Dictionary[lang][w.toUpperCase()] = k;
+			}
+		}
+		//console.log('dict', Dictionary);
+	}
+	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
+	clear() { super.clear(); if (isdef(this.prevLanguage)) G.language = this.prevLanguage; }
+	startLevel() {
+		G.keys = setKeysG(G, filterWordByLength, 25);
+		if (G.keys.length < 25) { G.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
+		//console.log('keys', G.keys.length);
+		//console.log('words', G.keys.map(x => Syms[x].E))
+	}
+	dropHandler(source, target, isCopy = false, clearTarget = false) {
+		let prevTarget = source.target;
+		source.target = target;
+		let dSource = iDiv(source);
+		let dTarget = iDiv(target);
+
+		if (clearTarget) {
+			//if this target is empty, remove _
+			let ch = dTarget.children[0];
+			let chSource = firstCond(Pictures, x => iDiv(x) == ch);
+			if (chSource) {
+				if (isdef(prevTarget)) {
+					mAppend(iDiv(prevTarget), ch);
+					chSource.target = prevTarget;
+				} else {
+					mAppend(this.dWordArea, ch);
+					delete chSource.target;
+				}
+			}
+			clearElement(dTarget);
+
+			//find out previous target! (parentNode of dSource in a drop target?)
+		}
+		if (isCopy) {
+			let dNew = mText(dSource.innerHTML, dTarget, { wmin: 100, fz: 20, padding: 4, margin: 4, display: 'inline-block' });
+			addDDSource(dNew, isCopy, clearTarget);
+		} else {
+			mAppend(dTarget, dSource);
+		}
+
+		//evaluate();
+		//relayout sources in target
+	}
+	prompt() {
+		showInstruction('', 'swap letter to form words', dTitle, true);
+		mLinebreak(dTable);
+
+		this.dHintArea = mDiv(dTable, { display: 'flex' });//, { w: 500, h: 150, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
+		mLinebreak(dTable);
+
+		let fz = 32;
+		// let fzPic = fz * 3, h = fz * 1.25, wmin = fz * 1.25;
+		let options = _simpleOptions({ w: 200, h: 200, keySet: G.keys, luc: 'u', fz: fz, bg: 'random', fg: 'white', showLabels: true });
+		// console.log(options)
+
+		let n = 2;
+		let items = gatherItems(n, options);
+		console.log('items', items);
+
+		//schreibe beide bilder auf (ohne pic)
+		let dArea = mDiv(dTable, { display: 'flex' });//, { w: 500, h: 150, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
+
+		let style = { margin: 3, fg: 'white', display: 'inline', bg: 'transparent', align: 'center', border: 'transparent', outline: 'none', family: 'Consolas', fz: 80 };
+		for (const item of items) {
+			let d1 = item.container = mDiv(dTable,{hmin:250});
+			let d = createLetterInputs(item.label, d1, style);
+			//let dHint=mText(item.info.subgroup,d1);
+			// let dHint = mPic(item, d1);
+			mStyleX(d, { margin: 25 })
+		}
+
+
+		// items.map(x => { let d = makeItemDiv(x, options); mStyleX(d, { hpadding: 12, margin: 20 }); mAppend(dArea, d); });
+
+		mLinebreak(dTable);
+		//myPresent(dArea, items, options);
+
+		// enableDD(items, containers, this.dropHandler.bind(this), false, true);
+		mLinebreak(dTable, 50);
+		mButton('Done!', evaluate, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		activateUi();
+
+	}
+	trialPrompt() {
+		sayTryAgain();
+		TOMain = setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))); }, 1200);
+		return 1500;
+	}
+	eval() {
+
+		let i = 0;
+		let isCorrect = true;
+		for (const p of Pictures) {
+			let cont = p.target;
+			if (nundef(cont)) p.isCorrect = isCorrect = false;
+			else if (p.index != cont.index) p.isCorrect = isCorrect = false;
+			else p.isCorrect = true;
+		}
+
+		Selected = { piclist: Pictures, feedbackUI: Pictures.map(x => iDiv(x)), sz: getRect(iDiv(Pictures[0])).h + 10 };
+		return isCorrect;
+	}
+
+}
+
+
 function belongsToCategory(item, cat) {
 	let info = item.info;
 	cat = cat.toLowerCase();

@@ -5393,7 +5393,7 @@ function tossCoin(percent) {
 	//r ist jetzt zahl zwischen 0 und 100
 	return r < percent;
 }
-function coin() { return tossCoin(50); }
+function coin(p=50) { return tossCoin(p); }
 function yesNo() { return tossCoin(50); }
 //#endregion
 

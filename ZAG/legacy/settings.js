@@ -78,8 +78,7 @@ function updateSpeakmodeSettings() {
 function updateKeySettings(nMin) {
 	//console.log(G,KeySets);
 	if (nundef(G)) return;
-	G.keys = setKeys({ nMin, lang: G.language, keysets: KeySets, key: G.vocab });
-	//console.log('keyset:', G.keys);
+	G.keys = setKeys({ nMin, lang: G.language, keySets: KeySets, key: G.vocab });
 }
 function updateTimeSettings() {
 	let timeElem = mBy('time');

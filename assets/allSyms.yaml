@@ -13356,10 +13356,10 @@ open book:
   text: '&#128214;'
   type: emo
   isDuplicate: false
-  E: book
-  D: buch
-  F: livre
-  S: libro
+  E: open book
+  D: offenes buch
+  F: livre ouvert
+  S: libro abierto
   C: 書
   cats:
     - huge

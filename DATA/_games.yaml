@@ -337,10 +337,13 @@ gSwap:
     0:
       maxWordLength: 4
     1:
+      minWordLength: 4
       maxWordLength: 6
     2:
+      minWordLength: 5
       maxWordLength: 8
     3:
+      minWordLength: 5
       maxWordLength: 10
 gSteps:
   friendly: 'Steps!'

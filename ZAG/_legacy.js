@@ -497,22 +497,22 @@ function mpOver(d, dParent, fz, color, picStyle) {
 	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
 	return d;
 }
-function setKeys({ nMin, lang, key, keysets, filterFunc, param, confidence, sortByFunc } = {}) {
-	// console.log('setKeys (legacy)',nMin,lang,key,keysets,'\nfilterFunc',filterFunc);
-	//G.keys = setKeys({ nMin, lang: G.language, keysets: KeySets, key: G.vocab });
+function setKeys({allowDuplicates, nMin, lang, key, keySets, filterFunc, param, confidence, sortByFunc } = {}) {
+	// console.log('setKeys (legacy)',nMin,lang,key,keySets,'\nfilterFunc',filterFunc);
+	//G.keys = setKeys({ nMin, lang: G.language, keySets: KeySets, key: G.vocab });
 
-	let keys = jsCopy(keysets[key]);
+	let keys = jsCopy(keySets[key]);
 	// console.log('setKeys (from',getFunctionsNameThatCalledThisFunction()+')',keys)
 	//if (isdef(filterFunc)) console.log('f',filterFunc);
 
 	// console.log('setKeys',keys)
 	if (isdef(nMin)) {
 		let diff = nMin - keys.length;
-		let additionalSet = diff > 0 ? firstCondDictKeys(keysets, k => k != key && keysets[k].length > diff) : null;
+		let additionalSet = diff > 0 ? firstCondDictKeys(keySets, k => k != key && keySets[k].length > diff) : null;
 
 		//console.log('diff',diff,additionalSet, keys)
 		if (additionalSet) KeySets[additionalSet].map(x => addIf(keys, x)); //
-		//if (additionalSet) keys = keys.concat(keysets[additionalSet]);
+		//if (additionalSet) keys = keys.concat(keySets[additionalSet]);
 		//console.log(keys)
 	}
 
@@ -551,11 +551,29 @@ function setKeys({ nMin, lang, key, keysets, filterFunc, param, confidence, sort
 
 	if (isdef(nMin)) console.assert(primary.length >= nMin);
 	//console.log(primary)
+	if (nundef(allowDuplicates)){ 
+		//console.log('hhhhhhhhhhhhhhh',primary.length)
+		primary = removeDuplicates(primary);
+	}
 	return primary;
 }
 
+function removeDuplicates(keys,prop){
+	let di={};
+	let res = [];
+	let items = keys.map(x=>Syms[x]);
+	for(const item of items){
+		// if (item.key.includes('key')) console.log('hallo',item)
+		// if (isdef(di[item.best])) {console.log('dupl:',item.key); continue;}
+		if (isdef(di[item.best])) {continue;}
+		res.push(item); 
+		di[item.key]=true;
+	}
+	return res.map(x=>x.key);
+}
+
 function setKeysG(g,filterFunc,nmin,key) {
-	return setKeys({ nmin: valf(nmin,25), lang: g.language, key: valf(key,g.vocab), keysets: KeySets, filterFunc: filterFunc, param:g });
+	return setKeys({ nmin: valf(nmin,25), lang: g.language, key: valf(key,g.vocab), keySets: KeySets, filterFunc: filterFunc, param:g });
 }
 
 

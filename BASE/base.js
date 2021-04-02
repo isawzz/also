@@ -222,6 +222,16 @@ function mText(text, dParent, styles, classes) {
 	if (isdef(classes)) mClass(d, classes);
 	return d;
 }
+function mPic(item, dParent, styles, classes) {
+	let info=isString(item)?Syms[item]:isdef(item.info)?item.info:item;
+	let d = mDiv(dParent);
+	d.innerHTML = info.text;
+	if (nundef(styles)) styles={};
+	addKeys({family:info.family,fz:50},styles);
+	mStyleX(d, styles); 
+	if (isdef(classes)) mClass(d, classes);
+	return d;
+}
 function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
 	let d = mDiv(dParent, outerStyles);
 	let dTitle = mDiv(d);

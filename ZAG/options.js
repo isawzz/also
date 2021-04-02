@@ -1,6 +1,6 @@
 function _simpleOptions(options={},defsOuter={}) {
 	//_simpleOptions({w:sz,h:sz,fz:sz/4,fzPic:sz/2,bg:levelColors[i], fg: textColor});	
-	options.showPic = isdef(options.fzPic);
+	options.showPic = valf(options.showPic,isdef(options.fzPic));
 	options.showLabels = isdef(options.fz);
 	options.szPic = { w: options.w, h: options.h };
 	//options.ifs = { bg: options.bg, fg: options.fg };
@@ -23,7 +23,7 @@ function _simpleOptions(options={},defsOuter={}) {
 		'justify-content': 'center', 'align-items': 'center','vertical-align':'top',
 		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
 	};
-	if (isdef(defsOuter)) copyKeys(defsOuter,options.outerStyles);
+	if (isdef(defsOuter)) addKeys(defsOuter,options.outerStyles);
 
 	return options;
 }

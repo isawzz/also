@@ -63,6 +63,7 @@ function myPresent(dArea, items, options) {
 	options.szPic = { w: wi, h: hi };
 	//console.log(items[0]);
 	//console.log('N=' + items.length, 'showLabels', showLabels, showLabels, '\ndims', 'wWin', w, 'hWin', h, '\nwnet', wi, 'hnet', hi, '\nrows,cols', rows, cols, '\nfzPic', fzPic, 'fz', fz);
+	if (nundef(options.ifs)) options.ifs = {};
 	let outerStyles = {
 		w: wi, h: hi, margin: gap / 2, rounding: 6,
 		bg: valf(options.ifs.bg, 'random'), fg: 'contrast', display: 'inline-flex', 'flex-direction': 'column',
