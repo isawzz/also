@@ -34,7 +34,7 @@ function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
-function mDiv(dParent = null, styles, id, inner) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; if (isdef(inner)) d.innerHTML=inner; return d; }
+function mDiv(dParent = null, styles, id, inner) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; if (isdef(inner)) d.innerHTML = inner; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
 function mEditableOnEdited(id, dParent, label, initialVal, onEdited, onOpening) {
 	let inp = mEditableInput(dParent, label, initialVal);
@@ -124,7 +124,7 @@ function mStyleX(elem, styles, unit = 'px') {
 	}
 	if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
 
-		styles.padding = valf(styles.vpadding,0) + unit + ' ' + valf(styles.hpadding,0) + unit;
+		styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
 		//console.log('::::::::::::::', styles.vpadding, styles.hpadding)
 	}
 	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
@@ -223,12 +223,12 @@ function mText(text, dParent, styles, classes) {
 	return d;
 }
 function mPic(item, dParent, styles, classes) {
-	let info=isString(item)?Syms[item]:isdef(item.info)?item.info:item;
+	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
 	let d = mDiv(dParent);
 	d.innerHTML = info.text;
-	if (nundef(styles)) styles={};
-	addKeys({family:info.family,fz:50},styles);
-	mStyleX(d, styles); 
+	if (nundef(styles)) styles = {};
+	addKeys({ family: info.family, fz: 50 }, styles);
+	mStyleX(d, styles);
 	if (isdef(classes)) mClass(d, classes);
 	return d;
 }
@@ -247,9 +247,7 @@ function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
 function iAdd(item, props) {
 	let id, l;
 	if (isString(item)) { id = item; item = Items[id]; } else if (nundef(item.id)) { id = iRegister(item); } else id = item.id;
-
 	if (nundef(item.live)) item.live = {}; l = item.live;
-
 	for (const k in props) {
 		let val = props[k];
 		l[k] = val;
@@ -266,17 +264,20 @@ function iAdd(item, props) {
 	}
 }
 function iAppend(dParent, i) { mAppend(iDiv(dParent), iDiv(i)); }
-function iBounds(i, irel) {
-	if (isdef(i.div)) i = i.div;
-	if (isdef(irel) && isdef(irel.div)) irel = irel.div;
-	isParent = (i.parentNode == irel);
-	let b = getBounds(i, isParent, irel);
-	let [x, y, w, h] = [Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)];
-
-	//console.log('bounds', b);
-	return { x: x, y: y, w: w, h: h };
-}
+function iBounds(i, irel) { return getRect(iDiv(i),iDiv(irel)); }
 function iCenter(item, offsetX, offsetY) { let d = iDiv(item); mCenterAbs(d, offsetX, offsetY); }
+function iDetect(itemInfoKey) {
+	let item, info, key;
+	if (isString(itemInfoKey)) { key = itemInfoKey; info = Syms[key]; item = infoToItem(info); }
+	else if (isDict(itemInfoKey)) {
+		if (isdef(itemInfoKey.info)) { item = itemInfoKey; info = item.info; key = item.info.key; }
+		else { info = itemInfoKey; key = info.key; item = infoToItem(info); }
+	}
+	return [item, info, key];
+}
+function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
+function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
+function infoToItem(x) { let item = { info: x, key: x.key }; item.id = iRegister(item); return item; }
 function iMoveFromTo(item, d1, d2, callback, offset) {
 	let bi = iBounds(item);
 	let b1 = iBounds(d1);
@@ -293,19 +294,10 @@ function iMoveFromTo(item, d1, d2, callback, offset) {
 	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
 	a.onfinish = () => { mAppend(d2, item.div); item.div.style.zIndex = item.z = iZMax(); if (isdef(callback)) callback(); };
 }
-function iParentBounds(i) {
-	if (isdef(i.div)) i = i.div;
-	let b = getBounds(i);
-	let [x, y, w, h] = [Math.round(b.left), Math.round(b.top), Math.round(b.width), Math.round(b.height)];
-
-	//console.log('bounds', b);
-	return { x: x, y: y, w: w, h: h };
-}
+function iParentBounds(i) {return getRect(iDiv(i));}
 function iResize(i, w, h) { return isList(i) ? i.map(x => iSize(x, w, h)) : iSize(i, w, h); }
-function iSize(i, w, h) { i.w = w; i.h = h; mSize(i.div, w, h); }
+function iSize(i, w, h) { i.w = w; i.h = h; mSize(iDiv(i), w, h); }
 function isItem(i) { return isdef(i.live) || isdef(i.div); }
-function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
-function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
 function iRegister(item) { let uid = getUID(); Items[uid] = item; return uid; }
 function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ovUnit = '%', createHand = true, rememberFunc = true) {
 
@@ -488,7 +480,7 @@ function bestContrastingColor(color, colorlist) {
 	}
 	//console.log(contrast,result)
 	return result;
-} 
+}
 function helleFarbe(contrastTo, minDiff = 25, mod = 30, start = 0) {
 	let wheel = getHueWheel(contrastTo, minDiff, mod, start);
 	//console.log('wheel',wheel)
@@ -1286,7 +1278,7 @@ function addDDSource(source, isCopy = true, clearTarget = false) {
 }
 function enableDD(sources, targets, dropHandler, isCopy, clearTarget) {
 	DDInfo = { sources: sources, targets: targets, dropHandler: dropHandler };
-	let sourceDivs = sources.map(x=>iDiv(x));
+	let sourceDivs = sources.map(x => iDiv(x));
 	for (let i = 0; i < sources.length; i++) {
 		let source = sources[i];
 		let d = sourceDivs[i];
@@ -1573,8 +1565,8 @@ function getRect(elem, relto) {
 	}
 	return { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
 }
-function idealFontSize(txt, wmax, hmax, fz=22, fzmin=6, weight) {return idealFontDims(...arguments).fz;}
-function idealFontDims(txt, wmax, hmax, fz=22, fzmin=6, weight) {
+function idealFontSize(txt, wmax, hmax, fz = 22, fzmin = 6, weight) { return idealFontDims(...arguments).fz; }
+function idealFontDims(txt, wmax, hmax, fz = 22, fzmin = 6, weight) {
 	let tStyles = { fz: fz, family: 'arial' };
 	if (isdef(weight)) tStyles.weight = weight;
 	while (true) {
@@ -1602,7 +1594,7 @@ function getSizeWithStyles(text, styles) {
 	d.parentNode.removeChild(d);
 	return { w: Math.round(width), h: Math.round(height) };
 }
-function measureWord(w,fz){	let styles = {fz:fz,family:'arial'};	return getSizeWithStyles(w,styles);}
+function measureWord(w, fz) { let styles = { fz: fz, family: 'arial' }; return getSizeWithStyles(w, styles); }
 function percentOf(elem, percentW, percentH) {
 	if (nundef(percentH)) percentH = percentW;
 	if (nundef(percentW)) percentW = percentH = 100;
@@ -2046,11 +2038,11 @@ function shuffleChildren(dParent) {
 	shuffle(arr);
 	for (const elem of arr) { mAppend(dParent, elem) }
 }
-function sortBy(arr, key) {	arr.sort((a, b) => (a[key] < b[key] ? -1 : 1)); return arr;}
-function sortByDescending(arr, key) {	arr.sort((a, b) => (a[key] > b[key] ? -1 : 1)); return arr;}
-function sortByFunc(arr, func) {	arr.sort((a, b) => (func(a) < func(b) ? -1 : 1));return arr;}
-function sortByFuncDescending(arr, func) {	arr.sort((a, b) => (func(a) > func(b) ? -1 : 1));return arr;}
-function sortNumbers(ilist) {	ilist.sort(function (a, b) { return a - b });	return ilist;}
+function sortBy(arr, key) { arr.sort((a, b) => (a[key] < b[key] ? -1 : 1)); return arr; }
+function sortByDescending(arr, key) { arr.sort((a, b) => (a[key] > b[key] ? -1 : 1)); return arr; }
+function sortByFunc(arr, func) { arr.sort((a, b) => (func(a) < func(b) ? -1 : 1)); return arr; }
+function sortByFuncDescending(arr, func) { arr.sort((a, b) => (func(a) > func(b) ? -1 : 1)); return arr; }
+function sortNumbers(ilist) { ilist.sort(function (a, b) { return a - b }); return ilist; }
 
 function takeFromStart(ad, n) {
 	if (isDict(ad)) {
@@ -2147,7 +2139,7 @@ function allIntegers(s) {
 	return s.match(/\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => {
 		return +v;
 	});
-} 
+}
 function allNumbers(s) {
 	//returns array of all numbers within string s
 	let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
@@ -2159,7 +2151,7 @@ function capitalize(s) {
 	return s.charAt(0).toUpperCase() + s.slice(1);
 }
 function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
-function extendWidth(w){return replaceEvery(w,'w',2);}
+function extendWidth(w) { return replaceEvery(w, 'w', 2); }
 function firstNumber(s) {
 	// returns first number in string s
 	if (s) {
@@ -2191,20 +2183,20 @@ function replaceAll(str, sSub, sBy) {
 	return str.replace(regex, sBy);
 }
 function replaceAllSpecialChars(str, sSub, sBy) { return str.split(sSub).join(sBy); }
-function replaceEvery(w,letter,nth){
-	let res='';
-	for(let i=1;i<w.length;i+=2){
-		res+=letter;
-		res+=w[i];
+function replaceEvery(w, letter, nth) {
+	let res = '';
+	for (let i = 1; i < w.length; i += 2) {
+		res += letter;
+		res += w[i];
 	}
-	if (w.length%2) res+=w[0];
+	if (w.length % 2) res += w[0];
 	return res;
 }
-function replaceFractionOfWordBy(w,letter='w',fr=.5){
-	let len =Math.ceil(w.length*fr);
-	let len1=Math.floor(w.length*fr);
-	let sub=letter.repeat(len); 
-	w = sub + w.substring(0,len1);
+function replaceFractionOfWordBy(w, letter = 'w', fr = .5) {
+	let len = Math.ceil(w.length * fr);
+	let len1 = Math.floor(w.length * fr);
+	let sub = letter.repeat(len);
+	w = sub + w.substring(0, len1);
 	return w;
 }
 function reverseString(s) {

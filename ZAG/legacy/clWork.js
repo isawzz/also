@@ -115,16 +115,17 @@ class GSwap extends Game {
 	}
 	eval() {
 		let n = Pictures.length;
-		let indices = [];//Pictures.map(x => {let l=getBlinkingLetter(x); if (isdef(l)) return l.i; else return null;});
+		let blinkInfo = [];//Pictures.map(x => {let l=getBlinkingLetter(x); if (isdef(l)) return l.i; else return null;});
 
 		for (let i = 0; i < n; i++) {
 			let p = Pictures[i];
 			let blinking = getBlinkingLetter(p);
-			indices.push({ i: i, blinking: blinking });
+			blinkInfo.push({ i: i, blinking: blinking });
 		}
-		console.log('indices', indices.map(x => x.blinking));
+		console.log('blinking', blinkInfo.map(x => x.blinking));
+		
 		for (let i = 0; i < n; i++) {
-			let iblink = indices[i].blinking;
+			let iblink = blinkInfo[i].blinking;
 			if (!iblink) continue;
 			let p = Pictures[i];
 			stopBlinking(p.letters[iblink]);
@@ -153,13 +154,13 @@ class GSwap extends Game {
 		item.testLabel = replaceAt(item.label, item.iLetter, hLetter);
 
 
-		console.log('test', item.testLabel); //false, 'und was jetzt???????????')
+		//console.log('test', item.testLabel); //false, 'und was jetzt???????????')
 
 		//console.assert(false,'END')
 		let isCorrect = true;
 		for (const p of Pictures) {
 			if (p.testLabel != p.origLabel) {
-				console.log('fehler:', p.origLabel, p.testLabel);
+				//console.log('fehler:', p.origLabel, p.testLabel);
 				isCorrect = false;
 			}
 		}

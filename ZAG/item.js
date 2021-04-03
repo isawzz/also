@@ -153,14 +153,10 @@ function getNItemsPerKeylist(n, keylists, options = {}) {
 		let cat = list.cat;
 		//console.log('list',list)
 		let newItems = genItems(n, options);
-		newItems.map(x => {x.cat=cat;items.push(x)});
-		
+		newItems.map(x => { x.cat = cat; items.push(x) });
+
 	}
 	return items;
-}
-function infoToItem(x) {
-	//console.log('iiiiiii'); 
-	let item = { info: x, key: x.key }; item.id = iRegister(item); return item;
 }
 function modifyColorkey(item) {
 	let colorkey = chooseRandom(Object.keys(ColorDict));
@@ -175,6 +171,7 @@ function makeItemDivs(items, options) { for (let i = 0; i < items.length; i++) {
 function makeItemDiv(item, options) {
 
 	//console.log('item',item,'options',options)
+
 
 	if (isdef(options.outerStyles) && isdef(options.ifs)) copyKeys(item, options.outerStyles, {}, Object.keys(options.ifs)); //options.ifs contains per item dynamic styles!!!!!
 	//console.log('item.id',item.id,item)

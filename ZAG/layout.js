@@ -51,7 +51,6 @@ function myPresent(dArea, items, options) {
 	} else[wi, hi, rows, cols] = calcRowsColsSizeAbWo(items.length, w, h, showLabels, options.wimax, options.himax);
 
 	// let gap = valf(options.gap,Math.min(wi,hi) * .1); wi -= gap; hi -= gap;
-	// let gap = valf(options.gap,Math.min(wi,hi) * .1); wi -= gap; hi -= gap;
 	//console.log(options.gap)
 	let gap = wi * .1; if (cols > 1) wi -= gap; if (rows > 1) hi -= gap;
 	let fzPic = options.fzPic = getStandardFzPic(wi, hi, showLabels);
