@@ -109,6 +109,28 @@ function onReleaseLetter(ev) {
 //#endregion
 
 //#region createLetterInputs
+function createLetterInputsX(s, dParent, style, idForContainerDiv) {
+	let d = mDiv(dParent);
+	if (isdef(idForContainerDiv)) d.id = idForContainerDiv;
+	inputs = [];
+	for (let i = 0; i < s.length; i++) {
+		let d1 = mDiv(d);
+		d1.innerHTML = s[i];
+		mStyleX(d1, style);
+	}
+	return d;
+}
+function iLetters(item,dParent,style){
+	let d = mDiv(dParent);
+	item.letters = [];
+	for (let i = 0; i < s.length; i++) {
+		let d1 = mDiv(d);
+		d1.innerHTML = s[i];
+		mStyleX(d1, style);
+	}
+	return d;
+}
+
 function blankInputs(d, ilist, blink = true) {
 	let inputs = [];
 	for (const idx of ilist) {
@@ -266,17 +288,6 @@ function createLetterInputs(s, dParent, style, idForContainerDiv, colorWhiteSpac
 		}
 		//console.log('white(' + s[i] + ') =', white);
 		mStyleX(d1, white ? whiteStyle : style);
-	}
-	return d;
-}
-function createLetterInputsX(s, dParent, style, idForContainerDiv) {
-	let d = mDiv(dParent);
-	if (isdef(idForContainerDiv)) d.id = idForContainerDiv;
-	inputs = [];
-	for (let i = 0; i < s.length; i++) {
-		let d1 = mDiv(d);
-		d1.innerHTML = s[i];
-		mStyleX(d1, style);
 	}
 	return d;
 }

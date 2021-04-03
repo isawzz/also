@@ -19,7 +19,7 @@ class GSwap extends Game {
 	startLevel() {
 		G.keys = setKeysG(G, filterWordByLength, 25);
 		if (G.keys.length < 25) { G.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
-		G.trials=4;
+		G.trials = 4;
 		//console.log('keys', G.keys.length);
 		//console.log('words', G.keys.map(x => Syms[x].E))
 	}
@@ -70,8 +70,11 @@ class GSwap extends Game {
 
 		let style = { margin: 3, fg: 'white', display: 'inline', bg: 'transparent', align: 'center', border: 'transparent', outline: 'none', family: 'Consolas', fz: 80 };
 		for (const item of items) {
-			let d1 = item.container = mDiv(dTable, { hmin: 250 });
-			let d = item.div = createLetterInputs(item.label, d1, style);
+			//let d1 = item.container = mDiv(dTable, { hmin: 250 });
+
+			let d = createLetterInputsX(item.label, dTable, style);
+			iAdd(item,{div: d});
+			//console.log('d', d)
 			let letters = item.letters = [];
 			for (let i = 0; i < arrChildren(d).length; i++) {
 				let ch = d.children[i];
@@ -114,12 +117,12 @@ class GSwap extends Game {
 		let n = Pictures.length;
 		let indices = [];//Pictures.map(x => {let l=getBlinkingLetter(x); if (isdef(l)) return l.i; else return null;});
 
-		for(let i=0;i<n;i++){
-			let p=Pictures[i];
+		for (let i = 0; i < n; i++) {
+			let p = Pictures[i];
 			let blinking = getBlinkingLetter(p);
-			indices.push({i:i,blinking:blinking});
+			indices.push({ i: i, blinking: blinking });
 		}
-		console.log('indices', indices.map(x=>x.blinking));
+		console.log('indices', indices.map(x => x.blinking));
 		for (let i = 0; i < n; i++) {
 			let iblink = indices[i].blinking;
 			if (!iblink) continue;
@@ -128,8 +131,8 @@ class GSwap extends Game {
 			//console.log('indices',indices);
 		}
 
-		let item0=Pictures[0];
-		let label0=item0.label;
+		let item0 = Pictures[0];
+		let label0 = item0.label;
 		let hLetter = label0[item0.iLetter];
 		// let hLetter = Pictures[0].label[indices[0]];
 		console.log('hLetter', hLetter);
@@ -137,19 +140,22 @@ class GSwap extends Game {
 			let item1 = Pictures[i];
 			let item2 = Pictures[i + 1];
 
-			let i1 = indices[i];
-			let i2 = indices[i + 1];
+			let i1 = item1.iLetter; //indices[i];
+			let i2 = item2.iLetter; //indices[i + 1];
+
+			console.log('______', i1, i2)
 
 			//item1 must get letter that is currently at position i2 in item2.label
 			let test = item1.testLabel = replaceAt(item1.label, i1, item2.label[i2]);
 			console.log('test', test);
 		}
 		let item = Pictures[n - 1];
-		item.testLabel = replaceAt(item.label, indices[n - 1], hLetter);
+		item.testLabel = replaceAt(item.label, item.iLetter, hLetter);
 
 
 		console.log('test', item.testLabel); //false, 'und was jetzt???????????')
 
+		//console.assert(false,'END')
 		let isCorrect = true;
 		for (const p of Pictures) {
 			if (p.testLabel != p.origLabel) {
@@ -160,7 +166,8 @@ class GSwap extends Game {
 
 		let feedbackList = [];
 		for (let i = 0; i < n; i++) {
-			let d = Pictures[i].letters[indices[i]].div;
+			let item = Pictures[i];
+			let d = item.letters[item.iLetter].div;
 			feedbackList.push(d);
 		}
 		Selected = { piclist: Pictures, feedbackUI: feedbackList, sz: getRect(iDiv(Pictures[0])).h };
