@@ -52,7 +52,7 @@ function _visualizeNumber(n, dParent, color, or = 'h') {
 	let dArea = mDiv(dParent, { display: 'inline-grid', 'grid-template-columns': `repeat(${cols}, 1fr)`, bg: 'white', fg: color });
 	for (let i = 0; i < n; i++) {
 		let item = getItem('plain-circle');
-		console.log('item', item)
+		//console.log('item', item)
 		let d = miPic(item, dArea, { fz: 12, margin: 6 });
 		iAdd(item, { div: d });
 		mAppend(dArea, d);

@@ -73,7 +73,7 @@ class GAbacus extends Game {
 		//console.log('showHint', G.showHint);
 
 		if (G.level <= 1 && G.showHint && (G.step <= 3 || G.op != 'mult'))
-			hintEngineStart(getOperationHintString, [0, 1], 100); //!!! 5000 + G.level * 1000);
+			hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
 
 		activateUi();
 	}
