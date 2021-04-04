@@ -46,13 +46,12 @@ function _visualizeAritOp(op, a, b, dParent, symResult) {
 	return dx;
 
 }
-function _visualizeNumber(n, dParent, color,or='h') {
+function _visualizeNumber_dep(n, dParent, color,or='h') {
 
 	//moecht ein kleines grid mit inside n dots in random colors
 
 	//#region prelim: keys,labels,ifs,options
 	let keys = new Array(n).fill('plain-circle');
-
 	let options = { repeat: n, showLabels: false, center:true, sz:25 };
 	let infos = keys.map(x => symbolDict[x]);
 	let ifs = { fg: color }
@@ -91,4 +90,18 @@ function _visualizeNumber(n, dParent, color,or='h') {
 
 	//console.log('*** THE END ***');
 	return dGrid;
+}
+function zText(text, dParent, textStyles, hText, vCenter = false) {
+	let tSize = getSizeWithStyles(text, textStyles);
+	let extra = 0, lines = 1;
+	if (isdef(hText)) {
+		extra = hText - tSize.h;
+		if (textStyles.fz) lines = Math.floor(tSize.h / textStyles.fz);
+	}
+	let dText = isdef(text) ? mText(text, dParent, textStyles) : mDiv(dParent);
+	if (extra > 0 && vCenter) {
+		dText.style.paddingTop = (extra / 2) + 'px';
+		dText.style.paddingBottom = (extra / 2) + 'px';
+	}
+	return { text: text, div: dText, extra: extra, lines: lines, h: tSize.h, w: tSize.w, fz: textStyles.fz };
 }

@@ -72,7 +72,8 @@ class GAbacus extends Game {
 
 		//console.log('showHint', G.showHint);
 
-		if (G.level <= 1 && G.showHint && (G.step <= 3 || G.op != 'mult')) hintEngineStart(getOperationHintString, [0, 1], 5000 + G.level * 1000);
+		if (G.level <= 1 && G.showHint && (G.step <= 3 || G.op != 'mult'))
+			hintEngineStart(getOperationHintString, [0, 1], 100); //!!! 5000 + G.level * 1000);
 
 		activateUi();
 	}
@@ -792,7 +793,7 @@ class GSentence extends Game {
 	}
 	trialPrompt() {
 		sayTryAgain();
-		showFleetingMessage('Try again!',0,{fg:'white'});
+		showFleetingMessage('Try again!', 0, { fg: 'white' });
 		TOMain = setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))); }, 1200);
 		return 1500;
 	}
@@ -1112,7 +1113,7 @@ class GSwap extends Game {
 				let iLetter = blinkInfo[i].blinking.i;
 				if (item.iLetter != iLetter) d = iDiv(item.letters[iLetter]);
 			}
-				
+
 			if (isdef(d)) feedbackList.push(d);
 		}
 		Selected = { piclist: Pictures, feedbackUI: feedbackList, sz: getRect(iDiv(Pictures[0])).h, delay: 800 };

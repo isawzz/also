@@ -41,13 +41,11 @@ function startLevel() {
 }
 function startRound() {
 	//console.log('...new round:',G.showLabels)
-
-	//if (G.addonActive != true && isTimeForAddon()) {		G.addonActive = true;		exitToAddon(startRound); return;	} else G.addonActive = false;	
+	//if (G.addonActive != true && isTimeForAddon()) { G.addonActive = true; exitToAddon(startRound); return; } else G.addonActive = false;
 
 	resetRound();
 	uiActivated = false;
 	G.instance.startRound();
-	//console.log('...new round:',G.showLabels)
 	TOMain = setTimeout(() => prompt(), 300);
 }
 function prompt() {

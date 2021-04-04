@@ -189,7 +189,7 @@ function setBadgeLevel(i) {
 
 //#region layouts
 function layoutGrid(elist, dGrid, containerStyles, { rows, cols, isInline = false } = {}) {
-	//console.log(elist, elist.length)
+	console.log('layoutGrid in _legacy!')
 	let dims = calcRowsCols(elist.length, rows, cols);
 	//console.log('dims', dims);
 
