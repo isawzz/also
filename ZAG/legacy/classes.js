@@ -196,6 +196,117 @@ class GAnagram extends Game {
 	}
 
 }
+class GCats extends Game {
+	constructor(name) { super(name); }
+	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
+
+	dropHandler(source, target, isCopy = true) {
+		let dSource = iDiv(source);
+		let dTarget = iDiv(target);
+
+		if (!isCopy) {
+			mAppend(dTarget, dSource);
+		} else {
+			let dNew = mText(dSource.innerHTML, dTarget, { wmin: 100, fz: 20, padding: 4, margin: 4, display: 'inline-block' });
+			addDDSource(dNew, false);
+		}
+
+		if (isOverflown(dTarget)) {
+			let d = dTarget.parentNode;
+			let r = getRect(d);
+			let w = r.w + 100;
+
+			mSize(d, w, r.h);
+			console.log('overflow!!!!', r.w, '=>', w)
+		}
+	}
+
+	prompt() {
+		let items;
+
+		// pick categories
+		let data = this.keysByCat = genCats(G.numCats);
+		this.keylists = [], this.catsByKey = {};
+		for (const cat in data) {
+			this.keylists.push({ keys: data[cat], cat: cat });
+			for (const k of data[cat]) {
+				this.catsByKey[k] = cat;
+			}
+		}
+		this.cats = Object.keys(this.keysByCat);
+		this.allKeys = Object.keys(this.catsByKey);
+		this.options = {}; _extendOptions(this.options);
+
+		// pick items
+		if (G.pickRandom == false) {
+			// let n = G.numPics;
+			// if (n == 1 || n == 2 || n == 3) console.log('n', n); else n = 4;
+			items = Pictures = getNItemsPerKeylist(G.numPics, this.keylists, this.options);
+		} else {
+			//console.log(this.allKeys);
+			let keys = choose(this.allKeys, G.numPics * G.numCats);
+			items = Pictures = genItemsFromKeys(keys, this.options);
+			items.map(x => x.cat = this.catsByKey[x.key]);
+			//for(let i=0;i<items.length;i++){items[i].cat=keysPlus[i].cat;}
+			//console.log('items', items)
+		}
+		shuffle(items);
+
+		//OIL for category boxes
+		showInstruction('', G.language == 'E' ? 'drag words to categories' : "ordne die texte in kategorien", dTitle, true);
+		mLinebreak(dTable);
+
+		//show categories:
+		let dArea = mDiv(dTable, { display: 'flex', 'flex-wrap': 'wrap' });//, layout: 'fhcc' });
+		let containers, dWordArea;
+		containers = this.containers = createContainers(this.cats, dArea, { w: 'auto', wmin: 150, wmax: 300, hmin: 250, fz: 24, fg: 'contrast' }); //['animals', 'sport', 'transport'], dArea);
+		mLinebreak(dTable);
+
+		//show words:
+		dWordArea = this.dWordArea = mDiv(dTable, { h: 70, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
+		for (const item of items) { let d = miPic(item, dWordArea); iAdd(item, { div: d }); }
+
+		enableDD(items, containers, this.dropHandler.bind(this), false);
+		mLinebreak(dTable, 50);
+		mButton('Done!', evaluate, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+
+		activateUi();
+	}
+	trialPrompt() {
+		sayTryAgain();
+		TOMain = setTimeout(() => {
+			for (const p of Pictures) {
+				if (!p.isCorrect) {
+					mAppend(this.dWordArea, iDiv(p));
+					if (G.trialNumber == 1) miAddLabel(p, { bg: '#00000080', margin: 4, fz: 20 });
+				}
+			}
+		}, 1000);
+		return 1200;
+	}
+	eval() {
+		this.piclist = Pictures;
+		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => iDiv(x)), sz: getRect(iDiv(this.piclist[0])).h };
+		let isCorrect = true;
+		for (const p of Pictures) {
+			let label = p.label;
+			let d = iDiv(p);
+			let cont = d.parentNode;
+			for (const c of this.containers) {
+				if (iDiv(c) == cont) {
+					p.classified = true;
+					if (p.cat == c.label) p.isCorrect = true;
+					else { p.isCorrect = isCorrect = false; }
+					break;
+				}
+			}
+			if (!p.classified) p.isCorrect = isCorrect = false;
+		}
+		//Pictures.map(x => console.log(x.label, x.isCorrect));
+		return isCorrect;
+	}
+}
+
 class GElim extends Game {
 	constructor(name) { super(name); }
 	startGame() {
@@ -681,6 +792,7 @@ class GSentence extends Game {
 	}
 	trialPrompt() {
 		sayTryAgain();
+		showFleetingMessage('Try again!',0,{fg:'white'});
 		TOMain = setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))); }, 1200);
 		return 1500;
 	}
