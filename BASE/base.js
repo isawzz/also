@@ -62,6 +62,41 @@ function mEditableInput(dParent, label, val) {
 	return elem;
 }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
+function miAddLabel(item,styles){
+	let d=iDiv(item);
+	//console.log('firstChild',d.firstChild, getTypeOf(d.firstChild));
+	if(getTypeOf(d.firstChild) == 'Text'){
+		let handler = d.onmousedown;
+		d.onmousedown = null;
+		let dPic = d;
+		let dParent = d.parentNode;
+		let outerStyles = jsCopy(styles);
+		addKeys({ display: 'inline-flex', 'flex-direction': 'column',
+		'justify-content': 'center', 'align-items': 'center', 'vertical-align':'top',},outerStyles);
+		//console.log('outerStyles',outerStyles)
+		d = mDiv(dParent,outerStyles);
+		mAppend(d,dPic);
+		d.onmousedown = handler;
+		let dLabel=mText(item.label,d,{fz:valf(styles.fz,20)});
+		iAdd(item,{div:d,dPic:dPic,dLabel:dLabel,options:outerStyles});
+	}else if (nundef(iLabel(item))){
+		let dLabel=mText(item.label,d,{fz:valf(styles.fz,20)});
+		iAdd(item,{dLabel:dLabel});
+		//console.log('this is not a pure pic, it HAS an OUTERDIV!!! (not impl)')
+	}
+	return d;
+}
+function miPic(item, dParent, styles, classes) {
+	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
+	let d = mDiv(dParent);
+	d.innerHTML = info.text;
+	if (nundef(styles)) styles = {};
+	addKeys({ family: info.family, fz: 50, display: 'inline-block' }, styles);
+	mStyleX(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	return d;
+}
+
 function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent, styles); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
 function mLinebreak(d, gap) { mGap(d, gap); }
@@ -222,16 +257,6 @@ function mText(text, dParent, styles, classes) {
 	if (isdef(classes)) mClass(d, classes);
 	return d;
 }
-function mPic(item, dParent, styles, classes) {
-	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
-	let d = mDiv(dParent);
-	d.innerHTML = info.text;
-	if (nundef(styles)) styles = {};
-	addKeys({ family: info.family, fz: 50 }, styles);
-	mStyleX(d, styles);
-	if (isdef(classes)) mClass(d, classes);
-	return d;
-}
 function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
 	let d = mDiv(dParent, outerStyles);
 	let dTitle = mDiv(d);
@@ -278,6 +303,7 @@ function iDetect(itemInfoKey) {
 function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
 function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
 function infoToItem(x) { let item = { info: x, key: x.key }; item.id = iRegister(item); return item; }
+function iLabel(i){return  isdef(i.live) ? i.live.dLabel : isdef(i.dLabel) ? i.dLabel : null; }
 function iMoveFromTo(item, d1, d2, callback, offset) {
 	let bi = iBounds(item);
 	let b1 = iBounds(d1);
@@ -295,6 +321,7 @@ function iMoveFromTo(item, d1, d2, callback, offset) {
 	a.onfinish = () => { mAppend(d2, item.div); item.div.style.zIndex = item.z = iZMax(); if (isdef(callback)) callback(); };
 }
 function iParentBounds(i) {return getRect(iDiv(i));}
+function iPic(i){return  isdef(i.live) ? i.live.dPic : isdef(i.dPic) ? i.dPic : null; }
 function iResize(i, w, h) { return isList(i) ? i.map(x => iSize(x, w, h)) : iSize(i, w, h); }
 function iSize(i, w, h) { i.w = w; i.h = h; mSize(iDiv(i), w, h); }
 function isItem(i) { return isdef(i.live) || isdef(i.div); }
@@ -345,6 +372,10 @@ function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ov
 
 }
 function iStyle(i, styles) { mStyleX(iDiv(i), styles); }
+//#endregion
+
+//#region opt
+
 //#endregion
 
 //#region ani
@@ -1792,7 +1823,8 @@ function dict2list(d, keyName = 'id') {
 		res.push(o);
 	}
 	return res;
-} function fisherYates(array) {
+} 
+function fisherYates(array) {
 	var rnd, temp;
 
 	for (var i = array.length - 1; i; i--) {
@@ -1803,6 +1835,7 @@ function dict2list(d, keyName = 'id') {
 	}
 	return array;
 }
+function findLongestWord(arr){return arr[arrMinMax(arr,x=>x.length).imax];}
 function firstCond(arr, func) {
 	//return first elem that fulfills condition
 	if (nundef(arr)) return null;

@@ -31,97 +31,17 @@ function initSymbolTableForGamesAddons() {
 	}
 }
 
-function gatherItems(n, options) {
-	let items = null;
-	while (!items) { items = Pictures = pickSuitableItems(n, options); }
 
-	//labels need to be replaced!
-	let l = items[0].letter;
-	for (let i = 0; i < n; i++) {
-		let item1 = items[i];
-		let item2 = items[(i + 1) % n];
-		let label = item1.origLabel = item1.label;
-		let idx = item1.iLetter;
-		let newLetter = item2.letter;
-		let s = label.substring(0, idx) + newLetter + label.substring(idx + 1);
-		//console.log('s', s);
-		item1.label = s;
-		if (isWord(item1.label)) {
-			item2.iLetter = (item2.iLetter + 1) % item2.label.length;
-			item2.letter = item2.label[item2.iLetter];
-			item1.label = label.substring(0, idx) + item2.letter + label.substring(idx + 1);
-			if (isWord(item1.label)) return gatherItems(n, options);
-		}
-	}
-	return items;
+
+function iStyle(item,styles){
+	let outerStyles = jsCopy(styles);
+	let picStyles={fz:styles.fzPic};
+	let labelStyles={fz:styles.fz};
+
+	let dPic=iPic(item);if (isdef(dPic)) mStyleX(dPic,picStyles)
+	let dLabel=iLabel(item);if (isdef(dLabel)) mStyleX(dLabel,labelStyles)
+	let d=iDiv(item);if (isdef(d)) mStyleX(d,outerStyles)
 }
-function replaceAt(s,i,ssub){return s.substring(0,i)+ssub+s.substring(i+1);}
-function arrCycleSwap(arr, prop, clockwise = true) {
-	let n = arr.length;
-	let h = arr[0].prop;
-	for (let i = 1; i < n; i++) { arr[i - 1][prop] = arr[i][prop]; }
-	arr[n - 1][prop] = h;
-}
-function getBlinkingLetter(item) {
-	if (nundef(item.letters)) return null;
-	return firstCond(item.letters, x => x.isBlinking);
-}
-function stopBlinking(item) { if (isdef(item)) { item.isBlinking = false; mRemoveClass(iDiv(item), 'blink'); } }
-function startBlinking(item, items, unique = true) {
-	console.log('item', item, 'items', items, 'unique', unique)
-	if (unique) {
-		let prevLetter = firstCond(items, x => x.isBlinking == true);
-		console.log('prevLetter', prevLetter);
-		stopBlinking(prevLetter);
-	}
-	mClass(iDiv(item), 'blink');
-	item.isBlinking = true;
-}
-
-function pickSuitableItems(n, options) {
-	let items = genItems(n, options);
-	let words = items.map(x => x.label);
-
-	let used = [];
-	for (const item of items) {
-		let res = getRandomConsonant(item.label, used);
-		if (isEmpty(res)) return null;
-		let i = item.iLetter = res.i;
-		let letter = item.letter = item.label[i];
-		used.push(letter);
-		//console.log('w',item.label,'i', i, 'letter', letter);
-	}
-	return items;
-}
-function getVowels(w, except = []) {
-	w = w.toLowerCase();
-	console.log('w', w);
-	let vowels = 'aeiouy';
-	let res = [];
-	for (let i = 0; i < w.length; i++) {
-		if (vowels.includes(w[i]) && !except.includes(w[i])) res.push({ i: i, letter: w[i] });
-	}
-	console.log('res', res)
-	return res;
-}
-function getConsonants(w, except = []) {
-	w = w.toLowerCase();
-	//console.log('w',w);
-	let vowels = 'aeiouy' + except.join('');
-	let res = [];
-	for (let i = 0; i < w.length; i++) {
-		if (!vowels.includes(w[i])) res.push({ i: i, letter: w[i] });
-	}
-	//console.log('res',res)
-	return res;
-}
-function getRandomVowel(w, except = []) { let vowels = getVowels(w, except); return chooseRandom(vowels); }
-function getRandomConsonant(w, except = []) { let cons = getConsonants(w, except); return chooseRandom(cons); }
-
-
-
-
-
 
 
 async function _start_neu() {

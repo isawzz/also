@@ -43,7 +43,7 @@ function startRound() {
 	//console.log('...new round:',G.showLabels)
 
 	//if (G.addonActive != true && isTimeForAddon()) {		G.addonActive = true;		exitToAddon(startRound); return;	} else G.addonActive = false;	
-	
+
 	resetRound();
 	uiActivated = false;
 	G.instance.startRound();
@@ -82,14 +82,14 @@ function evaluate() {
 	IsAnswerCorrect = G.instance.eval(...arguments);
 	//console.log('Selected',Selected)
 	if (IsAnswerCorrect === undefined) { promptNextTrial(); return; }
-	//console.log('answer is', IsAnswerCorrect ? 'correct' : 'WRONG!!!')
 
 	G.trialNumber += 1;
+	//console.log('answer is', IsAnswerCorrect ? 'correct' : 'WRONG!!!','trial#',G.trialNumber,'/',G.trials)
 	if (!IsAnswerCorrect && G.trialNumber < G.trials) { promptNextTrial(); return; }
 
 	//feedback
 	//console.log(G)
-	if (IsAnswerCorrect) { DELAY = G.spokenFeedback ? 1500 : 300; G.successFunc(); }
+	if (IsAnswerCorrect) { DELAY = isdef(Selected.delay) ? Selected.delay : G.spokenFeedback ? 1500 : 300; G.successFunc(); }
 	else { DELAY = G.correctionFunc(); G.failFunc(); }
 	setTimeout(removeMarkers, 1500);
 

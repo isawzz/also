@@ -463,9 +463,11 @@ div{
 .aniSlowlyDisappear{ animation: fadeinout 5s ease-out 0s 1 forwards;}
 .aniFastDisappear{ animation: fadeOut .5s ease-out 0s 1 forwards;}
 .aniSlowlyAppear{ animation: example 3s ease-in-out 0s 1 forwards;}
+.aniSuperSlowlyAppear{ animation: example 13s ease-in-out 0s 1 forwards;}
+.aniAppearMinute{ animation: example 60s ease-in 0s 1 forwards;}
 
 .aniFadeOut{ animation: example .5s ease-in-out 0s 1 reverse;}
-.aniFadeIn{ animation: example .5s ease-in-out;}
+.aniFadeIn{ animation: example .5s ease-in-out 0s 1 forwards;}
 .aniFadeOutIn{ animation: fadeoutin 2s ease-in-out;}
 /* example 4s ease-in-out 2s infinite reverse forwards */
 .aniFadeInOut{ animation: fadeinout 1.5s ease-in-out 0s 1 forwards;}

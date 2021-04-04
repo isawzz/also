@@ -39,29 +39,18 @@ function getStandardFz(wi, hi, showPic, showLabels, wLongest) {
 function getStandardFzPic(wi, hi, showLabels) { return Math.min(wi * .8, showLabels ? hi * .6 : hi * .75); }
 function myPresent(dArea, items, options) {
 	let showLabels = options.showLabels;
-	//console.log(options, items)
-	let w = options.w * valf(options.fw, .9); //window.innerWidth-70;
-	let h = options.h * valf(options.fh, .7); //window.innerHeight-150;
-
-	//console.log('rows are',options.rows)
+	let w = options.w * valf(options.fw, .9); 
+	let h = options.h * valf(options.fh, .7); 
 
 	let wi, hi, rows, cols;
 	if (isdef(options.rows) || isdef(options.cols)) {
 		[wi, hi, rows, cols] = calcSizeAbWo(items.length, options.rows, options.cols, w, h, options.wimax, options.himax);
 	} else[wi, hi, rows, cols] = calcRowsColsSizeAbWo(items.length, w, h, showLabels, options.wimax, options.himax);
 
-	// let gap = valf(options.gap,Math.min(wi,hi) * .1); wi -= gap; hi -= gap;
-	//console.log(options.gap)
 	let gap = wi * .1; if (cols > 1) wi -= gap; if (rows > 1) hi -= gap;
 	let fzPic = options.fzPic = getStandardFzPic(wi, hi, showLabels);
-	//console.log('fzPic',fzPic,showLabels)
-
 	let fz = getStandardFz(wi,hi,options.showPic,options.showLabels,options.wLongest);
-	// let hText = options.showPic ? hi / 3 : hi;
-	// let fz = options.fz = showLabels ? idealFontSize(options.wLongest, wi, hText) : 0;
 	options.szPic = { w: wi, h: hi };
-	//console.log(items[0]);
-	//console.log('N=' + items.length, 'showLabels', showLabels, showLabels, '\ndims', 'wWin', w, 'hWin', h, '\nwnet', wi, 'hnet', hi, '\nrows,cols', rows, cols, '\nfzPic', fzPic, 'fz', fz);
 	if (nundef(options.ifs)) options.ifs = {};
 	let outerStyles = {
 		w: wi, h: hi, margin: gap / 2, rounding: 6,
@@ -87,19 +76,14 @@ function myPresent(dArea, items, options) {
 		picStyles.family = item.info.family;
 		let dLabel, dPic;
 		if (options.showPic) { dPic = mDiv(dOuter, picStyles); dPic.innerHTML = item.info.text; }
-		//console.log('showLabels ',showLabels)
-		//console.log('labelStyles', labelStyles)
 		if (showLabels) dLabel = mText(item.label, dOuter, labelStyles);
 		if (options.showRepeat) addRepeatInfo(dOuter, item.iRepeat, wi);
 		iAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
 	}
-
 	if (isdef(options.numColors) && options.numColors > 1){
 		mStyleX(dArea, { display: 'inline-grid',gap:gap, 'grid-template-columns': `repeat(${cols},${wi}px)` });
 	}
-	//mStyleX(dArea, { w:w, display: 'inline-grid'});
 	items.map(x => mAppend(dArea, iDiv(x)));
-	//console.log('rows',rows,cols)
 	return getRect(dArea);
 }
 

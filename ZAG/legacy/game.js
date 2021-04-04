@@ -7,7 +7,6 @@ function animationCallback(secs, callback, removeBg = false) {
 	}, secs * 1000);
 
 }
-
 function animateColor(elem, from, to, classes, ms) {
 	elem.style.backgroundColor = from;
 	setTimeout(() => animate(elem, classes, ms), 10);
@@ -27,6 +26,13 @@ function aniFadeInOut(elem, secs) {
 	//dLineBottom.opacity=0;
 	//mClass(dLineBottom,'aniFadeInOut');
 	setTimeout(() => { mRemoveClass(elem, 'transopaOn'); mClass(elem, 'transopaOff'); }, secs * 1000);
+}
+function aniFadeIn(elem, secs) { //BROKEN!!!
+	elem.style.opacity=0;
+	//mClass(elem, 'transopaOff');
+	//dLineBottom.opacity=0;
+	//mClass(dLineBottom,'aniFadeInOut');
+	setTimeout(() => { mRemoveClass(elem, 'transopaOff'); mClass(elem, 'transopaOn'); }, secs * 1000);
 }
 function aniPulse(elem, ms) { animate(elem, 'onPulse', ms); }
 //#endregion
@@ -113,16 +119,6 @@ function createLetterInputsX(s, dParent, style, idForContainerDiv) {
 	let d = mDiv(dParent);
 	if (isdef(idForContainerDiv)) d.id = idForContainerDiv;
 	inputs = [];
-	for (let i = 0; i < s.length; i++) {
-		let d1 = mDiv(d);
-		d1.innerHTML = s[i];
-		mStyleX(d1, style);
-	}
-	return d;
-}
-function iLetters(item,dParent,style){
-	let d = mDiv(dParent);
-	item.letters = [];
 	for (let i = 0; i < s.length; i++) {
 		let d1 = mDiv(d);
 		d1.innerHTML = s[i];
@@ -1107,9 +1103,6 @@ function failThumbsDown(withComment = false) {
 	iDiv(p2).style.display = 'none';
 }
 function successPictureGoal(withComment = true) {
-
-	//console.log(Selected)
-
 	if (withComment && G.spokenFeedback) {
 		const comments = (G.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
 		sayRandomVoice(chooseRandom(comments));
@@ -1390,7 +1383,8 @@ function createContainers(list, dArea, styles) {
 		containers.push({ label: cat, div: cont });
 	}
 	return containers;
-} function getActualText(item) {
+} 
+function getActualText(item) {
 	//console.log(item)
 	if (isdef(item.live.dLabel)) return item.live.dLabel.innerHTML;
 	//if (isdef(item.pic)){return iDiv(item).children[1].innerHTML;} else {return iDiv(item).children[0].innerHTML;}

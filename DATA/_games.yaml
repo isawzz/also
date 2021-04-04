@@ -60,6 +60,8 @@ gAnagram:
   minWordLength: 3
   maxWordLength: 8
   pictureLabels: never
+  showWord: true
+  hidden: false
   levels:
     0:
       maxWordLength: 3
@@ -76,11 +78,27 @@ gAnagram:
       minWordLength: 6
       maxWordLength: 7
     5:
-      minWordLength: 7
-      maxWordLength: 8
+      minWordLength: 3
+      maxWordLength: 4
+      showWord: false
     6:
-      minWordLength: 7
-      maxWordLength: 8
+      minWordLength: 4
+      maxWordLength: 5
+      showWord: false
+    7:
+      minWordLength: 5
+      maxWordLength: 7
+      showWord: false
+    8:
+      minWordLength: 3
+      maxWordLength: 4
+      showWord: false
+      hidden: true
+    9:
+      minWordLength: 4
+      maxWordLength: 5
+      showWord: false
+      hidden: true
 gCats:
   friendly: 'Category'
   logo: 'bookmark tabs'
@@ -88,20 +106,40 @@ gCats:
   type: solitaire
   showHint: false
   numCats: 3
-  numPics: 1
+  numPics: 3
   pickRandom: false
+  showPic: true
+  showLabels: true
   levels:
     0:
       numCats: 2
+      numPics: 2
     1:
       numCats: 2
-      numPics: 2
+      numPics: 3
     2:
-      numPics: 1
+      numCats: 2
+      numPics: 4
     3:
+      numCats: 3
       numPics: 2
     4:
-      numPics: 7
+      numCats: 3
+      numPics: 3
+    5:
+      numCats: 3
+      numPics: 4
+    6:
+      numCats: 2
+      numPics: 3
+      pickRandom: true
+    7:
+      numCats: 3
+      numPics: 3
+      pickRandom: true
+    8:
+      numCats: 3
+      numPics: 4
       pickRandom: true
 gElim:
   friendly: 'Elim!'

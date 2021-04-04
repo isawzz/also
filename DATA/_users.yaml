@@ -137,7 +137,7 @@ test0:
 gul:
   id: gul
   avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gMem, gSwap, gWritePic, gSteps, gCats, gAnagram, gAbacus]
-  lastGame: gSwap
+  lastGame: gCats
   settings:
     # settings common to all games
     samplesPerGame: 25
@@ -158,9 +158,9 @@ gul:
     gAbacus:
       startLevel: 0
     gAnagram:
-      startLevel: 4
+      startLevel: 9
     gCats:
-      startLevel: 0
+      startLevel: 7
       trials: 2
     gElim:
       startLevel: 2

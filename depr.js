@@ -1,3 +1,207 @@
+class GCats_1 {
+	prompt() {
+		let items;
+
+		// pick categories
+		let data = this.keysByCat = genCats(G.numCats);
+		this.keylists = [], this.catsByKey = {};
+		for (const cat in data) {
+			this.keylists.push({ keys: data[cat], cat: cat });
+			for (const k of data[cat]) {
+				this.catsByKey[k] = cat;
+			}
+		}
+		this.cats = Object.keys(this.keysByCat);
+		this.allKeys = Object.keys(this.catsByKey);
+		this.options = {}; _extendOptions(this.options);
+
+		// pick items
+		if (G.pickRandom == false) {
+			// let n = G.numPics;
+			// if (n == 1 || n == 2 || n == 3) console.log('n', n); else n = 4;
+			items = Pictures = getNItemsPerKeylist(G.numPics, this.keylists, this.options);
+		} else {
+			//console.log(this.allKeys);
+			let keys = choose(this.allKeys, G.numPics * G.numCats);
+			items = Pictures = genItemsFromKeys(keys, this.options);
+			items.map(x => x.cat = this.catsByKey[x.key]);
+			//for(let i=0;i<items.length;i++){items[i].cat=keysPlus[i].cat;}
+			//console.log('items', items)
+		}
+		shuffle(items);
+
+		//find longest word in Pictures and also in cats
+		let wLongest = findLongestWord(this.cats.concat(items.map(x => x.label))); wLongest = extendWidth(wLongest);
+		//console.log('the longest word is', wLongest);
+
+		//OIL for category boxes
+		showInstruction('', G.language == 'E' ? 'drag words to categories' : "ordne die texte in kategorien", dTitle, true);
+		mLinebreak(dTable);
+
+		let fz = 24, padding = 4;
+		let wmin = measureWord(wLongest, fz).w;
+		let wWin = window.innerWidth * .75;
+		let hWin = window.innerHeight * .3;
+		//console.log('wLongest',wLongest,'wmin',wmin)
+
+		//show categories:
+		let dArea = mDiv(dTable, { display: 'flex', 'flex-wrap': 'wrap' });//, layout: 'fhcc' });
+		let containers, dWordArea;
+		if (G.showPic) {
+			if (this.cats.includes('music') || !G.showLabels) { this.options.showLabels = false; }
+			let wCont = wWin / G.numCats; //Math.max(150, wmin + 2 * padding);
+			let hCont = hWin;
+			containers = this.containers = createContainers(this.cats, dArea, { w: 'auto', wmin: 150, wmax: 300, hmin: 250, fz: 24, fg: 'contrast' }); //['animals', 'sport', 'transport'], dArea);
+		} else {
+			containers = this.containers = createContainers(this.cats, dArea, { hmin: 250, fg: 'contrast', wmin: Math.max(150, wmin + 2 * padding) }); //['animals', 'sport', 'transport'], dArea);
+		}
+		mLinebreak(dTable);
+
+		//show words:
+		dWordArea = this.dWordArea = mDiv(dTable, { h: 70, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
+		for (const item of items) {
+			let d = mPic(item, dWordArea, { display: 'inline-block' });
+			iAdd(item, { div: d });
+			console.log('d', d)
+		}
+		// if (G.showPic) {
+		// 	let w = this.options.w = window.innerWidth - 100;
+		// 	let h = this.options.h = 'auto';
+		// 	mStyleX(dWordArea, { h: h });
+		// 	this.options.rows = 1;
+		// 	//this.options.outerStyles.padding=12;
+		// 	let rect = myPresent(dWordArea, items, this.options);
+		// 	// items.map(x => mStyleX(iDiv(x), { w: 'auto', padding: 8 }))
+		// 	items.map(x => iStyle(x, { w: 'auto', padding: 8, fzPic:40, fz:20 }));
+		// } else {
+		// 	for (const item of items) { // ['horse', 'soccer', 'bird']) {
+		// 		let d = mText(item.label, dWordArea, { fz: fz, bg: 'orange', fg: 'contrast', rounding: 4, margin: 8, wmin: 70, hpadding: padding });
+		// 		iAdd(item, { div: d });
+		// 	}
+		// }
+
+		enableDD(items, containers, this.dropHandler.bind(this), false);
+
+		mLinebreak(dTable, 50);
+		mButton('Done!', evaluate, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		activateUi();
+		//add a submit button that triggers evaluation
+	}
+}
+
+
+function myPresent(dArea, items, options) {
+	let showLabels = options.showLabels;
+	//console.log(options, items)
+	let w = options.w * valf(options.fw, .9); //window.innerWidth-70;
+	let h = options.h * valf(options.fh, .7); //window.innerHeight-150;
+
+	//console.log('rows are',options.rows)
+
+	let wi, hi, rows, cols;
+	if (isdef(options.rows) || isdef(options.cols)) {
+		[wi, hi, rows, cols] = calcSizeAbWo(items.length, options.rows, options.cols, w, h, options.wimax, options.himax);
+	} else[wi, hi, rows, cols] = calcRowsColsSizeAbWo(items.length, w, h, showLabels, options.wimax, options.himax);
+
+	// let gap = valf(options.gap,Math.min(wi,hi) * .1); wi -= gap; hi -= gap;
+	//console.log(options.gap)
+	let gap = wi * .1; if (cols > 1) wi -= gap; if (rows > 1) hi -= gap;
+	let fzPic = options.fzPic = getStandardFzPic(wi, hi, showLabels);
+	//console.log('fzPic',fzPic,showLabels)
+
+	let fz = getStandardFz(wi, hi, options.showPic, options.showLabels, options.wLongest);
+	// let hText = options.showPic ? hi / 3 : hi;
+	// let fz = options.fz = showLabels ? idealFontSize(options.wLongest, wi, hText) : 0;
+	options.szPic = { w: wi, h: hi };
+	//console.log(items[0]);
+	//console.log('N=' + items.length, 'showLabels', showLabels, showLabels, '\ndims', 'wWin', w, 'hWin', h, '\nwnet', wi, 'hnet', hi, '\nrows,cols', rows, cols, '\nfzPic', fzPic, 'fz', fz);
+	if (nundef(options.ifs)) options.ifs = {};
+	let outerStyles = {
+		w: wi, h: hi, margin: gap / 2, rounding: 6,
+		bg: valf(options.ifs.bg, 'random'), fg: 'contrast', display: 'inline-flex', 'flex-direction': 'column',
+		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
+	};
+	let picStyles = { fz: fzPic };
+	let labelStyles = { fz: fz };
+	for (const item of items) {
+		for (const k in options.ifs) if (isdef(item[k])) outerStyles[k] = item[k];
+		if (isdef(item.textShadowColor)) {
+			let sShade = '0 0 0 ' + item.textShadowColor;
+			if (options.showPic) {
+				picStyles['text-shadow'] = sShade;
+				picStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+			} else {
+				labelStyles['text-shadow'] = sShade;
+				labelStyles.fg = anyColorToStandardString('black', options.contrast); //'#00000080' '#00000030' 
+			}
+		}
+		let dOuter = mCreate('div', outerStyles, item.id);
+		dOuter.onclick = options.handler;
+		picStyles.family = item.info.family;
+		let dLabel, dPic;
+		if (options.showPic) { dPic = mDiv(dOuter, picStyles); dPic.innerHTML = item.info.text; }
+		//console.log('showLabels ',showLabels)
+		//console.log('labelStyles', labelStyles)
+		if (showLabels) dLabel = mText(item.label, dOuter, labelStyles);
+		if (options.showRepeat) addRepeatInfo(dOuter, item.iRepeat, wi);
+		iAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
+	}
+
+	if (isdef(options.numColors) && options.numColors > 1) {
+		mStyleX(dArea, { display: 'inline-grid', gap: gap, 'grid-template-columns': `repeat(${cols},${wi}px)` });
+	}
+	//mStyleX(dArea, { w:w, display: 'inline-grid'});
+	items.map(x => mAppend(dArea, iDiv(x)));
+	//console.log('rows',rows,cols)
+	return getRect(dArea);
+}
+
+
+function trash() {
+
+	let item0 = Pictures[0];
+	let label0 = item0.label;
+	let hLetter = label0[item0.iLetter];
+	// let hLetter = Pictures[0].label[indices[0]];
+	//console.log('hLetter', hLetter);
+	for (let i = 0; i < n - 1; i++) {
+		let item1 = Pictures[i];
+		let item2 = Pictures[i + 1];
+
+		let i1 = item1.iLetter; //indices[i];
+		let i2 = item2.iLetter; //indices[i + 1];
+
+		//console.log('______', i1, i2)
+
+		//item1 must get letter that is currently at position i2 in item2.label
+		let test = item1.testLabel = replaceAt(item1.label, i1, item2.label[i2]);
+		//console.log('test', test);
+	}
+	let item = Pictures[n - 1];
+	item.testLabel = replaceAt(item.label, item.iLetter, hLetter);
+
+
+	//console.log('test', item.testLabel); //false, 'und was jetzt???????????')
+
+	//console.assert(false,'END')
+	for (const p of Pictures) {
+		if (p.testLabel != p.origLabel) {
+			//console.log('fehler:', p.origLabel, p.testLabel);
+			isCorrect = false;
+		}
+	}
+
+	let feedbackList = [];
+	for (let i = 0; i < n; i++) {
+		let item = Pictures[i];
+		let d = item.letters[item.iLetter].div;
+		feedbackList.push(d);
+	}
+	Selected = { piclist: Pictures, feedbackUI: feedbackList, sz: getRect(iDiv(Pictures[0])).h };
+	return isCorrect;
+
+}
+
 class GSwap extends Game {
 	constructor(name) {
 		super(name);
@@ -74,7 +278,7 @@ class GSwap extends Game {
 
 		let style = { margin: 3, fg: 'white', display: 'inline', bg: 'transparent', align: 'center', border: 'transparent', outline: 'none', family: 'Consolas', fz: 80 };
 		for (const item of items) {
-			let d1 = item.container = mDiv(dTable,{hmin:250});
+			let d1 = item.container = mDiv(dTable, { hmin: 250 });
 			let d = createLetterInputs(item.label, d1, style);
 			//let dHint=mText(item.info.subgroup,d1);
 			// let dHint = mPic(item, d1);
@@ -146,7 +350,7 @@ function getGSG(k) {
 }
 
 function genCategories(n) {
-	
+
 	console.log('hallo!!!!!!!!!!!!!!', ByGroupSubgroup)
 	let gsg = ByGroupSubgroup;
 	let groups = Object.keys(gsg);

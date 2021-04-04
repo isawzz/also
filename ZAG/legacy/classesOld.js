@@ -158,25 +158,18 @@ class GAnagram extends Game {
 	startLevel() {
 		G.keys = setKeysG(G, filterWordByLength, 25);
 		if (G.keys.length < 25) { G.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
-		//console.log(G.keys)
+		console.log(G.keys)
 	}
 	prompt() {
-		myShowPics(null, {}, {});
-		if (G.hidden) {
-			let d = iDiv(Pictures[0]);
-			animate(d, 'aniAppearMinute', 100000);
-			//d.style.opacity = 0; TOMain = setTimeout(() => animate(d, 'aniSuperSlowlyAppear', 50000), 20000);
-		}
+		myShowPics(() => fleetingMessage('drag and drop the letters to form the word!'), {}, {});
 		setGoal();
-		//let instr = G.language == 'E' ?'drag letters to form':"forme"
-		showInstruction(G.showWord ? Goal.label : '', G.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
+		showInstruction(Goal.label, G.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
 		mLinebreak(dTable);
 
 		this.inputs = createDropInputs();
-		let x = mLinebreak(dTable, 50);
+		let x = mLinebreak(dTable, 50);//x.style.background='red'
 		this.letters = createDragLetters();
 
-		if (G.hidden) showFleetingMessage('category: ' + Pictures[0].info.subgroup, 5000);
 		activateUi();
 
 	}
@@ -195,6 +188,199 @@ class GAnagram extends Game {
 		return w == word;
 	}
 
+}
+class GCats extends Game {
+	constructor(name) { super(name); }
+	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
+
+	startLevel() {
+		console.log(G);
+		// let n = this.numCats = G.numCats;
+		// if (n == 2 || n == 3) console.log('n', n, 'result', genCats(n)); else n = 4;
+		let data = genCats(G.numCats); //this.numCats); //genCats();
+		let options = this.options = {};
+		this.keysByCat = data;
+		this.catsByKey = {};
+		this.keylists = [];
+		for (const cat in data) {
+			this.keylists.push({ keys: data[cat], cat: cat });
+			for (const k of data[cat]) {
+				this.catsByKey[k] = cat;
+			}
+		}
+		this.cats = Object.keys(this.keysByCat);
+		this.lists = Object.values(this.keysByCat);
+		this.allKeys = Object.keys(this.catsByKey);
+		this.showPics = true;// this.cats.includes('gesture')||this.cats.includes('emotion')||this.cats.includes('music');
+
+		_extendOptions(options);
+	}
+	dropHandler(source, target, isCopy = true) {
+		let dSource = iDiv(source);
+		let dTarget = iDiv(target);
+
+		if (!isCopy) {
+			mAppend(dTarget, dSource);
+		} else {
+			let dNew = mText(dSource.innerHTML, dTarget, { wmin: 100, fz: 20, padding: 4, margin: 4, display: 'inline-block' });
+			addDDSource(dNew, false);
+		}
+
+		//evaluate();
+		//relayout sources in target
+	}
+
+	prompt() {
+
+		//generate words:
+		//console.log('lists', this.keylists);
+		let pickRandom = G.pickRandom; console.log('pickRandom', pickRandom);
+		let items;
+
+
+		if (pickRandom == false) {
+			// let n = G.numPics;
+			// if (n == 1 || n == 2 || n == 3) console.log('n', n); else n = 4;
+			items = Pictures = getNItemsPerKeylist(G.numPics, this.keylists, this.options);
+		} else {
+			console.log(this.allKeys);
+			let keys = choose(this.allKeys, G.numPics);
+			items = Pictures = genItemsFromKeys(keys, this.options);
+			items.map(x => x.cat = this.catsByKey[x.key]);
+			//for(let i=0;i<items.length;i++){items[i].cat=keysPlus[i].cat;}
+			console.log('items', items)
+		}
+		shuffle(items);
+
+		//find longest word in Pictures and also in cats
+		let wLongest = findLongestWord(this.cats.concat(items.map(x => x.label))); wLongest = extendWidth(wLongest);
+		//console.log('the longest word is', wLongest);
+
+		//OIL for category boxes
+		showInstruction('', G.language == 'E' ? 'drag words to categories' : "ordne die texte in kategorien", dTitle, true);
+		mLinebreak(dTable);
+
+		let fz = 24, padding = 4;
+		let wmin = measureWord(wLongest, fz).w;
+		let wWin = window.innerWidth * .75;
+		let hWin = window.innerHeight * .4;
+		//console.log('wLongest',wLongest,'wmin',wmin)
+
+		//show categories:
+		let dArea = mDiv(dTable, { display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
+		let containers, dWordArea;
+		if (this.showPics) {
+			if (this.cats.includes('music')) { this.options.showLabels = false; }
+			let wCont = wWin / G.numCats; //Math.max(150, wmin + 2 * padding);
+			let hCont = hWin;
+			containers = this.containers = createContainers(this.cats, dArea, { fz: 24, fg: 'contrast', w: wCont, h: hCont }); //['animals', 'sport', 'transport'], dArea);
+		} else {
+			containers = this.containers = createContainers(this.cats, dArea, { fg: 'contrast', w: Math.max(150, wmin + 2 * padding) }); //['animals', 'sport', 'transport'], dArea);
+		}
+		mLinebreak(dTable);
+
+		//show words:
+		dWordArea = this.dWordArea = mDiv(dTable, { h: 70, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
+		if (this.showPics) {
+			let w = this.options.w = window.innerWidth - 100;
+			let h = this.options.h = 120;
+			mStyleX(dWordArea, { h: h });
+			this.options.rows = 1;
+			//this.options.outerStyles.padding=12;
+			let rect = myPresent(dWordArea, items, this.options);
+			items.map(x => mStyleX(iDiv(x), { w: 'auto', padding: 8 }))
+		} else {
+			for (const item of items) { // ['horse', 'soccer', 'bird']) {
+
+				let d = mText(item.label, dWordArea, { fz: fz, bg: 'orange', fg: 'contrast', rounding: 4, margin: 8, wmin: 70, hpadding: padding });
+				iAdd(item, { div: d });
+			}
+		}
+
+		enableDD(items, containers, this.dropHandler.bind(this), false);
+
+		mLinebreak(dTable, 50);
+		mButton('Done!', evaluate, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		activateUi();
+		//add a submit button that triggers evaluation
+	}
+	trialPrompt() {
+		sayTryAgain();
+		TOMain = setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))) }, 1200);
+		return 1500;
+	}
+	eval() {
+		this.piclist = Pictures;
+		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => iDiv(x)), sz: getRect(iDiv(this.piclist[0])).h };
+		let isCorrect = true;
+		for (const p of Pictures) {
+			let label = p.label;
+			let d = iDiv(p);
+			let cont = d.parentNode;
+			for (const c of this.containers) {
+				if (iDiv(c) == cont) {
+					p.classified = true;
+					if (p.cat == c.label) p.isCorrect = true;
+					else { p.isCorrect = isCorrect = false; }
+					break;
+				}
+			}
+			if (!p.classified) p.isCorrect = isCorrect = false;
+		}
+		Pictures.map(x => console.log(x.label, x.isCorrect));
+		return isCorrect;
+	}
+	eval_dep1() {
+		//console.log('containers', this.containers);
+		let isCorrect = true;
+		let correctList = [], incorrectList = [];
+		for (const p of Pictures) {
+			//console.log('item', p)
+			//console.log('parent', iDiv(p).parentNode);
+			let cont = iDiv(p).parentNode;
+			p.classified = false;
+			for (const c of this.containers) {
+				if (iDiv(c) == cont) {
+					p.classified = true;
+					if (p.cat == c.label) correctList.push(p);
+					else { isCorrect = false; incorrectList.push(p); }
+					break;
+				}
+			}
+			if (!p.classified) isCorrect = false;
+		}
+		console.log('correct', correctList.map(x => x.label));
+		console.log('incorrect', incorrectList.map(x => x.label));
+		console.log('isCorrect', isCorrect);
+		// console.log('items', Pictures);
+		return isCorrect;
+	}
+	eval_dep() {
+		console.log('containers', this.containers);
+		let isCorrect = true;
+		let correctList = [], incorrectList = [];
+		for (const p of Pictures) {
+			console.log('item', p)
+			console.log('parent', iDiv(p).parentNode);
+			let cont = iDiv(p).parentNode;
+			for (const c of this.containers) {
+				if (iDiv(c) == cont) {
+					if (!belongsToCategory(p, c.label)) {
+						isCorrect = false;
+						incorrectList.push(p);
+						//p is in container c
+						//how can I find out if this picture belongs to this category?
+					} else correctList.push(p);
+					break;
+				}
+			}
+			//break;
+		}
+		console.log('correct', correctList.map(x => x.label));
+		console.log('incorrect', incorrectList.map(x => x.label));
+		console.log('isCorrect', isCorrect);
+		return isCorrect;
+	}
 }
 class GElim extends Game {
 	constructor(name) { super(name); }
@@ -795,219 +981,6 @@ class GSteps extends Game {
 		return isCorrect;
 	}
 }
-class GSwap extends Game {
-	constructor(name) {
-		super(name);
-		if (G.language == 'C') { this.prevLanguage = G.language; G.language = chooseRandom('E', 'D'); }
-		if (nundef(Dictionary)) { Dictionary = { E: {}, S: {}, F: {}, C: {}, D: {} } };
-		for (const k in Syms) {
-			for (const lang of ['E', 'D', 'F', 'C', 'S']) {
-				let w = Syms[k][lang];
-				if (nundef(w)) continue;
-				Dictionary[lang][w.toLowerCase()] = Dictionary[lang][w.toUpperCase()] = k;
-			}
-		}
-		//console.log('dict', Dictionary);
-	}
-	startGame() { G.correctionFunc = showCorrectLabelSwapping; } //G.successFunc = showCorrectLabelSwapping;  }
-	clear() { super.clear(); if (isdef(this.prevLanguage)) G.language = this.prevLanguage; }
-	startLevel() {
-		G.keys = setKeysG(G, filterWordByLength, 25);
-		if (G.keys.length < 25) { G.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
-		G.trials = 4;
-		//console.log('keys', G.keys.length);
-		//console.log('words', G.keys.map(x => Syms[x].E))
-	}
-	dropHandler(source, target, isCopy = false, clearTarget = false) {
-		let prevTarget = source.target;
-		source.target = target;
-		let dSource = iDiv(source);
-		let dTarget = iDiv(target);
-
-		if (clearTarget) {
-			//if this target is empty, remove _
-			let ch = dTarget.children[0];
-			let chSource = firstCond(Pictures, x => iDiv(x) == ch);
-			if (chSource) {
-				if (isdef(prevTarget)) {
-					mAppend(iDiv(prevTarget), ch);
-					chSource.target = prevTarget;
-				} else {
-					mAppend(this.dWordArea, ch);
-					delete chSource.target;
-				}
-			}
-			clearElement(dTarget);
-
-			//find out previous target! (parentNode of dSource in a drop target?)
-		}
-		if (isCopy) {
-			let dNew = mText(dSource.innerHTML, dTarget, { wmin: 100, fz: 20, padding: 4, margin: 4, display: 'inline-block' });
-			addDDSource(dNew, isCopy, clearTarget);
-		} else {
-			mAppend(dTarget, dSource);
-		}
-
-		//evaluate();
-		//relayout sources in target
-	}
-	prompt() {
-		showInstruction('', 'swap letter to form words', dTitle, true);
-		mLinebreak(dTable);
-
-		let fz = 32;
-		let options = _simpleOptions({ w: 200, h: 200, keySet: G.keys, luc: 'u', fz: fz, bg: 'random', fg: 'white', showLabels: true });
-		// console.log(options)
-
-		let n = 2;
-		let items = gatherItems(n, options); // items haben jetzt swaps dictionary
-		//console.log('items', items);
-
-		let style = { margin: 3, fg: 'white', display: 'inline', bg: 'transparent', align: 'center', border: 'transparent', outline: 'none', family: 'Consolas', fz: 80 };
-		for (const item of items) {
-			let d1 = item.container = mDiv(dTable, { hmin: 250 });
-			let d = iLetters(item.label, d1, style); //statt makeItemDiv
-			iAdd(item, { div: d }); //this is the item's standard div now!
-			//console.log('d', d)
-			let letters = item.letters = [];
-			for (let i = 0; i < arrChildren(d).length; i++) {
-				let ch = d.children[i];
-				let l = {
-					itemId: item.id, div: ch, i: i, letter: ch.innerHTML,
-					swapInfo: item.swaps[i],
-					state: 'swapped',
-					isBlinking: false, fg: 'white', bg: 'transparent'
-				};
-				letters.push(l);
-				ch.onclick = () => { startBlinking(l, item.letters, true) };
-			}
-			mStyleX(d, { margin: 35 });
-			delete item.swaps;
-		}
-
-
-		// enableDD(items, containers, this.dropHandler.bind(this), false, true);
-		mLinebreak(dTable, 50);
-		mButton('Done!', evaluate, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
-		activateUi();
-
-	}
-	trialPrompt() {
-		sayTryAgain();
-		showFleetingMessage('Try again!', 500);
-		for (const item of Pictures) {
-			//clear hint area
-			let d1 = item.container;
-			//console.log('d1',d1);
-			if (isdef(item.dHint)) mRemove(item.dHint);
-			//console.log(G);
-			if (G.trialNumber < 3) {
-				//console.log()
-				let hint = G.trialNumber == 1 ? item.info.group : item.info.subgroup;
-				let dHint = item.dHint = mText('(' + hint + ')', d1);
-			} else {
-				let dHint = miPic(item, d1);
-			}
-		}
-
-
-		TOMain = setTimeout(() => {
-			for (const p of Pictures) {
-				for (const l of p.letters) {
-					l.state = 'swapped';
-					if (isdef(l.swapInfo)) {
-						//console.log('need to correct:', l);
-						iDiv(l).innerHTML = p.label[l.i];
-					}
-				}
-			}
-		}, 1200);
-		return 3500;
-	}
-	eval() {
-		let n = Pictures.length;
-		let blinkInfo = this.blinkInfo = [];//Pictures.map(x => {let l=getBlinkingLetter(x); if (isdef(l)) return l.i; else return null;});
-
-		for (let i = 0; i < n; i++) {
-			let p = Pictures[i];
-			let blinking = getBlinkingLetter(p);
-			blinkInfo.push({ i: i, blinking: blinking });
-		}
-		//console.log('blinking', blinkInfo.map(x => x.blinking));
-
-		for (let i = 0; i < n; i++) {
-			let l = blinkInfo[i].blinking;
-			if (!l) continue;
-			//let p = Pictures[i];
-			stopBlinking(l);
-			//console.log('...stopped:',l);
-			//console.log('indices',indices);
-		}
-
-		//blinkinfo tells me which letters in each item have to be exchanged to build temp labels!
-		//if any item does NOT have a blinking, user did not finish task!
-
-		for (const blinki of blinkInfo) {
-			// console.log(blinki)
-			if (!blinki.blinking) {
-				showFleetingMessage('you did not finish the task!', 0, { fz: 18 + 6 * (G.trialNumber + 1) });
-				return false;
-			}
-		}
-
-		let isCorrect = true;
-
-		//swap letters first
-		for (let i = 0; i < n; i++) {
-			let b1 = blinkInfo[i].blinking;
-			let b2 = blinkInfo[(i + 1) % blinkInfo.length].blinking;
-
-			//console.log(b1, b1.itemId, Items[b1.itemId])
-
-			let item = Items[b1.itemId];
-			let item2 = Items[b2.itemId];
-
-			//item needs to get blinking letter from item2 at place b1.i
-			//will be a temp swap
-			//if there is no swap info, the currently blinking letter IS the correct info!
-			//console.log('item', item)
-			let l = item.letters[b1.i];
-			let sw = l.swapInfo;
-			if (nundef(sw)) {
-				sw = l.swapInfo = { correct: { itemId: item.id, index: b1.i, l: b1.letter } };
-			}
-			sw.temp = { itemId: item2.id, index: b2.i, l: b2.letter };
-			item.testLabel = replaceAt(item.label, b1.i, b2.letter);
-			iDiv(l).innerHTML = b2.letter;
-			l.state = 'temp';
-
-		}
-
-		//replacements sind gemacht
-		for (const p of Pictures) {
-			if (p.testLabel != p.origLabel) {
-				//console.log('ERR', p.testLabel, p.origLabel);
-				isCorrect = false;
-			}
-		}
-
-		let feedbackList = [];
-		for (let i = 0; i < n; i++) {
-			let item = Pictures[i];
-			let d;
-			if (isCorrect) d = iDiv(item.letters[item.iLetter]);
-			else {
-				let iLetter = blinkInfo[i].blinking.i;
-				if (item.iLetter != iLetter) d = iDiv(item.letters[iLetter]);
-			}
-				
-			if (isdef(d)) feedbackList.push(d);
-		}
-		Selected = { piclist: Pictures, feedbackUI: feedbackList, sz: getRect(iDiv(Pictures[0])).h, delay: 800 };
-		return isCorrect;
-	}
-}
-
 class GTouchColors extends Game {
 	constructor(name) { super(name); }
 	startLevel() {
@@ -1303,5 +1276,4 @@ class GStory extends Game {
 		activateUi();
 	}
 }
-
 
