@@ -1,3 +1,20 @@
+function showCorrectPictureLabels(sayit = true) {
+	return 1000;
+	for (const p of Pictures) { replacePicAndLabel(p, p.key); }
+	Goal = { pics: Pictures };
+
+	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
+	let div = Selected.feedbackUI;
+	mClass(div, anim);
+
+	if (!sayit || !G.spokenFeedback) G.spokenFeedback ? 3000 : 300;
+
+	let correctionPhrase = isdef(Goal.correctionPhrase) ? Goal.correctionPhrase : Goal.label;
+	sayRandomVoice(correctionPhrase);
+	return G.spokenFeedback ? 3000 : 300;
+}
+
+
 //GCats final mit old code!!!
 class GCats extends Game {
 	constructor(name) { super(name); }

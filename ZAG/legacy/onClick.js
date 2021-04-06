@@ -77,14 +77,14 @@ function onClickGo(ev) {
 	} else {
 		//console.log(ev)
 		let item = isdef(ev)?evToItemC(ev):null;
-		let gKey = nundef(ev) ? SelectedMenuKey : isString(ev) ? ev : item.o.id; // divKeyFromEv(ev);
+		let gKey = nundef(ev) ? SelectedMenuKey : isString(ev) ? ev : item.id; // divKeyFromEv(ev);
 
 		//console.log('==>gKey', gKey, SelectedMenuKey);
 
 		if (gKey != SelectedMenuKey) {
-			if (isdef(SelectedMenuKey)) toggleItemSelection(SelectedMenuItem);
+			if (isdef(SelectedMenuKey)) toggleItemSelection(Items[SelectedMenuKey]);
 			SelectedMenuKey = gKey;
-			SelectedMenuItem =  firstCond(MenuItems, x => x.o.id == SelectedMenuKey);
+			SelectedMenuItem =  Items[SelectedMenuKey]; //firstCond(MenuItems, x => x.o.id == SelectedMenuKey);
 			//console.log('ONCLICK:',MenuItems,gKey,MenuItems[gKey])
 			toggleItemSelection(SelectedMenuItem);
 		} else {

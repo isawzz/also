@@ -198,7 +198,7 @@ function replacePicAndLabel(item, key, label) {
 }
 function addLabel(item, label) { }
 function removeLabel(item) {
-	//console.log('old item',item);
+	console.log('old item',item);
 	let div = iDiv(item);
 	let newItem = getPic(item.key, item.sz, item.bg);
 	//console.log('newItem',newItem);

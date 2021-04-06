@@ -1,6 +1,9 @@
 function getKeySets() {
 	let ks = localStorage.getItem('KeySets');
-	if (isdef(ks)) return JSON.parse(ks);
+
+	makeCategories();	//console.log('Categories',Categories)
+
+	if (isdef(ks)) { return JSON.parse(ks); }
 
 	//console.log('hallo'); return [];
 	let res = {};
@@ -13,8 +16,6 @@ function getKeySets() {
 		}
 	}
 	localStorage.setItem('KeySets', JSON.stringify(res));
-	makeCategories();
-
 	return res;
 
 }
@@ -74,19 +75,19 @@ function makeCategories() {
 }
 
 
-function genCats(n){
+function genCats(n) {
 	//console.log('???????',Daat.incompatibleCats)
-	let di={};
+	let di = {};
 	let cats = Object.keys(Categories);
 	//console.log('cats available:',cats)
-	for(let i=0;i<n;i++){
+	for (let i = 0; i < n; i++) {
 		let cat = chooseRandom(cats);
-		let incompat=Daat.incompatibleCats[cat];
+		let incompat = Daat.incompatibleCats[cat];
 		//console.log('cats',cats,'\ncat',cat,'\nincompat',incompat)
-		cats = arrMinus(cats,incompat);
-		removeInPlace(cats,cat);
+		cats = arrMinus(cats, incompat);
+		removeInPlace(cats, cat);
 		//console.log('cats after minus',cats);
-		di[cat]=Categories[cat];
+		di[cat] = Categories[cat];
 	}
 	return di;
 }

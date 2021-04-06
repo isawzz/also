@@ -1,16 +1,18 @@
 async function _start() {
 
-	// initLive();	
-	//Daat={};
 	initTable(); initSidebar(); initAux(); initScore(); initSymbolTableForGamesAddons(); //creates Daat
-	// addonFeatureInit(); //new API!
-	Speech = new SpeechAPI('E');
-	KeySets = getKeySets();
 	loadUser(); console.assert(isdef(G));
 
+	let wpDict = await route_path_yaml_dict('../assets/math/allWP.yaml');
+
+	//wp00(wpDict);
+	//wp01_alle(wpDict);
+	wp02_checkMinus(wpDict);
 	//TEST let data = genCats();	let sample = new CatsApp(data);	uiActivated = true;	sample.prompt(dTable);
 	//makeCategories(); return; //console.log([3,6,1,2].sort()); return;
-	startUnit();
+	//startUnit();
+	//t00_wpInstantiate();
+	//console.log(math.fraction(1,2));
 }
 function startUnit() {
 	restartTime();
@@ -31,6 +33,11 @@ function initSymbolTableForGamesAddons() {
 	}
 }
 
+async function t00_wpInstantiate() {
+	
+	let p = firstCond(wp, x => x.index == 1); // chooseRandom(arrTake(wp,24));
+	instantiateWP(p);
+}
 
 
 function iStyle(item,styles){

@@ -136,7 +136,7 @@ test0:
       startLevel: 0
 gul:
   id: gul
-  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gMem, gSwap, gWritePic, gSteps, gCats, gAnagram, gAbacus]
+  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gMem, gSwap, gWritePic, gSteps, gAnagram, gCats, gAbacus]
   lastGame: gAbacus
   settings:
     # settings common to all games

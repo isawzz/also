@@ -23,6 +23,10 @@ function applyColorkey(item) {
 	mStyleX(ui, item.shadeStyles);
 }
 function _extendItemsAndOptions(items, options) {
+	//relevant props are: luc, numRepeat, colorKeys, ifs + item.label
+	//ifs:
+	// => alle ifs props werden in items copiert vordem items mit numRepeat und colorKeys expanded werden!
+	// => ifs kann bg, fg, ... auch als func(index,item,options,items) (index,items sind input param)
 	options.longestLabel = findLongestWord(items.map(x => x.label));
 	options.wLongest = extendWidth(options.longestLabel);
 
@@ -81,9 +85,6 @@ function genItemsFromObjects(list, keyProp, labelProp, options) {
 	//console.log('list',list)
 	let keys = [];
 	for (const l of list) keys.push(l[keyProp]);
-	//console.log(keys);
-	//console.log(keyProp,list)
-	//for(const k of keys) {console.log(k);console.log(Syms[k]);}
 	let items = list.map(x => infoToItem(Syms[x[keyProp]]));
 	let i = 0, luc = options.luc;
 	for (const item of items) {
