@@ -1,7 +1,7 @@
 nil:
   id: nil
-  avGames: [gStory, gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gStory
+  avGames: [gRiddle, gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
+  lastGame: gRiddle
   settings:
     # settings common to all games
     samplesPerGame: 20
@@ -136,8 +136,8 @@ test0:
       startLevel: 0
 gul:
   id: gul
-  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gMem, gSwap, gWritePic, gSteps, gAnagram, gCats, gAbacus]
-  lastGame: gAbacus
+  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gMem, gSwap, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  lastGame: gRiddle
   settings:
     # settings common to all games
     samplesPerGame: 25
@@ -184,7 +184,7 @@ gul:
       startLevel: 0
     gSteps:
       startLevel: 2
-    gStory:
+    gRiddle:
       startLevel: 0
     gSwap:
       startLevel: 3

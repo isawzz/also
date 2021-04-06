@@ -4,7 +4,7 @@ function createMenuUi(dParent) {
 	mCenterFlex(dParent);
 	mAppend(dParent, createElementFromHTML(`<h1>Choose Game:</h1>`));
 	mLinebreak(dParent);
-	let dMenuItems = mDiv(dParent, { w: 800, h: 500 });
+	let dMenuItems = mDiv(dParent, { w: 700, h: 600 });
 	// mCenterFlex(dMenuItems);
 
 	let games = jsCopy(U.avGames); if (!navigator.onLine) { removeInPlace(games, 'gSayPic'); }

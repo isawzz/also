@@ -12,7 +12,7 @@ const CLEAR_LOCAL_STORAGE = BROADCAST_SETTINGS;
 var PROD_START = !BROADCAST_SETTINGS;
 //#endregion
 
-var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup, Dictionary; //, CatSets, SymbolDict, SInfo;
+var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup, Dictionary, WordP; //, CatSets, SymbolDict, SInfo;
 var DB;
 
 var U;

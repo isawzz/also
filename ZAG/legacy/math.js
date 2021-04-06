@@ -1,8 +1,10 @@
+function getOperand(type) { let x = OPS[type]; return randomNumber(Math.max(2, x.min), x.max); }
+function getRandomWP(min = 1, max = 100) { return jsCopy(WordP[randomNumber(min - 1, max - 1)]); }// chooseRandom(WordP.slice(min,max));}
 function instantiateNames(wp) {
 	let text = wp.text;
 	let parts = text.split('@P');
 	//console.log('parts', parts);
-	let diNames = {};
+	let diNames = wp.diNames = {};
 	let tnew = '';
 	let allNames = jsCopy(arrPlus(GirlNames, BoyNames));
 	let gNames = jsCopy(GirlNames);
@@ -11,7 +13,12 @@ function instantiateNames(wp) {
 	if (!startsWith(text, '@P')) { tnew += parts[0]; parts = parts.slice(1); }
 	for (const part of parts) {
 		let textPart = stringAfter(part, ' ');
-		let key = part.substring(1, 2);
+
+		let hasDot = part[2]=='.';
+
+		//console.log('==>',part)
+		let key = part.substring(0, 2);
+
 		//console.log('key', key);
 
 		if (['G', 'B', 'P'].includes(part[0])) {
@@ -25,40 +32,47 @@ function instantiateNames(wp) {
 				tnew += ' ' + diNames[key];
 			}
 		}
-		tnew += ' ' + textPart.trim();
+		tnew += (hasDot?'. ':' ') + textPart.trim();
 	}
 	wp.text = tnew.trim();
+
+	if (wp.sol[0] == 'p') {
+		//console.log('diNames',diNames,'\nsol',wp.sol);
+		
+		let k=wp.sol.trim().substring(4);
+		//console.log('key',k)
+		wp.result = { number: 0, text: diNames[k] }; return true;
+	} else { return false; }
 }
 
-function replaceSol(sol,diop){
-
-}
-
-function instantiateNumbers(wp) {
-
-	let text = wp.text;
-
-	
-	let diop = {};
-	//let result=replaceSol()
-
+function replaceSol(sol, diop) {
 	//sol = R*N2=N1
-	let sol = wp.sol;
 	let rhs = stringBefore(sol, '=');
+	//console.log('rhs', rhs)
+
 	let type = rhs.includes('*') ? rhs.includes('R') ? 'div' : 'mult' : rhs.includes('R') ? 'minus' : 'plus';
 	//replace R and Nx in rhs by operands
 	let i = 0;
 	while (i < rhs.length) {
 		if (rhs[i] == 'R') { diop.R = getOperand(type); i += 1; }
+		else if (rhs[i] == 'r') { if (nundef(diop.r)) diop.r = getOperand(type); i += 1; } //zwischenergebnis
 		else if (rhs[i] == 'N') {
 			i += 1;
 			let inum = Number(rhs[i]);
 			let k = 'N' + inum;
-			diop[k] = getOperand(type);
+			if (nundef(diop[k])) diop[k] = getOperand(type);
 			i += 1;
+		} else if (rhs[i] == 'D') {
+			i += 1;
+			let inum = Number(rhs[i]);
+			let k = 'D' + inum;
+			if (nundef(diop[k])) diop[k] = randomNumber(2, 9); //getOperand(type);
+			i += 1;
+
 		} else i += 1;
 	}
 
+	//console.log('diop after capital replacement', diop)
 	//geh nochmal durch und diesmal replace nx by some number < Nx
 	//fuer div mit rest: R*N2+n2=N1
 	i = 0;
@@ -66,11 +80,12 @@ function instantiateNumbers(wp) {
 		if (rhs[i] == 'n') {
 			i += 1;
 			let inum = Number(rhs[i]);
-			let k='n'+inum;
+			let k = 'n' + inum;
 			let kN = 'N' + inum;
-			let x=diop[kN];
+			let x = diop[kN];
+			// if (x<=2) diop[kN]+=1;
 			//console.log('number exists',x);
-			diop[k]=randomNumber(1,x-1);
+			if (nundef(diop[k])) diop[k] = randomNumber(2, x - 1);
 			i += 1;
 		} else i += 1;
 	}
@@ -86,11 +101,31 @@ function instantiateNumbers(wp) {
 	//console.log('result',result);
 
 	//now, assign result to lhs
-	let lhs = stringAfter(sol, '=');
+	let lhs = stringAfter(sol, '=').trim();
+	if (isEmpty(lhs)) lhs = 'R';
 
 	//if lhs contains more than 1 all but the last one have to be replaced by 
 	diop[lhs] = result;
 
+	return [result, eq];
+}
+
+function instantiateNumbers(wp) {
+
+	let text = wp.text;
+
+	if (wp.sol[0] == 's') { wp.result = { number: 0, text: wp.sol.substring(1) }; return [{}, '']; }
+
+	let diop = wp.diop = {}, res, result = [], eq;
+	let solist = wp.sol.split('=>');
+	//console.log(wp.sol);
+
+	for (const sol of solist) {
+		//console.log(sol);
+		[res, eq] = replaceSol(sol, diop);
+		result.push(res);
+	}
+	result = arrLast(result).res;
 	//console.log('_______diop', diop);
 
 	//now replace each key in text by diop[key] and sett wp.result to diop.R
@@ -101,7 +136,7 @@ function instantiateNumbers(wp) {
 		text = text.replace('@' + k, diop[k]);
 	}
 	wp.text = text;
-	return [diop,eq];
+	return [diop, eq];
 }
 
 
@@ -114,10 +149,6 @@ function instantiateNumbers(wp) {
 
 
 
-function getOperand(type) {
-	let x = OPS[type];
-	return randomNumber(x.min, x.max);
-}
 function all2DigitFractionsExpanded() {
 	let f = all2DigitFractions();
 	let res = [];
@@ -295,3 +326,72 @@ function evalWP(wp) {
 }
 function getTextForFraction(num, denom) { return '&frac' + num + denom; }
 
+function instantiateNumbers_dep(wp) {
+
+	let text = wp.text;
+
+
+	let diop = {};
+	//let result=replaceSol()
+
+	//sol = R*N2=N1
+	let sol = wp.sol;
+	let rhs = stringBefore(sol, '=');
+	let type = rhs.includes('*') ? rhs.includes('R') ? 'div' : 'mult' : rhs.includes('R') ? 'minus' : 'plus';
+	//replace R and Nx in rhs by operands
+	let i = 0;
+	while (i < rhs.length) {
+		if (rhs[i] == 'R') { diop.R = getOperand(type); i += 1; }
+		else if (rhs[i] == 'N') {
+			i += 1;
+			let inum = Number(rhs[i]);
+			let k = 'N' + inum;
+			diop[k] = getOperand(type);
+			i += 1;
+		} else i += 1;
+	}
+
+	//geh nochmal durch und diesmal replace nx by some number < Nx
+	//fuer div mit rest: R*N2+n2=N1
+	i = 0;
+	while (i < rhs.length) {
+		if (rhs[i] == 'n') {
+			i += 1;
+			let inum = Number(rhs[i]);
+			let k = 'n' + inum;
+			let kN = 'N' + inum;
+			let x = diop[kN];
+			//console.log('number exists',x);
+			diop[k] = randomNumber(1, x - 1);
+			i += 1;
+		} else i += 1;
+	}
+
+	//replace in sol each rhs by its operand, the eval rhs
+	let eq = rhs;
+	for (const k in diop) {
+		eq = eq.replace(k, diop[k]);
+	}
+	//console.log('diop',diop);
+	//console.log('eq',eq);
+	let result = eval(eq);
+	//console.log('result',result);
+
+	//now, assign result to lhs
+	let lhs = stringAfter(sol, '=');
+
+	//if lhs contains more than 1 all but the last one have to be replaced by 
+	diop[lhs] = result;
+
+	//console.log('_______diop', diop);
+
+	//now replace each key in text by diop[key] and sett wp.result to diop.R
+	wp.result = { number: isdef(diop.R) ? diop.R : result };
+	wp.result.text = '' + wp.result.number;
+	for (const k in diop) {
+		if (k == 'R') continue;
+		text = text.replace('@' + k, diop[k]);
+	}
+	wp.text = text;
+	return [diop, eq];
+}

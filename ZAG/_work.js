@@ -1,6 +1,4 @@
-var WordP;
-function wp00(wpDict) {
-	WordP = wpDict;
+function wp00() {
 
 	let wp = getRandomWP(1, 5);
 	console.log('wp', wp);
@@ -14,9 +12,7 @@ function wp00(wpDict) {
 	console.log(wp.text);
 	console.log('ergebnis:', wp.result);
 }
-function wp01_alle(wpDict) {
-	WordP = wpDict;
-
+function wp01_alle() {
 	for (const wp of WordP) {
 		instantiateNames(wp);
 		console.log('______________',wp.index);//,'\n',wp.text)
@@ -27,11 +23,9 @@ function wp01_alle(wpDict) {
 	}
 	console.log(WordP)
 }
-function wp02_checkMinus(wpDict) {
-	WordP = wpDict;
-
+function wp02_checkMinus() {
 	let results=[];
-	for (let i=28;i<56;i++) {
+	for (let i=34;i<56;i++) {
 
 		let wp=jsCopy(WordP[i]);
 
@@ -47,11 +41,10 @@ function wp02_checkMinus(wpDict) {
 		//console.assert(wp.result.number>0,'!!!!!!!!!!!!!!!NEG!!!')
 		break;
 	}
-	console.log('result',results.map(x=>x.number))
+	console.log('result',results.map(x=>''+x.number+' text:'+x.text))
 	//console.log(WordP)
 }
 
-function getRandomWP(min = 1, max = 100) { return WordP[randomNumber(min - 1, max - 1)]; }// chooseRandom(WordP.slice(min,max));}
 
 
 

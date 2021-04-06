@@ -46,7 +46,7 @@ class GAbacus extends Game {
 	prompt() {
 		mLinebreak(dTable, 2);
 
-		showHiddenThumbsUpDown({ sz: 110 });
+		showHiddenThumbsUpDown(110);
 		mLinebreak(dTable);
 
 		G.seq = makeExpSequence();
@@ -1266,7 +1266,7 @@ class GMissingNumber extends Game {
 	prompt() {
 		mLinebreak(dTable, 12);
 
-		showHiddenThumbsUpDown({ sz: 140 });
+		showHiddenThumbsUpDown(110);
 		mLinebreak(dTable);
 
 		G.step = chooseRandom(G.steps);
@@ -1405,16 +1405,4 @@ class GPasscode extends Game {
 	}
 }
 //TODO:
-class GStory extends Game {
-	constructor(name) { super(name); }
-	prompt() {
-		let showLabels = G.showLabels == true && G.labels == true;
-		//console.log(G.showLabels, G.labels, showLabels)
-		myShowPics(evaluate, {}, { showLabels: showLabels });
-		setGoal();
-		showInstruction(Goal.label, 'click', dTitle, true);
-		activateUi();
-	}
-}
-
 

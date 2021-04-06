@@ -615,11 +615,12 @@ gPasscode:
     5: 
       passcodeLength: 2
       numPics: 15
-gStory:
-  friendly: 'Story'
+gRiddle:
+  friendly: 'Riddle'
   logo: 'blue book'
   color: seagreen
   type: solitaire
+  maxIndex: 10
   numMissing: 1
   minPlus: 0
   maxPlus: 10
@@ -636,46 +637,21 @@ gStory:
   ops: [plus,minus,mult]
   levels:
     0:
-      ops: [plus,minus,mult]
+      maxIndex: 10
     1:
+      maxIndex: 20
       minNum: 2
       maxNum: 5
       minFactor: 2
       maxFactor: 10
       ops: [mult]
     2:
+      maxIndex: 30
       minNum: 4
       maxNum: 10
       minFactor: 4
       maxFactor: 10
       ops: [mult]
-    3:
-      minNum: 20
-      maxNum: 99
-      maxFactor: 10
-      ops: [plus,minus]
-    4:
-      minNum: 5
-      maxNum: 10
-      ops: [mult]
-    5:
-      minNum: 50
-      maxNum: 100
-      minFactor: 1
-      maxFactor: 10
-      ops: [minus]
-    6:
-      minNum: 50
-      maxNum: 200
-      minFactor: 4
-      maxFactor: 20
-      ops: [minus,plus]
-    7:
-      minNum: 0
-      maxNum: 100
-      minFactor: 2
-      maxFactor: 10
-      ops: [plus,minus,mult]
 gGuess:
   friendly: 'Guess'
   logo: 'input latin letters'

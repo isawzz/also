@@ -39,6 +39,8 @@ async function _loader() {
 	symbolDict = Syms = await localOrRoute('syms', '../assets/allSyms.yaml');
 	SymKeys = Object.keys(Syms);
 	ByGroupSubgroup = await localOrRoute('gsg', '../assets/symGSG.yaml');
+	WordP = await route_path_yaml_dict('../assets/math/allWP.yaml');
+
 	//await addGroupInfo();
 
 	//dbInit:

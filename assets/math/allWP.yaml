@@ -79,7 +79,7 @@
 - index: 13
   title: 'Subtracting to 1,000'
   text: >-
-    @PB1 has a big ant farm. He decided to sell some of his ants. He started
+    @PB1 has an ant farm. He decided to sell some of his ants. He started
     with @N1 ants. He sold @N2. How many ants does he have now?
   sol: R+N2=N1
 - index: 14
@@ -149,32 +149,35 @@
     many rides can you go on?
   sol: R*N2=N1
 - index: 24
+  level: 2
   title: Dividing Numbers Ending with 0
   text: >-
     The school has $@N1 to buy new computer equipment. If each piece of
     equipment costs $@N2, how many pieces can the school buy in total?
   sol: R*N2+n2=N1
-# ************ HERE *******************
 - index: 25
-  title: Dividing 3 Integers
+  title: Dividing 2 Integers
   text: >-
     @PP1 buys @N1 packs of tennis balls for $@N2 in total. How much does 1 pack 
     of tennis balls cost? 
   sol: R*N1=N2
 - index: 26
-  title: Dividing 3 Integers
+  title: Irrelevant information
+  level: 2
   text: >-
     @PP1 buys @N1 packs of tennis balls for $@N2 in total. All together, there
     are @N3 tennis balls. How much does 1 tennis ball cost?
-  sol: N3*N1*R=N2
+  #2 packs for $12, each pack has 3 balls, total is 6 balls => 1 ball costs r=12/6 but 6 has to be multiple of 2!
+  sol: N4*N1=N3 => R*N3=N2
 - index: 27
   title: Mixing Addition and Subtraction
   text: >-
-    There are @N1 books in a library. On Monday, @n1 books are taken out. On
-    Tuesday, @N2 books are brought back. How many books are there now?
-  sol: N1-n1+N2
+    There are @N1 books in a library. On Monday, @N2 books are taken out. On
+    Tuesday, @N3 books are brought back. How many books are there now?
+  sol: N3+N4=N2 => N2+N5=N1 => N1-N2+N3
 - index: 28
   title: Mixing Multiplication and Division
+  level: 3
   text: >-
     There is a group of @N1 people who are ordering pizza. If each person gets
     @N2 slices and each pizza has @N3 slices, how many pizzas should they
@@ -182,47 +185,51 @@
   sol: Math.ceil(N1*N2/N3)
 - index: 29
   title: 'Mixing Multiplication, Addition and Subtraction'
+  level: 2
   text: >-
-    Lana has @N1 bags with @N2 marbles in each bag. Markus has @N3 bags with
-    @N4 marbles in each bag. How many more marbles does Markus have?
-  sol: [R+N1*N2=A,N3*N4=A]
+    @PG1 has @n3 bags with @n4 marbles in each bag. @PP2 has @N3 bags with
+    @N4 marbles in each bag. How many more marbles does @PP2 have?
+  sol: N3*N4=N5 => n3*n4=N6 => N5-N6
 - index: 30
   title: 'Mixing Division, Addition and Subtraction'
-  sol: null
+  level: 3
   text: >-
-    Lana has @N1 bags with the same amount of marbles in them, totaling @N2
-    marbles. Markus has @N3 bags with the same amount of marbles in them,
-    totaling @N4 marbles. How many more marbles does Markus have in each bag?
+    @PP1 has @n3 bags with the same amount of marbles in them, totaling @N6
+    marbles. @PP2 has @N3 bags with the same amount of marbles in them,
+    totaling @N5 marbles. How many more marbles does @PP2 have in each bag?
+  sol: N3*N4=N5 => n3*n4=N6 => N4-n4
 - index: 31
   title: Counting to Preview Multiplication
-  sol: null
   text: >-
     There are @N1 chalkboards in your classroom. If each chalkboard needs @N2
     pieces of chalk, how many pieces do you need in total?
+  sol: N1*N2
 - index: 32
+  level: 3
   title: Counting to Preview Division
-  sol: null
   text: >-
-    There are @N1 chalkboards in your classroom. Each chalkboard has @N2
+    There are @n2 chalkboards in your classroom. Each chalkboard has @N2
     pieces of chalk. This means there are @N3 pieces of chalk in total. If you
-    take @N4 piece of chalk away from each chalkboard, how many will there be
+    take @D4 piece of chalk away from each chalkboard, how many will there be
     in total?
+  sol: D4+D5=N2 => n2*N2=N3 => n2*D5
 - index: 33
   title: Composing Numbers
-  sol: null
-  text: 'What number is @N1 tens and @N2 ones?'
+  text: 'What number is @D1 tens and @D2 ones?'
+  sol: D1*10+D2
 - index: 34
   title: Guessing Numbers
-  sol: null
   text: >-
-    I have a @N1 in the tens place. I have an even number in the ones place. I
+    I have a @D1 in the tens place. I have an even number > 0 in the ones place. I
     am lower than @N2. What number am I?
+  sol: D1*10+2+2=N2 => D1*10+2
+# ************ HERE *******************
 - index: 35
   title: Finding the Order
-  sol: null
   text: >-
-    In the hockey game, Mitchell scored more points than @PP1 but fewer points
-    than Auston. Who scored the most points? Who scored the fewest points?
+    In the hockey game, @PP1 scored more points than @PP2 but fewer points
+    than @PP3. Who scored the most points?
+  sol: p@PP3
 - index: 36
   title: Finding Fractions of a Group
   text: >-
@@ -767,3 +774,23 @@
     An Italian restaurant receives a shipment of @N1 pears. If it takes
     @N2 pears to make a dish, how many pears will the restaurant have left
     over after making as many dishes as possible?
+- index: 122
+  title: Dividing 3 Integers
+  text: >-
+    @PP1 buys @N1 packs of tennis balls for $@N2 in total. In each pack, there
+    are @N3 tennis balls. How much does 1 tennis ball cost?
+  #2 packs for $12, each pack has 3 balls, total is 6 balls => 1 ball costs r=12/2*3
+  sol: N1*N3*R=N2
+- index: 123
+  title: Irrelevant information
+  text: >-
+    @PP1 buys @N1 packs of tennis balls for $@N2 in total. All together, there
+    are @N3 tennis balls. How many balls are there per pack?
+  #2 packs for $12, each pack has 3 balls, total is 6 balls => 1 ball costs r=12/2*3
+  sol: R*N1=N3
+- index: 124
+  title: Finding the Order
+  text: >-
+    In the hockey game, @PP1 scored more points than @PP2 but fewer points
+    than @PP3. Who scored the least points?
+  sol: p@PP2

@@ -1,77 +1,132 @@
-function visNumber(n, dParent, color, or = 'h', asNumber = [0]) {
-	//small grid w/ inside n dots in color
+class GRiddle extends Game {
+	constructor(name) { super(name); }
+	startGame() {
+		G.successFunc = successThumbsUpPlus; G.failFunc = failThumbsDownPlus;
+		G.correctionFunc = () => {
+			// 	clearElement(this.dResult);
+			mText('correct answer: ' + Goal.label, this.dResult, { fz: 40, matop: 20 }); 
+			return 10000;
+		};
+	}
 
-	if (!isNumber(n) || asNumber.includes(n)) return zText(''+n, dParent, { fg: 'white', fz: 64 });
-	return _visualizeNumber(n, dParent, color, or);
-}
-function visOperator(s, dParent, styles = { fg: 'white', fz: 64 }) {
-	zText(s, dParent, styles);
-}
-function visOperation(op, a, b, dParent, symResult) {
-	switch (op) {
-		case 'plus':
-		case 'minus': return _visualizeAritOp(op, a, b, dParent,symResult); break;
-		case 'mult': return _visualizeMult(a, b, dParent,symResult); break;
+	prompt() {
+		G.trials = 1;
+		showInstruction('', 'Solve the Riddle:', dTitle, true);
+
+		//console.log('starting story');
+
+		let wp = this.wp = getRandomWP(1, G.maxIndex);
+		let haveResult = wp.isTextResult = instantiateNames(wp);
+		if (!haveResult) instantiateNumbers(wp);
+
+		mLinebreak(dTable, 2);
+
+		showHiddenThumbsUpDown(90);
+		mLinebreak(dTable);
+		let dArea = this.textArea = mDiv(dTable, { w: '70%' });
+		let d = mText(wp.text, dArea, { fz: 28 });
+
+		mLinebreak(dTable, 20);
+		let dResult = this.dResult = mDiv(dTable);
+
+		// this.createInputElements();
+		Goal = { label: wp.result.text };
+		this.createMultipleChoiceElements();
+
+		mLinebreak(dTable);
+
+		// console.log(wp.text); console.log(wp.result);
+
+
+		activateUi();
 	}
-}
-function _visualizeMult(a, b, dParent, symResult) {
-	//opKey is one of the keys in OPS (plus, minus,mult,) or the object OPS[key]
-	op = OPS.mult;
-	//console.log('op', op)
-	let dx = mDiv(dParent); mFlex(dx); mStyleX(dx, { 'align-items': 'center', gap: 16 });
-	visNumber(a, dx, 'blue', 'v');
-	for (let i = 1; i < b; i++) {
-		let d2 = visOperator('+', dx);
-		visNumber(a, dx, 'blue', 'v');
+	createMultipleChoiceElements() {
+		let wp = this.wp;
+
+		let choices = [];
+		if (wp.isTextResult) {
+			choices = Object.values(wp.diNames);
+
+		} else {
+			let res = wp.result.number;
+			choices = [res, res + randomNumber(1, 25), res / randomNumber(2, 5), res * randomNumber(2, 5)];
+		}
+
+		shuffle(choices);
+		let dParent = this.dResult;
+		for (const ch of choices) {
+			let dButton = mButton(ch, (ev) => {
+				//console.log('ev', ev)
+				let id = evToClosestId(ev);
+				let b = mBy(id);
+				let x = b.innerHTML;
+				//console.log('________________', x);
+				let bg = x == Goal.label ? 'green' : 'red';
+				mStyleX(b, { bg: bg })
+				//console.log('clicked', b)
+				//console.log('clicked', ch, Goal.label);
+				Goal.buttonClicked = ev.target;
+				evaluate(ch, Goal.label);
+			}, dParent, { wmin:60, fz: 28, margin: 10, rounding: 4, vpadding: 4, hpadding: 10 }, ['toggleButtonClass']);
+			dButton.id = 'b_' + ch;
+			if (ch.toString() == wp.result.text) Goal.buttonCorrect = dButton;
+		}
+
 	}
-	let d4 = visOperator('=', dx);
-	let result = isdef(symResult)?symResult:op.f(a, b);
-	let d5 = visNumber(result, dx, 'red');
-	return dx;
-}
-function _visualizeAritOp(op, a, b, dParent, symResult) {
-	//opKey is one of the keys in OPS (plus, minus,mult,) or the object OPS[key]
-	op = isString(op) ? OPS[op] : op;
-	//console.log('op', op)
-	let dx = mDiv(dParent); mFlex(dx); mStyleX(dx, { 'align-items': 'center', gap: 16 });
-	let d1 = visNumber(a, dx, 'blue');
-	let d2 = visOperator(op.wr, dx);
-	let d3 = visNumber(b, dx, 'green');
-	let d4 = visOperator('=', dx);
-	// let result = op.f(a, b);
-	let result = isdef(symResult)?symResult:op.f(a, b);
-	let d5 = visNumber(result, dx, 'red');
-	return dx;
+	createInputElements() {
+		this.inputBox = addNthInputElement(this.dResult, 0);
+		this.defaultFocusElement = this.inputBox.id;
+		onclick = () => mBy(this.defaultFocusElement).focus();
+		mBy(this.defaultFocusElement).focus();
+	}
+
+	trialPrompt_dep() {
+		sayTryAgain();
+		let n = G.trialNumber; // == 1 ? 1 : (G.trialNumber + Math.floor((Goal.label.length - G.trialNumber) / 2));
+
+		showFleetingMessage('try again!', 0, {}, true);
+
+		this.inputBox = addNthInputElement(this.dResult, G.trialNumber);
+		this.defaultFocusElement = this.inputBox.id;
+		mLinebreak(dTable);
+
+		return 10;
+	}
+	activate() { }//this.activate_input(); }
+	activate_input() {
+		this.inputBox.onkeyup = ev => {
+			if (!canAct()) return;
+			if (ev.key === "Enter") {
+				ev.cancelBubble = true;
+				evaluate(ev);
+			}
+		};
+		this.inputBox.focus();
+	}
+	eval(answer, reqAnswer) {
+		clearFleetingMessage();
+		Selected = { reqAnswer: reqAnswer, answer: answer, feedbackUI: Goal.button };
+		return (answer == reqAnswer);
+	}
+	eval_dep(ev) {
+		console.log('#', G.trialNumber, 'of', G.trials);
+		clearFleetingMessage();
+		Selected = {};
+		let answer = normalize(this.inputBox.value, 'E');
+		let reqAnswer = normalize(this.wp.result.text, 'E');
+		console.log('answer', answer, 'req', reqAnswer);
+		let isCorrect = answer == reqAnswer;
+		Selected = { reqAnswer: reqAnswer, answer: answer, feedbackUI: isCorrect ? Goal.buttonClicked : Goal.buttonCorrect };
+		return (answer == reqAnswer);
+	}
 
 }
-function _visualizeNumber(n, dParent, color, or = 'h') {
-	let root = Math.sqrt(n);
-	let rows = Math.floor(root);
-	let cols = Math.ceil(root);
-	if (or == 'v') { let h = rows; rows = cols; cols = h; }
-	let dArea = mDiv(dParent, { display: 'inline-grid', 'grid-template-columns': `repeat(${cols}, 1fr)`, bg: 'white', fg: color });
-	for (let i = 0; i < n; i++) {
-		let item = getItem('plain-circle');
-		//console.log('item', item)
-		let d = miPic(item, dArea, { fz: 12, margin: 6 });
-		iAdd(item, { div: d });
-		mAppend(dArea, d);
-	}
-	return dArea;
-}
-function zText(text, dParent, textStyles, hText, vCenter = false) {
-	let tSize = getSizeWithStyles(text, textStyles);
-	let extra = 0, lines = 1;
-	if (isdef(hText)) {
-		extra = hText - tSize.h;
-		if (textStyles.fz) lines = Math.floor(tSize.h / textStyles.fz);
-	}
-	let dText = isdef(text) ? mText(text, dParent, textStyles) : mDiv(dParent);
-	if (extra > 0 && vCenter) {
-		dText.style.paddingTop = (extra / 2) + 'px';
-		dText.style.paddingBottom = (extra / 2) + 'px';
-	}
-	return { text: text, div: dText, extra: extra, lines: lines, h: tSize.h, w: tSize.w, fz: textStyles.fz };
-}
+
+
+
+
+
+
+
 
 

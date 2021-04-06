@@ -173,6 +173,18 @@ div{
 .buttonClass:active {
 	background-color: orange;
 }
+
+.toggleButtonClass{
+  border-radius: 2px;
+	margin: 2px;
+	padding:0px;
+  border: none;
+	/* background-color: #79d7e4; */
+  outline: none;
+}
+.toggleButtonClass:hover {
+	background-color: #79d7e4;
+}
 .buttonPlus{
 	padding: 4px 12px;
 	margin: 0px 14px;

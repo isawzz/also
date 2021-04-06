@@ -1080,6 +1080,48 @@ function slowlyTurnFaceDown(pic, secs = 5, removeBg = false) {
 //#endregion cards: turn face up or down
 
 //#region fail, hint, success
+function successThumbsUpPlus(withComment = true) {
+	if (withComment && G.spokenFeedback) {
+		const comments = (G.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
+		sayRandomVoice(chooseRandom(comments));
+	}
+	//console.log(Pictures)
+	let p1 = firstCond(Pictures, x => x.key == 'thumbs up');
+	iDiv(p1).style.opacity = 1;
+	let p2 = firstCond(Pictures, x => x.key == 'thumbs down');
+	//console.log('p2',p2)
+	iDiv(p2).style.display = 'none';
+
+	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
+		let uilist;
+		if (isdef(Selected.positiveFeedbackUI)) uilist = [Selected.positiveFeedbackUI];
+		else uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
+		let sz = getRect(uilist[0]).h;
+		//console.log('in der succesfunc!!!!!!!', uilist)
+		for (const ui of uilist) {
+			let d = markerSuccess();
+			//console.log('sz',sz,'ui',ui,'\nmarker',d);
+			mpOver(d, ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
+		}
+	}
+}
+function failThumbsDownPlus(withComment = false) {
+	if (withComment && G.spokenFeedback) {
+		const comments = (G.language == 'E' ? ['too bad'] : ["aber geh'"]);
+		sayRandomVoice(chooseRandom(comments));
+	}
+	let p1 = firstCond(Pictures, x => x.key == 'thumbs down');
+	iDiv(p1).style.opacity = 1;
+	let p2 = firstCond(Pictures, x => x.key == 'thumbs up');
+	iDiv(p2).style.display = 'none';
+
+	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
+		let uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
+		let sz = getRect(uilist[0]).h;
+		//console.log('failFunc:',uilist,sz)
+		for (const ui of uilist) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
+	}
+}
 function successThumbsUp(withComment = true) {
 	if (withComment && G.spokenFeedback) {
 		const comments = (G.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
@@ -1273,6 +1315,84 @@ function aniGameOver(msg, silent = false) {
 }
 //#endregion game over
 
+//#region vis
+function visNumber(n, dParent, color, or = 'h', asNumber = [0]) {
+	//small grid w/ inside n dots in color
+
+	if (!isNumber(n) || asNumber.includes(n)) return zText('' + n, dParent, { fg: 'white', fz: 64 });
+	return _visualizeNumber(n, dParent, color, or);
+}
+function visOperator(s, dParent, styles = { fg: 'white', fz: 64 }) {
+	zText(s, dParent, styles);
+}
+function visOperation(op, a, b, dParent, symResult) {
+	switch (op) {
+		case 'plus':
+		case 'minus': return _visualizeAritOp(op, a, b, dParent, symResult); break;
+		case 'mult': return _visualizeMult(a, b, dParent, symResult); break;
+	}
+}
+function _visualizeMult(a, b, dParent, symResult) {
+	//opKey is one of the keys in OPS (plus, minus,mult,) or the object OPS[key]
+	op = OPS.mult;
+	//console.log('op', op)
+	let dx = mDiv(dParent); mFlex(dx); mStyleX(dx, { 'align-items': 'center', gap: 16 });
+	visNumber(a, dx, 'blue', 'v');
+	for (let i = 1; i < b; i++) {
+		let d2 = visOperator('+', dx);
+		visNumber(a, dx, 'blue', 'v');
+	}
+	let d4 = visOperator('=', dx);
+	let result = isdef(symResult) ? symResult : op.f(a, b);
+	let d5 = visNumber(result, dx, 'red');
+	return dx;
+}
+function _visualizeAritOp(op, a, b, dParent, symResult) {
+	//opKey is one of the keys in OPS (plus, minus,mult,) or the object OPS[key]
+	op = isString(op) ? OPS[op] : op;
+	//console.log('op', op)
+	let dx = mDiv(dParent); mFlex(dx); mStyleX(dx, { 'align-items': 'center', gap: 16 });
+	let d1 = visNumber(a, dx, 'blue');
+	let d2 = visOperator(op.wr, dx);
+	let d3 = visNumber(b, dx, 'green');
+	let d4 = visOperator('=', dx);
+	// let result = op.f(a, b);
+	let result = isdef(symResult) ? symResult : op.f(a, b);
+	let d5 = visNumber(result, dx, 'red');
+	return dx;
+
+}
+function _visualizeNumber(n, dParent, color, or = 'h') {
+	let root = Math.sqrt(n);
+	let rows = Math.floor(root);
+	let cols = Math.ceil(root);
+	if (or == 'v') { let h = rows; rows = cols; cols = h; }
+	let dArea = mDiv(dParent, { display: 'inline-grid', 'grid-template-columns': `repeat(${cols}, 1fr)`, bg: 'white', fg: color });
+	for (let i = 0; i < n; i++) {
+		let item = getItem('plain-circle');
+		//console.log('item', item)
+		let d = miPic(item, dArea, { fz: 12, margin: 6 });
+		iAdd(item, { div: d });
+		mAppend(dArea, d);
+	}
+	return dArea;
+}
+function zText(text, dParent, textStyles, hText, vCenter = false) {
+	let tSize = getSizeWithStyles(text, textStyles);
+	let extra = 0, lines = 1;
+	if (isdef(hText)) {
+		extra = hText - tSize.h;
+		if (textStyles.fz) lines = Math.floor(tSize.h / textStyles.fz);
+	}
+	let dText = isdef(text) ? mText(text, dParent, textStyles) : mDiv(dParent);
+	if (extra > 0 && vCenter) {
+		dText.style.paddingTop = (extra / 2) + 'px';
+		dText.style.paddingBottom = (extra / 2) + 'px';
+	}
+	return { text: text, div: dText, extra: extra, lines: lines, h: tSize.h, w: tSize.w, fz: textStyles.fz };
+}
+//#endregion
+
 //#region card face up or down
 function toggleFaceSimple(pic) { if (pic.isFaceUp) turnFaceDownSimple(pic); else turnFaceUpSimple(pic); }
 function turnFaceDownSimple(pic) {
@@ -1308,29 +1428,8 @@ function turnFaceUp(pic, secTransition = 1) {
 	pic.isFaceUp = true;
 }
 function toggleFace(pic) { if (pic.isFaceUp) turnFaceDown(pic); else turnFaceUp(pic); }
+//#endregion
 
-//#region selection of picture
-function toggleSelectionOfPicture(pic, selectedPics) {
-
-	//	console.log(pic)
-
-	let ui = iDiv(pic);
-	//if (pic.isSelected){pic.isSelected=false;mRemoveClass(ui,)}
-	//console.log('pic selected?',pic.isSelected);
-	pic.isSelected = !pic.isSelected;
-	if (pic.isSelected) mClass(ui, 'framedPicture'); else mRemoveClass(ui, 'framedPicture');
-
-	//if piclist is given, add or remove pic according to selection state
-	if (isdef(selectedPics)) {
-		if (pic.isSelected) {
-			console.assert(!selectedPics.includes(pic), 'UNSELECTED PIC IN PICLIST!!!!!!!!!!!!')
-			selectedPics.push(pic);
-		} else {
-			console.assert(selectedPics.includes(pic), 'PIC NOT IN PICLIST BUT HAS BEEN SELECTED!!!!!!!!!!!!')
-			removeInPlace(selectedPics, pic);
-		}
-	}
-}
 
 function addNthInputElement(dParent, n) {
 	mLinebreak(dParent, 10);
@@ -1499,11 +1598,26 @@ function setMultiGoal(n, indices) {
 		for (const i of indices) Goal.pics.push(Pictures[i]);
 	}
 }
-function showHiddenThumbsUpDown(styles) {
-	styles.bg = ['transparent', 'transparent'];
-	myShowPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']);
+function showHiddenThumbsUpDown(sz=100) {
+	let d=mDiv(dTable);
+	mCenterFlex(d);
+	let keys = ['thumbs up', 'thumbs down'];
+	let options = getOptionsMinimalistic(d,null,300,100,{bg:'transparent',display:'inline'});//,{fzPic:50,w:60,h:60});
+	let items = Pictures = genItemsFromKeys(keys,options);
+	for(const item of items){
+		let d1=makeItemDiv(item,options);
+		mAppend(d,d1);
+		mStyleX(d1.firstChild,{fz:sz, mabottom:12});
+		mStyleX(d1,{opacity:0});
+	}
+	//console.log('items',items);
+
+	// styles.bg = ['transparent', 'transparent'];
+	// mLinebreak(dTable);
+	// Pictures = showPictures(dTable, null, styles, { szPic:styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']);
+	// console.log('Pictures',Pictures)
 	// Pictures = showPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']); //, ['bravo!', 'nope']);
-	for (const p of Pictures) { let d = iDiv(p); d.style.padding = d.style.margin = '6px 0px 0px 0px'; d.style.opacity = 0; }
+	//for (const p of Pictures) { let d = iDiv(p); d.style.padding = d.style.margin = '6px 0px 0px 0px'; d.style.opacity = 0; }
 
 }
 function showInstruction(text, cmd, title, isSpoken, spoken, fz) {
@@ -1584,6 +1698,27 @@ function showStats() {
 
 	Score.levelChange = false;
 	Score.gameChange = false;
+}
+function toggleSelectionOfPicture(pic, selectedPics) {
+
+	//	console.log(pic)
+
+	let ui = iDiv(pic);
+	//if (pic.isSelected){pic.isSelected=false;mRemoveClass(ui,)}
+	//console.log('pic selected?',pic.isSelected);
+	pic.isSelected = !pic.isSelected;
+	if (pic.isSelected) mClass(ui, 'framedPicture'); else mRemoveClass(ui, 'framedPicture');
+
+	//if piclist is given, add or remove pic according to selection state
+	if (isdef(selectedPics)) {
+		if (pic.isSelected) {
+			console.assert(!selectedPics.includes(pic), 'UNSELECTED PIC IN PICLIST!!!!!!!!!!!!')
+			selectedPics.push(pic);
+		} else {
+			console.assert(selectedPics.includes(pic), 'PIC NOT IN PICLIST BUT HAS BEEN SELECTED!!!!!!!!!!!!')
+			removeInPlace(selectedPics, pic);
+		}
+	}
 }
 
 

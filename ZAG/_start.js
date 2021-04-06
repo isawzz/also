@@ -3,14 +3,12 @@ async function _start() {
 	initTable(); initSidebar(); initAux(); initScore(); initSymbolTableForGamesAddons(); //creates Daat
 	loadUser(); console.assert(isdef(G));
 
-	let wpDict = await route_path_yaml_dict('../assets/math/allWP.yaml');
-
-	//wp00(wpDict);
-	//wp01_alle(wpDict);
-	wp02_checkMinus(wpDict);
+	//wp00();
+	//wp01_alle();
+	//wp02_checkMinus();
 	//TEST let data = genCats();	let sample = new CatsApp(data);	uiActivated = true;	sample.prompt(dTable);
 	//makeCategories(); return; //console.log([3,6,1,2].sort()); return;
-	//startUnit();
+	startUnit();
 	//t00_wpInstantiate();
 	//console.log(math.fraction(1,2));
 }
@@ -25,7 +23,7 @@ function initSymbolTableForGamesAddons() {
 	//console.log('Daat', Daat);//yes this is an empty dict!
 	if (nundef(Daat)) Daat = {};
 	Daat.GameClasses = {
-		gTouchPic: GTouchPic, gNamit: GNamit, gStory: GStory, gSentence: GSentence, gSwap: GSwap,
+		gTouchPic: GTouchPic, gNamit: GNamit, gRiddle: GRiddle, gSentence: GSentence, gSwap: GSwap,
 		gTouchColors: GTouchColors, gPremem: GPremem, gMem: GMem, gMissingLetter: GMissingLetter,
 		gMissingNumber: GMissingNumber, gWritePic: GWritePic, gSayPic: GSayPic, gSteps: GSteps, gElim: GElim,
 		gAnagram: GAnagram, gAbacus: GAbacus, gPasscode: GPasscode, gCats: GCats,
