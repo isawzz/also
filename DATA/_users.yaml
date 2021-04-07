@@ -140,8 +140,8 @@ test0:
       startLevel: 0
 gul:
   id: gul
-  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gElim
+  avGames: [gSentence, gRiddle, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gElim, gAbacus]
+  lastGame: gTouchPic
   settings:
     # settings common to all games
     samplesPerGame: 25
