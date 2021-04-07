@@ -89,10 +89,10 @@ function evaluate() {
 
 	let nextLevel = scoring(IsAnswerCorrect);
 
-	if (DELAY > 2000) showActiveMessage('click to continue...',gotoNext);
-	TOMain = setTimeout(gotoNext,DELAY);
+	if (DELAY > 2000) showActiveMessage('click to continue...',()=>gotoNext(nextLevel));
+	TOMain = setTimeout(()=>gotoNext(nextLevel),DELAY);
 }
-function gotoNext(){
+function gotoNext(nextLevel){
 
 	onclick=null;
 	removeMarkers();
