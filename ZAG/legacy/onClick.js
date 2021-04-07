@@ -1,4 +1,5 @@
 function clearTimeouts() {
+	onclick=null;
 	clearTimeout(TOMain); //console.log('TOMain cleared')
 	//clearTimeout(TOLong); console.log('TOLong cleared')
 	clearTimeout(TOFleetingMessage);

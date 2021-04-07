@@ -637,21 +637,13 @@ gRiddle:
   ops: [plus,minus,mult]
   levels:
     0:
-      maxIndex: 10
+      maxIndex: 6
     1:
-      maxIndex: 20
-      minNum: 2
-      maxNum: 5
-      minFactor: 2
-      maxFactor: 10
-      ops: [mult]
+      maxIndex: 10
     2:
+      maxIndex: 20
+    3:
       maxIndex: 30
-      minNum: 4
-      maxNum: 10
-      minFactor: 4
-      maxFactor: 10
-      ops: [mult]
 gGuess:
   friendly: 'Guess'
   logo: 'input latin letters'

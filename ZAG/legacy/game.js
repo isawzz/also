@@ -1162,6 +1162,20 @@ function successPictureGoal(withComment = true) {
 		}
 	}
 }
+function mXit(elem,sz=50){
+	if (nundef(sz)) sz = getRect(elem).h;
+	let d=markerFail();
+	mpOver(d, elem, sz/2, 'red', 'openMojiTextBlack');
+	mMoveBy(d,0,-4);
+	return d;
+}
+function mCheckit(elem,sz=50){
+	if (nundef(sz)) sz = getRect(elem).h;
+	let d=markerSuccess();
+	mpOver(d, elem, sz * (4 / 5), 'limegreen', 'segoeBlack');
+	mMoveBy(d,0,-4);
+	return d;
+}
 function failPictureGoal(withComment = false) {
 	//console.log('failPictureGoal')
 	if (withComment && G.spokenFeedback) {
@@ -1269,6 +1283,17 @@ function showFleetingMessage(msg, msDelay, styles = {}, fade = false) {
 		fleetingMessage(msg, styles, fade);
 	}
 }
+function showActiveMessage(msg, handler, styles = {}, fade = false) {
+
+	let defStyles = { fz: 22, rounding: 10, vpadding: 12, hpadding:25, matop: 50 };
+	styles = mergeOverride(defStyles, styles);
+	if (nundef(styles.fg)) styles.fg = colorIdealText(G.color);
+
+	clearFleetingMessage();
+	let d=fleetingMessage(msg, styles, fade);
+	d.onclick=handler;
+	
+}
 function fleetingMessage(msg, styles, fade = false) {
 	let d = mDiv(dLineBottom);
 	if (isString(msg)) {
@@ -1278,6 +1303,7 @@ function fleetingMessage(msg, styles, fade = false) {
 		mAppend(d, msg);
 	}
 	if (fade) TOMain = aniFadeInOut(dLineBottom, 1);
+	return d;
 }
 //#endregion fleetingMessage
 
@@ -1599,7 +1625,7 @@ function setMultiGoal(n, indices) {
 	}
 }
 function showHiddenThumbsUpDown(sz=100) {
-	let d=mDiv(dTable);
+	let d=mDiv(dTable,{hmin:sz*1.5});
 	mCenterFlex(d);
 	let keys = ['thumbs up', 'thumbs down'];
 	let options = getOptionsMinimalistic(d,null,300,100,{bg:'transparent',display:'inline'});//,{fzPic:50,w:60,h:60});
@@ -1610,15 +1636,6 @@ function showHiddenThumbsUpDown(sz=100) {
 		mStyleX(d1.firstChild,{fz:sz, mabottom:12});
 		mStyleX(d1,{opacity:0});
 	}
-	//console.log('items',items);
-
-	// styles.bg = ['transparent', 'transparent'];
-	// mLinebreak(dTable);
-	// Pictures = showPictures(dTable, null, styles, { szPic:styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']);
-	// console.log('Pictures',Pictures)
-	// Pictures = showPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']); //, ['bravo!', 'nope']);
-	//for (const p of Pictures) { let d = iDiv(p); d.style.padding = d.style.margin = '6px 0px 0px 0px'; d.style.opacity = 0; }
-
 }
 function showInstruction(text, cmd, title, isSpoken, spoken, fz) {
 	//console.assert(title.children.length == 0,'TITLE NON_EMPTY IN SHOWINSTRUCTION!!!!!!!!!!!!!!!!!')

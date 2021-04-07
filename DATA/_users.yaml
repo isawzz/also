@@ -1,68 +1,72 @@
 nil:
-  id: nil
-  avGames: [gRiddle, gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
-  lastGame: gRiddle
+  id: gul
+  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  lastGame: gSentence
   settings:
     # settings common to all games
-    samplesPerGame: 20
+    samplesPerGame: 25
     minutesPerUnit: 20
-    incrementLevelOnPositiveStreak: 4
-    decrementLevelOnNegativeStreak: 4
+    incrementLevelOnPositiveStreak: 12
+    decrementLevelOnNegativeStreak: 6
     pictureLabels: toggle #always never toggle (=remove labels after half level)
-    language: D
+    language: E
     vocab: lifePlus
     showTime: true
     spokenFeedback: true
     silentMode: true
     switchGame: true
     #indiv game settings default
-    trials: 1
+    trials: 2
     showHint: true
-    # activity animal body drink emotion food fruit game gesture kitchen object person place plant role sport time transport vegetable nosymemo nosymbols
-    categories: [nosymemo]
-    pressControlToUnfreeze: false
-    reducedAnimations: true
-    levelBadges: false
   games:
-    gNamit:
-      #vocab:
-      startLevel: 4
-    gTouchPic:
-      #vocab:
-      startLevel: 1
-    gPremem:
-      startLevel: 3
-    gTouchColors:
+    gAbacus:
       startLevel: 0
-    gMissingLetter:
-      startLevel: 2
-    gSteps:
-      startLevel: 0
-    gSayPic:
-      startLevel: 0
-    gMem:
-      startLevel: 1
-    gMissingNumber:
-      startLevel: 2
-    gWritePic:
-      startLevel: 2
     gAnagram:
-      startLevel: 0
+      startLevel: 9
+    gCats:
+      startLevel: 7
+      trials: 2
     gElim:
       startLevel: 2
-    gAbacus:
+    gMem:
+      startLevel: 4
+      showHint: false
+      trials: 1
+    gMissingLetter:
+      startLevel: 3
+    gMissingNumber:
+      startLevel: 2
+    gNamit:
       startLevel: 0
     gPasscode:
       startLevel: 0
+    gPremem:
+      startLevel: 5
+    gSayPic:
+      startLevel: 0
+    gSentence:
+      startLevel: 0
+    gSteps:
+      startLevel: 2
+    gRiddle:
+      startLevel: 0
+    gSwap:
+      startLevel: 3
+    gTouchColors:
+      startLevel: 5
+    gTouchPic:
+      startLevel: 0
+    gWritePic:
+      startLevel: 2
   avAddons: [aPasscode, aAddress, aPassword]
   addons:
     aPasscode:
-      open: true
+      open: false
       #tNext: 2000 #next time this should be running is in 20 seconds!
     aAddress:
-      open: true
+      open: false
     aPassword:
-      open: true
+      open: false
 guest0:
   id: guest
   avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
@@ -136,8 +140,8 @@ test0:
       startLevel: 0
 gul:
   id: gul
-  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gMem, gSwap, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gRiddle
+  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  lastGame: gElim
   settings:
     # settings common to all games
     samplesPerGame: 25
@@ -149,18 +153,18 @@ gul:
     vocab: lifePlus
     showTime: true
     spokenFeedback: true
-    silentMode: true
+    silentMode: false
     switchGame: true
     #indiv game settings default
     trials: 2
     showHint: true
   games:
     gAbacus:
-      startLevel: 0
+      startLevel: 2
     gAnagram:
-      startLevel: 9
+      startLevel: 3
     gCats:
-      startLevel: 7
+      startLevel: 2
       trials: 2
     gElim:
       startLevel: 2
@@ -173,25 +177,25 @@ gul:
     gMissingNumber:
       startLevel: 2
     gNamit:
-      startLevel: 0
+      startLevel: 3
     gPasscode:
       startLevel: 0
     gPremem:
-      startLevel: 5
+      startLevel: 6
     gSayPic:
       startLevel: 0
     gSentence:
       startLevel: 0
     gSteps:
-      startLevel: 2
+      startLevel: 3
     gRiddle:
       startLevel: 0
     gSwap:
-      startLevel: 3
+      startLevel: 0
     gTouchColors:
       startLevel: 5
     gTouchPic:
-      startLevel: 0
+      startLevel: 4
     gWritePic:
       startLevel: 2
   avAddons: [aPasscode, aAddress, aPassword]

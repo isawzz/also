@@ -78,20 +78,80 @@ function evaluate() {
 	uiActivated = false; clearTimeouts();
 
 	IsAnswerCorrect = G.instance.eval(...arguments);
-	//console.log('Selected',Selected)
 	if (IsAnswerCorrect === undefined) { promptNextTrial(); return; }
 
 	G.trialNumber += 1;
-	//console.log('answer is', IsAnswerCorrect ? 'correct' : 'WRONG!!!','trial#',G.trialNumber,'/',G.trials)
 	if (!IsAnswerCorrect && G.trialNumber < G.trials) { promptNextTrial(); return; }
 
 	//feedback
-	//console.log(G)
 	if (IsAnswerCorrect) { DELAY = isdef(Selected.delay) ? Selected.delay : G.spokenFeedback ? 1500 : 300; G.successFunc(); }
 	else { DELAY = G.correctionFunc(); G.failFunc(); }
-	setTimeout(removeMarkers, 1500);
 
 	let nextLevel = scoring(IsAnswerCorrect);
+
+	if (DELAY > 2000) showActiveMessage('click to continue...',gotoNext);
+	TOMain = setTimeout(gotoNext,DELAY);
+}
+function gotoNext(){
+
+	onclick=null;
+	removeMarkers();
+	clearTimeouts();
+
+
+
+	//console.log('cscoring result:', Score)
+	if (Score.gameChange) {
+		//updateUserScore();//this saves user data + clears the score.nTotal,nCorrect,nCorrect1!!!!!
+		setNextGame();
+		if (unitTimeUp()) {
+			//setTimeout(() => gameOver('Great job! Time for a break!'), DELAY);
+			gameOver('Great job! Time for a break!');
+		} else {
+			//TOMain = setTimeout(startGame, DELAY);
+			startGame();
+		}
+	} else if (Score.levelChange && nextLevel <= G.maxLevel) {
+		G.level = nextLevel;
+		setBadgeLevel(G.level); //show the last level accomplished in opacity=1!!!
+		//TOMain = setTimeout(startLevel, DELAY); //soll ich da startGame machen???
+		startLevel();
+	} else {
+		//TOMain = setTimeout(startRound, DELAY);
+		startRound();
+	}
+
+}
+
+
+
+
+
+
+
+
+
+function evaluate_dep() {
+	//console.log('evaluate!!!',arguments)
+	if (!canAct()) return;
+	uiActivated = false; clearTimeouts();
+
+	IsAnswerCorrect = G.instance.eval(...arguments);
+	if (IsAnswerCorrect === undefined) { promptNextTrial(); return; }
+
+	G.trialNumber += 1;
+	if (!IsAnswerCorrect && G.trialNumber < G.trials) { promptNextTrial(); return; }
+
+	//feedback
+	if (IsAnswerCorrect) { DELAY = isdef(Selected.delay) ? Selected.delay : G.spokenFeedback ? 1500 : 300; G.successFunc(); }
+	else { DELAY = G.correctionFunc(); G.failFunc(); }
+
+	let nextLevel = scoring(IsAnswerCorrect);
+
+	//TOMain = setTimeout(gotoNext,DELAY);
+
+	setTimeout(removeMarkers, 1500);
+
 	//console.log('cscoring result:', Score)
 	if (Score.gameChange) {
 		//updateUserScore();//this saves user data + clears the score.nTotal,nCorrect,nCorrect1!!!!!
@@ -110,15 +170,6 @@ function evaluate() {
 	}
 
 }
-
-
-
-
-
-
-
-
-
 
 
 

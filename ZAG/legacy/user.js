@@ -133,6 +133,7 @@ function saveUser() {
 function setGame(game, level) {
 	cleanupOldGame();
 	if (isdef(G) && G.id != game) Score.gameChange = true;
+	//console.log(game)
 	Settings = G = jsCopy(DB.games[game]); //jsCopy(DB.games[game]);
 	G.color = getColorDictColor(G.color); //isdef(ColorDict[G.color]) ? ColorDict[G.color].c : G.color;
 	G.id = game;

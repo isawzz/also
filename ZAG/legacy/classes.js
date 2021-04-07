@@ -696,7 +696,11 @@ class GSentence extends Game {
 		this.prevLanguage = G.language;
 		G.language = 'E';
 	}
-	startGame() { G.correctionFunc = showCorrectPictureLabels; G.failFunc = failSomePictures; }
+	startGame() {
+		G.correctionFunc = showCorrectPictureLabels;
+		G.failFunc = failSomePictures;
+		G.successFunc = () => { mCheckit(this.dWordArea, 120); };
+	}
 	clear() { super.clear(); G.language = this.prevLanguage; }
 	startLevel() {
 		G.sentences = EnglishSentences.map(x => x.split(' ')).filter(x => x.length <= G.maxWords);
@@ -755,7 +759,7 @@ class GSentence extends Game {
 
 		let dArea = mDiv(dTable, { h: 150, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
 		mLinebreak(dTable);
-		let dWordArea = this.dWordArea = mDiv(dTable, { h: 70, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
+		let dWordArea = this.dWordArea = mDiv(dTable, { h: 70, wmin: 20, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
 
 		let i = 0;
 		for (const word of words) {
@@ -1185,10 +1189,10 @@ class GWritePic extends Game {
 	startLevel() {
 		G.keys = setKeysG(G, filterWordByLength, 25);
 		if (G.keys.length < 25) { G.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
-		console.log(G.keys)
+		//console.log(G.keys)
 	}
 	prompt() {
-		console.log('showLabels: G', G.showLabels, G.labels);
+		//console.log('showLabels: G', G.showLabels, G.labels);
 		let showLabels = G.showLabels == true && G.labels == true;
 		myShowPics(() => mBy(this.defaultFocusElement).focus(), {}, { showLabels: showLabels });
 		setGoal();

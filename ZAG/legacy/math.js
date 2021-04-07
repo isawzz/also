@@ -1,5 +1,5 @@
 function getOperand(type) { let x = OPS[type]; return randomNumber(Math.max(2, x.min), x.max); }
-function getRandomWP(min = 1, max = 100) { return jsCopy(WordP[randomNumber(min - 1, max - 1)]); }// chooseRandom(WordP.slice(min,max));}
+function getRandomWP(min = 0, max = 35) { return jsCopy(WordP[randomNumber(min, max)]); }// chooseRandom(WordP.slice(min,max));}
 function instantiateNames(wp) {
 	let text = wp.text;
 	let parts = text.split('@P');

@@ -476,13 +476,32 @@ function mLinebreak(dParent, gap) {
 	return d;
 }
 function mpOver(d, dParent, fz, color, picStyle) {
-	//maPicOver
-	//d is pos fixed!!!
-	//console.log('dParent',dParent)
 	let b = getRect(dParent);
-
 	let cx = b.w / 2 + b.x;
 	let cy = b.h / 2 + b.y;
+	d.style.top = picStyle == 'segoeBlack' ? ((cy - fz * 2 / 3) + 'px') : ((cy - fz / 2) + 'px');
+	d.style.left = picStyle == 'segoeBlack' ? ((cx - fz / 3) + 'px') : ((cx - fz * 1.2 / 2) + 'px');
+	d.style.color = color;
+	d.style.fontSize = fz + 'px';
+	d.style.display = 'block';
+	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
+	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
+	return d;
+}
+
+function mpOver_NO(d, dParent, fz, color, picStyle) {
+	//find center on dParent
+	let b = getRect(dParent);
+	let cx = b.w / 2 + b.x;
+	let cy = b.h / 2 + b.y;
+
+	let [w,h]=[fz*1.25,fz*1.12];
+	mStyleX(d,{w:w,h:h,fz:fz,fg:color,family:'emoNoto'});
+
+	//mSize(d,fz*1.25,fz*1.12);
+	mPos(d, cx-w/2, cy-h/2, unit = 'px')
+	return d;
+
 	//console.log('picStyle')
 	d.style.top = picStyle == 'segoeBlack' ? ((cy - fz * 2 / 3) + 'px') : ((cy - fz / 2) + 'px');
 	d.style.left = picStyle == 'segoeBlack' ? ((cx - fz / 3) + 'px') : ((cx - fz * 1.2 / 2) + 'px');
@@ -576,6 +595,28 @@ function setKeysG(g,filterFunc,nmin,key) {
 	return setKeys({ nmin: valf(nmin,25), lang: g.language, key: valf(key,g.vocab), keySets: KeySets, filterFunc: filterFunc, param:g });
 }
 
+function mpOver_dep(d, dParent, fz, color, picStyle) {
+	//maPicOver
+	//d is pos fixed!!!
+	//console.log('dParent',dParent)
+	let b = getRect(dParent);
+
+	let cx = b.w / 2 + b.x;
+	let cy = b.h / 2 + b.y;
+	//console.log('picStyle')
+	d.style.top = picStyle == 'segoeBlack' ? ((cy - fz * 2 / 3) + 'px') : ((cy - fz / 2) + 'px');
+	d.style.left = picStyle == 'segoeBlack' ? ((cx - fz / 3) + 'px') : ((cx - fz * 1.2 / 2) + 'px');
+
+	//console.log(b);
+	// d.style.top = picStyle == 'segoeBlack' ? (b.y + 60 - fz / 2 + 'px') : (b.y + 100 - fz / 2 + 'px');
+	// d.style.left = picStyle == 'segoeBlack' ? (b.x + 120 - fz / 2 + 'px') : (b.x + 100 - fz / 2 + 'px');
+	d.style.color = color;
+	d.style.fontSize = fz + 'px';
+	d.style.display = 'block';
+	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
+	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
+	return d;
+}
 
 
 

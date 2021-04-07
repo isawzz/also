@@ -1,3 +1,26 @@
+function showHiddenThumbsUpDown(sz=100) {
+	let d=mDiv(dTable,{hmin:sz*1.5});
+	mCenterFlex(d);
+	let keys = ['thumbs up', 'thumbs down'];
+	let options = getOptionsMinimalistic(d,null,300,100,{bg:'transparent',display:'inline'});//,{fzPic:50,w:60,h:60});
+	let items = Pictures = genItemsFromKeys(keys,options);
+	for(const item of items){
+		let d1=makeItemDiv(item,options);
+		mAppend(d,d1);
+		mStyleX(d1.firstChild,{fz:sz, mabottom:12});
+		mStyleX(d1,{opacity:0});
+	}
+	//console.log('items',items);
+
+	// styles.bg = ['transparent', 'transparent'];
+	// mLinebreak(dTable);
+	// Pictures = showPictures(dTable, null, styles, { szPic:styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']);
+	// console.log('Pictures',Pictures)
+	// Pictures = showPics(null, styles, { sz: styles.sz, showLabels: false }, ['thumbs up', 'thumbs down']); //, ['bravo!', 'nope']);
+	//for (const p of Pictures) { let d = iDiv(p); d.style.padding = d.style.margin = '6px 0px 0px 0px'; d.style.opacity = 0; }
+
+}
+
 function showCorrectPictureLabels(sayit = true) {
 	return 1000;
 	for (const p of Pictures) { replacePicAndLabel(p, p.key); }

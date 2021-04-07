@@ -116,7 +116,9 @@ function mLine3(dParent, index, ids, styles) {
 	mInsert(dParent, x, index);
 	return [mBy(ids[0]), mBy(ids[1]), mBy(ids[2])];
 }
+function mMoveBy(elem,dx,dy){let rect=getRect(elem);mPos(elem,rect.x+dx,rect.y+dy);}
 function mParent(elem) { return elem.parentNode; }
+function mPos(d, x, y, unit = 'px') { mStyleX(d, { left: x, top: y, position: 'absolute' }, unit); }
 function mRemove(elem) { mDestroy(elem); }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
 function mRemoveStyle(d, styles) { for (const k of styles) d.style[k] = null; }

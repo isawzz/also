@@ -19,7 +19,6 @@ var U;
 var Pictures, Goal, Selected, Score, uiActivated = false, auxOpen, TO, QContextCounter = 0, Live, Daat, G;
 var Settings, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 
-
 var DA, Items;
 
 //#region color constants
@@ -201,7 +200,7 @@ EnglishSentences = [
 	'Anna plays the flute',
 	'Everybody want to be happy',
 	'life is so simple',
-	'sometimes things get complicated',
+	// 'sometimes things get complicated',
 	'it is never too late to learn something new',
 	'life is a dream',
 	'who is the person sitting in the corner',
