@@ -1798,6 +1798,7 @@ function arrMinMax(arr, func) {
 function arrSum(arr, props) {
 	if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0);
 }
+function classByName(name){return eval(name);}
 function copyKeys(ofrom, oto, except = {}, only) {
 	let keys = isdef(only) ? only : Object.keys(ofrom);
 	for (const k of keys) {
@@ -1806,10 +1807,7 @@ function copyKeys(ofrom, oto, except = {}, only) {
 	}
 }
 function copySimpleProps(ofrom, oto = {}) { for (const k in ofrom) { if (isLiteral(k)) oto[k] = ofrom[k]; } return oto; }
-function createClassByName(name, ...a) {
-	var c = eval(name);
-	return new c(...a);
-}
+function createClassByName(name, ...a) {	var c = eval(name);	return new c(...a);}
 function createKeyIndex(di, prop) {
 	let res = {};
 	for (const k in di) {

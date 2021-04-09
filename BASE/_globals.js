@@ -3,7 +3,7 @@ const BROADCAST_SETTINGS = true;
 //#region config
 
 var USE_ADDONS = false;
-const DEFAULTUSERNAME = 'gul'; // nil | gul | felix
+const DEFAULTUSERNAME = 'nil'; // nil | gul | felix
 const OFFLINE = true;
 
 const SERVERURL = OFFLINE ? 'http://localhost:3000/app/' : 'https://speech-games.herokuapp.com/app/';
@@ -16,8 +16,8 @@ var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup, Dictionary, WordP;
 var DB;
 
 var U;
-var Pictures, Goal, Selected, Score, uiActivated = false, auxOpen, TO, QContextCounter = 0, Live, Daat, G;
-var Settings, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
+var Pictures, Goal, Selected, Score, uiActivated = false, auxOpen, TO, TOMain, TOTrial, QContextCounter = 0, Live, Daat, G;
+var SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 
 var DA, Items;
 
@@ -210,13 +210,13 @@ EnglishSentences = [
 
 ];
 
-const GirlNames=['Adrianna','Amanda','Ashley','Cassandra','Charlene','Erica','Gudrun',
-'Jenny','Lana','Lillian','Martha','Maurita','Melissa','Micha','Milda','Natalie','Natasha',
-'Rebecca','Stacy'];
+const GirlNames = ['Adrianna', 'Amanda', 'Ashley', 'Cassandra', 'Charlene', 'Erica', 'Gudrun',
+	'Jenny', 'Lana', 'Lillian', 'Martha', 'Maurita', 'Melissa', 'Micha', 'Milda', 'Natalie', 'Natasha',
+	'Rebecca', 'Stacy'];
 
-const BoyNames=['Aaron','Ariel','Billy','Cayley','Erik',
-'Felix','Gunter','Gilbert','Henry','Jacob','Jaime','John','Leo',
-'Marshall','Matthew','Nathan',
-'Robert','Shad','Thomas','Tim','William'];
+const BoyNames = ['Aaron', 'Ariel', 'Billy', 'Cayley', 'Erik',
+	'Felix', 'Gunter', 'Gilbert', 'Henry', 'Jacob', 'Jaime', 'John', 'Leo',
+	'Marshall', 'Matthew', 'Nathan',
+	'Robert', 'Shad', 'Thomas', 'Tim', 'William'];
 
 

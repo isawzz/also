@@ -71,7 +71,15 @@ function registerAsNewItem(item) { item.id = iRegister(item); return item; }
 function genItems(n, options) { let keys = genKeys(n, options); let items = genItemsFromKeys(keys, options); return items; }
 function genItemsFromKeys(keys, options) {
 	//console.log('keys',keys)
-	let items = keys.map(x => infoToItem(Syms[x]));
+	let items = [];
+	for(const k of keys){
+		console.assert(isdef(Syms[k]),'key not found: '+k);
+		let info = Syms[k];
+		let item = infoToItem(info);
+		items.push(item);
+	}
+	//let items = keys.map(x => infoToItem(Syms[x]));
+	
 	//console.log(options.lang,options.luc)
 	addLabels(items, options.lang, options.luc);
 

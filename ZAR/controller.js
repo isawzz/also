@@ -5,8 +5,6 @@ function startGame(item) {
 	let game = G = createClassByName(item.o.id, item.o);
 	//console.log(G.maxLevel)
 	G.startGame();
-	//
-	//if (isdef(item.info)) game=item.o.key;
 }
 
 

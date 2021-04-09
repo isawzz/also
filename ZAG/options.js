@@ -1,6 +1,6 @@
-function _simpleOptions(options={},defsOuter={}) {
+function _simpleOptions(options = {}, defsOuter = {}) {
 	//_simpleOptions({w:sz,h:sz,fz:sz/4,fzPic:sz/2,bg:levelColors[i], fg: textColor});	
-	options.showPic = valf(options.showPic,isdef(options.fzPic));
+	options.showPic = valf(options.showPic, isdef(options.fzPic));
 	options.showLabels = isdef(options.fz);
 	options.szPic = { w: options.w, h: options.h };
 	//options.ifs = { bg: options.bg, fg: options.fg };
@@ -20,10 +20,10 @@ function _simpleOptions(options={},defsOuter={}) {
 	options.outerStyles = {
 		w: w, h: h, bg: options.bg, fg: options.fg,
 		display: 'inline-flex', 'flex-direction': 'column',
-		'justify-content': 'center', 'align-items': 'center','vertical-align':'top',
+		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
 		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
 	};
-	if (isdef(defsOuter)) addKeys(defsOuter,options.outerStyles);
+	if (isdef(defsOuter)) addKeys(defsOuter, options.outerStyles);
 
 	return options;
 }
@@ -54,7 +54,6 @@ function getOptionsMinimalistic(dParent, handler, w = 0, h = 0, ifs = {}, option
 	return options;
 
 }
-
 function getOptionsNoArea(dParent, handler, w = 0, h = 0, ifs = {}, options = {}) {
 	[w, h] = detectArea(dParent, w, h);
 
@@ -95,9 +94,9 @@ function getOptions1(dParent, handler, g, options, ifs) { // w = .9, h = .6, wIt
 function calcRowsColsSizeAbWo(n, wmax, hmax, showLabels, wimax = 200, himax = 200, fw = 1, fh = 1) {
 	let rows = n > 35 ? 6 : n > 28 ? 5 : n > 24 && !showLabels || n > 21 ? 4 : n > 8 ? 3 : n > 3 ? 2 : 1;
 	let cols = Math.ceil(n / rows);
-	return calcSizeAbWo(n,rows, cols, wmax, hmax, wimax, himax, fw, fh);
+	return calcSizeAbWo(n, rows, cols, wmax, hmax, wimax, himax, fw, fh);
 }
-function calcSizeAbWo(n,rows, cols, wmax, hmax, wimax=200, himax=200, fw=1, fh=1) {
+function calcSizeAbWo(n, rows, cols, wmax, hmax, wimax = 200, himax = 200, fw = 1, fh = 1) {
 	//assumes either cols or rows MUST exist!!!!
 	if (nundef(cols)) cols = Math.ceil(n / rows); else if (nundef(rows)) rows = Math.ceil(n / cols);
 	let wi = wmax * fw / cols;
@@ -106,27 +105,6 @@ function calcSizeAbWo(n,rows, cols, wmax, hmax, wimax=200, himax=200, fw=1, fh=1
 	hi = Math.min(hi, himax);
 	return [wi, hi, rows, cols];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //#region orig simplified calcRowsColsSize
 function calcRowsColsSize(n, wmax, hmax, maxrows, maxcols, minsz = 50, maxsz = 200, wPercent = 1, hPercent = 1) {
@@ -140,9 +118,9 @@ function calcRowsColsSize(n, wmax, hmax, maxrows, maxcols, minsz = 50, maxsz = 2
 
 	//console.log('hpic', hpic, 'wpic', wpic, ww, window.innerWidth, wh, window.innerHeight);
 	sz = Math.min(hpic, wpic);
-	//picsPerLine = dims.cols;
-	sz = Math.max(minsz, Math.min(sz, maxsz)); //Math.max(50, Math.min(sz, 200));
-	return [sz, dims.rows, dims.cols]; //pictureSize, picsPerLine];
+
+	sz = Math.max(minsz, Math.min(sz, maxsz));
+	return [sz, dims.rows, dims.cols];
 }
 
 

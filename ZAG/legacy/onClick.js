@@ -70,7 +70,7 @@ function onClickTemple() {
 function onClickMenuItem(ev){ onClickGo(ev);}
 
 function onClickGo(ev) {
-
+console.log('hallo')
 	if (isVisible('dTemple')) {
 		closeAux();
 		startGame();
@@ -101,6 +101,7 @@ function onClickGo(ev) {
 }
 
 function onClickBadgeX(ev) {
+	console.log('onClickBadgeX')
 	enterInterruptState();
 	let i = 0;
 	if (isNumber(ev)) { i = ev; }
@@ -159,7 +160,7 @@ function onClickTemple() {
 }
 
 function onClickBadgeX(ev) {
-	//console.log('haaaaaaaaaaaaaaaalo',ev)
+	console.log('haaaaaaaaaaaaaaaalo',ev)
 	interrupt(); //enterInterruptState();
 	let item = evToItem(ev);
 	setBadgeLevel(item.index);

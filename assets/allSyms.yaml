@@ -7768,7 +7768,7 @@ glasses:
   group: Objects
   subgroup: clothing
 globe showing americas:
-  key: globe showing Americas
+  key: globe showing americas
   hexcode: 1F30E
   hex: 1F30E
   family: emoNoto
@@ -7789,7 +7789,7 @@ globe showing americas:
   group: Travel & Places
   subgroup: place-map
 globe showing asia-australia:
-  key: globe showing Asia-Australia
+  key: globe showing asia-australia
   hexcode: 1F30F
   hex: 1F30F
   family: emoNoto
@@ -7810,7 +7810,7 @@ globe showing asia-australia:
   group: Travel & Places
   subgroup: place-map
 globe showing europe-africa:
-  key: globe showing Europe-Africa
+  key: globe showing europe-africa
   hexcode: 1F30D
   hex: 1F30D
   family: emoNoto
@@ -14339,7 +14339,7 @@ person frowning:
   group: People & Body
   subgroup: person-gesture
 person gesturing no:
-  key: person gesturing NO
+  key: person gesturing no
   hexcode: 1F645
   hex: 1F645-1F3FC
   family: emoNoto
@@ -22937,7 +22937,7 @@ zzz:
     - object
     - objectPlus
 a button (blood type):
-  key: A button (blood type)
+  key: a button (blood type)
   hexcode: 1F170
   hex: 1F170
   family: emoNoto
@@ -22951,7 +22951,7 @@ a button (blood type):
   cats:
     - huge
 ab button (blood type):
-  key: AB button (blood type)
+  key: ab button (blood type)
   hexcode: 1F18E
   hex: 1F18E
   family: emoNoto
@@ -22968,7 +22968,7 @@ ab button (blood type):
   cats:
     - huge
 atm sign:
-  key: ATM sign
+  key: atm sign
   hexcode: 1F3E7
   hex: 1F3E7
   family: emoNoto
@@ -23017,7 +23017,7 @@ aries:
   cats:
     - huge
 b button (blood type):
-  key: B button (blood type)
+  key: b button (blood type)
   hexcode: 1F171
   hex: 1F171
   family: emoNoto
@@ -23031,7 +23031,7 @@ b button (blood type):
   cats:
     - huge
 back arrow:
-  key: BACK arrow
+  key: back arrow
   hexcode: 1F519
   hex: 1F519
   family: emoNoto
@@ -23048,7 +23048,7 @@ back arrow:
   cats:
     - huge
 cl button:
-  key: CL button
+  key: cl button
   hexcode: 1F191
   hex: 1F191
   family: emoNoto
@@ -23065,7 +23065,7 @@ cl button:
   cats:
     - huge
 cool button:
-  key: COOL button
+  key: cool button
   hexcode: 1F192
   hex: 1F192
   family: emoNoto
@@ -23114,7 +23114,7 @@ capricorn:
   S: capricornio
   C: 摩ri座
 christmas tree:
-  key: Christmas tree
+  key: christmas tree
   hexcode: 1F384
   hex: 1F384
   family: emoNoto
@@ -23135,7 +23135,7 @@ christmas tree:
     - object
     - objectPlus
 end arrow:
-  key: END arrow
+  key: end arrow
   hexcode: 1F51A
   hex: 1F51A
   family: emoNoto
@@ -23152,7 +23152,7 @@ end arrow:
   cats:
     - huge
 free button:
-  key: FREE button
+  key: free button
   hexcode: 1F193
   hex: 1F193
   family: emoNoto
@@ -23184,7 +23184,7 @@ gemini:
   S: geminis
   C: 雙子座
 id button:
-  key: ID button
+  key: id button
   hexcode: 1F194
   hex: 1F194
   family: emoNoto
@@ -23201,7 +23201,7 @@ id button:
   cats:
     - huge
 japanese castle:
-  key: Japanese castle
+  key: japanese castle
   hexcode: 1F3EF
   hex: 1F3EF
   family: emoNoto
@@ -23220,7 +23220,7 @@ japanese castle:
     - all
     - nemo
 japanese symbol for beginner:
-  key: Japanese symbol for beginner
+  key: japanese symbol for beginner
   hexcode: 1F530
   hex: 1F530
   family: emoNoto
@@ -23271,7 +23271,7 @@ libra:
   cats:
     - huge
 new button:
-  key: NEW button
+  key: new button
   hexcode: 1F195
   hex: 1F195
   family: emoNoto
@@ -23288,7 +23288,7 @@ new button:
   cats:
     - huge
 ng button:
-  key: NG button
+  key: ng button
   hexcode: 1F196
   hex: 1F196
   family: emoNoto
@@ -23305,7 +23305,7 @@ ng button:
   cats:
     - huge
 o button (blood type):
-  key: O button (blood type)
+  key: o button (blood type)
   hexcode: 1F17E
   hex: 1F17E
   family: emoNoto
@@ -23316,7 +23316,7 @@ o button (blood type):
   h: 133
   E: o button (blood type)
 ok button:
-  key: OK button
+  key: ok button
   hexcode: 1F197
   hex: 1F197
   family: emoNoto
@@ -23333,7 +23333,7 @@ ok button:
   cats:
     - huge
 ok hand:
-  key: OK hand
+  key: ok hand
   hexcode: 1F44C
   hex: 1F44C-1F3FC
   family: emoNoto
@@ -23353,7 +23353,7 @@ ok hand:
     - nemo
     - emo
 on! arrow:
-  key: ON! arrow
+  key: on! arrow
   hexcode: 1F51B
   hex: 1F51B
   family: emoNoto
@@ -23381,7 +23381,7 @@ ophiuchus:
   h: 108
   E: ophiuchus
 p button:
-  key: P button
+  key: p button
   hexcode: 1F17F
   hex: 1F17F
   family: emoNoto
@@ -23412,7 +23412,7 @@ pisces:
   cats:
     - huge
 soon arrow:
-  key: SOON arrow
+  key: soon arrow
   hexcode: 1F51C
   hex: 1F51C
   family: emoNoto
@@ -23429,7 +23429,7 @@ soon arrow:
   cats:
     - huge
 sos button:
-  key: SOS button
+  key: sos button
   hexcode: 1F198
   hex: 1F198
   family: emoNoto
@@ -23463,7 +23463,7 @@ sagittarius:
   cats:
     - huge
 santa claus:
-  key: Santa Claus
+  key: santa claus
   hexcode: 1F385
   hex: 1F385
   family: emoNoto
@@ -23497,7 +23497,7 @@ scorpio:
   S: escorpión
   C: 天蠍座
 statue of liberty:
-  key: Statue of Liberty
+  key: statue of liberty
   hexcode: 1F5FD
   hex: 1F5FD
   family: emoNoto
@@ -23537,7 +23537,7 @@ t-rex:
     - life
     - lifePlus
 top arrow:
-  key: TOP arrow
+  key: top arrow
   hexcode: 1F51D
   hex: 1F51D
   family: emoNoto
@@ -23569,7 +23569,7 @@ taurus:
   S: tauro
   C: 金牛座
 up! button:
-  key: UP! button
+  key: up! button
   hexcode: 1F199
   hex: 1F199
   family: emoNoto
@@ -23586,7 +23586,7 @@ up! button:
   cats:
     - huge
 vs button:
-  key: VS button
+  key: vs button
   hexcode: 1F19A
   hex: 1F19A
   family: emoNoto
@@ -34934,7 +34934,7 @@ circle-sparks:
   h: 118
   E: circle-sparks
 circled m:
-  key: circled M
+  key: circled m
   hexcode: 24C2
   hex: 24C2
   family: emoNoto

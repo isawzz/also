@@ -1,3 +1,117 @@
+function updateStartLevelForUser(game, level, msg) {
+	//console.log('updating startLevel for', Username, game, level, '(' + msg + ')')
+	lookupSetOverride(U.games, [game, 'startLevel'], level);
+	saveUser();
+}
+
+
+function evaluate_dep() {
+	//console.log('evaluate!!!',arguments)
+	if (!canAct()) return;
+	uiActivated = false; clearTimeouts();
+
+	IsAnswerCorrect = G.instance.eval(...arguments);
+	if (IsAnswerCorrect === undefined) { promptNextTrial(); return; }
+
+	G.trialNumber += 1;
+	if (!IsAnswerCorrect && G.trialNumber < G.trials) { promptNextTrial(); return; }
+
+	//feedback
+	if (IsAnswerCorrect) { DELAY = isdef(Selected.delay) ? Selected.delay : G.spokenFeedback ? 1500 : 300; G.successFunc(); }
+	else { DELAY = G.correctionFunc(); G.failFunc(); }
+
+	let nextLevel = scoring(IsAnswerCorrect);
+
+	//TOMain = setTimeout(gotoNext,DELAY);
+
+	setTimeout(removeMarkers, 1500);
+
+	//console.log('cscoring result:', Score)
+	if (Score.gameChange) {
+		//updateUserScore();//this saves user data + clears the score.nTotal,nCorrect,nCorrect1!!!!!
+		setNextGame();
+		if (unitTimeUp()) {
+			setTimeout(() => gameOver('Great job! Time for a break!'), DELAY);
+		} else {
+			TOMain = setTimeout(startGame, DELAY);
+		}
+	} else if (Score.levelChange && nextLevel <= G.maxLevel) {
+		G.level = nextLevel;
+		setBadgeLevel(G.level); //show the last level accomplished in opacity=1!!!
+		TOMain = setTimeout(startLevel, DELAY); //soll ich da startGame machen???
+	} else {
+		TOMain = setTimeout(startRound, DELAY);
+	}
+
+}
+
+
+function saveUnit() { saveUser(); }
+
+function addScoreToUserSession() {
+	//at end of level
+	//adds Score to session
+	//console.log('Score', Score)
+	//console.assert(isdef(Score.nTotal) && Score.nTotal > 0)
+	let sc = { nTotal: Score.nTotal, nCorrect: Score.nCorrect, nCorrect1: Score.nCorrect1 };
+	let game = G.id;
+	let level = G.level;
+	let session = U.session;
+	if (nundef(session)) {
+		console.log('THERE WAS NO USER SESSION IN _addScoreToUserSession!!!!!!!!!!!!!!!!!!!!!')
+		U.session = {};
+	}
+
+	let sGame = session[game];
+	if (nundef(sGame)) {
+		sGame = session[game] = jsCopy(sc);
+		sGame.byLevel = {};
+		sGame.byLevel[level] = jsCopy(sc);
+	} else {
+		addByKey(sc, sGame);
+		let byLevel = lookupSet(sGame, ['byLevel', level], {});
+		addByKey(sc, byLevel);
+	}
+	sGame.percentage = Math.round(100 * sGame.nCorrect / sGame.nTotal);
+
+	saveUser();
+
+}
+function addSessionToUserGames() {
+	// adds session to U.games and deletes session
+
+	if (!isEmpty(U.session)) {
+		for (const g in U.session) {
+			let recOld = lookup(U, ['games', g]);
+			let recNew = U.session[g];
+
+			//console.assert(isdef(recOld));
+
+			addByKey(recNew, recOld);
+			recOld.percentage = Math.round(100 * recOld.nCorrect / recOld.nTotal);
+			if (nundef(recOld.byLevel)) recOld.byLevel = {};
+			for (const l in recNew.byLevel) {
+				if (nundef(recOld.byLevel[l])) recOld.byLevel[l] = jsCopy(recNew.byLevel[l]);
+				else addByKey(recNew.byLevel[l], recOld.byLevel[l]);
+			}
+		}
+	}
+	U.session = {};
+}
+function getStartLevels(user) {
+	let udata = lookup(DB, ['users', user]);
+	if (!udata) return 'not available';
+	let res = [];
+	let res2 = {};
+	for (const g in udata.games) {
+		res2[g] = udata.games[g].startLevel;
+		res.push(g + ': ' + udata.games[g].startLevel);
+	}
+	return res2; // res.join(',');
+
+}
+
+
 function showHiddenThumbsUpDown(sz=100) {
 	let d=mDiv(dTable,{hmin:sz*1.5});
 	mCenterFlex(d);

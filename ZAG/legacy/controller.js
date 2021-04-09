@@ -98,8 +98,6 @@ function gotoNext(nextLevel){
 	removeMarkers();
 	clearTimeouts();
 
-
-
 	//console.log('cscoring result:', Score)
 	if (Score.gameChange) {
 		//updateUserScore();//this saves user data + clears the score.nTotal,nCorrect,nCorrect1!!!!!

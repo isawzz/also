@@ -39,7 +39,7 @@ class Trial0 extends GameClass {
 	startLevel() {
 		console.log('___________startLevel_', this);
 		let settings = getGameValues();
-		copyKeys(settings,this);
+		copyKeys(settings, this);
 
 		this.startLevel1();
 	}
@@ -61,7 +61,7 @@ class Trial0 extends GameClass {
 		uiActivated = false;
 		this.startRound1();
 	}
-	startRound1(){
+	startRound1() {
 		console.log('___________startRound 1_', this);
 		TOMain = setTimeout(this.prompt.bind(this), 300);
 	}
@@ -75,7 +75,7 @@ class Trial0 extends GameClass {
 
 		this.prompt1();
 	}
-	prompt1(){
+	prompt1() {
 		console.log('___________prompt 1_', this);
 	}
 	promptNextTrial() {

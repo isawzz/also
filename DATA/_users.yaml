@@ -1,22 +1,22 @@
 nil:
   id: gul
   avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gSentence
+  lastGame: gTouchPic
   settings:
     # settings common to all games
-    samplesPerGame: 25
-    minutesPerUnit: 20
+    samplesPerGame: 2
+    minutesPerUnit: 0.1
     incrementLevelOnPositiveStreak: 12
     decrementLevelOnNegativeStreak: 6
     pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: E
-    vocab: lifePlus
+    vocab: all
     showTime: true
     spokenFeedback: true
     silentMode: true
     switchGame: true
     #indiv game settings default
-    trials: 2
+    trials: 1
     showHint: true
   games:
     gAbacus:

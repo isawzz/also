@@ -144,7 +144,7 @@ function showBadgesX(dParent, level, clickHandler, maxLevel) {
 	//console.log(badges)
 }
 function onClickBadgeX(ev) {
-	//console.log('haaaaaaaaaaaaaaaalo', ev)
+	console.log('NEW! haaaaaaaaaaaaaaaalo', ev)
 	interrupt(); //enterInterruptState();
 	let item = evToItem(ev);
 	setBadgeLevel(item.index);
@@ -153,9 +153,6 @@ function onClickBadgeX(ev) {
 	TOMain = setTimeout(startGame, 100);
 }
 function setBadgeLevel(i) {
-	//i is now correct level
-	//let userStartLevel = getUserStartLevel(G.id);
-	//if (userStartLevel > i) _updateStartLevelForUser(G.id, i);
 	G.level = i;
 	Score.levelChange = true;
 

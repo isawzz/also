@@ -38,7 +38,7 @@ function scoring(isCorrect) {
 	let boundary = G.samplesPerGame;
 
 
-	//level change will occur iff streak (- or +). on streak: updateStartLevelForUser!
+	//level change will occur iff streak (- or +). on streak: update StartLevel For User!
 	//check streaks
 	let pos = G.incrementLevelOnPositiveStreak;
 	let posSeq = pos > 0 && Score.nPos >= pos;
@@ -54,7 +54,8 @@ function scoring(isCorrect) {
 	if (halfnegSeq && !hasLabels && toggle) { labelsNextRound = true; }
 	else if (negSeq) { levelChange = -1; if (nextLevel > 0) nextLevel -= 1; Score.nNeg = 0; }
 	if (nextLevel != G.Level && nextLevel > 0 && nextLevel <= G.maxLevel) {
-		updateStartLevelForUser(G.id, nextLevel, 'cscoring');
+		userUpdate(['games', G.id, 'startLevel'], nextLevel);
+		// updateStartLevelForUser(G.id, nextLevel);
 	}
 
 	// if boundary reached: change game, 

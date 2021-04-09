@@ -18,7 +18,7 @@ function showPictures(dParent, handler, ifs = {}, options = {}, keys, labels) {
 	//console.log(options)
 	//I
 	if (nundef(keys)) keys = choose(G.keys, G.numPics);
-	//console.log('keys',keys)
+	//console.log('ERROR?keys',keys[0])
 	let items = genItemsFromKeys(keys, options);
 	if (isdef(labels)) {
 		options.showLabels = true;
