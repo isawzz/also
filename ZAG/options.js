@@ -40,11 +40,14 @@ function getOptionsMinimalistic(dParent, handler, w = 0, h = 0, ifs = {}, option
 
 	let defOptions = {
 		isRegular: true, hugeFont: true, szPic: { w: 200, h: 200 }, gap: 15, shufflePositions: true,
-		showPic: true, showLabels: true, luc: 'l', labelPos: 'bottom', lang: 'E', keySet: 'all',
+		showPic: true, showLabels: true, luc: 'l', labelPos: 'bottom', language: g.language, keySet: g.vocab,
 		w: w, h: h, fz: 24, fzText: 24, fzPic: 96, ifs: ifs, handler: handler, ifs: ifs, handler: handler,
 	};
+	//depr:
+	options.language = options.language;
 	addSimpleProps(g, options);
 	addKeys(defOptions, options);
+	//console.log(options.language,options.language)
 	if (options.numRepeat > 1 && nundef(options.ifs.bg)) {
 		let bg = isdef(options.colorKeys) ? 'white' : (i) => options.sameBackground ? computeColor('random') : 'random';
 		let fg = isdef(options.colorKeys) ? 'black' : 'contrast';

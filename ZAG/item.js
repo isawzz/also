@@ -80,8 +80,8 @@ function genItemsFromKeys(keys, options) {
 	}
 	//let items = keys.map(x => infoToItem(Syms[x]));
 	
-	//console.log(options.lang,options.luc)
-	addLabels(items, options.lang, options.luc);
+	//console.log(options.language,options.luc)
+	addLabels(items, options.language, options.luc);
 
 	//console.log('items',items)
 	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
@@ -108,7 +108,7 @@ function genItemsFromObjects(list, keyProp, labelProp, options) {
 	return items;
 }
 function genKeys(n, options) {
-	let [maxlen, lang, keySet] = [options.maxlen, options.lang, options.keySet];
+	let [maxlen, lang, keySet] = [options.maxlen, options.language, options.keySet];
 	let cond = isdef(maxlen) ? ((x) => x[lang].length <= maxlen) : null;
 	let keys = _getKeysCond(n, cond, keySet);
 	return keys;

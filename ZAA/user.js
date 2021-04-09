@@ -21,11 +21,8 @@ function editableUsernameUi(dParent) {
 	inp.addEventListener('focusout', () => { changeUserTo(inp.innerHTML.toLowerCase()); });
 	return inp;
 }
-function getUserStartLevel(game) {
-	gInfo = U.games[game];
-	level = isdef(gInfo) && isdef(gInfo.startLevel) ? gInfo.startLevel : 0;
-	return level;
-}
+function getUserStartLevel(game) { return valf(lookup(U, ['games', game, 'startLevel']), 0); }
+function getUserStartLevel_dep(game) { gInfo = U.games[game]; level = isdef(gInfo) && isdef(gInfo.startLevel) ? gInfo.startLevel : 0; return level; }
 function loadUser(newUser) {
 	//if (Username == newUser) return;
 	cleanupOldGame();
@@ -54,9 +51,9 @@ function loadUser(newUser) {
 	if (nundef(game)) game = U.avGames[0];
 
 	//determine level
-	let gInfo = U.games[game]; let level = isdef(gInfo) && isdef(gInfo.startLevel) ? gInfo.startLevel : 0;
+	//let gInfo = U.games[game]; let level = isdef(gInfo) && isdef(gInfo.startLevel) ? gInfo.startLevel : 0;
 
-	setGame(game, level);
+	setGame(game);
 }
 function saveUser() {
 	//console.log('saveUser:', Username,G.id,G.level); //_getFunctionsNameThatCalledThisFunction()); 
@@ -86,32 +83,9 @@ function updateUserScore() {
 	addByKey(sc, recOld);
 	recOld.percentage = Math.round(100 * recOld.nCorrect / recOld.nTotal);
 
-	console.log('updated user score for', g, sc, recOld);
+	//console.log('updated user score for', g, sc, recOld);
 	//console.log('updated user score session', recSession);
 	Score.nTotal = Score.nCorrect = Score.nCorrect1 = 0;
 	saveUser();
 }
 
-function setGame_dep(game, level) {
-	console.log('...setGame! wieso sollte ich nicht hier als einziges G setzen?')
-
-	cleanupOldGame();
-	if (isdef(G) && G.id != game) Score.gameChange = true;
-	//console.log(game)
-	Settings = G = jsCopy(DB.games[game]); //jsCopy(DB.games[game]);
-	G.color = getColorDictColor(G.color); //isdef(ColorDict[G.color]) ? ColorDict[G.color].c : G.color;
-	G.id = game;
-	if (nundef(U.games[game]) && G.type == 'solitaire') {
-		U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 };
-	}
-	saveUser();
-	let levels = lookup(DB.games, [game, 'levels']);
-	G.maxLevel = isdef(levels) ? Object.keys(levels).length - 1 : 0;
-	if (isdef(level)) G.level = level; else { G.level = getUserStartLevel(game); }
-	if (G.level > G.maxLevel) G.level = G.maxLevel;
-	let x = getGameValues(Username, G.id, G.level);
-	copyKeys(x, G);
-	updateSettings();
-	//console.log('game',game,'level',level)
-
-}

@@ -1,42 +1,9 @@
-var SettingTypesCommon = {
-	samplesPerGame: true,
-	minutesPerUnit: true,
-	incrementLevelOnPositiveStreak: true,
-	decrementLevelOnNegativeStreak: true,
-	pictureLabels: true,
-	language: true,
-	vocab: true,
-	showTime: true,
-	spokenFeedback: true,
-	silentMode: true,
-	switchGame: true,
-	trials: false,
-	showHint: false,
-}
-
-function updateSettings() {
-
-	appSpecificSettings();
-
-	//welche settings kommen wohin?
-	for (const k in SettingTypesCommon) {
-		if (SettingTypesCommon[k]) {
-			//console.log('should be set for all games:',k,G[k]);
-
-			lookupSetOverride(U, ['settings', k], G[k]);
-
-		} else {
-			if (isdef(G.id)) lookupSetOverride(U, ['games', G.id, 'settings', k], G[k]);
-
-		}
-	}
-
-}
+//#region settings ui
 
 function createSettingsUi(dParent) {
 	clearElement(dParent);
 	let ttag = 'h2';
-	mAppend(dParent, createElementFromHTML(`<${ttag}>Common G for ${Username}:</${ttag}>`));
+	mAppend(dParent, createElementFromHTML(`<${ttag}>Settings for ${Username}:</${ttag}>`));
 
 	let nGroupNumCommonAllGames = mInputGroup(dParent);
 	setzeEineZahl(nGroupNumCommonAllGames, 'samples', 25, ['samplesPerGame']);
@@ -44,57 +11,17 @@ function createSettingsUi(dParent) {
 	setzeEineZahl(nGroupNumCommonAllGames, 'correct streak', 5, ['incrementLevelOnPositiveStreak']);
 	setzeEineZahl(nGroupNumCommonAllGames, 'fail streak', 2, ['decrementLevelOnNegativeStreak']);
 	setzeEinOptions(nGroupNumCommonAllGames, 'show labels', ['toggle', 'always', 'never'], ['toggle', 'always', 'never'], 'toggle', ['pictureLabels']);
-	setzeEinOptions(nGroupNumCommonAllGames, 'language', ['E', 'D', 'S', 'F', 'C'], ['English', 'German','Spanish','French','Chinese'], 'E', ['language']);
+	setzeEinOptions(nGroupNumCommonAllGames, 'language', ['E', 'D', 'S', 'F', 'C'], ['English', 'German', 'Spanish', 'French', 'Chinese'], 'E', ['language']);
 	setzeEinOptions(nGroupNumCommonAllGames, 'vocabulary', Object.keys(KeySets), Object.keys(KeySets), 'best25', ['vocab']);
 	setzeEineCheckbox(nGroupNumCommonAllGames, 'show time', false, ['showTime']);
 	setzeEineCheckbox(nGroupNumCommonAllGames, 'spoken feedback', true, ['spokenFeedback']);
 	setzeEineCheckbox(nGroupNumCommonAllGames, 'silent', false, ['silentMode']);
 	setzeEineCheckbox(nGroupNumCommonAllGames, 'switch game after level', false, ['switchGame']);
+	setzeEineZahl(nGroupNumCommonAllGames, 'trials', 3, ['trials']);
+	setzeEineCheckbox(nGroupNumCommonAllGames, 'show hint', true, ['showHint']);
 
-
-	mLinebreak(dParent);
-	let g = DB.games[G.id];
-	if (nundef(g)) return;
-	mAppend(dParent, createElementFromHTML(`<${ttag}>G for <span style='color:${g.color}'>${g.friendly}</span></${ttag}>`));
-
-	let nGroupSpecific = mInputGroup(dParent);
-	setzeEineZahl(nGroupSpecific, 'trials', 3, ['trials']);
-	setzeEineCheckbox(nGroupSpecific, 'show hint', true, ['showHint']);
-
+	console.log('Settings', Settings)
 }
-
-//#region settings: update G after ui change
-function appSpecificSettings() {
-	updateLabelSettings();
-	updateTimeSettings();
-	updateKeySettings();
-	updateSpeakmodeSettings();
-}
-
-function updateSpeakmodeSettings() {
-	if (G.silentMode && G.spokenFeedback) G.spokenFeedback = false;
-
-}
-function updateKeySettings(nMin) {
-	//console.log(G,KeySets);
-	if (nundef(G)) return;
-	G.keys = setKeys({ nMin, lang: G.language, keySets: KeySets, key: G.vocab });
-}
-function updateTimeSettings() {
-	let timeElem = mBy('time');
-	//console.log('updateTimeSettings',_getFunctionsNameThatCalledThisFunction())
-	if (G.showTime) { show(timeElem); startTime(timeElem); }
-	else hide(timeElem);
-}
-function updateLabelSettings() {
-	if (G.pictureLabels == 'toggle') G.showLabels = true; //true;
-	else G.showLabels = (G.pictureLabels == 'always');
-	//console.log('G.pictureLabels',G.pictureLabels,'labels has been set to',G.showLabels)
-}
-//#endregion
-
-
-//#region store settings val after edit
 function setSettingsKeys(elem) {
 	let val = elem.type == 'number' ? Number(elem.value) : elem.type == 'checkbox' ? elem.checked : elem.value;
 	lookupSetOverride(G, elem.keyList, val);
@@ -115,9 +42,6 @@ function setSettingsKeysSelect(elem) {
 	lookupSetOverride(G, elem.keyList, val);
 	//console.log('result', lookup(G, elem.keyList));
 }
-
-
-//#region create elements for settings 
 function setzeEineZahl(dParent, label, init, skeys) {
 	// <input id='inputPicsPerLevel' class='input' type="number" value=1 />
 	let d = mDiv(dParent);
@@ -134,6 +58,7 @@ function setzeEineZahl(dParent, label, init, skeys) {
 	mClass(inp, 'input');
 
 	inp.keyList = skeys;
+	addSetting(skeys[0]);
 }
 function setzeEineCheckbox(dParent, label, init, skeys) {
 	// <input id='inputPicsPerLevel' class='input' type="number" value=1 />
@@ -153,6 +78,7 @@ function setzeEineCheckbox(dParent, label, init, skeys) {
 	mClass(inp, 'input');
 
 	inp.keyList = skeys;
+	addSetting(skeys[0]);
 }
 function setzeEinOptions(dParent, label, optionList, friendlyList, init, skeys) {
 
@@ -178,12 +104,58 @@ function setzeEinOptions(dParent, label, optionList, friendlyList, init, skeys) 
 	mStyleX(inp, { maleft: 12, mabottom: 4 });
 
 	inp.keyList = skeys;
+	addSetting(skeys[0]);
 }
-
+//#endregion
 
 //#region helpers 
 function mInputGroup(dParent, styles) {
 	let baseStyles = { display: 'inline-block', align: 'right', bg: '#00000080', rounding: 10, padding: 20, margin: 12 };
 	if (isdef(styles)) styles = mergeOverride(baseStyles, styles); else styles = baseStyles;
 	return mDiv(dParent, styles);
+}
+function addSetting(keylist) { if (nundef(Settings)) Settings = []; Settings.push(keylist); }
+function updateSettings() {
+
+	updateLabelSettings();
+	updateTimeSettings();
+	//updateKeySettings();
+	updateSpeakmodeSettings();
+
+	//welche settings kommen wohin?
+	let scope = 'user';//'game' 'level','temp','all'
+	//console.log(Settings)
+	if (scope == 'temp' || nundef(Settings)) return;
+	for (const k of Settings) {
+		if (scope == 'user') lookupSetOverride(U, ['settings', k], G[k]);
+		else if (scope == 'game') lookupSetOverride(U, ['games', G.id, k], G[k]);
+		else if (scope == 'level') lookupSetOverride(U, ['games', G.id, 'levels', G.level, k], G[k]);
+		else if (scope == 'all') lookupSetOverride(DB, ['settings', k], G[k]);
+	}
+
+}
+function updateSpeakmodeSettings() { if (G.silentMode && G.spokenFeedback) G.spokenFeedback = false; }
+function updateTimeSettings() { let timeElem = mBy('time'); if (G.showTime) { show(timeElem); startTime(timeElem); } else hide(timeElem); }
+function updateLabelSettings() { if (G.pictureLabels == 'toggle') G.showLabels = true; else G.showLabels = (G.pictureLabels == 'always'); }
+function updateGameValues(U, G) {
+	let game = G.id;
+	let level = G.level;
+
+	let settings = { numColors: 1, numRepeat: 1, numPics: 1, numSteps: 1, colors: ColorList }; // general defaults
+	settings = mergeOverride(settings, DB.settings);
+	if (isdef(U.settings)) settings = mergeOverride(settings, U.settings);
+	if (isdef(DB.games[game])) settings = mergeOverride(settings, DB.games[game]);
+	let next = lookup(DB.games, [game, 'levels', level]); if (next) settings = mergeOverride(settings, next);
+	next = lookup(U, ['games', game]); if (next) settings = mergeOverride(settings, next);
+	next = lookup(U, ['games', game, 'levels', level]); if (next) settings = mergeOverride(settings, next);
+
+	//console.log(settings);
+	delete settings.levels;
+	delete settings.colors;
+	Speech.setLanguage(settings.language);
+
+	copyKeys(settings, G);	
+	updateSettings(); 
+	//return settings;
+
 }

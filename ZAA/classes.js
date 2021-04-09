@@ -1,13 +1,9 @@
 
-// function getInstance(G) {
-// 	//console.log(this.id)
-// 	return new (Daat.GameClasses[this.id])(this.id);
-// }
 class Game {
 	constructor(name, o) {
 		this.name = name;
-		//console.log(G);
-		console.log('name',name,'o',o)
+		//console.log(this);
+		//console.log('name',name,'o',o)
 		copyKeys(o, this);
 		this.maxLevel = isdef(this.levels) ? Object.keys(this.levels).length - 1 : 0;
 		this.id = name;
@@ -15,7 +11,11 @@ class Game {
 	}
 	clear() { clearTimeout(this.TO); clearFleetingMessage(); }
 	startGame() { }
-	startLevel() { }
+	start_Level() {
+		//console.log('...language is', G.language,this.language)
+		this.keys = setKeysG(this, filterWordByLength, 25);
+		//console.log('keys', G.keys[12])
+	}
 	startRound() { }
 	prompt() {
 		myShowPics(evaluate);
@@ -50,7 +50,7 @@ class GAbacus extends Game {
 	constructor(name, o) { super(name, o); }
 	startGame() { this.successFunc = successThumbsUp; this.failFunc = failThumbsDown; this.correctionFunc = this.showCorrectSequence.bind(this); }
 	showCorrectSequence() { let t = correctBlanks(); if (this.level <= 1 && (this.step <= 3 || this.op != 'mult')) showSayHint(3); return t + 1000; }
-	startLevel() { if (!isList(this.steps)) this.steps = [this.steps]; this.numPics = 2; }
+	start_Level() { if (!isList(this.steps)) this.steps = [this.steps]; this.numPics = 2; }
 	prompt() {
 		mLinebreak(dTable, 2);
 
@@ -67,7 +67,7 @@ class GAbacus extends Game {
 		//arrReplace(this.seq,this.op,OPS[this.op].wr);
 		[this.words, this.letters] = showEquation(this.seq, panel);
 		setNumberSequenceGoal();
-		//console.log(G)
+		//console.log(this)
 
 		mLinebreak(dTable, 30);
 
@@ -156,17 +156,18 @@ class GAbacus extends Game {
 
 }
 class GAnagram extends Game {
-	constructor(name,o) {
-		super(name,o);
+	constructor(name, o) {
+		super(name, o);
 		if (this.language == 'C') {
 			this.realLanguage = this.language;
 			this.language = chooseRandom('E', 'S', 'F', 'D');
 		}
 	}
 	clear() { super.clear(); if (isdef(this.language)) this.language = this.language; }
-	startLevel() {
-		this.keys = setKeysG(G, filterWordByLength, 25);
-		if (this.keys.length < 25) { this.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
+	start_Level() {
+		//console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH');
+		this.keys = setKeysG(this, filterWordByLength, 25);
+		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
 		//console.log(this.keys)
 	}
 	prompt() {
@@ -315,14 +316,14 @@ class GCats extends Game {
 		return isCorrect;
 	}
 }
-
 class GElim extends Game {
 	constructor(name, o) { super(name, o); }
 	startGame() {
 		this.correctionFunc = () => { writeSound(); playSound('incorrect1'); return this.spokenFeedback ? 1800 : 300; };
 		this.successFunc = () => { Goal.pics.map(x => iDiv(x).style.opacity = .3); successPictureGoal(); }
 	}
-	startLevel() {
+	start_Level() {
+		super.start_Level();
 		this.keys = this.keys.filter(x => containsColorWord(x));
 	}
 	prompt() {
@@ -425,7 +426,8 @@ class GMem extends Game {
 }
 class GMissingLetter extends Game {
 	constructor(name, o) { super(name, o); }
-	startLevel() {
+	start_Level() {
+		super.start_Level();
 		this.maxPosMissing = this.posMissing == 'start' ? this.numMissing - 1 : 100;
 	}
 	prompt() {
@@ -594,7 +596,7 @@ class GNamit extends Game {
 
 }
 class GPremem extends Game {
-	constructor(name,o) { super(name,o); this.piclist = []; }
+	constructor(name, o) { super(name, o); this.piclist = []; }
 	prompt() {
 		this.piclist = [];
 		this.showLabels = false;
@@ -649,10 +651,10 @@ class GPremem extends Game {
 	}
 }
 class GRiddle extends Game {
-	constructor(name,o) { super(name,o); }
+	constructor(name, o) { super(name, o); }
 	startGame() {
-		G.successFunc = successThumbsUp; G.failFunc = failThumbsDown;
-		G.correctionFunc = () => {
+		this.successFunc = successThumbsUp; this.failFunc = failThumbsDown;
+		this.correctionFunc = () => {
 			// 	clearElement(this.dResult);
 			//mText('correct answer: ' + Goal.label, this.dResult, { fz: 40, matop: 20 }); 
 			mStyleX(Goal.buttonCorrect, { bg: 'green' });
@@ -661,12 +663,12 @@ class GRiddle extends Game {
 		};
 	}
 	prompt() {
-		G.trials = 1;
+		this.trials = 1;
 		showInstruction('', 'Solve the Riddle:', dTitle, true);
 
 		//console.log('starting story');
 
-		let wp = this.wp = getRandomWP(1, G.maxIndex);
+		let wp = this.wp = getRandomWP(1, this.maxIndex);
 		let haveResult = wp.isTextResult = instantiateNames(wp);
 		if (!haveResult) instantiateNumbers(wp);
 
@@ -750,7 +752,7 @@ class GRiddle extends Game {
 	}
 	activate() { }//this.activate_input(); }
 	eval_dep(ev) {
-		console.log('#', G.trialNumber, 'of', G.trials);
+		console.log('#', this.trialNumber, 'of', this.trials);
 		clearFleetingMessage();
 		Selected = {};
 		let answer = normalize(this.inputBox.value, 'E');
@@ -762,11 +764,11 @@ class GRiddle extends Game {
 	}
 	trialPrompt_dep() {
 		sayTryAgain();
-		let n = G.trialNumber; // == 1 ? 1 : (G.trialNumber + Math.floor((Goal.label.length - G.trialNumber) / 2));
+		let n = this.trialNumber; // == 1 ? 1 : (this.trialNumber + Math.floor((Goal.label.length - this.trialNumber) / 2));
 
 		showFleetingMessage('try again!', 0, {}, true);
 
-		this.inputBox = addNthInputElement(this.dResult, G.trialNumber);
+		this.inputBox = addNthInputElement(this.dResult, this.trialNumber);
 		this.defaultFocusElement = this.inputBox.id;
 		mLinebreak(dTable);
 
@@ -835,8 +837,8 @@ class GSayPic extends Game {
 	}
 }
 class GSentence extends Game {
-	constructor(name,o) {
-		super(name,o);
+	constructor(name, o) {
+		super(name, o);
 		this.prevLanguage = this.language;
 		this.language = 'E';
 	}
@@ -846,7 +848,7 @@ class GSentence extends Game {
 		this.successFunc = () => { mCheckit(this.dWordArea, 120); };
 	}
 	clear() { super.clear(); this.language = this.prevLanguage; }
-	startLevel() {
+	start_Level() {
 		this.sentences = EnglishSentences.map(x => x.split(' ')).filter(x => x.length <= this.maxWords);
 	}
 	dropHandler(source, target, isCopy = false, clearTarget = false) {
@@ -964,7 +966,8 @@ class GSentence extends Game {
 class GSteps extends Game {
 	constructor(name, o) { super(name, o); }
 	startGame() { this.correctionFunc = showCorrectWords; }
-	startLevel() {
+	start_Level() {
+		super.start_Level();
 		this.keys = this.keys.filter(x => containsColorWord(x));
 	}
 
@@ -1057,8 +1060,8 @@ class GSteps extends Game {
 	}
 }
 class GSwap extends Game {
-	constructor(name,o) {
-		super(name,o);
+	constructor(name, o) {
+		super(name, o);
 		if (this.language == 'C') { this.prevLanguage = this.language; this.language = chooseRandom('E', 'D'); }
 		if (nundef(Dictionary)) { Dictionary = { E: {}, S: {}, F: {}, C: {}, D: {} } };
 		for (const k in Syms) {
@@ -1072,9 +1075,9 @@ class GSwap extends Game {
 	}
 	startGame() { this.correctionFunc = showCorrectLabelSwapping; } //this.successFunc = showCorrectLabelSwapping;  }
 	clear() { super.clear(); if (isdef(this.prevLanguage)) this.language = this.prevLanguage; }
-	startLevel() {
-		this.keys = setKeysG(G, filterWordByLength, 25);
-		if (this.keys.length < 25) { this.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
+	start_Level() {
+		this.keys = setKeysG(this, filterWordByLength, 25);
+		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
 		this.trials = 4;
 		//console.log('keys', this.keys.length);
 		//console.log('words', this.keys.map(x => Syms[x].E))
@@ -1161,7 +1164,7 @@ class GSwap extends Game {
 			let d1 = item.container;
 			//console.log('d1',d1);
 			if (isdef(item.dHint)) mRemove(item.dHint);
-			//console.log(G);
+			//console.log(this);
 			if (this.trialNumber < 3) {
 				//console.log()
 				let hint = this.trialNumber == 1 ? item.info.group : item.info.subgroup;
@@ -1268,10 +1271,10 @@ class GSwap extends Game {
 		return isCorrect;
 	}
 }
-
 class GTouchColors extends Game {
 	constructor(name, o) { super(name, o); }
-	startLevel() {
+	start_Level() {
+		super.start_Level();
 		this.keys = this.keys.filter(x => containsColorWord(x));
 	}
 	prompt() {
@@ -1330,13 +1333,13 @@ class GWritePic extends Game {
 			if (isdef(this.inputBox)) { this.inputBox.focus(); }
 		}
 	}
-	startLevel() {
-		this.keys = setKeysG(G, filterWordByLength, 25);
-		if (this.keys.length < 25) { this.keys = setKeysG(G, filterWordByLength, 25, 'all'); }
+	start_Level() {
+		this.keys = setKeysG(this, filterWordByLength, 25);
+		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
 		//console.log(this.keys)
 	}
 	prompt() {
-		//console.log('showLabels: G', this.showLabels, this.labels);
+		//console.log('showLabels: this', this.showLabels, this.labels);
 		let showLabels = this.showLabels == true && this.labels == true;
 		myShowPics(() => mBy(this.defaultFocusElement).focus(), {}, { showLabels: showLabels });
 		setGoal();
@@ -1406,7 +1409,7 @@ class GMissingNumber extends Game {
 		this.correctionFunc = this.showCorrectSequence.bind(this);
 	}
 	showCorrectSequence() { return numberSequenceCorrectionAnimation(getNumSeqHint); }
-	startLevel() {
+	start_Level() {
 		if (!isList(this.steps)) this.steps = [this.steps];
 		this.numPics = 2;
 		this.labels = false; // do not show labels for the thumbs up/down: TODO: should really do this in game/showThumbsUpDown
@@ -1423,7 +1426,7 @@ class GMissingNumber extends Game {
 		this.seq = createNumberSequence(this.seqLen, this.minNum, this.maxNum, this.step, this.op);
 		[this.words, this.letters] = showNumberSequence(this.seq, dTable);
 		setNumberSequenceGoal();
-		//console.log(G)
+		//console.log(this)
 
 		mLinebreak(dTable);
 
@@ -1516,7 +1519,7 @@ class GPasscode extends Game {
 		this.decrementLevelOnNegativeStreak = this.samplesPerGame;
 
 	}
-	startLevel() { this.needNewPasscode = true; }
+	start_Level() { this.needNewPasscode = true; }
 	prompt() {
 		this.trials = 1;
 		if (this.needNewPasscode) {

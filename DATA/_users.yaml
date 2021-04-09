@@ -1,7 +1,7 @@
 nil:
   id: gul
   avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gTouchPic
+  lastGame: gMem
   settings:
     # settings common to all games
     samplesPerGame: 2

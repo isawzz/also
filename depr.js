@@ -1,3 +1,32 @@
+function setGame_dep(game, level) {
+	console.log('...setGame! wieso sollte ich nicht hier als einziges G setzen?')
+
+	cleanupOldGame();
+	if (isdef(G) && G.id != game) Score.gameChange = true;
+	//console.log(game)
+	Settings = G = jsCopy(DB.games[game]); //jsCopy(DB.games[game]);
+	G.color = getColorDictColor(G.color); //isdef(ColorDict[G.color]) ? ColorDict[G.color].c : G.color;
+	G.id = game;
+	if (nundef(U.games[game]) && G.type == 'solitaire') {
+		U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 };
+	}
+	saveUser();
+	let levels = lookup(DB.games, [game, 'levels']);
+	G.maxLevel = isdef(levels) ? Object.keys(levels).length - 1 : 0;
+	if (isdef(level)) G.level = level; else { G.level = getUserStartLevel(game); }
+	if (G.level > G.maxLevel) G.level = G.maxLevel;
+	let x = getGameValues(Username, G.id, G.level);
+	copyKeys(x, G);
+	updateSettings();
+	//console.log('game',game,'level',level)
+
+}
+
+function getInstance(G) {
+	//console.log(this.id)
+	return new (Daat.GameClasses[this.id])(this.id);
+}
+
 function updateStartLevelForUser(game, level, msg) {
 	//console.log('updating startLevel for', Username, game, level, '(' + msg + ')')
 	lookupSetOverride(U.games, [game, 'startLevel'], level);

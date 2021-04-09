@@ -4,7 +4,7 @@ function test60_2_clean(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc
 	let dArea = getMainAreaPercent(dTable, 'silver', wper, hper); //getMainAreaPadding(dTable, 2, 'silver');
 	dArea.id='dArea';
 	let options = getStandardOptions(dArea, arguments[1]);
-	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
+	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.language, options.luc);
 	let f = getFitting(items, options);
 
 	makeItemDivs(items, options);
@@ -36,7 +36,7 @@ function test60_2_v1(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, l
 	let tableRect = createPageDivsFullVisibleArea({ top: 30, title: 30 }, { footer: 30 }); //table is above footer
 	let dArea = getMainAreaPercent(dTable, 'silver', wper, hper); //getMainAreaPadding(dTable, 2, 'silver');
 	let options = getStandardOptions(dArea, arguments[1]);
-	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
+	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.language, options.luc);
 	let f = getFittingOld(items, options);
 
 	makeItemDivs(items, options);
@@ -297,7 +297,7 @@ function test60_2(n = 144, { maxlen, wper, hper, szPic, fzText, fzPic, luc, labe
 	let options = getStandardOptions(dArea, arguments[1]);
 	//console.log(options);
 
-	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.lang, options.luc);
+	let items = getItemsMaxLen(n, options.maxlen, 'lifePlus', options.language, options.luc);
 	//#endregion
 
 	let f = getFittingOld(items, options);

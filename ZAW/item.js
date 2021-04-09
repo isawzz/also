@@ -111,7 +111,7 @@ function getItem(k) { return infoToItem(Syms[k]); }
 
 //new API:
 function genKeys(n, options) {
-	let [maxlen, lang, keySet] = [options.maxlen, options.lang, options.keySet];
+	let [maxlen, lang, keySet] = [options.maxlen, options.language, options.keySet];
 	let cond = isdef(maxlen) ? ((x) => x[lang].length <= maxlen) : null;
 	let keys = _getKeysCond(n, cond, keySet);
 	return keys;
@@ -128,8 +128,8 @@ function _getKeysCond(n, cond, keySet = 'all') {
 function genItems(n, options) { let keys = genKeys(n, options); let items = genItemsFromKeys(keys, options); return items; }
 function genItemsFromKeys(keys, options) {
 	let items = keys.map(x => infoToItem(Syms[x]));
-	//console.log(options.lang,options.luc)
-	addLabels(items, options.lang, options.luc);
+	//console.log(options.language,options.luc)
+	addLabels(items, options.language, options.luc);
 	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',items.map(x=>x.label))
 
 	items = _extendItemsAndOptions(items, options);

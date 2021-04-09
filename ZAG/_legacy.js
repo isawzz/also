@@ -144,7 +144,7 @@ function showBadgesX(dParent, level, clickHandler, maxLevel) {
 	//console.log(badges)
 }
 function onClickBadgeX(ev) {
-	console.log('NEW! haaaaaaaaaaaaaaaalo', ev)
+	//console.log('NEW! haaaaaaaaaaaaaaaalo', ev)
 	interrupt(); //enterInterruptState();
 	let item = evToItem(ev);
 	setBadgeLevel(item.index);
@@ -537,7 +537,7 @@ function setKeys({allowDuplicates, nMin, lang, key, keySets, filterFunc, param, 
 	for (const k of keys) {
 		let info = Syms[k];
 
-		info.best = Syms[k][lang];
+		info.best = info[lang];
 		//console.log(info.best)
 
 		if (nundef(info.best)) {

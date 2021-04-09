@@ -13,19 +13,19 @@ function onClickTemple() {
 	hide('dTemple');
 	createMenuUi(dAux);
 }
-function onClickMenuItem(ev){ onClickGo(ev);}
+function onClickMenuItem(ev) { onClickGo(ev); }
 
 function onClickGo(ev) {
 	if (isVisible('dTemple')) {
 		closeAux();
 		startGame();
 	} else {
-		let item = isdef(ev)?evToItemC(ev):null;
+		let item = isdef(ev) ? evToItemC(ev) : null;
 		let gKey = nundef(ev) ? SelectedMenuKey : isString(ev) ? ev : item.id; // divKeyFromEv(ev);
 		if (gKey != SelectedMenuKey) {
 			if (isdef(SelectedMenuKey)) toggleItemSelection(Items[SelectedMenuKey]);
 			SelectedMenuKey = gKey;
-			let item =  Items[SelectedMenuKey];
+			let item = Items[SelectedMenuKey];
 			toggleItemSelection(item);
 		} else {
 			closeAux();

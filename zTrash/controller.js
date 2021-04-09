@@ -1,67 +1,101 @@
 function canAct() { return uiActivated && !auxOpen; }
 
-function setGame(game) {
-	cleanupOldGame();
+function setGame(game, level) {
+	//console.log('...setGame! wieso sollte ich nicht hier als einziges G setzen?', game)
 
+	cleanupOldGame();
 	if (isdef(G) && G.id != game) Score.gameChange = true;
 
+	//console.log('game', game, 'o', DB.games[game]);
 	G = new (classByName(capitalize(game)))(game, DB.games[game]);
-
-	if (nundef(U.games[game]) && G.type == 'solitaire') { U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 }; }
-	G.level = Math.min(getUserStartLevel(game), G.maxLevel);
-
-	//updateGameValues(U,G);//Username, G.id, G.level); copyKeys(x, G);	updateSettings(); // muss hier sein weil es gewisse additional settings setzt und consistence (eg., silentMode/spokenFeedback)
+	if (nundef(U.games[game]) && G.type == 'solitaire') {
+		U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 };
+	}
+	if (isdef(level)) G.level = level; else { G.level = getUserStartLevel(game); }
+	if (G.level > G.maxLevel) G.level = G.maxLevel;
+	let x = getGameValues(Username, G.id, G.level); copyKeys(x, G);
+	//console.log(jsCopy(G))
+	updateSettings();
 	saveUser();
 }
 
 function stopGame() { resetState(); }
 function startGame() {
+	//console.log('___________startGame_', G);
 	resetState(); pauseSound();
+
 	G.successFunc = successPictureGoal;
 	G.failFunc = failPictureGoal;
 	G.correctionFunc = showCorrectWord;
-
+	//console.log('=>language is',G.language,G.keys);
 	G.startGame();
+
+	//G.instance = getInstance(G);
+	//console.log('G',G)
+	//G.instance.startGame();
+
 	startLevel();
+
 }
 function startLevel() {
-	updateGameValues(U, G);
+
+	let x = getGameValues(Username, G.id, G.level);
+	//console.log('gameValues',x);
+	copyKeys(x, G);
+
+	updateLabelSettings();
 	Speech.setLanguage(G.language);
 
+	//console.log('=>G',G)
 	G.start_Level();
+	// G.instance.startLevel();
 
-	if (isdef(G.keys) && G.keys.length < G.numPics) { G.keys = setKeys({ nMin: G.numPics + 5, lang: G.language, keySets: KeySets, key: G.vocab }); }
+	//return;
+	//console.log(G)
+	if (G.keys.length < G.numPics) { updateKeySettings(G.numPics + 5); }
 	startRound();
 }
 function startRound() {
+	//console.log('...new round:',G.showLabels)
+	//if (G.addonActive != true && isTimeForAddon()) { G.addonActive = true; exitToAddon(startRound); return; } else G.addonActive = false;
+
 	resetRound();
 	uiActivated = false;
 	G.startRound();
+	// G.instance.startRound();
 	TOMain = setTimeout(() => prompt(), 300);
 }
 function prompt() {
 	QContextCounter += 1;
+	//GroupCounter = 0;
+
+	//console.log('prompt: G.pictureLabels',G.pictureLabels,'labels has been set to',G.showLabels)
 	showStats();
 	G.trialNumber = 0;
+
+	//mStyleX(dTable,{bg:'red',w:'100%',h:200}); return
 	G.prompt();
+	//G.instance.prompt();
 }
 function promptNextTrial() {
 	QContextCounter += 1;
 	clearTimeout(TOTrial);
 	uiActivated = false;
-	let delay = G.trialPrompt(G.trialNumber);
+	let delay = G.trialPrompt(G.trialNumber); //G.instance.trialPrompt(G.trialNumber);
 	TOMain = setTimeout(activateUi, delay);
 }
 function activateUi() {
 	Selected = null;
 	uiActivated = true;
 	G.activate();
+	//G.instance.activate();
 }
 function evaluate() {
+	//console.log('evaluate!!!',arguments)
 	if (!canAct()) return;
 	uiActivated = false; clearTimeouts();
 
-	IsAnswerCorrect = G.eval(...arguments);
+	IsAnswerCorrect = G.eval(...arguments); //G.instance.eval(...arguments);
 	if (IsAnswerCorrect === undefined) { promptNextTrial(); return; }
 
 	G.trialNumber += 1;
