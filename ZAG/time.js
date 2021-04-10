@@ -1,15 +1,14 @@
-var TimestampStarted, TimeElapsed, OnTimeOver = null, TimeElem, TimeLeft, TimeSettings={};
-function restartTime(elem,g={}) { TimeSettings = g; TimestampStarted = msNow(); TimeElapsed = 0; startTime(elem); }
+var TimestampStarted, TimeElapsed, OnTimeOver = null, TimeElem, TimeLeft;
+function restartTime(elem) { TimestampStarted = msNow(); TimeElapsed = 0; startTime(elem); }
 function startTime(elem) {
-	//console.log(TimeSettings.showTime)
-	if (nundef(TimeSettings.showTime) || !TimeSettings.showTime) return;
-	if (nundef(TimeSettings.minutesPerUnit)) TimeSettings.minutesPerUnit=10;
+
+	if (nundef(Settings.showTime) || !Settings.showTime) return;
 	if (nundef(TimestampStarted)) { TimestampStarted = msNow(); TimeElapsed = 0; }
 	if (nundef(elem) && isdef(TimeElem)) { elem = TimeElem; }
 	else { if (isString(elem)) elem = mBy(elem); TimeElem = elem; }
 
-	var timeLeft = TimeLeft = TimeSettings.minutesPerUnit * 60000 - getTimeElapsed();
-	//console.log('started at',TimestampStarted,'TimeLeft',TimeLeft)
+	// console.log(TimestampStarted, _getFunctionsNameThatCalledThisFunction())
+	var timeLeft = TimeLeft = Settings.minutesPerUnit * 60000 - getTimeElapsed();
 	if (timeLeft > 0) {
 		let t = msToTime(timeLeft);
 		let s = format2Digits(t.h) + ":" + format2Digits(t.m) + ":" + format2Digits(t.s);
@@ -21,9 +20,9 @@ function startTime(elem) {
 		if (OnTimeOver) OnTimeOver();
 	}
 }
-function unitTimeUp() { return (TimeSettings.minutesPerUnit * 60000 - getTimeElapsed()) <= 0; }
+function unitTimeUp() { return (Settings.minutesPerUnit * 60000 - getTimeElapsed()) <= 0; }
 function startTimeClock(elem) {
-	if (nundef(TimeSettings.showTime) || !TimeSettings.showTime) return;
+	if (nundef(Settings.showTime) || !Settings.showTime) return;
 	var today = new Date(),
 		h = format2Digits(today.getHours()),
 		m = format2Digits(today.getMinutes()),

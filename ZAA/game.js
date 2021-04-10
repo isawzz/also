@@ -1162,18 +1162,18 @@ function successPictureGoal(withComment = true) {
 		}
 	}
 }
-function mXit(elem,sz=50){
+function mXit(elem, sz = 50) {
 	if (nundef(sz)) sz = getRect(elem).h;
-	let d=markerFail();
-	mpOver(d, elem, sz/2, 'red', 'openMojiTextBlack');
-	mMoveBy(d,0,-4);
+	let d = markerFail();
+	mpOver(d, elem, sz / 2, 'red', 'openMojiTextBlack');
+	mMoveBy(d, 0, -4);
 	return d;
 }
-function mCheckit(elem,sz=50){
+function mCheckit(elem, sz = 50) {
 	if (nundef(sz)) sz = getRect(elem).h;
-	let d=markerSuccess();
+	let d = markerSuccess();
 	mpOver(d, elem, sz * (4 / 5), 'limegreen', 'segoeBlack');
-	mMoveBy(d,0,-4);
+	mMoveBy(d, 0, -4);
 	return d;
 }
 function failPictureGoal(withComment = false) {
@@ -1285,14 +1285,14 @@ function showFleetingMessage(msg, msDelay, styles = {}, fade = false) {
 }
 function showActiveMessage(msg, handler, styles = {}, fade = false) {
 
-	let defStyles = { fz: 22, rounding: 10, vpadding: 12, hpadding:25, matop: 50 };
+	let defStyles = { fz: 22, rounding: 10, vpadding: 12, hpadding: 25, matop: 50 };
 	styles = mergeOverride(defStyles, styles);
 	if (nundef(styles.fg)) styles.fg = colorIdealText(G.color);
 
 	clearFleetingMessage();
-	let d=fleetingMessage(msg, styles, fade);
-	d.onclick=handler;
-	
+	let d = fleetingMessage(msg, styles, fade);
+	d.onclick = handler;
+
 }
 function fleetingMessage(msg, styles, fade = false) {
 	let d = mDiv(dLineBottom);
@@ -1463,8 +1463,6 @@ function getOptionsMinimalistic(dParent, handler, w = 0, h = 0, ifs = {}, option
 		showPic: true, showLabels: true, luc: 'l', labelPos: 'bottom', language: g.language, keySet: g.vocab,
 		w: w, h: h, fz: 24, fzText: 24, fzPic: 96, ifs: ifs, handler: handler, ifs: ifs, handler: handler,
 	};
-	//depr:
-	options.language = options.language;
 	addSimpleProps(g, options);
 	addKeys(defOptions, options);
 	//console.log(options.language,options.language)
@@ -1566,14 +1564,14 @@ function showPictures(dParent, handler, ifs = {}, options = {}, keys, labels) {
 }
 function getStandardFz(wi, hi, showPic, showLabels, wLongest) {
 	//console.log('getStandardFz',wi,hi,showPic,showLabels,wLongest);
-	let hText = showPic ? hi / 3 : hi; 
-	return showLabels ? idealFontSize(wLongest, wi, hText) : 0; 
+	let hText = showPic ? hi / 3 : hi;
+	return showLabels ? idealFontSize(wLongest, wi, hText) : 0;
 }
 function getStandardFzPic(wi, hi, showLabels) { return Math.min(wi * .8, showLabels ? hi * .6 : hi * .75); }
 function myPresent(dArea, items, options) {
 	let showLabels = options.showLabels;
-	let w = options.w * valf(options.fw, .9); 
-	let h = options.h * valf(options.fh, .7); 
+	let w = options.w * valf(options.fw, .9);
+	let h = options.h * valf(options.fh, .7);
 
 	let wi, hi, rows, cols;
 	if (isdef(options.rows) || isdef(options.cols)) {
@@ -1582,13 +1580,13 @@ function myPresent(dArea, items, options) {
 
 	let gap = wi * .1; if (cols > 1) wi -= gap; if (rows > 1) hi -= gap;
 	let fzPic = options.fzPic = getStandardFzPic(wi, hi, showLabels);
-	let fz = getStandardFz(wi,hi,options.showPic,options.showLabels,options.wLongest);
+	let fz = getStandardFz(wi, hi, options.showPic, options.showLabels, options.wLongest);
 	options.szPic = { w: wi, h: hi };
 	if (nundef(options.ifs)) options.ifs = {};
 	let outerStyles = {
 		w: wi, h: hi, margin: gap / 2, rounding: 6,
 		bg: valf(options.ifs.bg, 'random'), fg: 'contrast', display: 'inline-flex', 'flex-direction': 'column',
-		'justify-content': 'center', 'align-items': 'center', 'vertical-align':'top',
+		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
 	};
 	let picStyles = { fz: fzPic };
 	let labelStyles = { fz: fz };
@@ -1613,9 +1611,9 @@ function myPresent(dArea, items, options) {
 		if (options.showRepeat) addRepeatInfo(dOuter, item.iRepeat, wi);
 		iAdd(item, { options: options, div: dOuter, dLabel: dLabel, dPic: dPic });
 	}
-	if (isdef(options.numColors) && options.numColors > 1){
-		mStyleX(dArea, { display: 'inline-grid',gap:gap, 'grid-template-columns': `repeat(${cols},${wi}px)` });
-	}
+	//if (isdef(options.numColors) && options.numColors > 1) {
+		mStyleX(dArea, { display: 'inline-grid', gap: gap, 'grid-template-columns': `repeat(${cols},${wi}px)` });
+	//}
 	items.map(x => mAppend(dArea, iDiv(x)));
 	return getRect(dArea);
 }
@@ -1702,9 +1700,11 @@ function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
 	if (nundef(ordinal)) ordinal = getOrdinal(Goal.iRepeat);
 	if (nundef(color)) color = Goal.color;
 
+	//console.log('color', color)
 	let colorWord = '', colorSpan = '';
 	if (isdef(color)) {
-		colorWord = isdef(color) ? color[G.language] : '';
+		colorWord = nundef(color) ? '' : nundef(color[G.language]) ? color.E : color[G.language];
+		//colorWord = isdef(color) ? color[G.language] : '';
 		if (G.language == 'D' && !isEmpty(ordinal) && !['lila', 'rosa'].includes(colorWord)) colorWord += 'e';
 		colorSpan = `<span style='color:${color.c}'>${colorWord.toUpperCase()}</span>`;
 	}
@@ -1788,17 +1788,17 @@ function setMultiGoal(n, indices) {
 		for (const i of indices) Goal.pics.push(Pictures[i]);
 	}
 }
-function showHiddenThumbsUpDown(sz=100) {
-	let d=mDiv(dTable,{hmin:sz*1.5});
+function showHiddenThumbsUpDown(sz = 100) {
+	let d = mDiv(dTable, { hmin: sz * 1.5 });
 	mCenterFlex(d);
 	let keys = ['thumbs up', 'thumbs down'];
-	let options = getOptionsMinimalistic(d,null,300,100,{bg:'transparent',display:'inline'});//,{fzPic:50,w:60,h:60});
-	let items = Pictures = genItemsFromKeys(keys,options);
-	for(const item of items){
-		let d1=makeItemDiv(item,options);
-		mAppend(d,d1);
-		mStyleX(d1.firstChild,{fz:sz, mabottom:12});
-		mStyleX(d1,{opacity:0});
+	let options = getOptionsMinimalistic(d, null, 300, 100, { bg: 'transparent', display: 'inline' }, {}, G);//,{fzPic:50,w:60,h:60});
+	let items = Pictures = genItemsFromKeys(keys, options);
+	for (const item of items) {
+		let d1 = makeItemDiv(item, options);
+		mAppend(d, d1);
+		mStyleX(d1.firstChild, { fz: sz, mabottom: 12 });
+		mStyleX(d1, { opacity: 0 });
 	}
 }
 function showInstruction(text, cmd, title, isSpoken, spoken, fz) {

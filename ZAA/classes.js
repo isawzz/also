@@ -1165,9 +1165,10 @@ class GSwap extends Game {
 			//console.log('d1',d1);
 			if (isdef(item.dHint)) mRemove(item.dHint);
 			//console.log(this);
-			if (this.trialNumber < 3) {
+			if (this.trialNumber < 2) {
 				//console.log()
-				let hint = this.trialNumber == 1 ? item.info.group : item.info.subgroup;
+				//let hint = this.trialNumber == 1 ? item.info.group : item.info.subgroup;
+				let hint = item.info.subgroup;
 				let dHint = item.dHint = mText('(' + hint + ')', d1);
 			} else {
 				let dHint = miPic(item, d1);

@@ -1,5 +1,6 @@
 function renewTimer(G, elem, onTimeOver = null) { if (nundef(GameTimer)) GameTimer = new TimerClass(G); GameTimer.restart(G, elem, onTimeOver); }
 function checkTimer(G) { if (nundef(GameTimer)) return false; return GameTimer.check(G); }
+
 class TimerClass {
 	constructor(g, elem) {
 		this.started, this.elapsed, this.onTimeOver = null, this.elem, this.timeLeft, this.settings = g;
@@ -58,4 +59,7 @@ class TimerClass {
 	}
 	getTimeElapsed() { return this.elapsed + msElapsedSince(this.started); }
 }
+
+
+
 

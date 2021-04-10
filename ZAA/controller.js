@@ -2,21 +2,21 @@ function canAct() { return uiActivated && !auxOpen; }
 
 function setGame(game) {
 	cleanupOldGame();
-
 	if (isdef(G) && G.id != game) Score.gameChange = true;
 
 	G = new (classByName(capitalize(game)))(game, DB.games[game]);
-	Settings = new SettingsClass(G,dAux);
+	Settings = new SettingsClass(G, dAux);
 
 	if (nundef(U.games[game]) && G.type == 'solitaire') { U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 }; }
 	G.level = Math.min(getUserStartLevel(game), G.maxLevel);
 
-	//updateGameValues(U,G);//Username, G.id, G.level); copyKeys(x, G);	updateSettings(); // muss hier sein weil es gewisse additional settings setzt und consistence (eg., silentMode/spokenFeedback)
+	Settings.updateGameValues(U, G);//Username, G.id, G.level); copyKeys(x, G);	updateSettings(); // muss hier sein weil es gewisse additional settings setzt und consistence (eg., silentMode/spokenFeedback)
 	saveUser();
 }
 
 function stopGame() { resetState(); }
 function startGame() {
+
 	resetState(); pauseSound();
 	G.successFunc = successPictureGoal;
 	G.failFunc = failPictureGoal;
@@ -26,7 +26,7 @@ function startGame() {
 	startLevel();
 }
 function startLevel() {
-	updateGameValues(U, G);
+	Settings.updateGameValues(U, G);
 	Speech.setLanguage(G.language);
 
 	G.start_Level();
@@ -85,7 +85,7 @@ function gotoNext(nextLevel) {
 
 	if (Score.gameChange) {
 		setNextGame();
-		if (unitTimeUp()) { gameOver('Great job! Time for a break!'); } else { startGame(); }
+		if (GameTimer.unitTimeUp()) { gameOver('Great job! Time for a break!'); } else { startGame(); }
 	} else if (Score.levelChange && nextLevel <= G.maxLevel) {
 		G.level = nextLevel;
 		setBadgeLevel(G.level);

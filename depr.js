@@ -1,3 +1,13 @@
+function initSymbolTableForGamesAddons() {
+	if (nundef(Daat)) Daat = {};
+	Daat.GameClasses = {
+		gTouchPic: GTouchPic, gNamit: GNamit, gRiddle: GRiddle, gSentence: GSentence, gSwap: GSwap,
+		gTouchColors: GTouchColors, gPremem: GPremem, gMem: GMem, gMissingLetter: GMissingLetter,
+		gMissingNumber: GMissingNumber, gWritePic: GWritePic, gSayPic: GSayPic, gSteps: GSteps, gElim: GElim,
+		gAnagram: GAnagram, gAbacus: GAbacus, gPasscode: GPasscode, gCats: GCats,
+	}
+}
+
 function setGame_dep(game, level) {
 	console.log('...setGame! wieso sollte ich nicht hier als einziges G setzen?')
 

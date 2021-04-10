@@ -1,5 +1,5 @@
 function createMenuUi(dParent) {
-	//console.log('dParent', dParent)
+	//console.log('BASE.features.menu: dParent', dParent)
 	clearElement(dParent);
 	mCenterFlex(dParent);
 	mAppend(dParent, createElementFromHTML(`<h1>Choose Game:</h1>`));

@@ -2283,6 +2283,21 @@ function toLetterList(s) {
 function toNoun(s) { return capitalize(s.toLowerCase()); }
 //#endregion
 
+//#region time 
+function format2Digits(i) { return (i < 10) ? "0" + i : i; }
+function msNow() { return Date.now(); }
+function msToTime(ms) {
+	let secs = Math.floor(ms / 1000);
+	let mins = Math.floor(secs / 60);
+	secs = secs - mins * 60;
+	let hours = Math.floor(mins / 60);
+	mins = mins - hours * 60;
+	return { h: hours, m: mins, s: secs };
+}
+function msElapsedSince(msStart) { return Date.now() - msStart; }
+function timeToMs(h, m, s) { return ((((h * 60) + m) * 60) + s) * 1000; }
+//#endregion
+
 //#region type checking / checking
 //#endregion
 

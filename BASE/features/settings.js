@@ -1,9 +1,9 @@
 class SettingsClass {
 
-	constructor(settingsObject,userObject, dParent) {
+	constructor(settingsObject, userObject, dParent) {
 		this.o=settingsObject;
 		this.u = userObject;
-		console.log('settings:',this.o,this.u);
+		//console.log('settings:',this.o,this.u);
 		this.dParent = dParent;
 	}
 	//#region settings ui
@@ -30,7 +30,7 @@ class SettingsClass {
 		this.setzeEineZahl(nGroupNumCommonAllGames, 'trials', 3, ['trials']);
 		this.setzeEineCheckbox(nGroupNumCommonAllGames, 'show hint', true, ['showHint']);
 
-		console.log('Settings', this.list)
+		//console.log('Settings', this.list)
 	}
 	setSettingsKeys(elem) {
 		let val = elem.type == 'number' ? Number(elem.value) : elem.type == 'checkbox' ? elem.checked : elem.value;
@@ -127,10 +127,10 @@ class SettingsClass {
 	addSetting(keylist) { if (nundef(this.list)) this.list = []; this.list.push(keylist); }
 	updateSettings() {
 
-		updateLabelSettings();
-		updateTimeSettings();
+		this.updateLabelSettings();
+		this.updateTimeSettings();
 		//updateKeySettings();
-		updateSpeakmodeSettings();
+		this.updateSpeakmodeSettings();
 
 		//welche settings kommen wohin?
 		let scope = 'user';//'game' 'level','temp','all'
@@ -145,9 +145,14 @@ class SettingsClass {
 
 	}
 	updateSpeakmodeSettings() { if (this.o.silentMode && this.o.spokenFeedback) this.o.spokenFeedback = false; }
-	updateTimeSettings() { let timeElem = mBy('time'); if (this.o.showTime) { show(timeElem); startTime(timeElem); } else hide(timeElem); }
-	updateLabelSettings() { if (this.o.pictureLabels == 'toggle') this.o.showLabels = true; else this.o.showLabels = (this.o.pictureLabels == 'always'); }
+	updateTimeSettings() { checkTimer(this.o);}//let timeElem = mBy('time'); if (this.o.showTime) { show(timeElem); startTime(timeElem); } else hide(timeElem); }
+	updateLabelSettings() { 
+		if (this.o.pictureLabels == 'toggle') this.o.showLabels = true; 
+		else this.o.showLabels = (this.o.pictureLabels == 'always'); 
+		//console.log('labels set to',this.o.showLabels)
+	}
 	updateGameValues(U) {
+		//extracts values for current user and current game from DB
 		let game = this.o.id;
 		let level = this.o.level;
 
@@ -171,3 +176,4 @@ class SettingsClass {
 	}
 
 }
+
