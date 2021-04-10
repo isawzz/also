@@ -10,7 +10,7 @@ nil:
     decrementLevelOnNegativeStreak: 6
     pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: E
-    vocab: all
+    vocab: best25
     showTime: true
     spokenFeedback: true
     silentMode: true
@@ -55,7 +55,7 @@ nil:
     gTouchColors:
       startLevel: 5
     gTouchPic:
-      startLevel: 0
+      startLevel: 5
     gWritePic:
       startLevel: 2
   avAddons: [aPasscode, aAddress, aPassword]

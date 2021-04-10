@@ -492,11 +492,11 @@ function mpOver_NO(d, dParent, fz, color, picStyle) {
 	let cx = b.w / 2 + b.x;
 	let cy = b.h / 2 + b.y;
 
-	let [w,h]=[fz*1.25,fz*1.12];
-	mStyleX(d,{w:w,h:h,fz:fz,fg:color,family:'emoNoto'});
+	let [w, h] = [fz * 1.25, fz * 1.12];
+	mStyleX(d, { w: w, h: h, fz: fz, fg: color, family: 'emoNoto' });
 
 	//mSize(d,fz*1.25,fz*1.12);
-	mPos(d, cx-w/2, cy-h/2, unit = 'px')
+	mPos(d, cx - w / 2, cy - h / 2, unit = 'px')
 	return d;
 
 	//console.log('picStyle')
@@ -513,7 +513,7 @@ function mpOver_NO(d, dParent, fz, color, picStyle) {
 	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
 	return d;
 }
-function setKeys({allowDuplicates, nMin, lang, key, keySets, filterFunc, param, confidence, sortByFunc } = {}) {
+function setKeys({ allowDuplicates, nMin = 25, lang, key, keySets, filterFunc, param, confidence, sortByFunc } = {}) {
 	// console.log('setKeys (legacy)',nMin,lang,key,keySets,'\nfilterFunc',filterFunc);
 	//G.keys = setKeys({ nMin, lang: G.language, keySets: KeySets, key: G.vocab });
 
@@ -524,9 +524,9 @@ function setKeys({allowDuplicates, nMin, lang, key, keySets, filterFunc, param, 
 	// console.log('setKeys',keys)
 	if (isdef(nMin)) {
 		let diff = nMin - keys.length;
-		let additionalSet = diff > 0 ? firstCondDictKeys(keySets, k => k != key && keySets[k].length > diff) : null;
+		let additionalSet = diff > 0 ? nMin > 100 ? firstCondDictKeys(keySets, k => k != key && keySets[k].length > diff) : 'best100' : null;
 
-		//console.log('diff',diff,additionalSet, keys)
+		//console.log('diff', diff, additionalSet, keys)
 		if (additionalSet) KeySets[additionalSet].map(x => addIf(keys, x)); //
 		//if (additionalSet) keys = keys.concat(keySets[additionalSet]);
 		//console.log(keys)
@@ -567,29 +567,32 @@ function setKeys({allowDuplicates, nMin, lang, key, keySets, filterFunc, param, 
 
 	if (isdef(nMin)) console.assert(primary.length >= nMin);
 	//console.log(primary)
-	if (nundef(allowDuplicates)){ 
+	if (nundef(allowDuplicates)) {
 		//console.log('hhhhhhhhhhhhhhh',primary.length)
 		primary = removeDuplicates(primary);
 	}
 	return primary;
 }
 
-function removeDuplicates(keys,prop){
-	let di={};
+function removeDuplicates(keys, prop) {
+	let di = {};
 	let res = [];
-	let items = keys.map(x=>Syms[x]);
-	for(const item of items){
+	let items = keys.map(x => Syms[x]);
+	for (const item of items) {
 		// if (item.key.includes('key')) console.log('hallo',item)
 		// if (isdef(di[item.best])) {console.log('dupl:',item.key); continue;}
-		if (isdef(di[item.best])) {continue;}
-		res.push(item); 
-		di[item.key]=true;
+		if (isdef(di[item.best])) { continue; }
+		res.push(item);
+		di[item.key] = true;
 	}
-	return res.map(x=>x.key);
+	return res.map(x => x.key);
 }
 
-function setKeysG(g,filterFunc,nmin,key) {
-	return setKeys({ nmin: valf(nmin,25), lang: g.language, key: valf(key,g.vocab), keySets: KeySets, filterFunc: filterFunc, param:g });
+function setKeysG(g, filterFunc, nMin, key) {
+	if (nundef(nMin)) nMin = 25;
+	if (isdef(g.numPics)) nMin = Math.max(25, g.numPics);
+	console.log(nMin,nMin)
+	return setKeys({ nMin: nMin, lang: g.language, key: valf(key, g.vocab), keySets: KeySets, filterFunc: filterFunc, param: g });
 }
 
 function mpOver_dep(d, dParent, fz, color, picStyle) {
