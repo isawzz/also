@@ -17,7 +17,7 @@ var DB;
 
 var U;
 var Pictures, Goal, Selected, Score, uiActivated = false, auxOpen, TO, TOMain, TOTrial, QContextCounter = 0, Live, Daat, G;
-var Settings, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
+var Settings,SettingsList, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 
 var DA, Items;
 

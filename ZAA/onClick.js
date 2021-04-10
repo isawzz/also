@@ -6,7 +6,7 @@ function onClickGear() {
 	openAux();
 	hide('dGear');
 	hide('dCalibrate');
-	createSettingsUi(dAux);
+	Settings.createSettingsUi(dAux);
 }
 function onClickTemple() {
 	openAux();
@@ -52,8 +52,8 @@ function closeAux() {
 	hide('dGo');
 	show('dGear');
 	show('dTemple');
-	if (SettingsChanged) { updateSettings(); dbSave('boardGames'); }
-	SettingsChanged = false;
+	if (Settings.hasChanged) { Settings.updateSettings(); dbSave('boardGames'); }
+	Settings.hasChanged = false;
 	auxOpen = false;
 }
 function interrupt() {

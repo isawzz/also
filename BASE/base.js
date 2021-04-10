@@ -1847,6 +1847,11 @@ function firstCond(arr, func) {
 	}
 	return null;
 }
+function firstCondDictKeys(dict, func) {
+	//return first elem that fulfills condition
+	for (const k in dict) { if (func(k)) return k; }
+	return null;
+}
 function firstNCond(n, arr, func) {
 	//return first n elements that fulfills condition
 	if (nundef(arr)) return [];

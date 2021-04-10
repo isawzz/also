@@ -155,7 +155,7 @@ function updateGameValues(U, G) {
 	Speech.setLanguage(settings.language);
 
 	copyKeys(settings, G);	
-	updateSettings(); 
+	Settings.updateSettings(); 
 	//return settings;
 
 }
