@@ -1652,6 +1652,7 @@ function createContainers(list, dArea, styles) {
 	addKeys(defStyles, styles);
 	for (const cat of list) {
 		let cont = mTitledDiv(cat, dArea, styles, {}, 'c' + i);
+		mStyleX(cont, { h: '100%' });
 		i += 1;
 		containers.push({ label: cat, div: cont });
 	}
@@ -1661,6 +1662,24 @@ function getActualText(item) {
 	//console.log(item)
 	if (isdef(item.live.dLabel)) return item.live.dLabel.innerHTML;
 	//if (isdef(item.pic)){return iDiv(item).children[1].innerHTML;} else {return iDiv(item).children[0].innerHTML;}
+}
+function getPrefixHint() {
+	let oldHintLength = isdef(G.hintLength) ? G.hintLength : 0;
+	if (nundef(G.hintLength)) G.hintLength = 0;
+
+	G.input.value = G.correctPrefix;
+	let progress = G.correctPrefix.length > G.nCorrect;
+	if (G.correctPrefix.length > G.nCorrect) {
+		//user got more good letters. hint length will be reduced to 1
+		G.hintLength = 1;
+		G.nCorrect = G.correctPrefix.length;
+	} else if (G.hintLength < G.goal.label.length - G.nCorrect) G.hintLength += 1;
+
+	if (G.hintLength == 0) G.hintLength = 1;
+	let wr = substringOfMinLength(G.goal.label, G.correctPrefix.length, G.hintLength);
+	let sp = oldHintLength == G.hintLength && !progress ? G.lastHintPrompt : null;
+	//console.log('oldHintLength',oldHintLength,'G.hintLength',G.hintLength,'progress',progress)
+	return [wr, sp];
 }
 function getRandomKeysFromGKeys(n) { return getRandomKeys(n, G.keys); }
 function getGameOrLevelInfo(k, defval) {
@@ -1855,6 +1874,22 @@ function showLevel() {
 	// dLevel.innerHTML = 'level: ' + G.level + '/' + G.maxLevel;
 }
 function showGameTitle() { dGameTitle.innerHTML = G.friendly; }
+function showPictureHints(items, dParentProp) {
+	for (const item of items) {
+		let d1 = item[dParentProp];
+		mRemoveChildrenFromIndex(d1, 1);
+		//if (isdef(item.dHint)) mRemoveChildrenFromIndex(d1,1); //mRemove(item.dHint);
+		let dHint = item.dHint = miPic(item, d1);
+	}
+}
+function showTextHints(items, dParentProp, textProp, removeFirst = true) {
+	for (const item of items) {
+		let d1 = item[dParentProp];
+		//if (removeFirst && isdef(item.dHint)) mRemove(item.dHint);
+		let hint = item[textProp];
+		let dHint = item.dHint = mText(hint, d1);
+	}
+}
 function showScore() {
 
 	//console.log('===>_showScore!!! level:', G.level);

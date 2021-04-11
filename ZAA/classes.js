@@ -1056,7 +1056,7 @@ class GSteps extends Game {
 class GSwap extends Game {
 	constructor(name, o) {
 		super(name, o);
-		// if (this.language == 'C') { this.prevLanguage = this.language; this.language = chooseRandom('E', 'D'); }
+		if (this.language == 'C') { this.prevLanguage = this.language; this.language = chooseRandom('E', 'D'); }
 		if (nundef(Dictionary)) { Dictionary = { E: {}, S: {}, F: {}, C: {}, D: {} } };
 		for (const k in Syms) {
 			for (const lang of ['E', 'D', 'F', 'C', 'S']) {
@@ -1068,7 +1068,7 @@ class GSwap extends Game {
 		//console.log('dict', Dictionary);
 	}
 	startGame() { this.correctionFunc = showCorrectLabelSwapping; } //this.successFunc = showCorrectLabelSwapping;  }
-	clear() { super.clear(); }// if (isdef(this.prevLanguage)) this.language = this.prevLanguage; }
+	clear() { super.clear(); if (isdef(this.prevLanguage)) this.language = this.prevLanguage; }
 	start_Level() {
 		this.keys = setKeysG(this, filterWordByLength, 25);
 		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }

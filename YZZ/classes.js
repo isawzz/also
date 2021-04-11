@@ -248,16 +248,11 @@ class GCats extends Game {
 
 		// pick items
 		if (this.pickRandom == false) {
-			// let n = this.numPics;
-			// if (n == 1 || n == 2 || n == 3) console.log('n', n); else n = 4;
 			items = Pictures = getNItemsPerKeylist(this.numPics, this.keylists, this.options);
 		} else {
-			//console.log(this.allKeys);
 			let keys = choose(this.allKeys, this.numPics * this.numCats);
 			items = Pictures = genItemsFromKeys(keys, this.options);
 			items.map(x => x.cat = this.catsByKey[x.key]);
-			//for(let i=0;i<items.length;i++){items[i].cat=keysPlus[i].cat;}
-			//console.log('items', items)
 		}
 		shuffle(items);
 
@@ -266,7 +261,7 @@ class GCats extends Game {
 		mLinebreak(dTable);
 
 		//show categories:
-		let dArea = mDiv(dTable, { display: 'flex', 'flex-wrap': 'wrap' });//, layout: 'fhcc' });
+		let dArea = mDiv(dTable, { display: 'flex', 'flex-wrap': 'wrap' });
 		let containers, dWordArea;
 		containers = this.containers = createContainers(this.cats, dArea, { w: 'auto', wmin: 150, wmax: 300, hmin: 250, fz: 24, fg: 'contrast' }); //['animals', 'sport', 'transport'], dArea);
 		mLinebreak(dTable);
@@ -1077,7 +1072,7 @@ class GSwap extends Game {
 	start_Level() {
 		this.keys = setKeysG(this, filterWordByLength, 25);
 		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
-		this.trials = 4;
+		this.trials = 2;
 		//console.log('keys', this.keys.length);
 		//console.log('words', this.keys.map(x => Syms[x].E))
 	}
@@ -1119,7 +1114,7 @@ class GSwap extends Game {
 		mLinebreak(dTable);
 
 		let fz = 32;
-		let options = _simpleOptions({ w: 200, h: 200, keySet: this.keys, luc: 'u', fz: fz, bg: 'random', fg: 'white', showLabels: true });
+		let options = _simpleOptions({ language: this.language, w: 200, h: 200, keySet: this.keys, luc: 'u', fz: fz, bg: 'random', fg: 'white', showLabels: true });
 		// console.log(options)
 
 		let n = 2;
@@ -1148,33 +1143,16 @@ class GSwap extends Game {
 			delete item.swaps;
 		}
 
+		showPictureHints(Pictures, 'container');
 
 		// enableDD(items, containers, this.dropHandler.bind(this), false, true);
 		mLinebreak(dTable, 50);
-		mButton('Done!', evaluate, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		this.buttonDone = mButton('Done!', evaluate, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 		activateUi();
 
 	}
 	trialPrompt() {
-		sayTryAgain();
-		showFleetingMessage('Try again!', 500);
-		for (const item of Pictures) {
-			//clear hint area
-			let d1 = item.container;
-			//console.log('d1',d1);
-			if (isdef(item.dHint)) mRemove(item.dHint);
-			//console.log(this);
-			if (this.trialNumber < 2) {
-				//console.log()
-				//let hint = this.trialNumber == 1 ? item.info.group : item.info.subgroup;
-				let hint = item.info.subgroup;
-				let dHint = item.dHint = mText('(' + hint + ')', d1);
-			} else {
-				let dHint = miPic(item, d1);
-			}
-		}
-
-
+		if (this.trialNumber % 2 == 0) showPictureHints(Pictures, 'container'); else showTextHints(Pictures, 'container', 'origLabel');
 		TOMain = setTimeout(() => {
 			for (const p of Pictures) {
 				for (const l of p.letters) {
@@ -1185,13 +1163,20 @@ class GSwap extends Game {
 					}
 				}
 			}
-		}, 1200);
-		return 3500;
+		}, 1500);
+		return 1800;
+	}
+	activate() {
+		this.buttonDone.style.opacity = 1;
+		if (this.trialNumber > 1) { sayTryAgain(); showFleetingMessage('Try again!'); }
+		else {showFleetingMessage('click one letter in each word!')}
 	}
 	eval() {
 		let n = Pictures.length;
 		let blinkInfo = this.blinkInfo = [];//Pictures.map(x => {let l=getBlinkingLetter(x); if (isdef(l)) return l.i; else return null;});
 
+		this.buttonDone.style.opacity = 0;
+		clearFleetingMessage();
 		for (let i = 0; i < n; i++) {
 			let p = Pictures[i];
 			let blinking = getBlinkingLetter(p);
@@ -1214,7 +1199,7 @@ class GSwap extends Game {
 		for (const blinki of blinkInfo) {
 			// console.log(blinki)
 			if (!blinki.blinking) {
-				showFleetingMessage('you did not finish the task!', 0, { fz: 18 + 6 * (this.trialNumber + 1) });
+				//showFleetingMessage('you did not finish the task!', 0, { fz: 18 + 6 * (this.trialNumber + 1) });
 				return false;
 			}
 		}
@@ -1387,6 +1372,9 @@ class GWritePic extends Game {
 		//console.log('#',this.trialNumber,'of',this.trials)
 		let answer = normalize(this.inputBox.value, this.language);
 		let reqAnswer = normalize(Goal.label, this.language);
+
+		let correctPrefix = this.correctPrefix = getCorrectPrefix(Goal.label, this.inputBox.value);
+
 
 		Selected = { reqAnswer: reqAnswer, answer: answer, feedbackUI: iDiv(Goal) };
 		if (answer == reqAnswer) {
