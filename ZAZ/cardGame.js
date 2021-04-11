@@ -111,14 +111,14 @@ class Card52 {
 	static turnFaceDown(c, color) {
 		//console.log(c.faceUp)
 		if (!c.faceUp) return;
-		let svgCode = c52.card_2B; //c52 is cached asset loaded in _start
+		let svgCode = C52.card_2B; //C52 is cached asset loaded in _start
 		c.div.innerHTML = svgCode;
 		if (isdef(color)) c.div.children[0].children[1].setAttribute('fill', color);
 		c.faceUp = false;
 	}
 	static turnFaceUp(c) {
 		if (c.faceUp) return;
-		c.div.innerHTML = c52[c.key];
+		c.div.innerHTML = C52[c.key];
 		c.faceUp = true;
 	}
 	static getItem(i, h = 110, w) {
@@ -133,7 +133,7 @@ class Card52 {
 		//#region set rank and suit from inputs
 		let rank = irankey;
 		if (nundef(irankey) && nundef(suit)) {
-			irankey = chooseRandom(Object.keys(c52));
+			irankey = chooseRandom(Object.keys(C52));
 			rank = irankey[5];
 			suit = irankey[6];
 		} else if (nundef(irankey)) {
@@ -154,8 +154,8 @@ class Card52 {
 
 		//#region load svg for card_[rank][suit] (eg. card_2H)
 		let cardKey = 'card_' + rank + suit;
-		let svgCode = c52[cardKey]; //c52 is cached asset loaded in _start
-		// console.log(cardKey, c52[cardKey])
+		let svgCode = C52[cardKey]; //C52 is cached asset loaded in _start
+		// console.log(cardKey, C52[cardKey])
 		svgCode = '<div>' + svgCode + '</div>';
 		let el = createElementFromHTML(svgCode);
 		if (isdef(h) || isdef(w)) { mSize(el, w, h); }
@@ -255,6 +255,58 @@ class Deck1 extends Array {
 	}
 }
 
+function splayout(elems, dParent, w, h, x, y, overlap = 20, splay = 'right') {
+	function splayRight(elems, d, x, y, overlap) {
+		//console.log('splayRight', elems, d)
+		for (const c of elems) {
+			mAppend(d, c);
+			mStyleX(c, { position: 'absolute', left: x, top: y });
+			x += overlap;
+		}
+		return [x, y];
+	}
+	function splayLeft(elems, d, x, y, overlap) {
+		x += (elems.length - 2) * overlap;
+		let xLast = x;
+		for (const c of elems) {
+			mAppend(d, c);
+			mStyleX(c, { position: 'absolute', left: x, top: y });
+			x -= overlap;
+		}
+		return [xLast, y];
+	}
+	function splayDown(elems, d, x, y, overlap) {
+		for (const c of elems) {
+			mAppend(d, c);
+			mStyleX(c, { position: 'absolute', left: x, top: y });
+			y += overlap;
+		}
+		return [x, y];
+	}
+	function splayUp(elems, d, x, y, overlap) {
+		y += (elems.length - 1) * overlap;
+		let yLast = y;
+		for (const c of elems) {
+			mAppend(d, c);
+			mStyleX(c, { position: 'absolute', left: x, top: y });
+			y -= overlap;
+		}
+		return [x, yLast];
+	}
+
+	if (isEmpty(elems)) return { w: 0, h: 0 };
+
+	mStyleX(dParent, { display: 'block', position: 'relative' });
+
+	//phase 4: add items to container
+	[x, y] = (eval('splay' + capitalize(splay)))(elems, dParent, x, y, overlap);
+
+	let isHorizontal = splay == 'right' || splay == 'left';
+	let sz = { w: (isHorizontal ? (x - overlap + w) : w), h: (isHorizontal ? (y - overlap + h) : h) };
+
+	return sz;
+
+}
 
 
 

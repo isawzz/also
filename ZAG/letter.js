@@ -81,7 +81,7 @@ function iLetters(s, dParent, style) {
 	}
 	return d;
 }
-function isWord(w) { return isdef(Dictionary[G.language][w]); }
+function isWord(w) { return lookup(Dictionary,[G.language,w]); }//isdef(Dictionary[G.language][w]); }
 function pickSuitableItems_dep(n, options) {
 	let items = genItems(n, options);
 	let words = items.map(x => x.label);
@@ -100,6 +100,8 @@ function pickSuitableItems_dep(n, options) {
 function pickSuitableItems(n, options) {
 	let items = genItems(n, options);
 	let words = items.map(x => x.label);
+
+	//console.log('words',words,'options',options)
 
 	//if all labels are longer than 5 letters try finding vowels first
 	let minlen = arrMinMax(words, x => x.length).min;

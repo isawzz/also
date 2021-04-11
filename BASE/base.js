@@ -98,7 +98,7 @@ function miPic(item, dParent, styles, classes) {
 	if (isdef(classes)) mClass(d, classes);
 	return d;
 }
-
+function mIfNotRelative(d) { if (nundef(d.style.position)) d.style.position = 'relative'; }
 function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent, styles); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
 function mLinebreak(d, gap) { mGap(d, gap); }
@@ -116,10 +116,11 @@ function mLine3(dParent, index, ids, styles) {
 	mInsert(dParent, x, index);
 	return [mBy(ids[0]), mBy(ids[1]), mBy(ids[2])];
 }
-function mMoveBy(elem,dx,dy){let rect=getRect(elem);mPos(elem,rect.x+dx,rect.y+dy);}
+function mMoveBy(elem, dx, dy) { let rect = getRect(elem); mPos(elem, rect.x + dx, rect.y + dy); }
 function mParent(elem) { return elem.parentNode; }
 function mPos(d, x, y, unit = 'px') { mStyleX(d, { left: x, top: y, position: 'absolute' }, unit); }
 function mRemove(elem) { mDestroy(elem); }
+function mRemoveChildrenFromIndex(dParent, i) { while (dParent.children[i]) { mRemove(dParent.children[i]); } }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
 function mRemoveStyle(d, styles) { for (const k of styles) d.style[k] = null; }
 function mReveal(d) { d.style.opacity = 1; }
@@ -270,6 +271,17 @@ function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
 	let dContent = mDiv(d, innerStyles, id);
 	return dContent;
 }
+function mZone(dParent, styles, pos) {
+	let d = mDiv(dParent);
+	if (isdef(styles)) mStyleX(d, styles);
+	if (isdef(pos)) {
+		mIfNotRelative(dParent);
+		mPos(d, pos.x, pos.y);
+	}
+	return d;
+}
+
+
 //#endregion
 
 //#region i
@@ -293,7 +305,7 @@ function iAdd(item, props) {
 	}
 }
 function iAppend(dParent, i) { mAppend(iDiv(dParent), iDiv(i)); }
-function iBounds(i, irel) { return getRect(iDiv(i), iDiv(irel)); }
+function iBounds(i, irel) { return getRect(iDiv(i), isdef(irel) ? iDiv(irel) : null); }
 function iCenter(item, offsetX, offsetY) { let d = iDiv(item); mCenterAbs(d, offsetX, offsetY); }
 function iDetect(itemInfoKey) {
 	let item, info, key;
@@ -376,6 +388,8 @@ function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ov
 
 }
 function iStyle(i, styles) { mStyleX(iDiv(i), styles); }
+var ZMax = 0;
+function iZMax(n) { if (isdef(n)) ZMax = n; ZMax += 1; return ZMax; }
 //#endregion
 
 //#region opt
@@ -1798,7 +1812,7 @@ function arrMinMax(arr, func) {
 function arrSum(arr, props) {
 	if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0);
 }
-function classByName(name){return eval(name);}
+function classByName(name) { return eval(name); }
 function copyKeys(ofrom, oto, except = {}, only) {
 	let keys = isdef(only) ? only : Object.keys(ofrom);
 	for (const k of keys) {
@@ -1807,7 +1821,7 @@ function copyKeys(ofrom, oto, except = {}, only) {
 	}
 }
 function copySimpleProps(ofrom, oto = {}) { for (const k in ofrom) { if (isLiteral(k)) oto[k] = ofrom[k]; } return oto; }
-function createClassByName(name, ...a) {	var c = eval(name);	return new c(...a);}
+function createClassByName(name, ...a) { var c = eval(name); return new c(...a); }
 function createKeyIndex(di, prop) {
 	let res = {};
 	for (const k in di) {
@@ -2192,6 +2206,15 @@ function capitalize(s) {
 }
 function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
 function extendWidth(w) { return replaceEvery(w, 'w', 2); }
+function findCommonPrefix(s1, s2) {
+	let i = 0;
+	let res = '';
+	while (i < s1.length && i < s2.length) {
+		if (s1[i] != s2[i]) break; else res += s1[i];
+		i += 1;
+	}
+	return res;
+}
 function firstNumber(s) {
 	// returns first number in string s
 	if (s) {
@@ -2202,6 +2225,42 @@ function firstNumber(s) {
 		}
 	}
 	return null;
+}
+function getCorrectPrefix(label, text) {
+
+	// let txt = this.input.value;
+	// console.log('input value',txt);
+
+	let req = label.toLowerCase();
+	let answer = text.toLowerCase();
+
+	let res1 = removeNonAlphanum(req);
+	let res2 = removeNonAlphanum(answer);
+	let req1 = res1.alphas;// removeNonAlphanum(req);
+	let answer1 = res2.alphas; //removeNonAlphanum(answer);
+	let whites = res1.whites;
+
+	let common = findCommonPrefix(req1, answer1);
+	//now find common prefix
+	//console.log(req1, answer1, 'common prefix is',common);
+
+	//the real address is label
+	//let aReal = label;
+	//whites
+	let nletters = common.length;
+	let ireal = 0;
+	let icompact = 0;
+	let iwhites = 0;
+	let correctPrefix = '';
+	while (icompact < nletters) {
+		if (req[ireal] == common[icompact]) { correctPrefix += label[ireal]; icompact += 1; }
+		else if (whites[iwhites] == req[ireal]) { correctPrefix += label[ireal]; iwhites += 1; }
+		else break;
+		ireal += 1;
+	}
+	//console.log('__________result:',correctPrefix);
+
+	return correctPrefix;
 }
 function includesAnyOf(s, slist) { for (const l of slist) { if (s.includes(l)) return true; } return false; }
 function ordinal_suffix_of(i) {
@@ -2238,6 +2297,14 @@ function replaceFractionOfWordBy(w, letter = 'w', fr = .5) {
 	let sub = letter.repeat(len);
 	w = sub + w.substring(0, len1);
 	return w;
+}
+function removeNonAlphanum(s) {
+	let res = '';
+	let nonalphas = '';
+	for (const l of s) {
+		if (isAlphaNumeric(l)) res += l; else nonalphas += l;
+	}
+	return { alphas: res, whites: nonalphas };
 }
 function reverseString(s) {
 	return toLetterList(s).reverse().join('');
@@ -2276,6 +2343,13 @@ function stringBetweenLast(sFull, sStart, sEnd) {
 	let s1 = stringBeforeLast(sFull, isdef(sEnd) ? sEnd : sStart);
 	return stringAfterLast(s1, sStart);
 	//return stringBefore(stringAfter(sFull,sStart),isdef(sEnd)?sEnd:sStart);
+}
+function substringOfMinLength(s, minStartIndex, minLength) {
+	let res = s.substring(minStartIndex).trim();
+	let i = 0;
+	let res1 = '';
+	while (res1.trim().length < minLength && i < res.length) { res1 += res[i]; i += 1; }
+	return res1.trim();
 }
 function toLetterList(s) {
 	return [...s];
@@ -2372,6 +2446,7 @@ function createElementFromHTML(htmlString) {
 	//console.log(div.firstChild)
 	return div.firstChild;
 }
+function divInt(a, b) { return Math.trunc(a / b); }
 function evToClosestId(ev) {
 	//returns first ancestor that has an id
 	let elem = findParentWithId(ev.target);

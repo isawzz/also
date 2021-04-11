@@ -1,22 +1,22 @@
 nil:
   id: gul
-  avGames: [gSentence, gElim, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gTouchPic
+  avGames: [gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  lastGame: gSwap
   settings:
     # settings common to all games
-    samplesPerGame: 2
-    minutesPerUnit: 0.1
-    incrementLevelOnPositiveStreak: 12
+    samplesPerGame: 10
+    minutesPerUnit: 10
+    incrementLevelOnPositiveStreak: 10
     decrementLevelOnNegativeStreak: 6
     pictureLabels: toggle #always never toggle (=remove labels after half level)
-    language: E
-    vocab: best25
+    language: D
+    vocab: objectPlus
     showTime: true
     spokenFeedback: true
     silentMode: true
     switchGame: true
     #indiv game settings default
-    trials: 1
+    trials: 2
     showHint: true
   games:
     gAbacus:
@@ -51,7 +51,7 @@ nil:
     gRiddle:
       startLevel: 0
     gSwap:
-      startLevel: 3
+      startLevel: 0
     gTouchColors:
       startLevel: 5
     gTouchPic:
@@ -69,7 +69,7 @@ nil:
       open: false
 guest0:
   id: guest
-  avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
+  avGames: [gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
   lastGame: gNamit
   settings:
     # settings common to all games
@@ -92,7 +92,7 @@ guest0:
       startLevel: 0
 test0:
   id: test0
-  avGames: [gNamit, gMissingLetter, gTouchPic, gPremem, gTouchColors, gSteps, gSayPic, gMem, gMissingNumber, gWritePic, gAnagram, gElim, gAbacus]
+  avGames: [gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
   lastGame: gNamit
   settings:
     # settings common to all games
@@ -140,7 +140,7 @@ test0:
       startLevel: 0
 gul:
   id: gul
-  avGames: [gSentence, gRiddle, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gElim, gAbacus]
+  avGames: [gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
   lastGame: gTouchPic
   settings:
     # settings common to all games

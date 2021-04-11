@@ -373,14 +373,17 @@ gSwap:
   maxWordLength: 10
   levels:
     0:
+      pictureHint: true
       maxWordLength: 4
     1:
+      maxWordLength: 4
+    2:
       minWordLength: 4
       maxWordLength: 6
-    2:
+    3:
       minWordLength: 5
       maxWordLength: 8
-    3:
+    4:
       minWordLength: 5
       maxWordLength: 10
 gSteps:

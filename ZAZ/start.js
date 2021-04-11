@@ -1,14 +1,14 @@
 async function _start() {
 
+	DA={};
+	createSubtitledPage('seagreen'); revealMain();
+
+	mCenterFlex(dTable)
 	//repairSubgroups(); return; //instead of person-role, makes subgroups job,jobman,role
 	//showGroupsSubgroups();
 
-	createSubtitledPage('seagreen'); revealMain();
-	console.log(DB);
-	let data = genCats();
-	let sample = new SolCatsClass(data);
-	sample.prompt();
-
+	//test05_solCats();
+	test03_sortDeck(); test03_2Hands(); //test03_2HandsRandom();
 
 }
 

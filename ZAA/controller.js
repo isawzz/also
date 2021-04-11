@@ -36,6 +36,9 @@ function startRound() {
 	uiActivated = false;
 	G.startRound();
 	TOMain = setTimeout(() => prompt(), 300);
+
+	//if (isdef(G.keys)) console.log('words',G.maxWordLength,G.keys.map(x=>Syms[x][G.language])); else console.log('no keys!');
+
 }
 function prompt() {
 	QContextCounter += 1;

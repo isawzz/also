@@ -420,7 +420,6 @@ function mZone(dParent, styles, pos) {
 	}
 	return d;
 }
-function mIfNotRelative(d) { if (nundef(d.style.position)) d.style.position = 'relative'; }
 function mCanvas(dParent) { let d = mDiv(dParent); d.style.position = 'relative'; return d; }
 function mCanvas100(dParent) { let d = mDiv(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }
 function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }

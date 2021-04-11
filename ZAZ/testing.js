@@ -1,4 +1,12 @@
 
+function test05_solCats(){
+	console.log(DB);
+	let data = genCats();
+	let sample = new SolCatsClass(data);
+	sample.prompt();
+
+}
+
 function registerItems(items) {
 	for (const i of items) UIS[i.div.id] = i;
 }
@@ -31,12 +39,12 @@ function test03_2HandsRandom() {
 
 function test03_sortDeck() {
 	let h1 = iMakeHand([7, 10, 21, 2, 43, 4], 'h1');
-	iSortHand(h1);
-	//setTimeout(()=>iSortHand(h1),2000);
+	//iSortHand(h1);
+	setTimeout(()=>iSortHand(h1),2000);
 }
 
 function test03_2Hands() {
-	let h1 = iMakeHand([0, 1, 2, 3, 4], 'h1');
+	let h1 = iMakeHand([0, 1, 2, 3, 4,5,6], 'h1');
 	let h2 = iMakeHand([13, 14, 15, 16, 17], 'h2');
 	//console.log('DA', DA)
 
@@ -58,6 +66,7 @@ function test03_2Hands_transferStarts() {
 	let w = c.w;
 	let ov = w / 4;
 	let xOffset = n1 * ov;
+	console.log('w',w,'ov',ov,'xOffset',xOffset)
 
 	iMoveFromTo(c, h2.div, h1.div, test03_2Hands_transfer, { x: xOffset, y: 0 });
 }
