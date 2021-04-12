@@ -1790,7 +1790,7 @@ function sayRandomVoice(e, g, voice = 'random') {
 	if (!G.silentMode) Speech.say(G.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
 }
 function sayTryAgain() { sayRandomVoice('try again!', 'nochmal'); }
-function setBackgroundColor() { document.body.style.backgroundColor = getColorDictColor(G.color); }
+function setBackgroundColor(c) { document.body.style.backgroundColor = getColorDictColor(isdef(c)?c:G.color); }
 function setGoal(index) {
 	if (nundef(index)) {
 		let rnd = G.numPics < 2 ? 0 : randomNumber(0, G.numPics - 2);

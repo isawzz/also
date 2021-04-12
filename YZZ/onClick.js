@@ -18,7 +18,7 @@ function onClickMenuItem(ev) { onClickGo(ev); }
 function onClickGo(ev) {
 	if (isVisible('dTemple')) {
 		closeAux();
-		startGame();
+		GC.startGame();
 	} else {
 		let item = isdef(ev) ? evToItemC(ev) : null;
 		let gKey = nundef(ev) ? SelectedMenuKey : isString(ev) ? ev : item.id; // divKeyFromEv(ev);
@@ -30,7 +30,7 @@ function onClickGo(ev) {
 		} else {
 			closeAux();
 			setGame(gKey);
-			startGame();
+			GC.startGame();
 
 		}
 	}

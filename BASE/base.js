@@ -1,5 +1,7 @@
 //region m
 function mAppend(d, child) { d.appendChild(child); }
+function mBackground(bg,fg) { mStyleX(document.body,{bg:bg,fg:fg});}
+
 function mButton(caption, handler, dParent, styles, classes) {
 	let x = mCreate('button');
 	x.innerHTML = caption;
@@ -318,7 +320,20 @@ function iDetect(itemInfoKey) {
 }
 function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
 function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
-function infoToItem(x) { let item = { info: x, key: x.key }; item.id = iRegister(item); return item; }
+function iGrid(rows, cols, dParent, styles) {
+	styles.display = 'inline-block';
+	let items = [];
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			let d = mDiv(dParent, styles);
+			let item = { row: i, col: j };
+			iAdd(item, { div: d });
+			items.push(item);
+		}
+		mLinebreak(dParent);
+	}
+	return items;
+}
 function iLabel(i) { return isdef(i.live) ? i.live.dLabel : isdef(i.dLabel) ? i.dLabel : null; }
 function iMoveFromTo(item, d1, d2, callback, offset) {
 	let bi = iBounds(item);
@@ -336,6 +351,7 @@ function iMoveFromTo(item, d1, d2, callback, offset) {
 	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
 	a.onfinish = () => { mAppend(d2, item.div); item.div.style.zIndex = item.z = iZMax(); if (isdef(callback)) callback(); };
 }
+function infoToItem(x) { let item = { info: x, key: x.key }; item.id = iRegister(item); return item; }
 function iParentBounds(i) { return getRect(iDiv(i)); }
 function iPic(i) { return isdef(i.live) ? i.live.dPic : isdef(i.dPic) ? i.dPic : null; }
 function iResize(i, w, h) { return isList(i) ? i.map(x => iSize(x, w, h)) : iSize(i, w, h); }

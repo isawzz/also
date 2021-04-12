@@ -7870,7 +7870,7 @@ glowing star:
   type: emo
   isDuplicate: false
   E: star
-  D: star
+  D: stern
   F: étoile
   S: estrella
   C: 星
@@ -18874,7 +18874,7 @@ star:
   type: emo
   isDuplicate: true
   E: star
-  D: star
+  D: stern
   F: étoile
   S: estrella
   C: 星
@@ -55031,7 +55031,7 @@ key-lock:
   w: 125
   h: 133
   E: star
-  D: star
+  D: stern
   F: étoile
   S: estrella
   C: 星

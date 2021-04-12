@@ -1,7 +1,7 @@
 nil:
   id: gul
-  avGames: [gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gSwap
+  avGames: [gKrieg, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  lastGame: gKrieg
   settings:
     # settings common to all games
     samplesPerGame: 10
@@ -11,7 +11,7 @@ nil:
     pictureLabels: toggle #always never toggle (=remove labels after half level)
     language: D
     vocab: objectPlus
-    showTime: true
+    showTime: false
     spokenFeedback: true
     silentMode: true
     switchGame: true
