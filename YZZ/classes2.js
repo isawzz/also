@@ -17,11 +17,11 @@ class Game {
 	}
 	startRound() { }
 	prompt() {
-		myShowPics(GC.evaluate.bind(GC));
-		//showPicturesSpeechTherapyGames(GC.evaluate.bind(GC));
+		myShowPics(this.controller.evaluate.bind(this.controller));
+		//showPicturesSpeechTherapyGames(this.controller.evaluate.bind(this.controller));
 		setGoal();
 		showInstruction(Goal.label, 'click', dTitle, true);
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
 		sayTryAgain();
@@ -82,7 +82,7 @@ class GAbacus extends Game {
 		if (this.level <= 1 && this.showHint && (this.step <= 3 || this.op != 'mult'))
 			hintEngineStart(getOperationHintString, [0, 1], 5000 + this.level * 1000);
 
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
 		if (this.level <= 1 && this.showHint && (this.step <= 3 || this.op != 'mult')) hintEngineStart(getOperationHintString, [0, 1], 5000 + this.level * 1000);
@@ -107,7 +107,7 @@ class GAbacus extends Game {
 		//TODO: multiple groups does NOT work!!!
 		if (sel.isMatch && sel.isVeryLast) {
 			deactivateFocusGroup();
-			GC.evaluate.bind(GC)(true);
+			this.controller.evaluate.bind(this.controller)(true);
 		} else if (sel.isMatch && sel.isLastOfGroup) {
 			//it has been filled
 			//remove this group from Goal.blankWords
@@ -128,7 +128,7 @@ class GAbacus extends Game {
 			Selected.req = getCorrectWordString();
 			deactivateFocusGroup();
 			//console.log('LAST ONE WRONG!!!')
-			GC.evaluate.bind(GC)(false);
+			this.controller.evaluate.bind(this.controller)(false);
 			//user entered last missing letter but it is wrong!
 			//can there be multiple errors in string?
 		} else if (sel.isLastOfGroup) {
@@ -138,7 +138,7 @@ class GAbacus extends Game {
 			Selected.answer = getInputWordString();
 			Selected.req = getCorrectWordString();
 			deactivateFocusGroup();
-			GC.evaluate.bind(GC)(false);
+			this.controller.evaluate.bind(this.controller)(false);
 			//user entered last missing letter but it is wrong!
 			//can there be multiple errors in string?
 		} else {
@@ -186,7 +186,7 @@ class GAnagram extends Game {
 		this.letters = createDragLetters();
 
 		if (this.hidden) showFleetingMessage('category: ' + Pictures[0].info.subgroup, 5000);
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 
 	}
 	trialPrompt() {
@@ -257,7 +257,7 @@ class GCats extends Game {
 		shuffle(items);
 
 		//OIL for category boxes
-		showInstruction('', this.language == 'E' ? 'drag words to categories' : "ordne die texte in kategorien", dTitle, true);
+		showInstruction('', this.language == 'E' ? 'drag pictures to categories' : "ordne die bilder in kategorien", dTitle, true);
 		mLinebreak(dTable);
 
 		//show categories:
@@ -272,9 +272,9 @@ class GCats extends Game {
 
 		enableDD(items, containers, this.dropHandler.bind(this), false);
 		mLinebreak(dTable, 50);
-		mButton('Done!', GC.evaluate.bind(GC), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		mButton('Done!', this.controller.evaluate.bind(this.controller), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
 		sayTryAgain();
@@ -337,7 +337,7 @@ class GElim extends Game {
 		Goal = { pics: this.piclist, sammler: [] };
 
 		showInstructionX(sWritten, dTitle, sSpoken, { fz: 22, voice: 'zira' });
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
 		sayTryAgain();
@@ -365,9 +365,9 @@ class GElim extends Game {
 		}
 
 
-		if (Goal.pics.length == Goal.sammler.length) GC.evaluate.bind(GC)(true);
-		else if (!Goal.pics.includes(pic)) { this.lastPic = pic; GC.evaluate.bind(GC)(false); }
-		// if (pic.label == Goal.label) GC.evaluate.bind(GC)(false);
+		if (Goal.pics.length == Goal.sammler.length) this.controller.evaluate.bind(this.controller)(true);
+		else if (!Goal.pics.includes(pic)) { this.lastPic = pic; this.controller.evaluate.bind(this.controller)(false); }
+		// if (pic.label == Goal.label) this.controller.evaluate.bind(this.controller)(false);
 		// else { removePicture(pic);maLayout(Pictures,dTable) }
 
 	}
@@ -401,7 +401,7 @@ class GMem extends Game {
 		let pic = findItemFromEvent(Pictures, ev);
 		turnFaceUpSimple(pic);
 		if (this.trialNumber == this.trials - 1) turnFaceUpSimple(Goal);
-		TOMain = setTimeout(() => GC.evaluate.bind(GC)(ev), 300);
+		TOMain = setTimeout(() => this.controller.evaluate.bind(this.controller)(ev), 300);
 	}
 
 	interact_orig(ev) {
@@ -414,8 +414,8 @@ class GMem extends Game {
 
 		if (this.trialNumber == this.trials - 1) {
 			turnFaceUp(Goal);
-			TOMain = setTimeout(() => GC.evaluate.bind(GC)(ev), 100);
-		} else GC.evaluate.bind(GC)(ev);
+			TOMain = setTimeout(() => this.controller.evaluate.bind(this.controller)(ev), 100);
+		} else this.controller.evaluate.bind(this.controller)(ev);
 	}
 }
 class GMissingLetter extends Game {
@@ -455,7 +455,7 @@ class GMissingLetter extends Game {
 		let msg = this.composeFleetingMessage();
 		//console.log('msg,msg', msg)
 		showFleetingMessage(msg, 3000);
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 
 	}
 	trialPrompt() {
@@ -489,7 +489,7 @@ class GMissingLetter extends Game {
 				mRemoveClass(d, 'blink');
 				let result = buildWordFromLetters(mParent(d));
 
-				GC.evaluate.bind(GC)(result);
+				this.controller.evaluate.bind(this.controller)(result);
 			} else {
 				let ch = charEntered.toUpperCase();
 				for (const inp of this.inputs) {
@@ -560,12 +560,12 @@ class GNamit extends Game {
 		setDropZones(Pictures, () => { });
 		mLinebreak(dTable, 50);
 
-		this.letters = createDragWords(Pictures, GC.evaluate.bind(GC));
+		this.letters = createDragWords(Pictures, this.controller.evaluate.bind(this.controller));
 		mLinebreak(dTable, 50);
 
-		mButton('Done!', GC.evaluate.bind(GC), dTable, { fz: 32, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		mButton('Done!', this.controller.evaluate.bind(this.controller), dTable, { fz: 32, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
 		sayTryAgain();
@@ -600,7 +600,7 @@ class GPremem extends Game {
 		// { showLabels: false }); //, showLabels: false });
 		// { numRepeat: this.numRepeat, sameBackground: this.sameBackground, showLabels: false }); //, showLabels: false });
 		showInstruction('', this.language == 'E' ? 'click any picture' : 'click irgendein Bild', dTitle, true);
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
 		for (const p of this.piclist) { toggleSelectionOfPicture(p); }
@@ -634,7 +634,7 @@ class GPremem extends Game {
 				: 'click das ' + (this.numRepeat == 2 ? 'andere' : 'letzte') + ' Bild mit', dTitle, true);
 		} else {
 			//set is complete: eval
-			GC.evaluate.bind(GC)(this.piclist);
+			this.controller.evaluate.bind(this.controller)(this.piclist);
 		}
 	}
 	eval(piclist) {
@@ -683,7 +683,7 @@ class GRiddle extends Game {
 		mLinebreak(dTable);
 
 		// console.log(wp.text); console.log(wp.result);
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	createMultipleChoiceElements() {
 		let wp = this.wp;
@@ -718,7 +718,7 @@ class GRiddle extends Game {
 
 
 				Goal.buttonClicked = ev.target;
-				GC.evaluate.bind(GC)(ch, Goal.label);
+				this.controller.evaluate.bind(this.controller)(ch, Goal.label);
 			}, dParent, { wmin: 100, fz: 36, margin: 20, rounding: 4, vpadding: 4, hpadding: 10 }, ['toggleButtonClass']);
 			dButton.id = 'b_' + ch;
 			if (ch.toString() == wp.result.text) Goal.buttonCorrect = dButton;
@@ -773,7 +773,7 @@ class GRiddle extends Game {
 			if (!canAct()) return;
 			if (ev.key === "Enter") {
 				ev.cancelBubble = true;
-				GC.evaluate.bind(GC)(ev);
+				this.controller.evaluate.bind(this.controller)(ev);
 			}
 		};
 		this.inputBox.focus();
@@ -796,7 +796,7 @@ class GSayPic extends Game {
 		//console.log('MicrophoneUi',MicrophoneUi)
 		MicrophoneHide();
 
-		TOMain = setTimeout(GC.activateUi.bind(GC), 200);
+		TOMain = setTimeout(this.controller.activateUi.bind(this.controller), 200);
 
 	}
 	trialPrompt(nTrial) {
@@ -809,7 +809,7 @@ class GSayPic extends Game {
 		if (Speech.isSpeakerRunning()) {
 			TOMain = setTimeout(this.activate.bind(this), 200);
 		} else {
-			TOMain = setTimeout(() => Speech.startRecording(this.language, GC.evaluate.bind(GC)), 100);
+			TOMain = setTimeout(() => Speech.startRecording(this.language, this.controller.evaluate.bind(this.controller)), 100);
 		}
 
 	}
@@ -876,7 +876,7 @@ class GSentence extends Game {
 			mAppend(dTarget, dSource);
 		}
 
-		//GC.evaluate.bind(GC)();
+		//this.controller.evaluate.bind(this.controller)();
 		//relayout sources in target
 	}
 	prompt() {
@@ -922,7 +922,7 @@ class GSentence extends Game {
 		enableDD(items, containers, this.dropHandler.bind(this), false, true);
 
 		mLinebreak(dTable, 50);
-		mButton('Done!', GC.evaluate.bind(GC), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		mButton('Done!', this.controller.evaluate.bind(this.controller), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 		// myShowPics(() => fleetingMessage('drag and drop the letters to form the word!'), {}, { });
 		// setGoal();
 		// showInstruction(Goal.label, this.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
@@ -932,7 +932,7 @@ class GSentence extends Game {
 		// let x = mLinebreak(dTable, 50);//x.style.background='red'
 		// this.letters = createDragLetters();
 
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 
 	}
 	trialPrompt() {
@@ -994,7 +994,7 @@ class GSteps extends Game {
 		// console.log('written', written, '\nspoken', spoken);
 		showInstructionX(written.join('; '), dTitle, spoken.join('. '), { fz: 20 });
 
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
 		sayTryAgain();
@@ -1015,7 +1015,7 @@ class GSteps extends Game {
 		toggleSelectionOfPicture(pic, this.piclist);
 		if (this.piclist.length == Goal.pics.length) {
 			clearFleetingMessage();
-			Selected = { piclist: this.piclist }; GC.evaluate.bind(GC)();
+			Selected = { piclist: this.piclist }; this.controller.evaluate.bind(this.controller)();
 		}
 	}
 	interact_dep(ev) {
@@ -1030,8 +1030,8 @@ class GSteps extends Game {
 
 		let iGoal = this.piclist.length - 1;
 
-		if (pic != Goal.pics[iGoal]) { Selected = { pics: this.piclist, wrong: pic, correct: Goal[iGoal] }; GC.evaluate.bind(GC)(false); }
-		else if (this.piclist.length == Goal.pics.length) { Selected = { piclist: this.piclist }; GC.evaluate.bind(GC)(true); }
+		if (pic != Goal.pics[iGoal]) { Selected = { pics: this.piclist, wrong: pic, correct: Goal[iGoal] }; this.controller.evaluate.bind(this.controller)(false); }
+		else if (this.piclist.length == Goal.pics.length) { Selected = { piclist: this.piclist }; this.controller.evaluate.bind(this.controller)(true); }
 	}
 	eval() {
 		//console.log('eval', isCorrect);
@@ -1106,7 +1106,7 @@ class GSwap extends Game {
 			mAppend(dTarget, dSource);
 		}
 
-		//GC.evaluate.bind(GC)();
+		//this.controller.evaluate.bind(this.controller)();
 		//relayout sources in target
 	}
 	prompt() {
@@ -1147,8 +1147,8 @@ class GSwap extends Game {
 
 		// enableDD(items, containers, this.dropHandler.bind(this), false, true);
 		mLinebreak(dTable, 50);
-		this.buttonDone = mButton('Done!', GC.evaluate.bind(GC), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
-		GC.activateUi.bind(GC)();
+		this.buttonDone = mButton('Done!', this.controller.evaluate.bind(this.controller), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		this.controller.activateUi.bind(this.controller)();
 
 	}
 	trialPrompt() {
@@ -1267,7 +1267,7 @@ class GTouchColors extends Game {
 		let colorKeys = choose(this.colors, this.numColors);
 		//let showLabels = this.showLabels == true && this.labels == true;
 		let rows = this.numColors;
-		myShowPics(GC.evaluate.bind(GC), { bg: 'white' },// { contrast: this.contrast, },
+		myShowPics(this.controller.evaluate.bind(this.controller), { bg: 'white' },// { contrast: this.contrast, },
 			{ showLabels: this.showLabels, colorKeys: colorKeys, rows: rows });
 
 		//{ contrast: this.contrast }, { colorKeys: colorKeys, showLabels: showLabels });
@@ -1277,7 +1277,7 @@ class GTouchColors extends Game {
 			let dParent = iDiv(Pictures[0]).parentNode;
 			shuffleChildren(dParent);
 		}
-		//showPicturesSpeechTherapyGames(GC.evaluate.bind(GC), { contrast: this.contrast }, { colorKeys: colorKeys });
+		//showPicturesSpeechTherapyGames(this.controller.evaluate.bind(this.controller), { contrast: this.contrast }, { colorKeys: colorKeys });
 		//Pictures.map(x => x.color = ColorDict[x.textShadowColor]);
 
 		setGoal(randomNumber(0, Pictures.length - 1));
@@ -1285,7 +1285,7 @@ class GTouchColors extends Game {
 		let [written, spoken] = getOrdinalColorLabelInstruction('click'); //getColorLabelInstruction('click');
 		showInstructionX(written, dTitle, spoken);
 
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	eval(ev) {
 		ev.cancelBubble = true;
@@ -1303,10 +1303,10 @@ class GTouchPic extends Game {
 	prompt() {
 		//console.log('showLabels',showLabels,this.showLabels)
 		//console.log(this.showLabels, this.labels, showLabels)
-		myShowPics(GC.evaluate.bind(GC));
+		myShowPics(this.controller.evaluate.bind(this.controller));
 		setGoal();
 		showInstruction(Goal.label, 'click', dTitle, true);
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 }
 class GWritePic extends Game {
@@ -1344,7 +1344,7 @@ class GWritePic extends Game {
 		this.inputBox = addNthInputElement(dTable, this.trialNumber);
 		this.defaultFocusElement = this.inputBox.id;
 
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 		//return 10;
 	}
 	trialPrompt() {
@@ -1363,7 +1363,7 @@ class GWritePic extends Game {
 			if (!canAct()) return;
 			if (ev.key === "Enter") {
 				ev.cancelBubble = true;
-				GC.evaluate.bind(GC)(ev);
+				this.controller.evaluate.bind(this.controller)(ev);
 			}
 		};
 		this.inputBox.focus();
@@ -1426,7 +1426,7 @@ class GMissingNumber extends Game {
 			hintEngineStart(getNumSeqHintString, [0, 1, 2, 3, 4], 5000 + this.level * 1000);
 		}
 
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
 		let hintlist = this.trialNumber >= 4 ? [this.trialNumber] : range(this.trialNumber, 4);
@@ -1452,7 +1452,7 @@ class GMissingNumber extends Game {
 		//TODO: multiple groups does NOT work!!!
 		if (sel.isMatch && sel.isVeryLast) {
 			deactivateFocusGroup();
-			GC.evaluate.bind(GC)(true);
+			this.controller.evaluate.bind(this.controller)(true);
 		} else if (sel.isMatch && sel.isLastOfGroup) {
 			//it has been filled
 			//remove this group from Goal.blankWords
@@ -1473,7 +1473,7 @@ class GMissingNumber extends Game {
 			Selected.req = getCorrectWordString();
 			deactivateFocusGroup();
 			//console.log('LAST ONE WRONG!!!')
-			GC.evaluate.bind(GC)(false);
+			this.controller.evaluate.bind(this.controller)(false);
 			//user entered last missing letter but it is wrong!
 			//can there be multiple errors in string?
 		} else if (sel.isLastOfGroup) {
@@ -1483,7 +1483,7 @@ class GMissingNumber extends Game {
 			Selected.answer = getInputWordString();
 			Selected.req = getCorrectWordString();
 			deactivateFocusGroup();
-			GC.evaluate.bind(GC)(false);
+			this.controller.evaluate.bind(this.controller)(false);
 			//user entered last missing letter but it is wrong!
 			//can there be multiple errors in string?
 		} else {

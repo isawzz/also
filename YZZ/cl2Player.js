@@ -16,11 +16,11 @@ class Game2Player {
 	}
 	startRound() { }
 	prompt() {
-		myShowPics(GC.evaluate.bind(GC));
-		//showPicturesSpeechTherapyGames(GC.evaluate.bind(GC));
+		myShowPics(this.controller.evaluate.bind(this.controller));
+		//showPicturesSpeechTherapyGames(this.controller.evaluate.bind(this.controller));
 		setGoal();
 		showInstruction(Goal.label, 'click', dTitle, true);
-		GC.activateUi.bind(GC)();
+		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
 		sayTryAgain();
@@ -47,7 +47,7 @@ class Game2Player {
 
 
 class GKrieg extends Game2Player {
-	startGame() {
+	startGame(players) {
 		console.log('deal card...')
 		console.log('determine player order...')
 		console.log('show stats...')

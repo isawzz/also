@@ -257,7 +257,7 @@ class GCats extends Game {
 		shuffle(items);
 
 		//OIL for category boxes
-		showInstruction('', this.language == 'E' ? 'drag words to categories' : "ordne die texte in kategorien", dTitle, true);
+		showInstruction('', this.language == 'E' ? 'drag pictures to categories' : "ordne die bilder in kategorien", dTitle, true);
 		mLinebreak(dTable);
 
 		//show categories:

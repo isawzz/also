@@ -10023,7 +10023,7 @@ function getSym(key, lang = 'E') {
 var BlockServerSend = false;
 var SERVER_DATA = null;
 
-async function broadcastSIMA(usersPath = './_users.yaml', settingsPath = './_settings.yaml', gamesPath = './_games.yaml', addonsPath = './_addons.yaml') {
+async function broadcastSIMA(usersPath = './users.yaml', settingsPath = './settings.yaml', gamesPath = './games.yaml', addonsPath = './addons.yaml') {
 	let users = await loadYamlDict(usersPath);
 	let settings = await loadYamlDict(settingsPath);
 	let games = await loadYamlDict(gamesPath);
@@ -10687,7 +10687,7 @@ function initSymbolTableForGamesAddons() {
 
 //#region db init (von db.js)
 var BlockServerSend = false;
-async function dbInit(appName, {usersPath = './_users.yaml', settingsPath = './_settings.yaml', gamesPath = './_games.yaml', tablesPath = './_tables.yaml', addonsPath = './_addons.yaml'}={}) {
+async function dbInit(appName, {usersPath = './users.yaml', settingsPath = './settings.yaml', gamesPath = './games.yaml', tablesPath = './tables.yaml', addonsPath = './addons.yaml'}={}) {
 	let users = await loadYamlDict(usersPath);
 	let settings = await loadYamlDict(settingsPath);
 	let addons = await loadYamlDict(addonsPath);

@@ -1,6 +1,6 @@
 async function _start() {
 	initTable(); initSidebar(); initAux(); initScore();
-	loadUser();
+	loadUser('gul');
 	startUnit();
 }
 function startUnit() {

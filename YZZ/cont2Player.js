@@ -1,9 +1,10 @@
 class GC2PlayerClass {
 
-	constructor(player1, player2) {
+	constructor(g) {
+		this.g=g;
 		let players = this.players = [];
-		players.push(isdef(player1) ? player1 : U);
-		players.push(isdef(player2) ? player2 : new AIPlayer());
+		players.push(isdef(g.player1) ? g.player1 : U);
+		players.push(isdef(g.player2) ? g.player2 : new AIPlayer());
 		console.log('2 player controller');
 
 	}
@@ -12,7 +13,7 @@ class GC2PlayerClass {
 
 		resetState();
 
-		G.startGame();
+		G.startGame(this.players);
 		// this.startLevel();
 	}
 	startLevel() {

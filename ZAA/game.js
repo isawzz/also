@@ -1775,7 +1775,6 @@ function resetState() {
 	onkeydown = null; onkeypress = null; onkeyup = null;
 	lastPosition = 0;
 	DELAY = 1000;
-	// console.log(G)
 	setBackgroundColor();
 
 }

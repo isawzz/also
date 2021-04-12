@@ -4,8 +4,9 @@ nil:
   lastGame: gKrieg
   settings:
     # settings common to all games
-    samplesPerGame: 10
-    minutesPerUnit: 10
+    userColor: green
+    samplesPerGame: 2
+    minutesPerUnit: 0
     incrementLevelOnPositiveStreak: 10
     decrementLevelOnNegativeStreak: 6
     pictureLabels: toggle #always never toggle (=remove labels after half level)

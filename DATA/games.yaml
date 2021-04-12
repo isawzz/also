@@ -2,7 +2,7 @@ gAbacus:
   friendly: 'Abacus'
   logo: 'abacus'
   color: mediumslateblue
-  type: solitaire
+  controllerType: solitaire
   numMissing: 1
   minNum: 0
   maxNum: 10
@@ -56,7 +56,7 @@ gAnagram:
   friendly: 'Anagram!'
   logo: 'ram'
   color: rgb(0,152,105)
-  type: solitaire
+  controllerType: solitaire
   minWordLength: 3
   maxWordLength: 8
   pictureLabels: never
@@ -103,7 +103,7 @@ gCats:
   friendly: 'Category'
   logo: 'bookmark tabs'
   color: BROWN
-  type: solitaire
+  controllerType: solitaire
   showHint: false
   numCats: 3
   numPics: 3
@@ -145,7 +145,7 @@ gElim:
   friendly: 'Elim!'
   logo: 'collision'
   color: CRIMSON
-  type: solitaire
+  controllerType: solitaire
   contrast: 0.22
   colors: [blue, violet, lightgreen, pink, red, yellow]
   levels:
@@ -174,7 +174,7 @@ gMem:
   friendly: 'Memory!'
   logo: 'memory'
   color: GREEN
-  type: solitaire
+  controllerType: solitaire
   pictureLabels: toggle
   showHint: false
   levels:
@@ -211,7 +211,7 @@ gMissingLetter:
   friendly: 'Letters!'
   logo: 'black nib'
   color: gold
-  type: solitaire
+  controllerType: solitaire
   pictureLabels: never
   levels:
     0:
@@ -236,7 +236,7 @@ gNamit:
   friendly: 'Name it!'
   logo: 'bee'
   color: rgb(152,0,105)
-  type: solitaire
+  controllerType: solitaire
   levels:
     0: 
       numPics: 2
@@ -252,7 +252,7 @@ gPremem:
   friendly: 'Premem!'
   logo: 'hammer and wrench'
   color: RED
-  type: solitaire
+  controllerType: solitaire
   trials: 1
   sameBackground: true
   pictureLabels: toggle
@@ -290,7 +290,7 @@ gTouchColors:
   friendly: 'Colors!'
   logo: 'artist palette'
   color: LIGHTGREEN
-  type: solitaire
+  controllerType: solitaire
   contrast: 0.32
   pictureLabels: toggle
   shuffle: false
@@ -329,7 +329,7 @@ gTouchPic:
   logo: 'computer mouse'
   color: deepskyblue
   pictureLabels: toggle
-  type: solitaire
+  controllerType: solitaire
   levels:
     0: 
       numPics: 2
@@ -350,13 +350,13 @@ gSayPic:
   friendly: 'Speak up!'
   logo: 'microphone'
   color: BLUE
-  type: solitaire
+  controllerType: solitaire
 gSentence:
   friendly: 'Sentence!'
   logo: 'top hat'
   language: 'E'
   color: BLUEGREEN
-  type: solitaire
+  controllerType: solitaire
   levels:
     0:
       maxWords: 4
@@ -368,7 +368,7 @@ gSwap:
   friendly: 'Swap!'
   logo: 'fleur-de-lis'
   color: deeppink
-  type: solitaire
+  controllerType: solitaire
   minWordLength: 2
   maxWordLength: 10
   levels:
@@ -390,7 +390,7 @@ gSteps:
   friendly: 'Steps!'
   logo: 'stairs'
   color: PURPLE
-  type: solitaire
+  controllerType: solitaire
   contrast: 0.22
   colors: [blue1, violet, lightgreen, pink, red, yellow]
   levels:
@@ -438,7 +438,7 @@ gWritePic:
   friendly: 'Type it!'
   logo: 'keyboard'
   color: orange
-  type: solitaire
+  controllerType: solitaire
   pictureLabels: toggle
   instruction: all
   minWordLength: 3
@@ -475,7 +475,7 @@ gMissingNumber:
   friendly: 'Sequence!'
   logo: 'fleur-de-lis'
   color: deeppink
-  type: solitaire
+  controllerType: solitaire
   numMissing: 1
   minNum: 0
   maxNum: 99
@@ -522,7 +522,7 @@ gSet:
   friendly: 'Set!'
   logo: 'stairs'
   color: PURPLE
-  type: solitaire
+  controllerType: solitaire
   contrast: 0.22
   colors: [blue, violet, lightgreen, pink, red, yellow]
   levels:
@@ -562,7 +562,7 @@ gReverse:
   friendly: 'Reverse!'
   logo: 'keyboard'
   color: orange
-  type: solitaire
+  controllerType: solitaire
   pictureLabels: toggle
   instruction: all
   minWordLength: 3
@@ -598,7 +598,7 @@ gPasscode:
   friendly: 'Passcode!'
   logo: 'lock'
   color: indigo
-  type: solitaire
+  controllerType: solitaire
   levels:
     0: 
       passcodeLength: 1
@@ -622,7 +622,7 @@ gRiddle:
   friendly: 'Riddle'
   logo: 'blue book'
   color: seagreen
-  type: solitaire
+  controllerType: solitaire
   maxIndex: 10
   numMissing: 1
   minPlus: 0
@@ -651,17 +651,17 @@ gGuess:
   friendly: 'Guess'
   logo: 'input latin letters'
   color: midnightblue #YELLOW
-  type: word
+  controllerType: word
   numPlayers: 2
 gAristo:
   friendly: 'Aristocracy'
   logo: 'crown'
   color: indigo
-  type: c52
+  controllerType: c52
   numPlayers: [2, 3, 4, 5]
 gKrieg:
   friendly: 'Krieg'
   logo: 'fencing'
   color: steelblue
-  type: c52
+  controllerType: solo
   numPlayers: 2

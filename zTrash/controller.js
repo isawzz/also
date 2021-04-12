@@ -8,7 +8,7 @@ function setGame(game, level) {
 
 	//console.log('game', game, 'o', DB.games[game]);
 	G = new (classByName(capitalize(game)))(game, DB.games[game]);
-	if (nundef(U.games[game]) && G.type == 'solitaire') {
+	if (nundef(U.games[game]) && G.controllerType == 'solitaire') {
 		U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 };
 	}
 	if (isdef(level)) G.level = level; else { G.level = getUserStartLevel(game); }

@@ -7,11 +7,13 @@ function setGame(game) {
 	G = new (classByName(capitalize(game)))(game, DB.games[game]);
 	Settings = new SettingsClass(G, dAux);
 
-	if (nundef(U.games[game]) && G.type == 'solitaire') { U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 }; }
+	if (nundef(U.games[game]) && G.controllerType == 'solitaire') { U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 }; }
 	G.level = Math.min(getUserStartLevel(game), G.maxLevel);
 
 	Settings.updateGameValues(U, G);//Username, G.id, G.level); copyKeys(x, G);	updateSettings(); // muss hier sein weil es gewisse additional settings setzt und consistence (eg., silentMode/spokenFeedback)
 	saveUser();
+
+	GC=G.controller=this;
 }
 
 function stopGame() { resetState(); }

@@ -73,7 +73,7 @@ function setGame(game, level) {
 	Settings = G = jsCopy(DB.games[game]); //jsCopy(DB.games[game]);
 	G.color = getColorDictColor(G.color); //isdef(ColorDict[G.color]) ? ColorDict[G.color].c : G.color;
 	G.id = game;
-	if (nundef(U.games[game]) && G.type == 'solitaire') {
+	if (nundef(U.games[game]) && G.controllerType == 'solitaire') {
 		U.games[game] = { nTotal: 0, nCorrect: 0, nCorrect1: 0, startLevel: 0 };
 	}
 	saveUser();
