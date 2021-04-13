@@ -21,7 +21,7 @@ var Settings, SettingsList, SettingsChanged, SelectedMenuKey; //var G, T, P, U, 
 var GameTimer;
 var Daat = {}, DA = {}, Items;
 
-var Players, GC;
+var Players,PlayerOnTurn, GC;
 
 //#region color constants
 var ColorNames; //see base.js colors

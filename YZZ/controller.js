@@ -1,20 +1,23 @@
-class GC2PlayerClass {
+var IsAnswerCorrect;
 
-	constructor(g) {
-		this.g=g;
+class GCSolitaireClass {
+
+	constructor(player1, player2) {
 		let players = this.players = [];
-		players.push(isdef(g.player1) ? g.player1 : U);
-		players.push(isdef(g.player2) ? g.player2 : new AIPlayer());
-		console.log('2 player controller');
+		players.push(isdef(player1) ? player1 : U);
+		players.push(isdef(player2) ? player2 : new AIPlayer());
 
 	}
 	stopGame() { resetState(); }
 	startGame() {
 
 		resetState();
+		G.successFunc = successPictureGoal;
+		G.failFunc = failPictureGoal;
+		G.correctionFunc = showCorrectWord;
 
-		G.startGame(this.players);
-		// this.startLevel();
+		G.startGame();
+		this.startLevel();
 	}
 	startLevel() {
 		Settings.updateGameValues(U, G);
@@ -86,3 +89,17 @@ class GC2PlayerClass {
 
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

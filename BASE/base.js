@@ -289,18 +289,24 @@ function mZone(dParent, styles, pos) {
 //#region i
 function iAdd(item, props) {
 	let id, l;
-	if (isString(item)) { id = item; item = Items[id]; } else if (nundef(item.id)) { id = iRegister(item); } else id = item.id;
+	if (isString(item)) { id = item; item = Items[id]; } 
+	else if (nundef(item.id)) { 
+		id = item.id = iRegister(item); 
+		console.log('id of item is',id, item)
+	} else id = item.id;
 	if (nundef(item.live)) item.live = {}; l = item.live;
 	for (const k in props) {
 		let val = props[k];
 		l[k] = val;
-		if (isDict(val) && !isEmpty(val.id)) {
+		//console.log('ist ein dom ein dict?',isDict(val))
+		if (isDict(val) && (!isEmpty(val.id) || k=='div')) {
 			// console.log('val.id is defined:',val.id)
 			val.liveId = id;
 			//console.log('type of',k,'is',typeof(val),getTypeOf(val));
 			// if is elem should go to UIS!
 			if (isDOM(val)) {
-				// console.log('found DOM elem w/ id!!!!',val.id,k);
+				if (isEmpty(val.id)) val.id=id;
+				//console.log('found DOM elem w/ id!!!!',val.id,k);
 				lookupSet(l, ['uids', k], val.id);
 			}
 		}
@@ -326,7 +332,7 @@ function iGrid(rows, cols, dParent, styles) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			let d = mDiv(dParent, styles);
-			let item = { row: i, col: j };
+			let item = { row: i, col: j }; //, id:getUID() };
 			iAdd(item, { div: d });
 			items.push(item);
 		}

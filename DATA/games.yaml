@@ -665,3 +665,10 @@ gKrieg:
   color: steelblue
   controllerType: solo
   numPlayers: 2
+gTTT:
+  friendly: 'TicTacToe'
+  logo: 'fencing'
+  color: BLUEGREEN
+  controllerType: solo
+  numPlayers: 2
+

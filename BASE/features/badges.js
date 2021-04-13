@@ -1,9 +1,15 @@
 //#region badges
 var badges = [];
+function clearBadges(){
+	removeBadges(null,0);
+	badges = [];
+	//hide(dLeiste);
+}
 function removeBadges(dParent, level) {
 	while (badges.length > level) {
-		let badge = badges.pop()
-		removeElem(badge.div);
+		let badge = badges.pop();
+		//console.log(badge)
+		mRemove(iDiv(badge));
 	}
 }
 function addBadge(dParent, level, clickHandler, animateRubberband = false) {

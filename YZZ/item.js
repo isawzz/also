@@ -72,14 +72,14 @@ function genItems(n, options) { let keys = genKeys(n, options); let items = genI
 function genItemsFromKeys(keys, options) {
 	//console.log('keys',keys)
 	let items = [];
-	for(const k of keys){
-		console.assert(isdef(Syms[k]),'key not found: '+k);
+	for (const k of keys) {
+		console.assert(isdef(Syms[k]), 'key not found: ' + k);
 		let info = Syms[k];
 		let item = infoToItem(info);
 		items.push(item);
 	}
 	//let items = keys.map(x => infoToItem(Syms[x]));
-	
+
 	//console.log(options.language,options.luc)
 	addLabels(items, options.language, options.luc);
 
@@ -178,7 +178,12 @@ function modifyColorkey(item) {
 }
 function makeItemDivs(items, options) { for (let i = 0; i < items.length; i++) { makeItemDiv(items[i], options) } }
 function makeItemDiv(item, options) {
+
+	//console.log('item',item,'options',options)
+
+
 	if (isdef(options.outerStyles) && isdef(options.ifs)) copyKeys(item, options.outerStyles, {}, Object.keys(options.ifs)); //options.ifs contains per item dynamic styles!!!!!
+	//console.log('item.id',item.id,item)
 	let dOuter = mCreate('div', options.outerStyles, item.id);
 
 	if (isdef(item.textShadowColor)) {
@@ -219,6 +224,15 @@ function newItemSelection(item, items, onSelectSelected = null) {
 	if (selectedItem && selectedItem != item) toggleItemSelection(selectedItem);
 	else if (onSelectSelected && selectedItem) { onSelectSelected(item); }
 	toggleItemSelection(item);
+}
+function addLabel(item, label, styles) {
+	item.label = label;
+	let div = iDiv(item);
+	if (isdef(item.live.dLabel)) mRemove(item.live.dLabel);
+	let dLabel = item.live.dLabel = mDiv(div, styles, null, label);
+	mCenterFlex(div, true, true);
+	mStyleX(div, { 'vertical-align': 'top' });
+	return dLabel;
 }
 function addLabel1(item, label, replaceOld = true) {
 	let div = iDiv(item);

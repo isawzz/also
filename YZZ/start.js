@@ -2,7 +2,7 @@ async function _start() {
 	initTable(); initSidebar(); initAux(); initScore();
 	loadUser();
 
-	//console.log('G', G, 'U', U);
+	console.log('G', G, 'U', U);
 
 	//console.log('dTable', dTable);
 	// mBackground(BLUEGREEN);
