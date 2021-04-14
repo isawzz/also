@@ -217,6 +217,7 @@ div{
 	/* justify-content: space-between; */
 	font-size: 20pt;
 	position: relative;
+	min-height: 31px;
 }
 #lineTopLeft{
 	display: inline-block;

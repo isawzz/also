@@ -507,5 +507,96 @@ function _tryGrow(items, options) {
 
 }
 
+function present00(items, options) {
+	//[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
+
+	[options.rows, options.cols, options.szPic.w, options.szPic.h] = [10,10,50,50];
+
+	console.log('present00: rows', options.rows, 'cols', options.cols);
+
+	let fzOrig = options.fzOrig = options.fzText;
+	//console.log('fzText',options.fzText)
+	_setRowsColsSize(options);
+
+	makeItemDivs(items, options);
+
+	if (options.fixTextFont == true) {
+		_setTextFont(items, options, (options.fzOrig + options.fzText) / 2);
+		//console.log('fzText',options.fzText)
+	}
+
+	//console.log('fzText',options.fzText)
+
+	let dGrid = mDiv(options.dArea, { hmax: options.area.h, fz: 2, padding: options.gap }, getUID());
+
+	options.idGrid = dGrid.id;
+	for (const item of items) { mAppend(dGrid, iDiv(item)); }
+	_makeGridGrid(items, options, dGrid);
+	//console.assert(!isOverflown(dGrid), '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+	//console.log('fzText',options.fzText)
+	// options.fzOrig = options.fzText;
+
+	let wa = options.area.w, ha = options.area.h;
+	let wi = (wa / options.cols) - 1.25 * options.gap;
+	let hi = ha / options.rows - 1.25 * options.gap;
+	wi = Math.min(200, wi); wi = Math.round(wi);
+	hi = Math.min(200, hi); hi = Math.round(hi);
+	let fzMax, fpMax;
+	if (options.showLabels) {
+		// fzMax = Math.floor(idealFontDims(options.longestLabel, wi - 2 * Math.ceil(options.padding), hi, 24).fz);
+		fzMax = Math.floor(idealFontDims(options.wLongest, wi - 2 * options.padding, hi, 24).fz); //or longestLabel!
+		fpMax = options.showPic ? Math.min(hi / 2, wi * 2 / 3, hi - fzMax) : 0;
+	} else { fzMax = 1; fpMax = options.showPic ? Math.min(hi * 2 / 3, wi * 2 / 3) : 0; }
+	//let fpMax = Math.min(hi / 2, wi * 2 / 3, hi - fzMax);
+	//console.log('===>pad', options.padding, 'wi', wi, idealFontDims(options.longestLabel, wi, hi, 24));
+	//console.log('====>item size', wi, hi, 'fz', fzMax, 'fzPic', fpMax, 'lw', options.longestLabel, options.wLongest);
+	//console.log('===>pad', options.padding, 'wi', wi, 'wnet',wi-2*options.padding, 'fz',fzMax );
+
+	options.fzPic = options.picStyles.fz = fpMax; //Math.floor(fzPic)
+	options.fzText = options.labelStyles.fz = fzMax; // Math.floor(fz);
+	options.szPic = { w: wi, h: hi };
+
+	for (const item of items) {
+		let ui = item.live;
+		mStyleX(ui.div, { wmin: wi, hmin: hi, padding: 0 });
+		// mStyleX(ui.dPic, { fz: hi/2 }); 
+		if (isdef(ui.dPic)) mStyleX(ui.dPic, { fz: fpMax });
+		if (isdef(ui.dLabel)) mStyleX(ui.dLabel, { fz: fzMax });
+	}
+	//console.log('fzText',options.fzText);
+
+	if (options.fzText < options.fzOrig && options.fixTextFont == true) _setTextFont(items, options, (options.fzOrig + options.fzText) / 2)
+
+	mStyleX(dGrid, { display: 'inline-grid', wmax: options.area.w, hmax: options.area.h });
+
+	//_checkOverflow(items, options, dGrid);
+	if (isOverflown(dGrid)) {
+		let factor = .9;
+		//console.log('OVERFLOWN!!!!!!!!!!!! vorher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+		w = options.szPic.w * factor;
+		h = options.szPic.h * factor;
+		fz = options.fzText * factor; // idealFontDims(options.longestLabel, w, h, 22).fz; //options.fzText;// * factor;
+		fzPic = options.fzPic * factor;
+		options.fzPic = options.picStyles.fz = fzPic; //Math.floor(fzPic)
+		options.fzText = options.labelStyles.fz = fz; // Math.floor(fz);
+		options.szPic = { w: w, h: h };
+		options.padding *= factor;
+		options.gap *= factor;
+		mStyleX(dGrid, { gap: options.gap / 2 });
+		for (const item of items) {
+			let ui = item.live; 
+			if (options.showLabels) mStyleX(ui.dLabel, { fz: fz });
+			mStyleX(ui.div, { padding: options.padding, w: w, h: h }); 
+			mStyleX(ui.dPic, { fz: fzPic });
+		}
+		//console.log('fonts set to', fz, fzPic);
+		//console.log('...nachher', options.szPic, options.fzText, options.fzPic, options.padding, options.gap);
+	}
+
+	//console.log('fzText',options.fzText)
+
+	return [items, options];
+
+}
 
 

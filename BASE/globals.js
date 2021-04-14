@@ -16,7 +16,7 @@ var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup, Dictionary, WordP;
 var DB;
 
 var U;
-var Pictures, Goal, Selected, Score, uiActivated = false, auxOpen, TO, TOMain, TOTrial, QContextCounter = 0, Live, G;
+var Pictures, Goal, Selected, Score, uiActivated, aiActivated, auxOpen, TO, TOMain, TOTrial, QContextCounter = 0, Live, G;
 var Settings, SettingsList, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 var GameTimer;
 var Daat = {}, DA = {}, Items;

@@ -103,7 +103,7 @@ function onReleaseLetter(ev) {
 
 			//check if word complete!
 			let w = buildWordFromLetters(inp.parentNode);
-			if (!w.includes('_')) evaluate(w, Goal.label.toUpperCase());
+			if (!w.includes('_')) GC.evaluate(w, Goal.label.toUpperCase());
 
 		}
 	}
@@ -1055,7 +1055,7 @@ function turnCardsAfter(secs, removeBg = false) {
 		//if (qc!=QContextCounter) return;
 		showInstruction(Goal.label, 'click', dTitle, true);
 		showMouse();
-		activateUi();
+		GC.activateUi.bind(GC)(); //activateUi();
 	}, secs * 1000);
 
 }
@@ -1619,6 +1619,12 @@ function myPresent(dArea, items, options) {
 }
 //#endregion
 
+//#region tile
+
+function tileCondBelongsTo(t, pl, prop) { return t[prop] == pl.id; }
+
+//#endregion
+
 function addNthInputElement(dParent, n) {
 	mLinebreak(dParent, 10);
 	let d = mDiv(dParent);
@@ -1639,13 +1645,13 @@ function clearTable() {
 	clearElement(dLineTableMiddle); clearElement(dLineTitleMiddle); removeMarkers();
 }
 function clearStats() {
-	showGameTitle();
 	clearLevel();
 	clearScore();
+	clearGameTitle();
 }
-function clearScore(){clearElement(dScore)}
-function clearLevel(){clearElement(dLevel); clearBadges();}
-function clearGameTitle(){clearElement(dGameTitle);}
+function clearScore() { clearElement(dScore) }
+function clearLevel() { clearElement(dLevel); clearBadges(); }
+function clearGameTitle() { clearElement(dGameTitle); }
 function containsColorWord(s) {
 	let colors = ['old', 'blond', 'red', 'blue', 'green', 'purple', 'black', 'brown', 'white', 'grey', 'gray', 'yellow', 'orange'];
 	for (const c of colors) {
@@ -1755,6 +1761,9 @@ function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
 	//console.log('spoken', spoken, 'written', written);
 	return [written, spoken, corr];
 }
+function makeSurePlayerColorsAreContrasting(human,ai){
+	ai.color = RED;// bestContrastingColor(human,[GREEN,RED,YELLOW])
+}
 function removePicture(pic, reorder = false) {
 	removeInPlace(Pictures, pic);
 	if (reorder) {
@@ -1797,7 +1806,7 @@ function sayRandomVoice(e, g, voice = 'random') {
 	if (!G.silentMode) Speech.say(G.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
 }
 function sayTryAgain() { sayRandomVoice('try again!', 'nochmal'); }
-function setBackgroundColor(c) { document.body.style.backgroundColor = getColorDictColor(isdef(c)?c:G.color); }
+function setBackgroundColor(c) { document.body.style.backgroundColor = getColorDictColor(isdef(c) ? c : G.color); }
 function setGoal(index) {
 	if (nundef(index)) {
 		let rnd = G.numPics < 2 ? 0 : randomNumber(0, G.numPics - 2);
@@ -1828,11 +1837,12 @@ function showHiddenThumbsUpDown(sz = 100) {
 		mStyleX(d1, { opacity: 0 });
 	}
 }
-function showInstruction(text, cmd, title, isSpoken, spoken, fz) {
+function showInstruction(text, cmd, dParent, isSpoken, spoken, fz) {
+	//console.log('isSpoken',isSpoken,'G',G)
 	//console.assert(title.children.length == 0,'TITLE NON_EMPTY IN SHOWINSTRUCTION!!!!!!!!!!!!!!!!!')
 	//console.log('G.id is', G.id)
-	clearElement(title);
-	let d = mDiv(title);
+	clearElement(dParent);
+	let d = mDiv(dParent);
 	mStyleX(d, { margin: 15 })
 	mClass(d, 'flexWrap');
 
@@ -1840,13 +1850,13 @@ function showInstruction(text, cmd, title, isSpoken, spoken, fz) {
 	if (nundef(fz)) fz = 36;
 	let d1 = mText(msg, d, { fz: fz, display: 'inline-block' });
 
-	if (isSpoken){
+	if (isSpoken) {
 		let sym = symbolDict.speaker;
 		let d2 = mText(sym.text, d, {
 			fz: fz + 2, weight: 900, display: 'inline-block',
 			family: sym.family, 'padding-left': 14
 		});
-		}
+	}
 	dFeedback = dInstruction = d;
 
 	spoken = isSpoken ? isdef(spoken) ? spoken : cmd + " " + text : null;
@@ -1901,21 +1911,25 @@ function showTextHints(items, dParentProp, textProp, removeFirst = true) {
 	}
 }
 function showScore() {
+	if (G.controllerType == 'solitaire') {
+		//console.log('===>_showScore!!! level:', G.level);
+		if (Score.gameChange) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
 
-	//console.log('===>_showScore!!! level:', G.level);
-	if (Score.gameChange) showBadgesX(dLeiste, G.level, onClickBadgeX, G.maxLevel);
+		let scoreString = 'question: ' + (Score.nTotal + 1) + '/' + G.samplesPerGame;
 
-	let scoreString = 'question: ' + (Score.nTotal + 1) + '/' + G.samplesPerGame;
-
-	if (Score.levelChange) {
-		dScore.innerHTML = scoreString;
-		setBadgeLevel(G.level);
-	} else {
-		setTimeout(() => {
+		if (Score.levelChange) {
 			dScore.innerHTML = scoreString;
 			setBadgeLevel(G.level);
-		}, 300);
+		} else {
+			setTimeout(() => {
+				dScore.innerHTML = scoreString;
+				setBadgeLevel(G.level);
+			}, 300);
+		}
+	} else {
+		setTimeout(() => { dScore.innerHTML = 'score ' + GC.human.score + ':' + GC.ai.score; }, 300);
 	}
+
 }
 function showStats() {
 	if (nundef(Score)) initScore();

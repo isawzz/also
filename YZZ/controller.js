@@ -1,71 +1,66 @@
 var IsAnswerCorrect;
 
-class GCSolitaireClass {
+class ControllerSolitaire {
 
-	constructor(player1, player2) {
-		let players = this.players = [];
-		players.push(isdef(player1) ? player1 : U);
-		players.push(isdef(player2) ? player2 : new AIPlayer());
-
-	}
+	constructor(g,user) { this.g = g;this.player = user; }
 	stopGame() { resetState(); }
 	startGame() {
 
 		resetState();
-		G.successFunc = successPictureGoal;
-		G.failFunc = failPictureGoal;
-		G.correctionFunc = showCorrectWord;
+		this.g.successFunc = successPictureGoal;
+		this.g.failFunc = failPictureGoal;
+		this.g.correctionFunc = showCorrectWord;
 
-		G.startGame();
+		this.g.startGame();
 		this.startLevel();
 	}
 	startLevel() {
-		Settings.updateGameValues(U, G);
+		Settings.updateGameValues(this.player, this.g);
 
-		G.start_Level();
+		this.g.start_Level();
 
 		this.startRound();
 	}
 	startRound() {
 		resetRound();
 		uiActivated = false;
-		G.startRound();
+		this.g.startRound();
 		TOMain = setTimeout(() => this.prompt(), 300);
 
-		//if (isdef(G.keys)) console.log('words',G.maxWordLength,G.keys.map(x=>Syms[x][G.language])); else console.log('no keys!');
+		//if (isdef(this.g.keys)) console.log('words',this.g.maxWordLength,this.g.keys.map(x=>Syms[x][this.g.language])); else console.log('no keys!');
 
 	}
 	prompt() {
 		QContextCounter += 1;
 		showStats();
-		G.trialNumber = 0;
-		G.prompt();
+		this.g.trialNumber = 0;
+		this.g.prompt();
 	}
 	promptNextTrial() {
 		QContextCounter += 1;
 		clearTimeout(TOTrial);
 		uiActivated = false;
-		let delay = G.trialPrompt(G.trialNumber);
-		TOMain = setTimeout(this.activateUi, delay);
+		let delay = this.g.trialPrompt(this.g.trialNumber);
+		TOMain = setTimeout(()=>this.activateUi(), delay);
 	}
 	activateUi() {
 		Selected = null;
 		uiActivated = true;
-		G.activate();
+		this.g.activate();
 	}
 	evaluate() {
 		if (!canAct()) return;
 		uiActivated = false; clearTimeouts();
 
-		IsAnswerCorrect = G.eval(...arguments);
+		IsAnswerCorrect = this.g.eval(...arguments);
 		if (IsAnswerCorrect === undefined) { this.promptNextTrial(); return; }
 
-		G.trialNumber += 1;
-		if (!IsAnswerCorrect && G.trialNumber < G.trials) { this.promptNextTrial(); return; }
+		this.g.trialNumber += 1;
+		if (!IsAnswerCorrect && this.g.trialNumber < this.g.trials) { this.promptNextTrial(); return; }
 
 		//feedback
-		if (IsAnswerCorrect) { DELAY = isdef(Selected.delay) ? Selected.delay : G.spokenFeedback ? 1500 : 300; G.successFunc(); }
-		else { DELAY = G.correctionFunc(); G.failFunc(); }
+		if (IsAnswerCorrect) { DELAY = isdef(Selected.delay) ? Selected.delay : this.g.spokenFeedback ? 1500 : 300; this.g.successFunc(); }
+		else { DELAY = this.g.correctionFunc(); this.g.failFunc(); }
 
 		let nextLevel = scoring(IsAnswerCorrect);
 
@@ -81,9 +76,9 @@ class GCSolitaireClass {
 		if (Score.gameChange) {
 			setNextGame();
 			if (GameTimer.unitTimeUp()) { gameOver('Great job! Time for a break!'); } else { this.startGame(); }
-		} else if (Score.levelChange && nextLevel <= G.maxLevel) {
-			G.level = nextLevel;
-			setBadgeLevel(G.level);
+		} else if (Score.levelChange && nextLevel <= this.g.maxLevel) {
+			this.g.level = nextLevel;
+			setBadgeLevel(this.g.level);
 			this.startLevel();
 		} else { this.startRound(); }
 

@@ -23,7 +23,7 @@ nil:
     gAbacus:
       startLevel: 0
     gAnagram:
-      startLevel: 9
+      startLevel: 0
     gCats:
       startLevel: 7
       trials: 2
@@ -54,9 +54,9 @@ nil:
     gSwap:
       startLevel: 0
     gTouchColors:
-      startLevel: 5
+      startLevel: 0
     gTouchPic:
-      startLevel: 5
+      startLevel: 0
     gWritePic:
       startLevel: 2
   avAddons: [aPasscode, aAddress, aPassword]
@@ -145,6 +145,7 @@ gul:
   lastGame: gTouchPic
   settings:
     # settings common to all games
+    userColor: blue
     samplesPerGame: 25
     minutesPerUnit: 20
     incrementLevelOnPositiveStreak: 12

@@ -2,7 +2,9 @@ async function _start() {
 	initTable(); initSidebar(); initAux(); initScore();
 	loadUser();
 
-	console.log('G', G, 'U', U);
+	//console.log('G', G, 'U', U);
+	// let keys = SymKeys;//.filter(x=>x.includes('bookmark') || x.includes('box'));
+	// let app = new ItemViewerClass(dTable, dLineTitleRight, keys);
 
 	//console.log('dTable', dTable);
 	// mBackground(BLUEGREEN);

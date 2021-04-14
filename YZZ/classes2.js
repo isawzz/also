@@ -1,5 +1,12 @@
-class Game2Player {
+class GameX{
+	toServerData(){return this;}
+	toThis(){return this;}
+	applyMove(pl,tbl,move){	}
+}
+
+class Game2Player extends GameX {
 	constructor(name, o) {
+		super();
 		this.name = name;
 		//console.log(this);
 		//console.log('name',name,'o',o)
@@ -38,10 +45,10 @@ class Game2Player {
 	}
 }
 
-class GTTT extends Game2Player {
+class GTTT_ extends Game2Player {
 	startGame() {
-		for (let i = 0; i < this.controller.players.length; i++) {
-			let pl = this.controller.players[i];
+		for (let i = 0; i < this.players.length; i++) {
+			let pl = this.players[i];
 			pl.symbol = ['X', 'O', '@', '+', 'U', '#'][i];
 		}
 		this.board();
@@ -56,7 +63,7 @@ class GTTT extends Game2Player {
 			mCenterFlex(d);
 			d.onclick = this.controller.evaluate.bind(this.controller);
 		});
-		console.log(this.tiles)
+		//console.log(this.tiles)
 	}
 	prompt() {
 
@@ -69,24 +76,26 @@ class GTTT extends Game2Player {
 
 	}
 	AIMove() {
-		let emptyTiles = this.possibleMoves = this.tiles.filter(x => nundef(x.label));
-		let t=this.tiles;
-		for(let i=0;i<this.rows;i++){
-			let av=true;
-			let sym;
-			for(const j=0;j<this.cols;j++){
-				//look if this row contains only one free tile and all other tiles belong to same user
-				if (isdef(t.label)) {
-					if (nundef(sym)) sym=t.label;
-				}else if (!av) {
+		let state = this.tiles.map(x=>x.label);
+		console.log('state',state);
+		// let emptyTiles = this.possibleMoves = this.tiles.filter(x => nundef(x.label));
+		// let t=this.tiles;
+		// for(let i=0;i<this.rows;i++){
+		// 	let av=true;
+		// 	let sym;
+		// 	for(let j=0;j<this.cols;j++){
+		// 		//look if this row contains only one free tile and all other tiles belong to same user
+		// 		if (isdef(t.label)) {
+		// 			if (nundef(sym)) sym=t.label;
+		// 		}else if (!av) {
 					
-				} else av=false;
-			}
-		}
-		let tile = chooseRandom(emptyTiles);
-		let ev = { target: iDiv(tile) };
-		console.log('AI clicked on tile',tile.row,tile.col)
-		this.controller.evaluate(ev);
+		// 		} else av=false;
+		// 	}
+		// }
+		// let tile = chooseRandom(emptyTiles);
+		// let ev = { target: iDiv(tile) };
+		// console.log('AI clicked on tile',tile.row,tile.col)
+		// this.controller.evaluate(ev);
 	}
 	eval(ev) {
 		let tile = evToItemC(ev);

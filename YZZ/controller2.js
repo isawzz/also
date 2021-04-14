@@ -1,10 +1,10 @@
 class GC2PlayerClass {
 	constructor(g) {
 		this.g=g;
-		let players = this.players = [];
+		let players = this.players = g.players = [];
 		players.push(isdef(g.player1) ? g.player1 : U);
 		players.push(isdef(g.player2) ? g.player2 : new AIPlayer());
-		console.log('2 player controller');
+		//console.log('2 player controller');
 	}
 	stopGame() { resetState(); }
 	startGame() {
@@ -48,10 +48,11 @@ class GC2PlayerClass {
 			showFleetingMessage('The winner is '+this.g.winner); 
 		} else { 
 			PlayerOnTurn = this.players[(this.players.indexOf(PlayerOnTurn)+1)%this.players.length];
-			TOMain = setTimeout(this.startRound.bind(this),DELAY); 
+			//TOMain = setTimeout(this.startRound.bind(this),DELAY); 
+			this.startRound();
 		}
 
 	}
 }
 
-function isAI(player){ return player != U; }
+function isAI(player){ return player.type=='ai'; }

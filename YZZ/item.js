@@ -228,6 +228,7 @@ function newItemSelection(item, items, onSelectSelected = null) {
 function addLabel(item, label, styles) {
 	item.label = label;
 	let div = iDiv(item);
+	//console.log(item,label,div)
 	if (isdef(item.live.dLabel)) mRemove(item.live.dLabel);
 	let dLabel = item.live.dLabel = mDiv(div, styles, null, label);
 	mCenterFlex(div, true, true);

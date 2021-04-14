@@ -1,6 +1,6 @@
 //region m
 function mAppend(d, child) { d.appendChild(child); }
-function mBackground(bg,fg) { mStyleX(document.body,{bg:bg,fg:fg});}
+function mBackground(bg, fg) { mStyleX(document.body, { bg: bg, fg: fg }); }
 
 function mButton(caption, handler, dParent, styles, classes) {
 	let x = mCreate('button');
@@ -289,23 +289,23 @@ function mZone(dParent, styles, pos) {
 //#region i
 function iAdd(item, props) {
 	let id, l;
-	if (isString(item)) { id = item; item = Items[id]; } 
-	else if (nundef(item.id)) { 
-		id = item.id = iRegister(item); 
-		console.log('id of item is',id, item)
+	if (isString(item)) { id = item; item = Items[id]; }
+	else if (nundef(item.id)) {
+		id = item.id = iRegister(item);
+		//console.log('id of item is',id, item)
 	} else id = item.id;
 	if (nundef(item.live)) item.live = {}; l = item.live;
 	for (const k in props) {
 		let val = props[k];
 		l[k] = val;
 		//console.log('ist ein dom ein dict?',isDict(val))
-		if (isDict(val) && (!isEmpty(val.id) || k=='div')) {
+		if (isDict(val) && (!isEmpty(val.id) || k == 'div')) {
 			// console.log('val.id is defined:',val.id)
 			val.liveId = id;
 			//console.log('type of',k,'is',typeof(val),getTypeOf(val));
 			// if is elem should go to UIS!
 			if (isDOM(val)) {
-				if (isEmpty(val.id)) val.id=id;
+				if (isEmpty(val.id)) val.id = id;
 				//console.log('found DOM elem w/ id!!!!',val.id,k);
 				lookupSet(l, ['uids', k], val.id);
 			}
@@ -329,10 +329,12 @@ function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.ma
 function iGrid(rows, cols, dParent, styles) {
 	styles.display = 'inline-block';
 	let items = [];
+	let index = 0;
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			let d = mDiv(dParent, styles);
-			let item = { row: i, col: j }; //, id:getUID() };
+			let item = { row: i, col: j, index: index }; //, id:getUID() };
+			index += 1;
 			iAdd(item, { div: d });
 			items.push(item);
 		}

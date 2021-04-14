@@ -89,7 +89,7 @@ class GAbacus extends Game {
 		TOMain = setTimeout(() => getWrongChars().map(x => unfillChar(x)), 500);
 		return 600;
 	}
-	activate() { onkeypress = this.interact; }
+	activate() { onkeypress = this.interact.bind(this); }
 	interact(ev) {
 		//console.log('key!');
 		clearFleetingMessage();
@@ -164,7 +164,6 @@ class GAnagram extends Game {
 	}
 	clear() { super.clear(); if (isdef(this.language)) this.language = this.language; }
 	start_Level() {
-		//console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH');
 		this.keys = setKeysG(this, filterWordByLength, 25);
 		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
 		//console.log(this.keys)
@@ -174,10 +173,8 @@ class GAnagram extends Game {
 		if (this.hidden) {
 			let d = iDiv(Pictures[0]);
 			animate(d, 'aniAppearMinute', 100000);
-			//d.style.opacity = 0; TOMain = setTimeout(() => animate(d, 'aniSuperSlowlyAppear', 50000), 20000);
 		}
 		setGoal();
-		//let instr = this.language == 'E' ?'drag letters to form':"forme"
 		showInstruction(this.showWord ? Goal.label : '', this.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
 		mLinebreak(dTable);
 
@@ -1434,7 +1431,7 @@ class GMissingNumber extends Game {
 		TOMain = setTimeout(() => getWrongChars().map(x => unfillChar(x)), 500);
 		return 600;
 	}
-	activate() { onkeypress = this.interact; }
+	activate() { onkeypress = this.interact.bind(this); }
 	interact(ev) {
 		//console.log('key!');
 		clearFleetingMessage();

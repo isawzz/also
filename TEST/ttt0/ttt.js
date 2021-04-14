@@ -64,8 +64,9 @@ function GameScore(game, depth) {
 	else if (score === 3)
 		return 10 - depth;
 }
-
-function alphaBetaMinimax(node, depth, alpha, beta) {
+function alphaBetaMinimax(node, depth, alpha, beta, maxDepth=4) {
+	console.log('node', node, '\ndepth', depth, '\nalpha', alpha, '\nbeta', beta);
+	if (depth >= maxDepth) return 1;
 	if (CheckForWinner(node) === 1 || CheckForWinner(node) === 2
 		|| CheckForWinner(node) === 3)
 		return GameScore(node, depth);
@@ -77,12 +78,11 @@ function alphaBetaMinimax(node, depth, alpha, beta) {
 		for (var i = 0; i < availableMoves.length; i++) {
 			move = availableMoves[i];
 			possible_game = GetNewState(move, node);
-			result = alphaBetaMinimax(possible_game, depth, alpha, beta);
+			result = alphaBetaMinimax(possible_game, depth, alpha, beta, maxDepth);
 			node = UndoMove(node, move);
 			if (result > alpha) {
 				alpha = result;
-				if (depth == 1)
-					choice = move;
+				if (depth == 1) choice = move;
 			} else if (alpha >= beta) {
 				return alpha;
 			}
@@ -96,8 +96,7 @@ function alphaBetaMinimax(node, depth, alpha, beta) {
 			node = UndoMove(node, move);
 			if (result < beta) {
 				beta = result;
-				if (depth == 1)
-					choice = move;
+				if (depth == 1) choice = move;
 			} else if (beta <= alpha) {
 				return beta;
 			}
@@ -105,6 +104,7 @@ function alphaBetaMinimax(node, depth, alpha, beta) {
 		return beta;
 	}
 }
+
 
 function UndoMove(game, move) {
 	game[move] = UNOCCUPIED;
@@ -219,5 +219,49 @@ function ShowAverageTime() {
 		document.getElementById("searchTime").innerHTML =
 			document.getElementById("searchTime").innerHTML + "<br />Average search was <strong>" + sum / i + "</strong> seconds. <br />";
 		showAverageTime = false;
+	}
+}
+
+
+
+
+
+function alphaBetaMinimaxOrig(node, depth, alpha, beta) {
+	console.log('node', node, '\ndepth', depth, '\nalpha', alpha, '\nbeta', beta);
+	if (CheckForWinner(node) === 1 || CheckForWinner(node) === 2
+		|| CheckForWinner(node) === 3)
+		return GameScore(node, depth);
+
+	depth += 1;
+	var availableMoves = GetAvailableMoves(node);
+	var move, result, possible_game;
+	if (active_turn === "COMPUTER") {
+		for (var i = 0; i < availableMoves.length; i++) {
+			move = availableMoves[i];
+			possible_game = GetNewState(move, node);
+			result = alphaBetaMinimax(possible_game, depth, alpha, beta);
+			node = UndoMove(node, move);
+			if (result > alpha) {
+				alpha = result;
+				if (depth == 1) choice = move;
+			} else if (alpha >= beta) {
+				return alpha;
+			}
+		}
+		return alpha;
+	} else {
+		for (var i = 0; i < availableMoves.length; i++) {
+			move = availableMoves[i];
+			possible_game = GetNewState(move, node);
+			result = alphaBetaMinimax(possible_game, depth, alpha, beta);
+			node = UndoMove(node, move);
+			if (result < beta) {
+				beta = result;
+				if (depth == 1) choice = move;
+			} else if (beta <= alpha) {
+				return beta;
+			}
+		}
+		return beta;
 	}
 }
