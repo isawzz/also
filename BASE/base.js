@@ -1775,7 +1775,7 @@ function mergeOverride(base, drueber) { return _deepMerge(base, drueber, { array
 
 //#endregion
 
-//#region objects (arrays, dictionaries...)
+//#region objects ( *** ARRAYS ***, dictionaries...)
 function addIf(arr, el) {
 	if (!arr.includes(el)) arr.push(el);
 }
@@ -1833,6 +1833,17 @@ function arrMinMax(arr, func) {
 
 	return { min: min, imin: imin, max: max, imax: imax };
 }
+function arrReplaceAt(arr, index, val, inPlace = true) { return inPlace ? arrReplaceAtInPlace(arr, index, val) : arrReplaceAtCopy(arr, index, val); }
+function arrReplaceAtInPlace(arr, index, val) { arr[index] = val; }
+function arrReplaceAtCopy(arr, index, val) {
+	//console.log('index',index,'val',val)
+	let res = new Array();
+	for (let i = 0; i < arr.length; i++) {
+		if (i == index) res[i] = val; else res[i] = arr[i];
+	}
+	return res;
+}
+
 function arrSum(arr, props) {
 	if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0);
 }
@@ -2281,7 +2292,7 @@ function fromUmlaut(w) {
 		w = replaceAll(w, 'Ö', 'OE');
 		return w;
 	}
-}function getCorrectPrefix(label, text) {
+} function getCorrectPrefix(label, text) {
 
 	// let txt = this.input.value;
 	// console.log('input value',txt);
@@ -2337,6 +2348,7 @@ function replaceAll(str, sSub, sBy) {
 	return str.replace(regex, sBy);
 }
 function replaceAllSpecialChars(str, sSub, sBy) { return str.split(sSub).join(sBy); }
+function replaceAtString(s, i, ssub) { return s.substring(0, i) + ssub + s.substring(i + 1); }
 function replaceEvery(w, letter, nth) {
 	let res = '';
 	for (let i = 1; i < w.length; i += 2) {

@@ -83,7 +83,7 @@ function nega(node, depth, a, b, sign) {
 	let availableMoves = getAvailableMoves(node);
 	let value = -Infinity;
 	for (const m of availableMoves) {
-		let ch = replaceAtX(node, m, sign > 0 ? 1 : 2);
+		let ch = arrReplaceAtCopy(node, m, sign > 0 ? 1 : 2);
 		let rec = -nega(ch, depth - 1, -b, -a, -sign);
 		if (rec > value) { value = rec; GLOBALMOVE = m; }
 		a = Math.max(a, value);
@@ -104,7 +104,7 @@ function minimax1(node, depth, maximizingPlayer) {
 		let availableMoves = getAvailableMoves(node); //console.log(availableMoves)
 		for (let i = 0; i < availableMoves.length; i++) {
 
-			let child = replaceAtX(node, availableMoves[i], 1);
+			let child = arrReplaceAtCopy(node, availableMoves[i], 1);
 			// printState(child);
 			// console.log(evaluateState(child))
 			// return;
@@ -117,7 +117,7 @@ function minimax1(node, depth, maximizingPlayer) {
 		let value = Infinity;
 		let availableMoves = getAvailableMoves(node);
 		for (let i = 0; i < availableMoves.length; i++) {
-			let child = replaceAtX(node, availableMoves[i], 2);
+			let child = arrReplaceAtCopy(node, availableMoves[i], 2);
 
 			// value = Math.min(value, minimax1(child, depth - 1, true))
 			let v = minimax1(child, depth - 1, true);
@@ -140,9 +140,9 @@ function minimax0(state, pl, depth, maxDepth) {
 	let bestVal = (pl == 1 ? -1000 : 1000), bestMove = null;
 	for (let i = 0; i < availableMoves.length; i++) {
 		let index = availableMoves[i];
-		replaceAt(state, index, pl);
+		arrReplaceAtInPlace(state, index, pl);
 		let [v, m] = minimax(state, (pl == 1 ? 2 : 1), depth + 1, maxDepth);
-		replaceAt(state, index, null);
+		arrReplaceAtInPlace(state, index, null);
 		if (pl == 1 && v > bestVal) { bestVal = v; bestMove = index; }
 		else if (pl == 2 && -v < bestVal) { bestVal = -v; bestMove = index; }
 	}
@@ -201,17 +201,6 @@ function getAvailableMoves(state) {
 		if (nundef(state[i])) moves.push(i);
 	}
 	return moves;
-}
-function replaceAt(arr, index, val) {
-	arr[index] = val;
-}
-function replaceAtX(arr, index, val) {
-	//console.log('index',index,'val',val)
-	let res = new Array();
-	for (let i = 0; i < arr.length; i++) {
-		if (i == index) res[i] = val; else res[i] = arr[i];
-	}
-	return res;
 }
 function undoReplace(arr, index) {
 	arr[index] = null;

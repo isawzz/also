@@ -1051,7 +1051,7 @@ class GSwap extends Game {
 	}
 	activate() {
 		//this.buttonDone.style.opacity = 1;
-		console.log('trialNumber', this.trialNumber)
+		//console.log('trialNumber', this.trialNumber)
 		if (this.trialNumber >= 1) { sayTryAgain(); showFleetingMessage('Try again!'); }
 		else { showFleetingMessage('click one letter in each word!'); }
 	}
@@ -1081,7 +1081,7 @@ class GSwap extends Game {
 			let sw = l.swapInfo;
 			if (nundef(sw)) { sw = l.swapInfo = { correct: { itemId: item.id, index: b1.i, l: b1.letter } }; }
 			sw.temp = { itemId: item2.id, index: b2.i, l: b2.letter };
-			item.testLabel = replaceAtCopy(item.label, b1.i, b2.letter);
+			item.testLabel = replaceAtString(item.label, b1.i, b2.letter);
 			iDiv(l).innerHTML = b2.letter;
 			l.state = 'temp';
 		}

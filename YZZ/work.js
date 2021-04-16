@@ -1,3 +1,17 @@
+function replaceAt(arr, index, val) {
+	arr[index] = val;
+}
+function replaceAtX(arr, index, val) {
+	//console.log('index',index,'val',val)
+	let res = new Array();
+	for (let i = 0; i < arr.length; i++) {
+		if (i == index) res[i] = val; else res[i] = arr[i];
+	}
+	return res;
+}
+
+
+
 
 var sss = { 'O': 2, 'X': 3, 0: 0 };
 var sssNumber = 0;
@@ -221,18 +235,6 @@ function getAvailableMoves(state) {
 	}
 	return moves;
 }
-function replaceAt(arr, index, val) {
-	arr[index] = val;
-}
-function replaceAtX(arr, index, val) {
-	//console.log('index',index,'val',val)
-	let res = new Array();
-	for (let i = 0; i < arr.length; i++) {
-		if (i == index) res[i] = val; else res[i] = arr[i];
-	}
-	return res;
-}
-
 function undoReplace(arr, index) {
 	arr[index] = null;
 }

@@ -79,34 +79,12 @@ class GTTT {
 	checkFinal(state) {
 		if (nundef(state)) state = this.getState();
 		let isTie = false;
-		let isWin = checkWinnerTTT(state, 3, 3);
-		if (!isWin) { isTie = this.isBoardFull(state) || !checkPotentialTTT(state, 3, 3); }
+		let isWin = checkWinnerTTT(state);
+		if (!isWin) { isTie = checkBoardFull(state) || !checkPotentialTTT(state); }
 		return isWin ? 2 : isTie ? 1 : 0;
 	}
 
-	checkFinal_dep(state) {
-		if (nundef(state)) state = this.getState();
-		let isTie = false;
-		let isWin = checkWinnerTTT(state, 3, 3); //this.isWinningState(state,this.plTurn.sym);
-		if (isWin) {
-			this.winner = this.plTurn;
-			//this.gameOver = true;
-			//console.log('winner', isWin);
-		} else {
-			let partial = checkPotentialTTT(state, 3, 3);
-			isTie = !partial;
-			if (!isTie) {
-				isTie = this.isBoardFull(state);
-				// let moves = this.getAvailableMoves(state);
-				// isTie = isEmpty(moves);
-			}
-			//console.log('tie?', isTie);//, '(partial', partial,')');
-			//this.gameOver = isTie;
-		}
-		return isWin || isTie;
-	}
 
-	isBoardFull(state) { for (const s of state) if (nundef(s)) return false; return true; }
 	getAvailableMoves(state) {
 		let moves = [];
 		for (let i = 0; i < state.length; i++) {

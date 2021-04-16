@@ -20,12 +20,12 @@ function gatherItems(n, options) {
 		let item2 = items[(i + 1) % n];
 		let label = item1.origLabel = item1.label;
 		let idx = item1.iLetter;
-		item1.label = replaceAtCopy(label, idx, item2.letter);
+		item1.label = replaceAtString(label, idx, item2.letter);
 		if (isWord(item1.label)) {
 			//console.log(item1,item2,item1.label,item2.label)
 			item2.iLetter = (item2.iLetter + 1) % item2.label.length;
 			item2.letter = item2.label[item2.iLetter];
-			item1.label = replaceAtCopy(label, idx, item2.letter); // label.substring(0, idx) + item2.letter + label.substring(idx + 1);
+			item1.label = replaceAtString(label, idx, item2.letter); // label.substring(0, idx) + item2.letter + label.substring(idx + 1);
 			if (isWord(item1.label)) return gatherItems(n, options);
 		}
 		//add swapInfo to item1
@@ -123,7 +123,6 @@ function pickSuitableItems_dep(n, options) {
 	}
 	return items;
 }
-function replaceAtCopy(s, i, ssub) { return s.substring(0, i) + ssub + s.substring(i + 1); }
 function stopBlinking(item) { if (isdef(item)) { item.isBlinking = false; mRemoveClass(iDiv(item), 'blink'); } }
 function startBlinking(item, items, unique = true) {
 	//console.log('item', item, 'items', items, 'unique', unique)
@@ -156,7 +155,7 @@ function showCorrectLabelSwapping() {
 				//startPulsating(l,p.letters,false);
 				iDiv(l).innerHTML = sw.correct.l;
 				if (l.i == p.iLetter) animate(iDiv(l), 'komisch', 2300);
-				//console.log('will correct',p.testLabel,'to',replaceAtCopy(p.label,l.i,sw.correct.l));
+				//console.log('will correct',p.testLabel,'to',replaceAtString(p.label,l.i,sw.correct.l));
 				//show correct version of that letter!
 				//transformation should be slow (animation similar to abacus correction!)
 			}

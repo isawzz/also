@@ -15,6 +15,27 @@ function checkPotentialTTT_dep(arr, rows, cols) {
 
 
 class SAMMELCLASS{
+	checkFinal_dep(state) {
+		if (nundef(state)) state = this.getState();
+		let isTie = false;
+		let isWin = checkWinnerTTT(state, 3, 3); //this.isWinningState(state,this.plTurn.sym);
+		if (isWin) {
+			this.winner = this.plTurn;
+			//this.gameOver = true;
+			//console.log('winner', isWin);
+		} else {
+			let partial = checkPotentialTTT(state, 3, 3);
+			isTie = !partial;
+			if (!isTie) {
+				isTie = this.isBoardFull(state);
+				// let moves = this.getAvailableMoves(state);
+				// isTie = isEmpty(moves);
+			}
+			//console.log('tie?', isTie);//, '(partial', partial,')');
+			//this.gameOver = isTie;
+		}
+		return isWin || isTie;
+	}
 	interact_orig(ev) {
 		//console.log('interact!', ev);
 		ev.cancelBubble = true;
