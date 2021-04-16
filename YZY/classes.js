@@ -10,7 +10,7 @@ class Game {
 	clear() { clearTimeout(this.TO); clearFleetingMessage(); }
 	startGame() { }
 	start_Level() {
-		this.keys = setKeysG(this, filterWordByLength, 25);
+		this.keys = setKeysG(this, filterWordByLengthG, 25);
 		console.assert(nundef(this.numPics) || this.keys.length >= this.numPics, 'WAAAAAAAAAAAS? nMin in setKeys nicht richtig!!!!! ' + this.numPics + ' ' + this.keys.length)
 	}
 	startRound() { }
@@ -160,8 +160,8 @@ class GAnagram extends Game {
 	}
 	clear() { super.clear(); if (isdef(this.language)) this.language = this.language; }
 	start_Level() {
-		this.keys = setKeysG(this, filterWordByLength, 25);
-		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
+		this.keys = setKeysG(this, filterWordByLengthG, 25);
+		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLengthG, 25, 'all'); }
 		//console.log(this.keys)
 	}
 	prompt() {
@@ -948,8 +948,8 @@ class GSwap extends Game {
 	startGame() { this.correctionFunc = showCorrectLabelSwapping; } //this.successFunc = showCorrectLabelSwapping;  }
 	clear() { super.clear(); if (isdef(this.prevLanguage)) this.language = this.prevLanguage; }
 	start_Level() {
-		this.keys = setKeysG(this, filterWordByLength, 25);
-		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
+		this.keys = setKeysG(this, filterWordByLengthG, 25);
+		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLengthG, 25, 'all'); }
 		this.trials = 2;
 	}
 	dropHandler(source, target, isCopy = false, clearTarget = false) {
@@ -1151,8 +1151,8 @@ class GWritePic extends Game {
 		}
 	}
 	start_Level() {
-		this.keys = setKeysG(this, filterWordByLength, 25);
-		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
+		this.keys = setKeysG(this, filterWordByLengthG, 25);
+		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLengthG, 25, 'all'); }
 	}
 	prompt() {
 		let showLabels = this.showLabels == true && this.labels == true;

@@ -274,8 +274,6 @@ function toggleItemSelection(item, selectedItems) {
 		}
 	}
 }
-
-
 function zRepeatEachItem(items, repeat, shufflePositions = false) {
 	//repeat items: repeat & shufflePositions
 	let orig = items;

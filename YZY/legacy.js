@@ -151,7 +151,7 @@ function _extendOptions(options, defOptions, createArea = true) {
 	options.outerStyles = {
 		w: w, h: h, bg: options.bg, fg: options.fg,
 		display: 'inline-flex', 'flex-direction': 'column',
-		'justify-content': 'center', 'align-items': 'center','vertical-align':'top',
+		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
 		//'place-content': 'center',
 		padding: 0, box: true, margin: options.margin, rounding: options.rounding,
 	};
@@ -510,7 +510,7 @@ function _tryGrow(items, options) {
 function present00(items, options) {
 	//[options.rows, options.cols, options.szPic.w, options.szPic.h] = _bestRowsColsSize(items, options);
 
-	[options.rows, options.cols, options.szPic.w, options.szPic.h] = [10,10,50,50];
+	[options.rows, options.cols, options.szPic.w, options.szPic.h] = [10, 10, 50, 50];
 
 	console.log('present00: rows', options.rows, 'cols', options.cols);
 
@@ -584,9 +584,9 @@ function present00(items, options) {
 		options.gap *= factor;
 		mStyleX(dGrid, { gap: options.gap / 2 });
 		for (const item of items) {
-			let ui = item.live; 
+			let ui = item.live;
 			if (options.showLabels) mStyleX(ui.dLabel, { fz: fz });
-			mStyleX(ui.div, { padding: options.padding, w: w, h: h }); 
+			mStyleX(ui.div, { padding: options.padding, w: w, h: h });
 			mStyleX(ui.dPic, { fz: fzPic });
 		}
 		//console.log('fonts set to', fz, fzPic);
@@ -645,7 +645,7 @@ function layoutFlex(elist, dGrid, containerStyles, { rows, cols, isInline = fals
 function initSidebar1() {
 	show(dSidebar);
 	clearElement(dSidebar);
-	mDiv(dSidebar,{ 'min-width':50, 'max-height': '100vh', display: 'flex', 'flex-flow': 'column wrap', 'align-content':'center' },'dLeiste');
+	mDiv(dSidebar, { 'min-width': 50, 'max-height': '100vh', display: 'flex', 'flex-flow': 'column wrap', 'align-content': 'center' }, 'dLeiste');
 }
 
 function get3ColLineName(dParent, name, styles = {}) {
@@ -710,7 +710,7 @@ function initTable() {
 	setTableBackground(RED, 'white', true);
 	//title line
 	let ltitle = get3ColLineName(dTableBackground, 'title', { hmin: 30 });//, bg:BLUE});
-	mStyleX(dTitle,{maleft:-50})
+	mStyleX(dTitle, { maleft: -50 })
 	let ltable = get3ColLineName(dTableBackground, 'table', {});
 	let lbottom = get3ColLineName(dTableBackground, 'bottom', { position: 'absolute', bottom: 30 });
 	// dTitle.innerHTML='HALLO';
@@ -935,25 +935,6 @@ function picSet(setname) {
 }
 //#endregion
 
-//#region user - UNUSED bis auf saveUser
-function changeUser(username, dParent) {
-	console.log('hhhhhhhhhhhhhhhhhhhhhhhhhh')
-	saveUser();
-	loadUser(username, dParent);
-}
-function loadUser_new(username, dParent) {
-	U = DB.users[username];
-	U.live = {};
-	mInner('user: ' + username, dParent);
-	//console.log('User', U)
-}
-function saveUser() {
-	//was muss von U.live uebernommen werden?
-	delete U.live;
-	dbSave('boardGames');
-}
-//#endregion
-
 function calcRowsColsX(num, rows, cols) {
 	const tableOfDims = {
 		2: { rows: 1, cols: 2 },
@@ -1008,12 +989,6 @@ function calcRowsCols(num, rows, cols) {
 	//console.log(rows, cols, shape);
 	return { rows: rows, cols: cols, recommendedShape: shape };
 }
-function filterWordByLength(g, k, w, spacesAllowed = false) {
-	//console.log('k',k,'w',w,'max',G.maxWordLength,'min',G.minWordLength)
-	if (nundef(g.minWordLength)) g.minWordLength = 0;
-	if (nundef(g.maxWordLength)) g.maxWordLength = 50;
-	return w.length <= g.maxWordLength && w.length >= g.minWordLength && (!w.includes(' ') || spacesAllowed);
-}
 function getGameValues() {
 	let user = U.id;
 	let game = G.id;
@@ -1033,157 +1008,6 @@ function getGameValues() {
 
 	return settings;
 }
-function getParamsForMaPicStyle(desc = 'segoeBlack') {
-	desc = desc.toLowerCase();
-	switch (desc) {
-		case 'twittertext': return { isText: true, isOmoji: false };
-		case 'twitterimage': return { isText: false, isOmoji: false };
-		case 'openmojitext': return { isText: true, isOmoji: true };
-		case 'openmojiimage': return { isText: false, isOmoji: true };
-		case 'openmojiblacktext': return { isText: true, isOmoji: 'openmoBlack' };
-		case 'segoe': return { isText: true, isOmoji: 'segoe ui emoji' };
-		case 'segoeblack': return { isText: true, isOmoji: 'segoe ui symbol' };
-		default: return { isText: true, isOmoji: false };
-	}
-
-}
-function mHasClass(el, className) {
-	if (el.classList) return el.classList.contains(className);
-	else return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
-}
-function mLinebreak(dParent, gap) {
-	if (isString(dParent)) dParent = mBy(dParent);
-	let d = mDiv(dParent);
-	//console.log('parent style',dParent.style.display)
-
-	//console.log(dParent.classList, Array.from(dParent.classList))
-
-	if (dParent.style.display == 'flex' || mHasClass(dParent, 'flexWrap')) mClass(d, 'linebreak');
-	else d.innerHTML = '<br>';
-
-	if (isdef(gap)) { d.style.minHeight = gap + 'px'; d.innerHTML = ' &nbsp; '; d.style.opacity = .2; }//return mLinebreak(dParent);}
-
-	return d;
-}
-function mpOver(d, dParent, fz, color, picStyle) {
-	let b = getRect(dParent);
-	let cx = b.w / 2 + b.x;
-	let cy = b.h / 2 + b.y;
-	d.style.top = picStyle == 'segoeBlack' ? ((cy - fz * 2 / 3) + 'px') : ((cy - fz / 2) + 'px');
-	d.style.left = picStyle == 'segoeBlack' ? ((cx - fz / 3) + 'px') : ((cx - fz * 1.2 / 2) + 'px');
-	d.style.color = color;
-	d.style.fontSize = fz + 'px';
-	d.style.display = 'block';
-	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
-	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
-	return d;
-}
-function setKeys({ allowDuplicates, nMin = 25, lang, key, keySets, filterFunc, param, confidence, sortByFunc } = {}) {
-	// console.log('setKeys (legacy)',nMin,lang,key,keySets,'\nfilterFunc',filterFunc);
-	//G.keys = setKeys({ nMin, lang: G.language, keySets: KeySets, key: G.vocab });
-
-	let keys = jsCopy(keySets[key]);
-	// console.log('setKeys (from',getFunctionsNameThatCalledThisFunction()+')',keys)
-	//if (isdef(filterFunc)) console.log('f',filterFunc);
-
-	// console.log('setKeys',keys)
-	if (isdef(nMin)) {
-		let diff = nMin - keys.length;
-		let additionalSet = diff > 0 ? nMin > 100 ? firstCondDictKeys(keySets, k => k != key && keySets[k].length > diff) : 'best100' : null;
-
-		//console.log('diff', diff, additionalSet, keys)
-		if (additionalSet) KeySets[additionalSet].map(x => addIf(keys, x)); //
-		//if (additionalSet) keys = keys.concat(keySets[additionalSet]);
-		//console.log(keys)
-	}
-
-	let primary = [];
-	let spare = [];
-	for (const k of keys) {
-		let info = Syms[k];
-
-		info.best = info[lang];
-		//console.log(info.best)
-
-		if (nundef(info.best)) {
-			let ersatzLang = (lang == 'D' ? 'D' : 'E');
-			let klang = 'best' + ersatzLang;
-			//console.log(k,lang,klang)
-			if (nundef(info[klang])) info[klang] = lastOfLanguage(k, ersatzLang);
-		}
-		//console.log(k,lang,lastOfLanguage(k,lang),info.best,info)
-		let isMatch = true;
-		//if (isdef(filterFunc)) console.log(filterFunc,filterFunc(k,info.best))
-		if (isdef(filterFunc)) isMatch = isMatch && filterFunc(param, k, info.best);
-		if (isdef(confidence)) isMatch = info[klang + 'Conf'] >= confidence;
-		if (isMatch) { primary.push(k); } else { spare.push(k); }
-	}
-
-	//console.assert(isEmpty(intersection(spare,primary)))
-
-	if (isdef(nMin)) {
-		//if result does not have enough elements, take randomly from other
-		let len = primary.length;
-		let nMissing = nMin - len;
-		if (nMissing > 0) { let list = choose(spare, nMissing); spare = arrMinus(spare, list); primary = primary.concat(list); }
-	}
-
-	if (isdef(sortByFunc)) { sortBy(primary, sortByFunc); }
-
-	if (isdef(nMin)) console.assert(primary.length >= nMin);
-	//console.log(primary)
-	if (nundef(allowDuplicates)) {
-		//console.log('hhhhhhhhhhhhhhh',primary.length)
-		primary = removeDuplicates(primary);
-	}
-	return primary;
-}
-function removeDuplicates(keys, prop) {
-	let di = {};
-	let res = [];
-	let items = keys.map(x => Syms[x]);
-	for (const item of items) {
-		// if (item.key.includes('key')) console.log('hallo',item)
-		// if (isdef(di[item.best])) {console.log('dupl:',item.key); continue;}
-		if (isdef(di[item.best])) { continue; }
-		res.push(item);
-		di[item.key] = true;
-	}
-	return res.map(x => x.key);
-}
-
-function setKeysG(g, filterFunc, nMin, key) {
-	if (nundef(nMin)) nMin = 25;
-	if (isdef(g.numPics)) nMin = Math.max(25, g.numPics);
-	//console.log(nMin,nMin)
-	return setKeys({ nMin: nMin, lang: g.language, key: valf(key, g.vocab), keySets: KeySets, filterFunc: filterFunc, param: g });
-}
-
-function mpOver_dep(d, dParent, fz, color, picStyle) {
-	//maPicOver
-	//d is pos fixed!!!
-	//console.log('dParent',dParent)
-	let b = getRect(dParent);
-
-	let cx = b.w / 2 + b.x;
-	let cy = b.h / 2 + b.y;
-	//console.log('picStyle')
-	d.style.top = picStyle == 'segoeBlack' ? ((cy - fz * 2 / 3) + 'px') : ((cy - fz / 2) + 'px');
-	d.style.left = picStyle == 'segoeBlack' ? ((cx - fz / 3) + 'px') : ((cx - fz * 1.2 / 2) + 'px');
-
-	//console.log(b);
-	// d.style.top = picStyle == 'segoeBlack' ? (b.y + 60 - fz / 2 + 'px') : (b.y + 100 - fz / 2 + 'px');
-	// d.style.left = picStyle == 'segoeBlack' ? (b.x + 120 - fz / 2 + 'px') : (b.x + 100 - fz / 2 + 'px');
-	d.style.color = color;
-	d.style.fontSize = fz + 'px';
-	d.style.display = 'block';
-	let { isText, isOmoji } = getParamsForMaPicStyle(picStyle);
-	d.style.fontFamily = isString(isOmoji) ? isOmoji : isOmoji ? 'emoOpen' : 'emoNoto';
-	return d;
-}
-
-
-
 
 
 

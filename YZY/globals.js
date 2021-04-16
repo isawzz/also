@@ -12,11 +12,10 @@ const CLEAR_LOCAL_STORAGE = BROADCAST_SETTINGS;
 //#endregion
 
 var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup, Dictionary, WordP; //, CatSets, SymbolDict, SInfo;
-var DB;
-var U;
-var Pictures, Goal, Selected, Score, uiActivated, aiActivated, auxOpen, TO, TOMain, TOTrial, QContextCounter = 0, Live, G;
+var DB, U, Live, G;
+var Pictures, Goal, Selected, Score, TO, TOMain, TOTrial, TOList, IsAnswerCorrect, QContextCounter = 0;
+var uiActivated, aiActivated, auxOpen, GameTimer, STOPAUS = false;
 var Settings, SettingsList, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
-var GameTimer, STOPAUS = false;
 var Daat = {}, DA = {}, Items;
 var Players, PlayerOnTurn, GC;
 

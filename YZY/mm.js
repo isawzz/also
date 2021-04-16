@@ -1,14 +1,3 @@
-function simpleScoreTTT(game) {
-	var score = CheckForWinner(game);
-	if (score === 1) return 0;
-	else if (score === 2) return -10; //depth - 10;
-	else if (score === 3) return 10; // 10 - depth;
-}
-function evalBoard(node, depth, chWin, symax) {
-	if (chWin == symax) return 20 - depth;
-	else if (chWin) return depth - 10;
-	else return 0;
-}
 function mmab2(node, depth, alpha, beta, maxDepth = 9) {
 	//console.log('node', node, '\ndepth', depth, '\nalpha', alpha, '\nbeta', beta);
 	if (depth >= maxDepth) return 1;

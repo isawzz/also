@@ -1,4 +1,3 @@
-
 var sss = { 'O': 2, 'X': 3, 0: 0 };
 var sssNumber = 0;
 function test10() {
@@ -14,6 +13,10 @@ function test10() {
 	console.log('player', pl, 'should choose', m, '(val=' + v + ')');
 }
 var GLOBALMOVE = null;
+
+
+
+
 function test11() {
 	let state = [1, 1, null, 2, 2, 1, null, 2, null];
 	let pl = 1;
@@ -69,6 +72,20 @@ function test15() {
 	printState(state);
 	console.log('player', pl, 'should choose', GLOBALMOVE, '(val=' + x + ')');
 }
+
+
+function simpleScoreTTT(game) {
+	var score = CheckForWinner(game);
+	if (score === 1) return 0;
+	else if (score === 2) return -10; //depth - 10;
+	else if (score === 3) return 10; // 10 - depth;
+}
+function evalBoard(node, depth, chWin, symax) {
+	if (chWin == symax) return 20 - depth;
+	else if (chWin) return depth - 10;
+	else return 0;
+}
+
 function otherPlayer(pl) { return pl == 1 ? 2 : 1; }
 function isFinalState(state) { return isWinningState(state, 1) || isWinningState(state, 2) || isEmpty(getAvailableMoves(state)); }
 function evaluateState(state) { return isWinningState(state, 1) ? 100 : isWinningState(state, 2) ? 100 : 0; }

@@ -1,4 +1,3 @@
-var TOList;
 //#region animations
 function animationCallback(secs, callback, removeBg = false) {
 	for (const p of Pictures) { slowlyTurnFaceDown(p, secs - 1, removeBg); }
@@ -1200,11 +1199,6 @@ function failSomePictures(withComment = false) {
 		if (p.isCorrect == false) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 		else mpOver(markerSuccess(), ui, sz * (4 / 5), 'limegreen', 'segoeBlack');
 	}
-	// if (isdef(Selected) && isdef(Selected.feedbackUI)) {
-	// 	let uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
-	// 	let sz = getRect(uilist[0]).h;
-	// 	for (const ui of uilist) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
-	// }
 }
 function showCorrectWord(sayit = true) {
 	let anim = G.spokenFeedback ? 'onPulse' : 'onPulse1';
@@ -1541,25 +1535,18 @@ function myShowLabels(onClickPictureHandler, ifs = {}, options = {}, keys, label
 	return showPictures(dTable, onClickPictureHandler, ifs, options, keys, labels);
 }
 function showPictures(dParent, handler, ifs = {}, options = {}, keys, labels) {
-	//O
-	// console.log('vorher',options.fz)
 	options = getOptionsMinimalistic(dParent, handler, options.w, options.h, ifs, options, G);
-	// console.log('nachher',options.fz)
-	//console.log(options)
-	//I
+
 	if (nundef(keys)) keys = choose(G.keys, G.numPics);
-	//console.log('ERROR?keys',keys[0])
+	//keys[0] = 'pin'; keys[1] = 'pushpin'; keys[2] = 'round pushpin';
+
 	let items = genItemsFromKeys(keys, options);
-	//console.log(items)
 	if (isdef(labels)) {
 		options.showLabels = true;
 		for (let i = 0; i < items.length; i++) item[i].label = labels[i % labels.length];
 	}
-	//L
 	let dArea = mDiv(dParent);
 	let rect = myPresent(dArea, items, options);
-	//mStyleX(dArea,{bg:'white'});
-	//console.log(rect);
 	return items;
 }
 function getStandardFz(wi, hi, showPic, showLabels, wLongest) {
@@ -1761,7 +1748,7 @@ function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
 	//console.log('spoken', spoken, 'written', written);
 	return [written, spoken, corr];
 }
-function makeSurePlayerColorsAreContrasting(human,ai){
+function makeSurePlayerColorsAreContrasting(human, ai) {
 	ai.color = RED;// bestContrastingColor(human,[GREEN,RED,YELLOW])
 }
 function removePicture(pic, reorder = false) {
@@ -1824,18 +1811,18 @@ function setMultiGoal(n, indices) {
 		for (const i of indices) Goal.pics.push(Pictures[i]);
 	}
 }
-function setPlayer(g,pl){
+function setPlayer(g, pl) {
 	let idx;
 	if (isdef(g.iPlayer)) {
-		idx=(g.iPlayer+1)%g.players.length;
-	}	else if (isdef(pl)){
+		idx = (g.iPlayer + 1) % g.players.length;
+	} else if (isdef(pl)) {
 		idx = g.players.indexOf(pl);
-	} else idx=0;
+	} else idx = 0;
 
-	pl=g.players[idx];
+	pl = g.players[idx];
 	//console.log('turn to:',idx,pl);
 
-	[GC.iPlayer, GC.plTurn] = [g.iPlayer, g.plTurn] =  [idx,pl];
+	[GC.iPlayer, GC.plTurn] = [g.iPlayer, g.plTurn] = [idx, pl];
 }
 function showHiddenThumbsUpDown(sz = 100) {
 	let d = mDiv(dTable, { hmin: sz * 1.5 });

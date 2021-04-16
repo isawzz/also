@@ -1,8 +1,7 @@
-var IsAnswerCorrect;
 
 class ControllerSolitaire {
 
-	constructor(g,user) { this.g = g;this.player = user; }
+	constructor(g, user) { this.g = g; this.player = user; }
 	stopGame() { resetState(); }
 	startGame() {
 
@@ -26,9 +25,6 @@ class ControllerSolitaire {
 		uiActivated = false;
 		this.g.startRound();
 		TOMain = setTimeout(() => this.prompt(), 300);
-
-		//if (isdef(this.g.keys)) console.log('words',this.g.maxWordLength,this.g.keys.map(x=>Syms[x][this.g.language])); else console.log('no keys!');
-
 	}
 	prompt() {
 		QContextCounter += 1;
@@ -41,7 +37,7 @@ class ControllerSolitaire {
 		clearTimeout(TOTrial);
 		uiActivated = false;
 		let delay = this.g.trialPrompt(this.g.trialNumber);
-		TOMain = setTimeout(()=>this.activateUi(), delay);
+		TOMain = setTimeout(() => this.activateUi(), delay);
 	}
 	activateUi() {
 		Selected = null;
@@ -65,7 +61,6 @@ class ControllerSolitaire {
 		let nextLevel = scoring(IsAnswerCorrect);
 
 		if (DELAY > 2000) showActiveMessage('click to continue...', () => this.gotoNext(nextLevel));
-		//console.log('gotoNext',this.gotoNext)
 		TOMain = setTimeout(() => this.gotoNext(nextLevel), DELAY);
 	}
 	gotoNext(nextLevel) {

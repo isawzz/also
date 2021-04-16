@@ -83,8 +83,6 @@ class GTTT {
 		if (!isWin) { isTie = checkBoardFull(state) || !checkPotentialTTT(state); }
 		return isWin ? 2 : isTie ? 1 : 0;
 	}
-
-
 	getAvailableMoves(state) {
 		let moves = [];
 		for (let i = 0; i < state.length; i++) {
@@ -93,17 +91,4 @@ class GTTT {
 		return moves;
 	}
 	getState() { return this.board.getState(); }
-	isWinningState(state, sym) {
-		for (let i = 0; i <= 6; i += 3) { if (state[i] === sym && state[i + 1] === sym && state[i + 2] === sym) return true; }
-
-		// Check for vertical wins
-		for (let i = 0; i <= 2; i++) { if (state[i] === sym && state[i + 3] === sym && state[i + 6] === sym) return true; }
-
-		// Check for diagonal wins
-		if ((state[0] === sym && state[4] === sym && state[8] === sym) || (state[2] === sym && state[4] === sym && state[6] === sym)) return true;
-
-		return false;
-	}
-	isFinalState(state) { return isWinningState(state, 'X') || isWinningState(state, 'O') || isEmpty(this.getAvailableMoves(state)); }
-	evaluateState(state) { return isWinningState(state, 'X') ? 100 : isWinningState(state, 'O') ? -100 : 0; }
 }

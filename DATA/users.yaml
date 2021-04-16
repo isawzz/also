@@ -1,7 +1,7 @@
 nil:
   id: nil
   avGames: [gTTT, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gTTT
+  lastGame: gTouchPic
   settings:
     # settings common to all games
     userColor: green
@@ -56,7 +56,7 @@ nil:
     gTouchColors:
       startLevel: 0
     gTouchPic:
-      startLevel: 0
+      startLevel: 2
     gWritePic:
       startLevel: 2
   avAddons: [aPasscode, aAddress, aPassword]

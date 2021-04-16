@@ -64,6 +64,10 @@ function mEditableInput(dParent, label, val) {
 	return elem;
 }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
+function mHasClass(el, className) {
+	if (el.classList) return el.classList.contains(className);
+	else return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+}
 function miAddLabel(item, styles) {
 	let d = iDiv(item);
 	//console.log('firstChild',d.firstChild, getTypeOf(d.firstChild));
@@ -103,7 +107,16 @@ function miPic(item, dParent, styles, classes) {
 function mIfNotRelative(d) { if (nundef(d.style.position)) d.style.position = 'relative'; }
 function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent, styles); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
-function mLinebreak(d, gap) { mGap(d, gap); }
+function mLinebreakNew(d, gap) { mGap(d, gap); }
+function mLinebreak(dParent, gap) {
+	if (isString(dParent)) dParent = mBy(dParent);
+	let d = mDiv(dParent);
+	if (dParent.style.display == 'flex' || mHasClass(dParent, 'flexWrap')) mClass(d, 'linebreak');
+	else d.innerHTML = '<br>';
+	if (isdef(gap)) { d.style.minHeight = gap + 'px'; d.innerHTML = ' &nbsp; '; d.style.opacity = .2; }//return mLinebreak(dParent);}
+	return d;
+}
+
 function mLine3(dParent, index, ids, styles) {
 	let html = `<div class="lineOuter">
 		<div>
@@ -2241,6 +2254,7 @@ function capitalize(s) {
 }
 function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
 function extendWidth(w) { return replaceEvery(w, 'w', 2); }
+function filterByLength(w, min, max, allowSpaces = false) { return w.length <= max && w.length >= min && (allowSpaces || !w.includes(' ')); }
 function findCommonPrefix(s1, s2) {
 	let i = 0;
 	let res = '';

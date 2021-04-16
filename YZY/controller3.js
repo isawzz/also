@@ -10,7 +10,6 @@ class ControllerTTT {
 		players.push(this.human);
 		players.push(this.ai);
 		this.ai.color = RED;
-		//makeSurePlayerColorsAreContrasting(h,a);
 	}
 	startGame() {
 		resetState();
@@ -18,19 +17,12 @@ class ControllerTTT {
 		delete this.g.iPlayer;
 		this.g.startGame();
 		this.startRound();
-		//this.bTest = mButton('step', () => { unitTest00(); }, dTable, { fz: 28, matop: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
-
 	}
 	startRound() {
 		this.deactivateUi();
-
 		setPlayer(this.g, this.g.startingPlayer == 'random' && coin() ? this.ai : this[this.g.startingPlayer]);
-		//console.log('player is now:',this.plTurn)
-
 		showStats();
-
 		this.g.startRound();
-		//console.log('player is',this.plTurn);
 		this.prompt();
 	}
 	prompt() {
@@ -38,9 +30,7 @@ class ControllerTTT {
 	}
 	uiInteract(ev) { if (canHumanAct()) this.g.interact(ev); }
 	activateUi() {
-		//console.log(this.plTurn)
 		if (this.plTurn == this.ai) aiActivated = true; else uiActivated = true;
-		//console.log('ui', uiActivated, 'ai', aiActivated);
 		this.g.activate();
 	}
 	deactivateUi() { aiActivated = uiActivated = false; }
@@ -48,9 +38,9 @@ class ControllerTTT {
 		this.deactivateUi();
 		this.g.eval(...arguments);
 		if (this.g.gameOver) {
-			let msg,sp;
-			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins!';sp='A.I. wins!'; this.ai.score += 1; }
-			else if (this.g.winner) { msg = 'You win!!!'; sp=msg;this.human.score += 1; }
+			let msg, sp;
+			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins!'; sp = 'A.I. wins!'; this.ai.score += 1; }
+			else if (this.g.winner) { msg = 'You win!!!'; sp = msg; this.human.score += 1; }
 			else { msg = "It's a tie"; }
 
 			Score.nTotal += 1;
@@ -70,22 +60,3 @@ class ControllerTTT {
 	}
 }
 
-var TestCounter = 0;
-function unitTest00() {
-	if (nundef(G.startPosition)) {
-		let states = [
-			['O', 'O', null, 'X', null, null, 'X', null, null],
-			[null, 'O', null, 'O', null, 'X', null, 'X', null],
-			[null, null, null, null, 'X', 'O', null, 'O', null]];
-		let state = states[TestCounter]; TestCounter = (TestCounter + 1) % states.length;
-		G.startPosition = state;
-		G.board.clear();
-		G.board.setState(state, { X: G.ai.color, O: G.human.color });
-		GC.bTest.innerHTML = 'GO!';
-		console.log('______ ready:'); printState(state);
-	} else {
-		resetRound();
-		GC.startGame();
-	}
-
-}
