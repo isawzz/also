@@ -77,7 +77,7 @@ class GTTT {
 		choice = [];
 
 		//experimental algo:
-		mmab3(state, 0, -Infinity, +Infinity);
+		prepMM(state);
 		var iMove2 = choice;
 		if (iMove1 != iMove2) {
 			console.log('correct:' + iMove1, 'ERR:' + iMove2);

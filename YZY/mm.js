@@ -1,3 +1,48 @@
+//maximizer={score:3,sym:plTurn.sym,isMax:true}
+function prepMM(state){
+	let maximizer = {score:3,sym:G.plTurn.sym,isMax:true};
+	let minimizer = {score:2,sym:G.plOpp.sym,isMax:false};
+	let maxDepth = 9;
+	mmab4(state,0, -Infinity, +Infinity, maxDepth, maximizer, minimizer);
+}
+
+function mmab4(node, depth, alpha, beta, maxDepth, pl, opp) {
+	if (depth >= maxDepth) return 1;
+	if (checkBoardFull(node)||checkWinnerTTT(node)) return GameScore1(node, depth, pl, opp);
+	depth += 1;
+	var availableMoves = G.getAvailableMoves(node); 
+
+	var move, result, possible_game;
+	if (pl.isMax) {
+		for (var i = 0; i < availableMoves.length; i++) {
+			move = availableMoves[i];
+			possible_game = arrReplaceAtInPlace(node,move,pl.sym); //GetNewState(move, node);
+			result = mmab4(possible_game, depth, alpha, beta, maxDepth, opp, pl);
+			node = arrReplaceAtInPlace(node,move,' '); //UndoMove(node, move);
+			if (result > alpha) {
+				alpha = result;
+				if (depth == 1) choice = move;
+			} else if (alpha >= beta) {
+				return alpha;
+			}
+		}
+		return alpha;
+	} else {
+		for (var i = 0; i < availableMoves.length; i++) {
+			move = availableMoves[i];
+			possible_game = arrReplaceAtInPlace(node,move,pl.sym); //GetNewState(move, node);
+			result = mmab4(possible_game, depth, alpha, beta, opp, pl);
+			node = arrReplaceAtInPlace(node,move,' '); //UndoMove(node, move);
+			if (result < beta) {
+				beta = result;
+				if (depth == 1) choice = move;
+			} else if (beta <= alpha) {
+				return beta;
+			}
+		}
+		return beta;
+	}
+}
 
 function mmab3(node, depth, alpha, beta, maxDepth = 9) {
 	if (depth >= maxDepth) return 1;

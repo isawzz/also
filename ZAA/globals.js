@@ -3,7 +3,7 @@ const BROADCAST_SETTINGS = true;
 //#region config
 
 var USE_ADDONS = false;
-const DEFAULTUSERNAME = 'nil'; // nil | gul | felix
+const DEFAULTUSERNAME = 'gunter'; // nil | gul | felix
 const OFFLINE = true;
 
 const SERVERURL = OFFLINE ? 'http://localhost:3000/app/' : 'https://speech-games.herokuapp.com/app/';

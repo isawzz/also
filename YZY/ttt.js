@@ -118,6 +118,12 @@ function MakeComputerMove() {
 	}
 }
 
+function GameScore1(game, depth,pl, opp) {
+	var score = CheckForWinner(game);
+	if (score === 1) return 0;
+	else if (score === opp.score) return depth - 10;
+	else if (score === pl.score) return 10 - depth;
+}
 function GameScore(game, depth) {
 	var score = CheckForWinner(game);
 	if (score === 1) return 0;

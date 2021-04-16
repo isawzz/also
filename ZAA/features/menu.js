@@ -7,8 +7,9 @@ function createMenuUi(dParent) {
 	let dMenuItems = mDiv(dParent, { w: 700, h: 600 });
 	// mCenterFlex(dMenuItems);
 
-	let games = jsCopy(U.avGames); if (!navigator.onLine) { removeInPlace(games, 'gSayPic'); }
-
+	let games = jsCopy(U.avGames); 
+	if (!navigator.onLine) { removeInPlace(games, 'gSayPic'); }
+	
 	let items = [];
 	let outerStyles = {
 		display: 'inline-flex', 'flex-direction': 'column',

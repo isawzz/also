@@ -16,6 +16,6 @@ showHint: true
 mode: solo # hotseat | pp | solo
 perspective: god # me | spectator | god
 startPlayer: random
-startPosition: random # random | empty | sequence
+startPosition: sequence # random | empty | sequence
 searchDepth: 10
   
