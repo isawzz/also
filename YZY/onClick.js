@@ -18,7 +18,7 @@ function onClickMenuItem(ev) { onClickGo(ev); }
 function onClickGo(ev) {
 	if (isVisible('dTemple')) {
 		closeAux();
-		GC.startGame();
+		if (G.controllerType == 'solitaire') GC.startGame(); else GC.activateUi();
 	} else {
 		let item = isdef(ev) ? evToItemC(ev) : null;
 		let gKey = nundef(ev) ? SelectedMenuKey : isString(ev) ? ev : item.id; // divKeyFromEv(ev);

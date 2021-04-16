@@ -1144,7 +1144,22 @@ class GSwap extends Game {
 
 		// enableDD(items, containers, this.dropHandler.bind(this), false, true);
 		mLinebreak(dTable, 50);
-		this.buttonDone = mButton('Done!', this.controller.evaluate.bind(this.controller), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		this.buttonDone = mButton('Done!', ()=>{
+			if (!canAct()) return;
+			for (let i = 0; i < Pictures.length; i++) {
+				let p = Pictures[i];
+				let blinking = getBlinkingLetter(p);
+				//console.log('blinking',blinking);
+				if (!blinking) {
+					let msg='You need to pick 1 letter to swap in EACH word!!!';
+					Speech.say(msg);
+					sayRandomVoice(msg);
+					showFleetingMessage('You need to pick 1 letter to swap in EACH word!!!',0,{fz:30});
+					return;
+				}
+			}
+			this.controller.evaluate.bind(this.controller)();
+		}, dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 		this.controller.activateUi.bind(this.controller)();
 
 	}
@@ -1164,15 +1179,16 @@ class GSwap extends Game {
 		return 1800;
 	}
 	activate() {
-		this.buttonDone.style.opacity = 1;
-		if (this.trialNumber > 1) { sayTryAgain(); showFleetingMessage('Try again!'); }
-		else {showFleetingMessage('click one letter in each word!')}
+		//this.buttonDone.style.opacity = 1;
+		console.log('trialNumber',this.trialNumber)
+		if (this.trialNumber >= 1) { sayTryAgain(); showFleetingMessage('Try again!'); }
+		else {showFleetingMessage('click one letter in each word!');}
 	}
 	eval() {
 		let n = Pictures.length;
 		let blinkInfo = this.blinkInfo = [];//Pictures.map(x => {let l=getBlinkingLetter(x); if (isdef(l)) return l.i; else return null;});
 
-		this.buttonDone.style.opacity = 0;
+		//this.buttonDone.style.opacity = 0;
 		clearFleetingMessage();
 		for (let i = 0; i < n; i++) {
 			let p = Pictures[i];
@@ -1223,7 +1239,7 @@ class GSwap extends Game {
 				sw = l.swapInfo = { correct: { itemId: item.id, index: b1.i, l: b1.letter } };
 			}
 			sw.temp = { itemId: item2.id, index: b2.i, l: b2.letter };
-			item.testLabel = replaceAt(item.label, b1.i, b2.letter);
+			item.testLabel = replaceAtCopy(item.label, b1.i, b2.letter);
 			iDiv(l).innerHTML = b2.letter;
 			l.state = 'temp';
 
@@ -1249,6 +1265,8 @@ class GSwap extends Game {
 
 			if (isdef(d)) feedbackList.push(d);
 		}
+
+		//console.log('correct?',isCorrect)
 		Selected = { piclist: Pictures, feedbackUI: feedbackList, sz: getRect(iDiv(Pictures[0])).h, delay: 800 };
 		return isCorrect;
 	}

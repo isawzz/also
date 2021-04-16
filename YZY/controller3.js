@@ -24,7 +24,7 @@ class ControllerTTT {
 	startRound() {
 		this.deactivateUi();
 
-		setPlayer(this.g, this.g.startingPlayer == 'random' && coin()? this.ai: this[this.g.startingPlayer]);
+		setPlayer(this.g, this.g.startingPlayer == 'random' && coin() ? this.ai : this[this.g.startingPlayer]);
 		//console.log('player is now:',this.plTurn)
 
 		showStats();
@@ -48,18 +48,22 @@ class ControllerTTT {
 		this.deactivateUi();
 		this.g.eval(...arguments);
 		if (this.g.gameOver) {
-			let msg;
-			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins'; this.ai.score += 1; }
-			else if (this.g.winner) { msg = 'You win!!!'; this.human.score += 1; }
+			let msg,sp;
+			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins!';sp='A.I. wins!'; this.ai.score += 1; }
+			else if (this.g.winner) { msg = 'You win!!!'; sp=msg;this.human.score += 1; }
 			else { msg = "It's a tie"; }
 
 			Score.nTotal += 1;
 			Score.nCorrect = this.human.score;
 
 			showScore();
-			showInstruction('', msg, dTitle, !this.g.silentMode, msg);
+			showInstruction('', msg, dTitle, !this.g.silentMode, sp);
 
-			this.bPlay = mButton('play again!', () => { resetRound(); this.startGame(); }, dTable, { fz: 28, matop: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
+			this.bPlay = mButton('play again', () => { resetRound(); this.startGame(); }, dTable, { fz: 28, margin: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
+			this.bPlay = mButton('next game', () => {
+				setNextGame();
+				if (GameTimer.unitTimeUp()) { gameOver('Great job! Time for a break!'); } else { GC.startGame(); }
+			}, dTable, { fz: 28, margin: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
 			// this.bTest = mButton('test', () => { unitTest00(); }, dTable, { fz: 28, matop: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
 		}
 		else this.startRound();
@@ -78,7 +82,7 @@ function unitTest00() {
 		G.board.clear();
 		G.board.setState(state, { X: G.ai.color, O: G.human.color });
 		GC.bTest.innerHTML = 'GO!';
-		console.log('______ ready:');printState(state);
+		console.log('______ ready:'); printState(state);
 	} else {
 		resetRound();
 		GC.startGame();

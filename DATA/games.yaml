@@ -668,7 +668,7 @@ gKrieg:
 gTTT:
   friendly: TicTacToe
   logo: 'abstract-050'
-  color: BLUEGREEN
+  color: '#1e3569'
   controllerType: solo
   numPlayers: 2
   searchDepth: 9

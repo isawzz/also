@@ -147,7 +147,7 @@ function instantiateNumbers(wp) {
 
 
 
-
+//old code
 
 function all2DigitFractionsExpanded() {
 	let f = all2DigitFractions();

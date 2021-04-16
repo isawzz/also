@@ -75,7 +75,7 @@ class ControllerSolitaire {
 
 		if (Score.gameChange) {
 			setNextGame();
-			if (GameTimer.unitTimeUp()) { gameOver('Great job! Time for a break!'); } else { this.startGame(); }
+			if (GameTimer.unitTimeUp()) { gameOver('Great job! Time for a break!'); } else { GC.startGame(); }
 		} else if (Score.levelChange && nextLevel <= this.g.maxLevel) {
 			this.g.level = nextLevel;
 			setBadgeLevel(this.g.level);

@@ -5,8 +5,11 @@ function arrCycleSwap(arr, prop, clockwise = true) {
 	arr[n - 1][prop] = h;
 }
 function gatherItems(n, options) {
+	//console.log(n,options)
 	let items = null;
 	while (!items) { items = Pictures = pickSuitableItems(n, options); }
+
+	//console.log('==>items',items)
 
 	//each item has a iLetter and letter now!
 
@@ -17,11 +20,12 @@ function gatherItems(n, options) {
 		let item2 = items[(i + 1) % n];
 		let label = item1.origLabel = item1.label;
 		let idx = item1.iLetter;
-		item1.label = replaceAt(label, idx, item2.letter);
+		item1.label = replaceAtCopy(label, idx, item2.letter);
 		if (isWord(item1.label)) {
+			//console.log(item1,item2,item1.label,item2.label)
 			item2.iLetter = (item2.iLetter + 1) % item2.label.length;
 			item2.letter = item2.label[item2.iLetter];
-			item1.label = replaceAt(label, idx, item2.letter); // label.substring(0, idx) + item2.letter + label.substring(idx + 1);
+			item1.label = replaceAtCopy(label, idx, item2.letter); // label.substring(0, idx) + item2.letter + label.substring(idx + 1);
 			if (isWord(item1.label)) return gatherItems(n, options);
 		}
 		//add swapInfo to item1
@@ -32,6 +36,28 @@ function gatherItems(n, options) {
 			temp: null,
 		};
 
+	}
+	return items;
+}
+function pickSuitableItems(n, options) {
+	let items = genItems(n, options);
+	let words = items.map(x => x.label);
+	//console.log('words',words);
+
+	//console.log('words',words,'options',options)
+
+	//if all labels are longer than 5 letters try finding vowels first
+	let minlen = arrMinMax(words, x => x.length).min;
+	//console.log('minlen', minlen)
+
+	let used = [];
+	for (const item of items) {
+		let res = minlen > 6 ? getRandomVowel(item.label, used) : minlen > 3 ? getRandomConsonant(item.label, used) : getRandomLetter(item.label, used);
+		if (isEmpty(res)) return null;
+		let i = item.iLetter = res.i;
+		let letter = item.letter = item.label[i];
+		used.push(letter);
+		//console.log('w',item.label,'i', i, 'letter', letter);
 	}
 	return items;
 }
@@ -97,28 +123,7 @@ function pickSuitableItems_dep(n, options) {
 	}
 	return items;
 }
-function pickSuitableItems(n, options) {
-	let items = genItems(n, options);
-	let words = items.map(x => x.label);
-
-	//console.log('words',words,'options',options)
-
-	//if all labels are longer than 5 letters try finding vowels first
-	let minlen = arrMinMax(words, x => x.length).min;
-	//console.log('minlen', minlen)
-
-	let used = [];
-	for (const item of items) {
-		let res = minlen > 6 ? getRandomVowel(item.label, used) : minlen > 3 ? getRandomConsonant(item.label, used) : getRandomLetter(item.label, used);
-		if (isEmpty(res)) return null;
-		let i = item.iLetter = res.i;
-		let letter = item.letter = item.label[i];
-		used.push(letter);
-		//console.log('w',item.label,'i', i, 'letter', letter);
-	}
-	return items;
-}
-function replaceAt(s, i, ssub) { return s.substring(0, i) + ssub + s.substring(i + 1); }
+function replaceAtCopy(s, i, ssub) { return s.substring(0, i) + ssub + s.substring(i + 1); }
 function stopBlinking(item) { if (isdef(item)) { item.isBlinking = false; mRemoveClass(iDiv(item), 'blink'); } }
 function startBlinking(item, items, unique = true) {
 	//console.log('item', item, 'items', items, 'unique', unique)
@@ -151,7 +156,7 @@ function showCorrectLabelSwapping() {
 				//startPulsating(l,p.letters,false);
 				iDiv(l).innerHTML = sw.correct.l;
 				if (l.i == p.iLetter) animate(iDiv(l), 'komisch', 2300);
-				//console.log('will correct',p.testLabel,'to',replaceAt(p.label,l.i,sw.correct.l));
+				//console.log('will correct',p.testLabel,'to',replaceAtCopy(p.label,l.i,sw.correct.l));
 				//show correct version of that letter!
 				//transformation should be slow (animation similar to abacus correction!)
 			}
