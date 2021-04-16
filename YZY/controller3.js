@@ -20,7 +20,7 @@ class ControllerTTT {
 	}
 	startRound() {
 		this.deactivateUi();
-		setPlayer(this.g, this.g.startingPlayer == 'random' && coin() ? this.ai : this[this.g.startingPlayer]);
+		setPlayer(this.g, this.g.startingPlayer == 'random' && coin()? this.ai: this[this.g.startingPlayer]);
 		showStats();
 		this.g.startRound();
 		this.prompt();

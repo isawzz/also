@@ -1,7 +1,7 @@
 nil:
   id: nil
   avGames: [gTTT, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gTouchPic
+  lastGame: gTTT
   settings:
     # settings common to all games
     userColor: green

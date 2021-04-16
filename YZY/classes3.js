@@ -11,7 +11,6 @@ class GTTT {
 	startGame() {
 		this.board = new Board(3, 3, this.controller.uiInteract.bind(this.controller));
 		this.winner = null;
-
 		this.human.sym = 'O';
 		this.ai.sym = 'X';
 
@@ -19,14 +18,14 @@ class GTTT {
 		//console.log('state',state)
 		//let state =['X', 'X', null, 'O', null, null, 'O', null, null];
 		// state =[null, 'X', null, 'X', null, 'O', null, 'O', null];
-		// state=[null, null, null, null, 'X', 'O', null, 'O', null];
+		//state=[null, null, null, null, 'X', 'O', null, 'O', null];
 		this.board.setState(state, { X: this.ai.color, O: this.human.color }); //AI wins! ok
 		//state = this.getState();
 		//console.log('state',state)
 		//this.plTurn = this.ai;
 
 	}
-	startRound() { delete this.startPosition; }
+	startRound() { 		delete this.startPosition; }
 	interact(ev) {
 		let tile = evToItemC(ev);
 		if (isdef(tile.label)) return; //illegal move!
@@ -49,7 +48,7 @@ class GTTT {
 		choice = [];
 
 		//experimental algo:
-		mmab2(state, 0, -Infinity, +Infinity);
+		mmab3(state, 0, -Infinity, +Infinity);
 		var iMove2 = choice;
 		if (iMove1 != iMove2) {
 			console.log('correct:' + iMove1, 'ERR:' + iMove2);
@@ -86,7 +85,7 @@ class GTTT {
 	getAvailableMoves(state) {
 		let moves = [];
 		for (let i = 0; i < state.length; i++) {
-			if (nundef(state[i]) || state[i] == ' ') moves.push(i);
+			if (EmptyFunc(state[i])) moves.push(i);
 		}
 		return moves;
 	}
