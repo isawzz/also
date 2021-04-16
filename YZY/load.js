@@ -23,8 +23,6 @@ async function addGroupInfo() {
 			console.log('IMMER NOCH KEIN GROUP INFO!!!!', k, Syms[k], sInfo[k], symbolDict[k]);
 		}
 	}
-
-
 	//console.log(Syms)
 	// let symsNo = await localOrRoute('symsNo', '../assets/symsNo.yaml');
 	// for(const k in symsNo){ delete Syms[k.toLowerCase()]; }

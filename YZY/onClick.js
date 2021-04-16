@@ -31,11 +31,8 @@ function onClickGo(ev) {
 			closeAux();
 			setGame(gKey);
 			GC.startGame();
-
 		}
 	}
-
-
 }
 
 //#region helpers

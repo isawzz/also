@@ -44,7 +44,34 @@ function instantiateNames(wp) {
 		wp.result = { number: 0, text: diNames[k] }; return true;
 	} else { return false; }
 }
+function instantiateNumbers(wp) {
 
+	let text = wp.text;
+
+	if (wp.sol[0] == 's') { wp.result = { number: 0, text: wp.sol.substring(1) }; return [{}, '']; }
+
+	let diop = wp.diop = {}, res, result = [], eq;
+	let solist = wp.sol.split('=>');
+	//console.log(wp.sol);
+
+	for (const sol of solist) {
+		//console.log(sol);
+		[res, eq] = replaceSol(sol, diop);
+		result.push(res);
+	}
+	result = arrLast(result).res;
+	//console.log('_______diop', diop);
+
+	//now replace each key in text by diop[key] and sett wp.result to diop.R
+	wp.result = { number: isdef(diop.R) ? diop.R : result };
+	wp.result.text = '' + wp.result.number;
+	for (const k in diop) {
+		if (k == 'R') continue;
+		text = text.replace('@' + k, diop[k]);
+	}
+	wp.text = text;
+	return [diop, eq];
+}
 function replaceSol(sol, diop) {
 	//sol = R*N2=N1
 	let rhs = stringBefore(sol, '=');
@@ -108,35 +135,6 @@ function replaceSol(sol, diop) {
 	diop[lhs] = result;
 
 	return [result, eq];
-}
-
-function instantiateNumbers(wp) {
-
-	let text = wp.text;
-
-	if (wp.sol[0] == 's') { wp.result = { number: 0, text: wp.sol.substring(1) }; return [{}, '']; }
-
-	let diop = wp.diop = {}, res, result = [], eq;
-	let solist = wp.sol.split('=>');
-	//console.log(wp.sol);
-
-	for (const sol of solist) {
-		//console.log(sol);
-		[res, eq] = replaceSol(sol, diop);
-		result.push(res);
-	}
-	result = arrLast(result).res;
-	//console.log('_______diop', diop);
-
-	//now replace each key in text by diop[key] and sett wp.result to diop.R
-	wp.result = { number: isdef(diop.R) ? diop.R : result };
-	wp.result.text = '' + wp.result.number;
-	for (const k in diop) {
-		if (k == 'R') continue;
-		text = text.replace('@' + k, diop[k]);
-	}
-	wp.text = text;
-	return [diop, eq];
 }
 
 
