@@ -1,3 +1,5 @@
+/* #region settings */
+
 #dAux{
 	position: absolute;
 	left: 0;
@@ -19,6 +21,20 @@
 	display: inline-block;
 	padding: 10px;
 }
+.input{
+	width:70px;
+}
+.options{
+	width:77px;
+}
+#dGameSettings input{
+	width:70px;
+}
+#dGameSettings select{
+	width:77px;
+}
+/* #endregion */
+
 /* #region fieldset */
 .fsc{
 	height:290px;
@@ -76,20 +92,6 @@ fieldset div{
   border: 8px solid green;
 }
 /* #endregion radio */
-
-.input{
-	width:70px;
-}
-.options{
-	width:77px;
-}
-#dGameSettings input{
-	width:70px;
-}
-#dGameSettings select{
-	width:77px;
-}
-
 
 /* #region checkbox */
 .checkbox {

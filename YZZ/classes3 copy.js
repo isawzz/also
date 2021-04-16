@@ -15,7 +15,7 @@ class GTTT {
 		this.human.sym = 'O';
 		this.ai.sym = 'X';
 
-		let state = isdef(this.startPosition) ? this.startPosition : new Array(9).fill(null);//['X', 'X', null, 'O', null, null, 'O', null, null];
+		let state = new Array(9).fill(null);//['X', 'X', null, 'O', null, null, 'O', null, null];
 		//console.log('state',state)
 		//let state =['X', 'X', null, 'O', null, null, 'O', null, null];
 		// state =[null, 'X', null, 'X', null, 'O', null, 'O', null];
@@ -26,7 +26,7 @@ class GTTT {
 		//this.plTurn = this.ai;
 
 	}
-	startRound() { delete this.startPosition; }
+	startRound() { }
 	interact(ev) {
 		let tile = evToItemC(ev);
 		if (isdef(tile.label)) return; //illegal move!
@@ -46,24 +46,27 @@ class GTTT {
 		state = boardToNode(state);
 		mmab1(state, 0, -Infinity, +Infinity);
 		var iMove1 = choice;
-		// choice = [];
-		// mmab6(state, 0, -Infinity, +Infinity);
-		// var iMove2 = choice;
-		// if (iMove1 != iMove2) {
-		// 	console.log('correct:' + iMove1, 'ERR:' + iMove2);
-		// 	Daat.state = {
-
-		// 	}
-		// 	interrupt();
-		// }
-		return iMove1;
+		choice = [];
+		mmab4(state, 0, -Infinity, +Infinity);
+		var iMove2 = choice;
+		console.assert(iMove1 == iMove2, 'correct:' + iMove1, 'ERR:' + iMove2);
+		return iMove2;
 	}
 	activate() {
 		let pl = this.plTurn;
-		let autoplay = false;
-		if (autoplay || pl == this.ai) {
+		if (pl == this.ai) {
 			this.TO = setTimeout(() => {
+
 				let iMove = this.computerMove();
+
+
+
+				//let iMove = pl.getBestMove(G);
+
+				// let state = this.getState();
+				// let m = this.getAvailableMoves(state);
+				// let x = minimax(state, this.ai, 0, 2);
+
 				let tile = this.board.items[iMove];
 				this.interact({ target: iDiv(tile) });
 			}, 300); //DELAY
@@ -111,7 +114,7 @@ class GTTT {
 	getAvailableMoves(state) {
 		let moves = [];
 		for (let i = 0; i < state.length; i++) {
-			if (nundef(state[i]) || state[i] == ' ') moves.push(i);
+			if (nundef(state[i])||state[i]==' ') moves.push(i);
 		}
 		return moves;
 	}

@@ -69,7 +69,6 @@ function test15() {
 	printState(state);
 	console.log('player', pl, 'should choose', GLOBALMOVE, '(val=' + x + ')');
 }
-
 function otherPlayer(pl) { return pl == 1 ? 2 : 1; }
 function isFinalState(state) { return isWinningState(state, 1) || isWinningState(state, 2) || isEmpty(getAvailableMoves(state)); }
 function evaluateState(state) { return isWinningState(state, 1) ? 100 : isWinningState(state, 2) ? 100 : 0; }
@@ -92,8 +91,6 @@ function nega(node, depth, a, b, sign) {
 	}
 	return value
 }
-
-
 function minimax1(node, depth, maximizingPlayer) {
 	if (depth == 0 || isFinalState(node)) {
 		//console.log('==>')
@@ -129,8 +126,6 @@ function minimax1(node, depth, maximizingPlayer) {
 		return value;
 	}
 }
-
-
 function minimax0(state, pl, depth, maxDepth) {
 
 	if (isWinningState(state, pl) || isWinningState(state, (pl == 1 ? 2 : 1))) {
@@ -153,15 +148,6 @@ function minimax0(state, pl, depth, maxDepth) {
 	}
 	return [bestVal, bestMove];
 }
-
-
-
-
-
-
-
-
-
 function checkForWinner(state, sym1, sym2) {
 	//console.log(state,sym1,sym2)
 	// Check for horizontal wins
@@ -196,9 +182,6 @@ function checkForWinner(state, sym1, sym2) {
 	}
 	return 0;
 }
-
-
-
 function printState(state) {
 	//console.log('___________',state)
 	let formattedString = '';
@@ -212,8 +195,6 @@ function printState(state) {
 	console.log('%c' + formattedString, 'color: #6d4e42;font-size:10px');
 	console.log();
 }
-
-
 function getAvailableMoves(state) {
 	let moves = [];
 	for (let i = 0; i < state.length; i++) {
@@ -232,7 +213,6 @@ function replaceAtX(arr, index, val) {
 	}
 	return res;
 }
-
 function undoReplace(arr, index) {
 	arr[index] = null;
 }
@@ -247,8 +227,6 @@ function isWinningState(state, pl) {
 
 	return false;
 }
-
-
 
 function wp00() {
 

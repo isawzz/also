@@ -1,7 +1,7 @@
 var playerImage = new Image();
-playerImage.src = "images/o.png";
+playerImage.src = "/TEST/ttt0/images/o.png";
 var computerImage = new Image();
-computerImage.src = "images/x.png";
+computerImage.src = "/TEST/ttt0/images/x.png";
 var board = new Array();
 var BOARD_SIZE = 9;
 var UNOCCUPIED = ' ';
@@ -12,7 +12,18 @@ var choice;
 var searchTimes = new Array();
 var showAverageTime = true;
 
-function alphaBetaMinimax(node, depth, alpha, beta, maxDepth = 5) {
+function boardToNode(state) {
+	let res = new Array();
+	for (let i = 0; i < state.length; i++) {
+		if (state[i] == null) res[i] = UNOCCUPIED;
+		else res[i] = state[i];
+		//else if (state[i]=='O')
+	}
+	active_turn = "COMPUTER";
+	return res;
+}
+
+function alphaBetaMinimax(node, depth, alpha, beta, maxDepth = 9) {
 	//console.log('node', node, '\ndepth', depth, '\nalpha', alpha, '\nbeta', beta);
 	if (depth >= maxDepth) return 1;
 	if (CheckForWinner(node) === 1 || CheckForWinner(node) === 2
@@ -72,7 +83,7 @@ function NewGame() {
 	} else {
 		var alert = document.getElementById("turnInfo");
 		alert.innerHTML = "Computer's turn.";
-		setTimeout(MakeComputerMove,300);
+		setTimeout(MakeComputerMove, 300);
 	}
 }
 
@@ -109,12 +120,9 @@ function MakeComputerMove() {
 
 function GameScore(game, depth) {
 	var score = CheckForWinner(game);
-	if (score === 1)
-		return 0;
-	else if (score === 2)
-		return depth - 10;
-	else if (score === 3)
-		return 10 - depth;
+	if (score === 1) return 0;
+	else if (score === 2) return depth - 10;
+	else if (score === 3) return 10 - depth;
 }
 
 

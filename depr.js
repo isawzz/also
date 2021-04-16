@@ -1,4 +1,60 @@
+class GamteTTT{
+	availableMoves(state) {
+		let moves = [];
+		for (let i = 0; i < state.length; i++) {
+			if (state[i] === undefined) moves.push({ index: i, sym: sym });
+		}
+		return moves;
+	}
+	getPlayer(sym) { return firstCond(this.players, x => x.sym == sym); }
+	applyMove(state, move) {
+		//move should be of the form: i,sym
+		//console.log('===>',move,state)
+		this.lastMove = move;
+		state[move.index] = move.sym;
+		return state;
+	}
+	undoMove(state, move) {
+		state[move.index] = undefined;
+		return state;
+	}
+	applyState(state) {
+		//move should be of the form: i,sym
+		this.board.applyState(state);
+		state[move.i] = move.sym;
+	}
+	evalState(state, sym) {
+		let res = checkForWinner(state, this.human.sym, this.ai.sym); // returns a sym
+		console.log('checkForWinner returns', res)
+		let plCheck = this.getPlayer(sym);
+		let plWinner = isdef(res) && res != 0 ? this.getPlayer(res) : null;
+		//console.log('state', state, 'check for', plCheck.id, 'winner', plWinner);
+	}
 
+}
+
+class AIPlayer_0{
+
+	move(possibleMoves) { return chooseRandom(possibleMoves); }
+
+	getBestMove(board, maximizing = true, callback = () => { }, depth = 0) {
+
+		//clear nodes_map if the function is called for a new move
+		if (depth == 0) this.nodes_map.clear();
+
+		//If the board state is a terminal one, return the heuristic value
+		if (board.isTerminal() || depth == this.max_depth) {
+			if (board.isTerminal().winner == 'x') {
+				return 100 - depth;
+			} else if (board.isTerminal().winner == 'o') {
+				return -100 + depth;
+			}
+			return 0;
+		}
+	}
+
+
+}
 
 function calcDisjunctKeysets() {
 	let dictDisjoint = {};

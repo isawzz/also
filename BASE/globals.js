@@ -18,7 +18,7 @@ var DB;
 var U;
 var Pictures, Goal, Selected, Score, uiActivated, aiActivated, auxOpen, TO, TOMain, TOTrial, QContextCounter = 0, Live, G;
 var Settings, SettingsList, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
-var GameTimer;
+var GameTimer, STOPAUS=false;
 var Daat = {}, DA = {}, Items;
 
 var Players,PlayerOnTurn, GC;

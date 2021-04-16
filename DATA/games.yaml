@@ -671,4 +671,6 @@ gTTT:
   color: BLUEGREEN
   controllerType: solo
   numPlayers: 2
+  searchDepth: 9
+  startingPlayer: random  # ai | human | random
 
