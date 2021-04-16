@@ -64,7 +64,6 @@ function checkWinnerPossible(arr, rows, cols) {
 	ch = bPartialDiag2(arr, rows, cols); if (ch) return ch;
 	return null;
 }
-function checkWinnerTTT(arr){return checkWinner(arr,3,3);}
 function checkWinner(arr, rows, cols) {
 	for (i = 0; i < rows; i++) { let ch = bFullRow(arr, i, rows, cols); if (ch) return ch; }
 	for (i = 0; i < cols; i++) { let ch = bFullCol(arr, i, rows, cols); if (ch) return ch; }
@@ -73,8 +72,15 @@ function checkWinner(arr, rows, cols) {
 	return null;
 }
 function checkBoardEmpty(arr) { for (const x of arr) { if (!EmptyFunc(x)) return false; } return true; }
-// function checkBoardFull(arr){return !firstCond(arr,x=>nundef(x)||x==' ');}
 function checkBoardFull(arr) { for (const x of arr) if (EmptyFunc(x)) return false; return true; }
+
+//TTT
+function checkPotentialTTT(arr) { return checkWinnerPossible(arr, 3, 3); }
+function checkWinnerTTT(arr) { return checkWinner(arr, 3, 3); }
+
+
+
+//TBDEP: deprecate after long time no diff mmab1 and mmab2
 function checkWinnerSpaces(arr, rows, cols) {
 	for (i = 0; i < rows; i++) { let ch = bFullRow(arr, i, rows, cols); if (isdef(ch) && ch != ' ') return true; }
 	for (i = 0; i < cols; i++) { let ch = bFullCol(arr, i, rows, cols); if (isdef(ch) && ch != ' ') return true; }
@@ -82,21 +88,8 @@ function checkWinnerSpaces(arr, rows, cols) {
 	ch = bFullDiag2(arr, rows, cols); if (isdef(ch) && ch != ' ') return true;
 	return false;
 }
-function checkWinnerTTT_dep(arr, rows, cols) {
-	for (i = 0; i < rows; i++) { if (bFullRow(arr, i, rows, cols)) return true; }
-	for (i = 0; i < cols; i++) { if (bFullCol(arr, i, rows, cols)) return true; }
-	if (bFullDiag(arr, rows, cols)) return true;
-	if (bFullDiag2(arr, rows, cols)) return true;
-	return false;
-}
-function checkPotentialTTT(arr, rows, cols) {
-	for (i = 0; i < rows; i++) { if (bPartialRow(arr, i, rows, cols)) return true; }
-	for (i = 0; i < cols; i++) { if (bPartialCol(arr, i, rows, cols)) return true; }
-	if (bPartialDiag(arr, rows, cols)) return true;
-	if (bPartialDiag2(arr, rows, cols)) return true;
-	return false;
-}
 
+//testing
 function bTest01() {
 	let arr = [1, 1, 1, 1, 2, 1, 0, 1, 0], rows = 3, cols = 3, irow = 0;// =>1
 	console.log(bFullRow(arr, irow, rows, cols));

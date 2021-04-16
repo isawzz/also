@@ -40263,9 +40263,9 @@ drop:
   w: 100
   h: 133
   E: drop
-  D: fallen
-  F: laissez tomber
-  S: soltar
+  D: tropfen
+  F: goute
+  S: gota
   C: 下降
   cats:
     - huge

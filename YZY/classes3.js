@@ -46,16 +46,15 @@ class GTTT {
 		state = boardToNode(state);
 		mmab1(state, 0, -Infinity, +Infinity);
 		var iMove1 = choice;
-		// choice = [];
-		// mmab6(state, 0, -Infinity, +Infinity);
-		// var iMove2 = choice;
-		// if (iMove1 != iMove2) {
-		// 	console.log('correct:' + iMove1, 'ERR:' + iMove2);
-		// 	Daat.state = {
+		choice = [];
 
-		// 	}
-		// 	interrupt();
-		// }
+		//experimental algo:
+		mmab2(state, 0, -Infinity, +Infinity);
+		var iMove2 = choice;
+		if (iMove1 != iMove2) {
+			console.log('correct:' + iMove1, 'ERR:' + iMove2);
+		}
+
 		return iMove1;
 	}
 	activate() {

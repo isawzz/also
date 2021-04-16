@@ -1,4 +1,33 @@
-class GamteTTT{
+function checkWinnerTTT_dep(arr, rows, cols) {
+	for (i = 0; i < rows; i++) { if (bFullRow(arr, i, rows, cols)) return true; }
+	for (i = 0; i < cols; i++) { if (bFullCol(arr, i, rows, cols)) return true; }
+	if (bFullDiag(arr, rows, cols)) return true;
+	if (bFullDiag2(arr, rows, cols)) return true;
+	return false;
+}
+function checkPotentialTTT_dep(arr, rows, cols) {
+	for (i = 0; i < rows; i++) { if (bPartialRow(arr, i, rows, cols)) return true; }
+	for (i = 0; i < cols; i++) { if (bPartialCol(arr, i, rows, cols)) return true; }
+	if (bPartialDiag(arr, rows, cols)) return true;
+	if (bPartialDiag2(arr, rows, cols)) return true;
+	return false;
+}
+
+
+class SAMMELCLASS{
+	interact_orig(ev) {
+		//console.log('interact!', ev);
+		ev.cancelBubble = true;
+		if (!canAct()) return;
+		//console.log('halloooooooooooooo')
+		let pic = findItemFromEvent(Pictures, ev);
+		toggleFace(pic);
+
+		if (this.trialNumber == this.trials - 1) {
+			turnFaceUp(Goal);
+			TOMain = setTimeout(() => this.controller.evaluate.bind(this.controller)(ev), 100);
+		} else this.controller.evaluate.bind(this.controller)(ev);
+	}
 	availableMoves(state) {
 		let moves = [];
 		for (let i = 0; i < state.length; i++) {

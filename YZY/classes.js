@@ -2,8 +2,6 @@
 class Game {
 	constructor(name, o) {
 		this.name = name;
-		//console.log(this);
-		//console.log('name',name,'o',o)
 		copyKeys(o, this);
 		this.maxLevel = isdef(this.levels) ? Object.keys(this.levels).length - 1 : 0;
 		this.id = name;
@@ -18,7 +16,6 @@ class Game {
 	startRound() { }
 	prompt() {
 		myShowPics(this.controller.evaluate.bind(this.controller));
-		//showPicturesSpeechTherapyGames(this.controller.evaluate.bind(this.controller));
 		setGoal();
 		showInstruction(Goal.label, 'click', dTitle, true);
 		this.controller.activateUi.bind(this.controller)();
@@ -32,7 +29,6 @@ class Game {
 	interact() { }
 	eval(ev) {
 		ev.cancelBubble = true;
-		// let id = evToClosestId(ev);		let i = firstNumber(id);		let item = Pictures[i];
 		let item = findItemFromEvent(Pictures, ev);
 		Selected = { pic: item, feedbackUI: iDiv(item), sz: getRect(iDiv(item)).h };
 
@@ -401,19 +397,6 @@ class GMem extends Game {
 		TOMain = setTimeout(() => this.controller.evaluate.bind(this.controller)(ev), 300);
 	}
 
-	interact_orig(ev) {
-		//console.log('interact!', ev);
-		ev.cancelBubble = true;
-		if (!canAct()) return;
-		//console.log('halloooooooooooooo')
-		let pic = findItemFromEvent(Pictures, ev);
-		toggleFace(pic);
-
-		if (this.trialNumber == this.trials - 1) {
-			turnFaceUp(Goal);
-			TOMain = setTimeout(() => this.controller.evaluate.bind(this.controller)(ev), 100);
-		} else this.controller.evaluate.bind(this.controller)(ev);
-	}
 }
 class GMissingLetter extends Game {
 	constructor(name, o) { super(name, o); }
@@ -450,7 +433,6 @@ class GMissingLetter extends Game {
 		mLinebreak(dTable);
 
 		let msg = this.composeFleetingMessage();
-		//console.log('msg,msg', msg)
 		showFleetingMessage(msg, 3000);
 		this.controller.activateUi.bind(this.controller)();
 
@@ -591,11 +573,7 @@ class GPremem extends Game {
 	prompt() {
 		this.piclist = [];
 		this.showLabels = false;
-		myShowPics(this.interact.bind(this),
-			{ border: '3px solid #ffffff80' }, // border: '3px solid #ffffff80'
-			{}); //, showLabels: false });
-		// { showLabels: false }); //, showLabels: false });
-		// { numRepeat: this.numRepeat, sameBackground: this.sameBackground, showLabels: false }); //, showLabels: false });
+		myShowPics(this.interact.bind(this), { border: '3px solid #ffffff80' }, {});
 		showInstruction('', this.language == 'E' ? 'click any picture' : 'click irgendein Bild', dTitle, true);
 		this.controller.activateUi.bind(this.controller)();
 	}
@@ -608,15 +586,10 @@ class GPremem extends Game {
 	interact(ev) {
 		ev.cancelBubble = true;
 		if (!canAct()) return;
-
 		let pic = findItemFromEvent(Pictures, ev);
-		// let id = evToClosestId(ev);
-		// let i = firstNumber(id);
-		// let pic = Pictures[i];
-		//let div = pic.div;
+
 		if (!isEmpty(this.piclist) && this.piclist.length < this.numRepeat - 1 && this.piclist[0].label != pic.label) return;
 		toggleSelectionOfPicture(pic, this.piclist);
-		//console.log('clicked', pic.key, this.piclist);//,piclist, GPremem.PicList);
 		if (isEmpty(this.piclist)) {
 			showInstruction('', this.language == 'E' ? 'click any picture' : 'click irgendein Bild', dTitle, true);
 		} else if (this.piclist.length < this.numRepeat - 1) {
@@ -646,8 +619,6 @@ class GRiddle extends Game {
 	startGame() {
 		this.successFunc = successThumbsUp; this.failFunc = failThumbsDown;
 		this.correctionFunc = () => {
-			// 	clearElement(this.dResult);
-			//mText('correct answer: ' + Goal.label, this.dResult, { fz: 40, matop: 20 }); 
 			mStyleX(Goal.buttonCorrect, { bg: 'green' });
 			animate(Goal.buttonCorrect, 'komisch', 1000);
 			return 20000;
@@ -656,8 +627,6 @@ class GRiddle extends Game {
 	prompt() {
 		this.trials = 1;
 		showInstruction('', 'Solve the Riddle:', dTitle, true);
-
-		//console.log('starting story');
 
 		let wp = this.wp = getRandomWP(1, this.maxIndex);
 		let haveResult = wp.isTextResult = instantiateNames(wp);
@@ -693,8 +662,6 @@ class GRiddle extends Game {
 			let res = wp.result.number;
 			choices = [res, res + randomNumber(1, 25), res / randomNumber(2, 5), res * randomNumber(2, 5)];
 			choices = choices.map(x => (Math.round(x * 100) / 100));
-			//choices = choices.map(x=>(Math.round(x * 100) / 100).toFixed(2));
-			//choices = choices.map(x=>(x>0 && x<1)? parseFloat(x).toFixed(2):x);//parseFloat(x).toFixed(2));
 		}
 
 		shuffle(choices);
@@ -702,17 +669,11 @@ class GRiddle extends Game {
 		for (const ch of choices) {
 
 			let dButton = mButton(ch, (ev) => {
-				//console.log('ev', ev)
 				let id = evToClosestId(ev);
 				let b = mBy(id);
 				let x = b.innerHTML;
-				//console.log('________________', x);
-
 				if (x == Goal.label) { mStyleX(b, { bg: 'green' }); mCheckit(this.textArea, 100); }
 				else { let d = mXit(b, 100); }
-				// let bg = x == Goal.label ? 'green' : 'red';
-				// mStyleX(b, { bg: bg })
-
 
 				Goal.buttonClicked = ev.target;
 				this.controller.evaluate.bind(this.controller)(ch, Goal.label);
@@ -727,13 +688,6 @@ class GRiddle extends Game {
 		Selected = { delay: 5000, reqAnswer: reqAnswer, answer: answer, feedbackUI: Goal.button };
 		return (answer == reqAnswer);
 	}
-
-
-
-
-
-
-
 
 	createInputElements() {
 		this.inputBox = addNthInputElement(this.dResult, 0);
@@ -781,20 +735,14 @@ class GSayPic extends Game {
 	constructor(name, o) { super(name, o); }
 	clear() { Speech.stopRecording(); }
 	prompt() {
-
 		myShowPics();
 		setGoal();
-
 		showInstruction(Goal.label, this.language == 'E' ? 'say:' : "sage: ", dTitle);
 		animate(dInstruction, 'pulse800' + bestContrastingColor(this.color, ['yellow', 'red']), 900);
-
 		mLinebreak(dTable);
 		MicrophoneUi = mMicrophone(dTable, this.color);
-		//console.log('MicrophoneUi',MicrophoneUi)
 		MicrophoneHide();
-
 		TOMain = setTimeout(this.controller.activateUi.bind(this.controller), 200);
-
 	}
 	trialPrompt(nTrial) {
 		sayRandomVoice(nTrial < 2 ? 'speak UP!!!' : 'Louder!!!', 'LAUTER!!!');
@@ -802,7 +750,6 @@ class GSayPic extends Game {
 		return 600;
 	}
 	activate() {
-		//console.log('hallo')
 		if (Speech.isSpeakerRunning()) {
 			TOMain = setTimeout(this.activate.bind(this), 200);
 		} else {
@@ -811,9 +758,6 @@ class GSayPic extends Game {
 
 	}
 	eval(isfinal, speechResult, confidence, sessionId) {
-
-		//console.log(Goal);
-		//console.log('===>',sessionId,SessionId);
 		if (sessionId != SessionId) {
 			alert('NOT THIS BROWSER!!!!!!'); return undefined;
 		}
@@ -847,8 +791,6 @@ class GSentence extends Game {
 		source.target = target;
 		let dSource = iDiv(source);
 		let dTarget = iDiv(target);
-
-
 		if (clearTarget) {
 			//if this target is empty, remove _
 			let ch = dTarget.children[0];
@@ -872,27 +814,17 @@ class GSentence extends Game {
 		} else {
 			mAppend(dTarget, dSource);
 		}
-
-		//this.controller.evaluate.bind(this.controller)();
-		//relayout sources in target
 	}
 	prompt() {
-
-		//choose a random sentence
-
 		let words = this.sentence = chooseRandom(this.sentences);
-
 		showInstruction('', 'drag words into blanks', dTitle, true);
 		mLinebreak(dTable);
 
 		let fz = 32;
 		let h = fz * 1.25, wmin = fz * 1.25;
-
 		let items = Pictures = [];
 		let containers = [];
 		let options = _simpleOptions({ fz: fz, bg: 'transparent', fg: 'white', showPic: false, showLabels: true }, { wmin: wmin });
-
-		//console.log('words', words);
 
 		let dArea = mDiv(dTable, { h: 150, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
 		mLinebreak(dTable);
@@ -906,31 +838,16 @@ class GSentence extends Game {
 			let d = makeItemDiv(item, options);
 			let dCont = mDiv(dArea, { wmin: wmin + 12, hmin: h + 10, bg: colorTrans('beige', .25), fg: 'black', margin: 12 });
 			container.div = dCont;
-
-			//console.log(item,container);
 			items.push(item);
 			containers.push(container);
 		}
 
 		shuffle(items);
 		items.map(x => { mAppend(dWordArea, iDiv(x)); mStyleX(iDiv(x), { h: h, w: 'auto' }); });
-
-		//console.assert(false)
 		enableDD(items, containers, this.dropHandler.bind(this), false, true);
-
 		mLinebreak(dTable, 50);
 		mButton('Done!', this.controller.evaluate.bind(this.controller), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
-		// myShowPics(() => fleetingMessage('drag and drop the letters to form the word!'), {}, { });
-		// setGoal();
-		// showInstruction(Goal.label, this.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
-		// mLinebreak(dTable);
-
-		// this.inputs = createDropInputs();
-		// let x = mLinebreak(dTable, 50);//x.style.background='red'
-		// this.letters = createDragLetters();
-
 		this.controller.activateUi.bind(this.controller)();
-
 	}
 	trialPrompt() {
 		sayTryAgain();
@@ -939,7 +856,6 @@ class GSentence extends Game {
 		return 1500;
 	}
 	eval() {
-
 		let i = 0;
 		let isCorrect = true;
 		for (const p of Pictures) {
@@ -971,14 +887,7 @@ class GSteps extends Game {
 
 		myShowPics(this.interact.bind(this), { bg: bg },// { contrast: this.contrast, },
 			{ rows: rows, showRepeat: showRepeat, colorKeys: colorKeys, numRepeat: this.numRepeat, contrast: this.contrast });
-
-
-		// myShowPics(this.interact.bind(this), { contrast: this.contrast, },
-		// 	{ showRepeat: showRepeat, colorKeys: colorKeys, numRepeat: this.numRepeat });
-
 		setMultiGoal(this.numSteps);
-		// console.log(Goal)
-
 		let cmd = 'click';
 		let spoken = [], written = [], corr = [];
 		for (let i = 0; i < this.numSteps; i++) {
@@ -988,9 +897,7 @@ class GSteps extends Game {
 			goal.correctionPhrase = corr[i];
 			cmd = 'then';
 		}
-		// console.log('written', written, '\nspoken', spoken);
 		showInstructionX(written.join('; '), dTitle, spoken.join('. '), { fz: 20 });
-
 		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
@@ -1006,33 +913,14 @@ class GSteps extends Game {
 	interact(ev) {
 		ev.cancelBubble = true;
 		if (!canAct()) { console.log('no act'); return; }
-
 		let pic = findItemFromEvent(Pictures, ev);
-
 		toggleSelectionOfPicture(pic, this.piclist);
 		if (this.piclist.length == Goal.pics.length) {
 			clearFleetingMessage();
 			Selected = { piclist: this.piclist }; this.controller.evaluate.bind(this.controller)();
 		}
 	}
-	interact_dep(ev) {
-		ev.cancelBubble = true;
-		if (!canAct()) { console.log('no act'); return; }
-
-		let pic = findItemFromEvent(Pictures, ev);
-
-		toggleSelectionOfPicture(pic, this.piclist);
-
-		if (isEmpty(this.piclist)) return;
-
-		let iGoal = this.piclist.length - 1;
-
-		if (pic != Goal.pics[iGoal]) { Selected = { pics: this.piclist, wrong: pic, correct: Goal[iGoal] }; this.controller.evaluate.bind(this.controller)(false); }
-		else if (this.piclist.length == Goal.pics.length) { Selected = { piclist: this.piclist }; this.controller.evaluate.bind(this.controller)(true); }
-	}
 	eval() {
-		//console.log('eval', isCorrect);
-		//console.log('piclist', this.piclist)
 		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => iDiv(x)), sz: getRect(iDiv(this.piclist[0])).h };
 		let isCorrect = true;
 		this.message = this.language == 'D' ? 'beachte die REIHENFOLGE!' : 'mind the ORDER!';
@@ -1041,12 +929,6 @@ class GSteps extends Game {
 			if (!Goal.pics.includes(p)) this.message = this.language == 'D' ? 'noch einmal!' : 'try again!';
 			if (this.piclist[i] != Goal.pics[i]) isCorrect = false;
 		}
-		return isCorrect;
-	}
-	eval_dep(isCorrect) {
-		//console.log('eval', isCorrect);
-		//console.log('piclist', this.piclist)
-		Selected = { piclist: this.piclist, feedbackUI: this.piclist.map(x => iDiv(x)), sz: getRect(iDiv(this.piclist[0])).h };
 		return isCorrect;
 	}
 }
@@ -1062,7 +944,6 @@ class GSwap extends Game {
 				Dictionary[lang][w.toLowerCase()] = Dictionary[lang][w.toUpperCase()] = k;
 			}
 		}
-		//console.log('dict', Dictionary);
 	}
 	startGame() { this.correctionFunc = showCorrectLabelSwapping; } //this.successFunc = showCorrectLabelSwapping;  }
 	clear() { super.clear(); if (isdef(this.prevLanguage)) this.language = this.prevLanguage; }
@@ -1070,15 +951,12 @@ class GSwap extends Game {
 		this.keys = setKeysG(this, filterWordByLength, 25);
 		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
 		this.trials = 2;
-		//console.log('keys', this.keys.length);
-		//console.log('words', this.keys.map(x => Syms[x].E))
 	}
 	dropHandler(source, target, isCopy = false, clearTarget = false) {
 		let prevTarget = source.target;
 		source.target = target;
 		let dSource = iDiv(source);
 		let dTarget = iDiv(target);
-
 		if (clearTarget) {
 			//if this target is empty, remove _
 			let ch = dTarget.children[0];
@@ -1102,9 +980,6 @@ class GSwap extends Game {
 		} else {
 			mAppend(dTarget, dSource);
 		}
-
-		//this.controller.evaluate.bind(this.controller)();
-		//relayout sources in target
 	}
 	prompt() {
 		showInstruction('', 'swap letter to form words', dTitle, true);
@@ -1112,18 +987,15 @@ class GSwap extends Game {
 
 		let fz = 32;
 		let options = _simpleOptions({ language: this.language, w: 200, h: 200, keySet: this.keys, luc: 'u', fz: fz, bg: 'random', fg: 'white', showLabels: true });
-		// console.log(options)
 
 		let n = 2;
 		let items = gatherItems(n, options); // items haben jetzt swaps dictionary
-		//console.log('items', items);
 
 		let style = { margin: 3, fg: 'white', display: 'inline', bg: 'transparent', align: 'center', border: 'transparent', outline: 'none', family: 'Consolas', fz: 80 };
 		for (const item of items) {
 			let d1 = item.container = mDiv(dTable, { hmin: 250 });
 			let d = iLetters(item.label, d1, style); //statt makeItemDiv
 			iAdd(item, { div: d }); //this is the item's standard div now!
-			//console.log('d', d)
 			let letters = item.letters = [];
 			for (let i = 0; i < arrChildren(d).length; i++) {
 				let ch = d.children[i];
@@ -1142,19 +1014,18 @@ class GSwap extends Game {
 
 		showPictureHints(Pictures, 'container');
 
-		// enableDD(items, containers, this.dropHandler.bind(this), false, true);
 		mLinebreak(dTable, 50);
-		this.buttonDone = mButton('Done!', ()=>{
+		this.buttonDone = mButton('Done!', () => {
 			if (!canAct()) return;
 			for (let i = 0; i < Pictures.length; i++) {
 				let p = Pictures[i];
 				let blinking = getBlinkingLetter(p);
 				//console.log('blinking',blinking);
 				if (!blinking) {
-					let msg='You need to pick 1 letter to swap in EACH word!!!';
+					let msg = 'You need to pick 1 letter to swap in EACH word!!!';
 					Speech.say(msg);
 					sayRandomVoice(msg);
-					showFleetingMessage('You need to pick 1 letter to swap in EACH word!!!',0,{fz:30});
+					showFleetingMessage('You need to pick 1 letter to swap in EACH word!!!', 0, { fz: 30 });
 					return;
 				}
 			}
@@ -1180,15 +1051,14 @@ class GSwap extends Game {
 	}
 	activate() {
 		//this.buttonDone.style.opacity = 1;
-		console.log('trialNumber',this.trialNumber)
+		console.log('trialNumber', this.trialNumber)
 		if (this.trialNumber >= 1) { sayTryAgain(); showFleetingMessage('Try again!'); }
-		else {showFleetingMessage('click one letter in each word!');}
+		else { showFleetingMessage('click one letter in each word!'); }
 	}
 	eval() {
 		let n = Pictures.length;
-		let blinkInfo = this.blinkInfo = [];//Pictures.map(x => {let l=getBlinkingLetter(x); if (isdef(l)) return l.i; else return null;});
+		let blinkInfo = this.blinkInfo = [];
 
-		//this.buttonDone.style.opacity = 0;
 		clearFleetingMessage();
 		for (let i = 0; i < n; i++) {
 			let p = Pictures[i];
@@ -1196,26 +1066,8 @@ class GSwap extends Game {
 			blinkInfo.push({ i: i, blinking: blinking });
 		}
 		//console.log('blinking', blinkInfo.map(x => x.blinking));
-
-		for (let i = 0; i < n; i++) {
-			let l = blinkInfo[i].blinking;
-			if (!l) continue;
-			//let p = Pictures[i];
-			stopBlinking(l);
-			//console.log('...stopped:',l);
-			//console.log('indices',indices);
-		}
-
-		//blinkinfo tells me which letters in each item have to be exchanged to build temp labels!
-		//if any item does NOT have a blinking, user did not finish task!
-
-		for (const blinki of blinkInfo) {
-			// console.log(blinki)
-			if (!blinki.blinking) {
-				//showFleetingMessage('you did not finish the task!', 0, { fz: 18 + 6 * (this.trialNumber + 1) });
-				return false;
-			}
-		}
+		for (let i = 0; i < n; i++) { let l = blinkInfo[i].blinking; if (!l) continue; stopBlinking(l); }
+		for (const blinki of blinkInfo) { if (!blinki.blinking) { return false; } }
 
 		let isCorrect = true;
 
@@ -1223,35 +1075,19 @@ class GSwap extends Game {
 		for (let i = 0; i < n; i++) {
 			let b1 = blinkInfo[i].blinking;
 			let b2 = blinkInfo[(i + 1) % blinkInfo.length].blinking;
-
-			//console.log(b1, b1.itemId, Items[b1.itemId])
-
 			let item = Items[b1.itemId];
 			let item2 = Items[b2.itemId];
-
-			//item needs to get blinking letter from item2 at place b1.i
-			//will be a temp swap
-			//if there is no swap info, the currently blinking letter IS the correct info!
-			//console.log('item', item)
 			let l = item.letters[b1.i];
 			let sw = l.swapInfo;
-			if (nundef(sw)) {
-				sw = l.swapInfo = { correct: { itemId: item.id, index: b1.i, l: b1.letter } };
-			}
+			if (nundef(sw)) { sw = l.swapInfo = { correct: { itemId: item.id, index: b1.i, l: b1.letter } }; }
 			sw.temp = { itemId: item2.id, index: b2.i, l: b2.letter };
 			item.testLabel = replaceAtCopy(item.label, b1.i, b2.letter);
 			iDiv(l).innerHTML = b2.letter;
 			l.state = 'temp';
-
 		}
 
 		//replacements sind gemacht
-		for (const p of Pictures) {
-			if (p.testLabel != p.origLabel) {
-				//console.log('ERR', p.testLabel, p.origLabel);
-				isCorrect = false;
-			}
-		}
+		for (const p of Pictures) { if (p.testLabel != p.origLabel) { isCorrect = false; } }
 
 		let feedbackList = [];
 		for (let i = 0; i < n; i++) {
@@ -1262,7 +1098,6 @@ class GSwap extends Game {
 				let iLetter = blinkInfo[i].blinking.i;
 				if (item.iLetter != iLetter) d = iDiv(item.letters[iLetter]);
 			}
-
 			if (isdef(d)) feedbackList.push(d);
 		}
 
@@ -1278,46 +1113,28 @@ class GTouchColors extends Game {
 		this.keys = this.keys.filter(x => containsColorWord(x));
 	}
 	prompt() {
-		//console.log(this.pictureLabels,this.showLabels)
 		let colorKeys = choose(this.colors, this.numColors);
-		//let showLabels = this.showLabels == true && this.labels == true;
 		let rows = this.numColors;
-		myShowPics(this.controller.evaluate.bind(this.controller), { bg: 'white' },// { contrast: this.contrast, },
-			{ showLabels: this.showLabels, colorKeys: colorKeys, rows: rows });
-
-		//{ contrast: this.contrast }, { colorKeys: colorKeys, showLabels: showLabels });
+		myShowPics(this.controller.evaluate.bind(this.controller), { bg: 'white' }, { showLabels: this.showLabels, colorKeys: colorKeys, rows: rows });
 		if (this.shuffle == true) {
-			//console.log('HAAAAAAAAAAAAAAAAAAAAAAAALO')
-			//shuffle(Pictures);
 			let dParent = iDiv(Pictures[0]).parentNode;
 			shuffleChildren(dParent);
 		}
-		//showPicturesSpeechTherapyGames(this.controller.evaluate.bind(this.controller), { contrast: this.contrast }, { colorKeys: colorKeys });
-		//Pictures.map(x => x.color = ColorDict[x.textShadowColor]);
-
 		setGoal(randomNumber(0, Pictures.length - 1));
-
 		let [written, spoken] = getOrdinalColorLabelInstruction('click'); //getColorLabelInstruction('click');
 		showInstructionX(written, dTitle, spoken);
-
 		this.controller.activateUi.bind(this.controller)();
 	}
 	eval(ev) {
 		ev.cancelBubble = true;
-		// let id = evToClosestId(ev);		let i = firstNumber(id);		let item = Pictures[i];
 		let item = findItemFromEvent(Pictures, ev);
-		Selected = { pic: item, feedbackUI: iDiv(item) };
-		Selected.reqAnswer = Goal.label;
-		Selected.answer = item.label;
-
+		Selected = { answer: item.label, reqAnswer: Goal.label, pic: item, feedbackUI: iDiv(item) };
 		if (item == Goal) { return true; } else { return false; }
 	}
 }
 class GTouchPic extends Game {
 	constructor(name, o) { super(name, o); }
 	prompt() {
-		//console.log('showLabels',showLabels,this.showLabels)
-		//console.log(this.showLabels, this.labels, showLabels)
 		myShowPics(this.controller.evaluate.bind(this.controller));
 		setGoal();
 		showInstruction(Goal.label, 'click', dTitle, true);
@@ -1336,10 +1153,8 @@ class GWritePic extends Game {
 	start_Level() {
 		this.keys = setKeysG(this, filterWordByLength, 25);
 		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLength, 25, 'all'); }
-		//console.log(this.keys)
 	}
 	prompt() {
-		//console.log('showLabels: this', this.showLabels, this.labels);
 		let showLabels = this.showLabels == true && this.labels == true;
 		myShowPics(() => mBy(this.defaultFocusElement).focus(), {}, { showLabels: showLabels });
 		setGoal();
@@ -1360,17 +1175,14 @@ class GWritePic extends Game {
 		this.defaultFocusElement = this.inputBox.id;
 
 		this.controller.activateUi.bind(this.controller)();
-		//return 10;
 	}
 	trialPrompt() {
 		sayTryAgain();
 		let n = this.trialNumber == 1 ? 1 : (this.trialNumber + Math.floor((Goal.label.length - this.trialNumber) / 2));
-
 		showFleetingMessage(Goal.label.substring(0, n));
 		mLinebreak(dTable);
 		this.inputBox = addNthInputElement(dTable, this.trialNumber);
 		this.defaultFocusElement = this.inputBox.id;
-
 		return 10;
 	}
 	activate() {
@@ -1384,26 +1196,15 @@ class GWritePic extends Game {
 		this.inputBox.focus();
 	}
 	eval(ev) {
-		//console.log('#',this.trialNumber,'of',this.trials)
 		let answer = normalize(this.inputBox.value, this.language);
 		let reqAnswer = normalize(Goal.label, this.language);
-
 		let correctPrefix = this.correctPrefix = getCorrectPrefix(Goal.label, this.inputBox.value);
-
-
 		Selected = { reqAnswer: reqAnswer, answer: answer, feedbackUI: iDiv(Goal) };
-		if (answer == reqAnswer) {
-			showFleetingMessage(Goal.label);
-			return true;
-		} else {
-			//if (this.trialNumber == this.trials-1) dTitle.innerHTML = Goal.label;
-			return false;
-		}
+		if (answer == reqAnswer) { showFleetingMessage(Goal.label); return true; }
+		else { return false; }
 	}
-
 }
 
-//unused:
 class GMissingNumber extends Game {
 	constructor(name, o) { super(name, o); }
 	startGame() {
@@ -1415,11 +1216,10 @@ class GMissingNumber extends Game {
 	start_Level() {
 		if (!isList(this.steps)) this.steps = [this.steps];
 		this.numPics = 2;
-		this.labels = false; // do not show labels for the thumbs up/down: TODO: should really do this in game/showThumbsUpDown
+		this.labels = false; 
 	}
 	prompt() {
 		mLinebreak(dTable, 12);
-
 		showHiddenThumbsUpDown(110);
 		mLinebreak(dTable);
 
@@ -1429,7 +1229,6 @@ class GMissingNumber extends Game {
 		this.seq = createNumberSequence(this.seqLen, this.minNum, this.maxNum, this.step, this.op);
 		[this.words, this.letters] = showNumberSequence(this.seq, dTable);
 		setNumberSequenceGoal();
-		//console.log(this)
 
 		mLinebreak(dTable);
 
@@ -1508,11 +1307,9 @@ class GMissingNumber extends Game {
 			showFleetingMessage('does NOT fit: ' + Selected.ch, 0, { fz: 24 });
 			setTimeout(() => unfillCharInput(Selected.target), 500);
 		}
-		//
 	}
 
 	eval(isCorrect) { return isCorrect; }
-
 }
 class GPasscode extends Game {
 	constructor(name, o) { super(name, o); this.needNewPasscode = true; }
@@ -1520,7 +1317,6 @@ class GPasscode extends Game {
 	startGame() {
 		this.incrementLevelOnPositiveStreak = this.samplesPerGame;
 		this.decrementLevelOnNegativeStreak = this.samplesPerGame;
-
 	}
 	start_Level() { this.needNewPasscode = true; }
 	prompt() {
@@ -1532,14 +1328,9 @@ class GPasscode extends Game {
 			myShowPics(null,
 				{ border: '3px solid #ffffff80' },
 				{ numRepeat: this.numRepeat, sameBackground: true }, keys);
-
-			//console.log(Pictures)
 			Goal = Pictures[0];
-			//console.log('===>Goal',Goal);
-
 			this.wort = (this.language == 'E' ? 'the passcode' : 'das Codewort');
 			showInstruction(Goal.label, this.wort + (this.language == 'E' ? ' is' : ' ist'), dTitle, true);
-
 			TOMain = setTimeout(anim1, 300, Goal, 500, showGotItButton);
 		} else {
 			this.timeout *= 2;
@@ -1549,14 +1340,9 @@ class GPasscode extends Game {
 	}
 	eval(x) {
 		CountdownTimer.cancel();
-		// return super.eval(x);
 		let isCorrect = super.eval(x);
 		if (!isCorrect) this.needNewPasscode = true;
 		return isCorrect;
-		// //return the opposite, but no feedback!
-		// if (isCorrect) return undefined; else return false;
-
 	}
 }
-//TODO:
 

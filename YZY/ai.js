@@ -9,10 +9,10 @@ class AIPlayer {
 	constructor(max_depth = -1) {
 		this.id = getUID('AI');
 		this.color = randomColor();
-		this.max_depth = max_depth;
-		this.nodes_map = new Map();
 		this.type = 'ai';
 		this.score = 0;
+		// this.max_depth = max_depth;
+		// this.nodes_map = new Map();
 	}
 	setData(o) { copyKeys(o, this); }
 }

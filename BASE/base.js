@@ -2250,7 +2250,38 @@ function firstNumber(s) {
 	}
 	return null;
 }
-function getCorrectPrefix(label, text) {
+function toUmlaut(w) {
+	//ue ü, ae ä, oe ö
+	if (isList(w)) {
+		let res = [];
+		for (const w1 of w) res.push(toUmlaut(w1));
+		return res;
+	} else {
+		w = replaceAll(w, 'ue', 'ü');
+		w = replaceAll(w, 'ae', 'ä');
+		w = replaceAll(w, 'oe', 'ö');
+		w = replaceAll(w, 'UE', 'Ü');
+		w = replaceAll(w, 'AE', 'Ä');
+		w = replaceAll(w, 'OE', 'Ö');
+		return w;
+	}
+}
+function fromUmlaut(w) {
+	if (isList(w)) {
+		let res = [];
+		for (const w1 of w) res.push(fromUmlaut(w1));
+		return res;
+	} else {
+		//ue ü, ae ä, oe ö
+		w = replaceAll(w, 'ü', 'ue');
+		w = replaceAll(w, 'ä', 'ae');
+		w = replaceAll(w, 'ö', 'oe');
+		w = replaceAll(w, 'Ü', 'UE');
+		w = replaceAll(w, 'Ä', 'AE');
+		w = replaceAll(w, 'Ö', 'OE');
+		return w;
+	}
+}function getCorrectPrefix(label, text) {
 
 	// let txt = this.input.value;
 	// console.log('input value',txt);

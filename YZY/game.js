@@ -1032,7 +1032,7 @@ function hideMouse() {
 }
 function showMouse() {
 	var x = dTable.getElementsByTagName("DIV");
-	if (nundef(x[0].prevCursor)) { console.log('did NOT hide mouse!'); return; }
+	if (nundef(x) || nundef(x[0]) || nundef(x[0].prevCursor)) { console.log('did NOT hide mouse!'); return; }
 	for (const el of x) {
 		// console.log('classList',el.classList,mHasClass(el,'noCursor'));//,el.classList.includes('noCursor'))
 		// if (!mHasClass(el,'noCursor')) return;
