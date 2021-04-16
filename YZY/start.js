@@ -1,6 +1,5 @@
 async function _start() {
-	initTable(); initSidebar(); initAux(); initScore();
-	loadUser();
+	initTable(); initSidebar(); initAux(); initScore();	loadUser();
 
 	//bTest01();
 	//bTest02();
@@ -25,7 +24,7 @@ async function _start() {
 function startUnit() {
 	renewTimer(G, 'time'); //console.log('time',G.showTime,'should be started')
 	U.session = {};
-	if (PROD_START) { PROD_START = false; onClickTemple(); } else GC.startGame();
+	if (START_IN_MENU) { START_IN_MENU = false; onClickTemple(); } else GC.startGame();
 
 }
 

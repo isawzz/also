@@ -6,7 +6,7 @@ async function _start() {
 function startUnit() {
 	renewTimer(G,'time'); //console.log('time',G.showTime,'should be started')
 	U.session = {};
-	if (PROD_START) { PROD_START = false; onClickTemple(); } else startGame();
+	if (START_IN_MENU) { START_IN_MENU = false; onClickTemple(); } else startGame();
 
 }
 

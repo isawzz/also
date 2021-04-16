@@ -1,6 +1,6 @@
 nil:
   id: nil
-  avGames: [gTTT, gKrieg, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  avGames: [gTTT, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
   lastGame: gTTT
   settings:
     # settings common to all games

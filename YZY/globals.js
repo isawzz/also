@@ -1,7 +1,7 @@
 const BROADCAST_SETTINGS = true;
+var START_IN_MENU = true; //!BROADCAST_SETTINGS;
 
 //#region config
-
 var USE_ADDONS = false;
 const DEFAULTUSERNAME = 'nil'; // nil | gul | felix
 const OFFLINE = true;
@@ -9,19 +9,16 @@ const OFFLINE = true;
 const SERVERURL = OFFLINE ? 'http://localhost:3000/app/' : 'https://speech-games.herokuapp.com/app/';
 var USE_LOCAL_STORAGE = !BROADCAST_SETTINGS; // true | false //localStorage is cleared when false!!!!!
 const CLEAR_LOCAL_STORAGE = BROADCAST_SETTINGS;
-var START_IN_MENU = !BROADCAST_SETTINGS;
 //#endregion
 
 var C52, Syms, SymKeys, KeySets, Categories, ByGroupSubgroup, Dictionary, WordP; //, CatSets, SymbolDict, SInfo;
 var DB;
-
 var U;
-var Pictures, Goal, Selected, Score, uiActivated = false, auxOpen, TO, TOMain, TOTrial, QContextCounter = 0, Live, G;
+var Pictures, Goal, Selected, Score, uiActivated, aiActivated, auxOpen, TO, TOMain, TOTrial, QContextCounter = 0, Live, G;
 var Settings, SettingsList, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
-var GameTimer;
+var GameTimer, STOPAUS = false;
 var Daat = {}, DA = {}, Items;
-
-var Players, GC;
+var Players, PlayerOnTurn, GC;
 
 //#region color constants
 var ColorNames; //see base.js colors
@@ -83,7 +80,6 @@ const ColorDict = {
 };
 
 //#endregion
-
 
 //#region speechGame constants: badge symbols, DD, OPS...
 const levelColors = [LIGHTGREEN, LIGHTBLUE, YELLOW, 'orange', RED,
