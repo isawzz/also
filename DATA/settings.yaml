@@ -15,6 +15,7 @@ showHint: true
 #games
 mode: solo # hotseat | pp | solo
 perspective: god # me | spectator | god
-startingPlayer: random
+startPlayer: random
+startPosition: random # random | empty | sequence
 searchDepth: 10
   

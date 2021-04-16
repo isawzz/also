@@ -14,47 +14,18 @@ class GTTT {
 		this.human.sym = 'O';
 		this.ai.sym = 'X';
 
-		this.setStartPosition();
-		this.setStartPlayer();
-	}
-	setStartPosition() {
-		let positions = [
-			new Array(9).fill(null),
-			['X', 'X', null, 'O', null, null, 'O', null, null],
-			[null, 'X', null, 'X', null, 'O', null, 'O', null],
-			[null, null, null, null, 'X', 'O', null, 'O', null],
-		];
-		if (isdef(this.iPosition)) {
-			let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;
-		} else this.iPosition = 0;
-
-		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0]
-			: this.startPosition == 'random' ? chooseRandom(positions)
-				: positions[this.iPosition];
-		//state =['X', 'X', null, 'O', null, null, 'O', null, null];
-		//state =[null, 'X', null, 'X', null, 'O', null, 'O', null];
+		let state = isdef(this.startPosition) ? this.startPosition : new Array(9).fill(null);//['X', 'X', null, 'O', null, null, 'O', null, null];
+		//console.log('state',state)
+		//let state =['X', 'X', null, 'O', null, null, 'O', null, null];
+		// state =[null, 'X', null, 'X', null, 'O', null, 'O', null];
 		//state=[null, null, null, null, 'X', 'O', null, 'O', null];
 		this.board.setState(state, { X: this.ai.color, O: this.human.color }); //AI wins! ok
+		//state = this.getState();
 		//console.log('state',state)
-	}
-	setStartPlayer() {
-		console.log('starting player:', this.startPlayer)
-		if (this.startPlayer == 'human') this.playerOrder = [this.human, this.ai];
-		else if (this.startPlayer == 'ai') this.playerOrder = [this.ai, this.human];
-		else this.playerOrder = chooseRandom([[this.human, this.ai], [this.ai, this.human]]);
-		this.iPlayer = 0;
-		this.setPlayers();
-	}
-	setPlayers() {
-		this.plTurn = this.playerOrder[this.iPlayer];
-		this.plOpp = this.plTurn == this.ai ? this.human : this.ai;
-	}
-	changePlayer() {
-		let idx = this.iPlayer = (this.iPlayer + 1) % this.players.length;
-		this.setPlayers();
-	}
-	startRound() { }
+		//this.plTurn = this.ai;
 
+	}
+	startRound() { 		delete this.startPosition; }
 	interact(ev) {
 		let tile = evToItemC(ev);
 		if (isdef(tile.label)) return; //illegal move!

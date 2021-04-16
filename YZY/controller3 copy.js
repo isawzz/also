@@ -13,13 +13,16 @@ class ControllerTTT {
 	}
 	startGame() {
 		resetState();
+		delete this.iPlayer;
+		delete this.g.iPlayer;
 		this.g.startGame();
 		this.startRound();
 	}
 	startRound() {
 		this.deactivateUi();
-		this.g.startRound();
+		setPlayer(this.g, this.g.startingPlayer == 'random' && coin()? this.ai: this[this.g.startingPlayer]);
 		showStats();
+		this.g.startRound();
 		this.prompt();
 	}
 	prompt() {
@@ -53,10 +56,7 @@ class ControllerTTT {
 			}, dTable, { fz: 28, margin: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
 			// this.bTest = mButton('test', () => { unitTest00(); }, dTable, { fz: 28, matop: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
 		}
-		else {
-			this.g.changePlayer();
-			this.startRound();
-		}
+		else this.startRound();
 	}
 }
 
