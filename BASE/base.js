@@ -1351,6 +1351,19 @@ function safeLoop(func, params) {
 	console.log('safeLoop: max reached!!!!!!!!!');
 	return null;
 }
+function sleepX(msecs) {
+	//#region doc 
+	/*	
+example: 
+	flag = false;
+	functionWithSetTimeouts (after last timeout flag should be set)
+	while (!flag) { await sleepX(3000); }
+	... continuing code after last timeout!
+
+	*/
+	//#endregion 
+	return new Promise(r => setTimeout(r, msecs));
+}
 
 //#endregion
 
@@ -1962,6 +1975,14 @@ function intersection(arr1, arr2) {
 	}
 	return res;
 }
+function lastCond(arr, func) {
+	//return first elem that fulfills condition
+	for (let i = arr.length - 1; i >= 0; i--) {
+		if (func(arr[i])) return arr[i];
+	}
+
+	return null;
+}
 function loop(n) { return range(1, n); }
 function lookup(dict, keys) {
 	let d = dict;
@@ -2451,6 +2472,63 @@ function msToTime(ms) {
 }
 function msElapsedSince(msStart) { return Date.now() - msStart; }
 function timeToMs(h, m, s) { return ((((h * 60) + m) * 60) + s) * 1000; }
+//#endregion
+
+//#region Timit
+class TimeIt {
+	constructor(msg, showOutput = true) {
+		this.showOutput = showOutput;
+		this.init(msg);
+	}
+	getTotalTimeElapsed() {
+		let tNew = new Date();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		return tDiffStart;
+	}
+	tacit() { this.showOutput = false; }
+	timeStamp(name) {
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - this.namedTimestamps.start.getTime();// this.t.getTime();
+		if (this.showOutput) console.log('___', tDiff, 'msecs * to', name);
+		this.t = tNew;
+		this.namedTimestamps[name] = tNew;
+	}
+	reset() { this.init('timing start') }
+	init(msg) {
+		this.t = new Date();
+		if (this.showOutput) console.log('___', msg);
+		this.namedTimestamps = { start: this.t };
+	}
+	showSince(name, msg = 'now') {
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tNamed = this.namedTimestamps[name];
+		if (this.showOutput) if (!tNamed) { console.log(name, 'is not a timestamp!'); return; } //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - tNamed.getTime();
+		if (this.showOutput) console.log('___', tDiff, 'msecs', name, 'to', msg);
+		this.t = tNew;
+	}
+	format(t) { return '___' + t.getSeconds() + ':' + t.getMilliseconds(); }
+	show(msg) { this.showTime(msg); }
+	showTime(msg) {
+		//shows ticks diff to last call of show
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - this.t.getTime();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		//if (this.showOutput) console.log(this.format(tNew), ':', tDiff, 'msecs to', msg, '(' + tDiffStart, 'total)');
+		if (this.showOutput) console.log('___ ', tDiff, 'msecs to', msg, '(' + tDiffStart, 'total)');
+		this.t = tNew;
+	}
+	start_of_cycle(msg) {
+		this.init(msg);
+	}
+	end_of_cycle(msg) {
+		//shows ticks diff to last call of show
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - this.t.getTime();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		if (this.showOutput) console.log('___ ' + tDiff + ' msecs', msg, 'to EOC (total: ' + tDiffStart + ')');
+	}
+}
 //#endregion
 
 //#region type checking / checking

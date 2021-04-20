@@ -1,6 +1,6 @@
 const BROADCAST_SETTINGS = true;
 var START_IN_MENU = false; //!BROADCAST_SETTINGS;
-const DEFAULTUSERNAME = 'nil'; // nil | gul | felix
+const DEFAULTUSERNAME = 'gul'; // nil | gul | felix
 
 //#region config
 var USE_ADDONS = false;
@@ -18,6 +18,10 @@ var uiActivated, aiActivated, auxOpen, GameTimer, STOPAUS = false;
 var Settings, SettingsList, SettingsChanged, SelectedMenuKey; //var G, T, P, U, User, ????? , G...Game, T...Table, U...Userdata
 var Daat = {}, DA = {}, Items;
 var Players, PlayerOnTurn, GC;
+
+var BestMinusScore = Infinity, BestMinusState, BestPlusScore = -Infinity, BestPlusState;
+var F_END, F_MOVES, F_APPLYMOVE, F_UNDOMOVE, F_EVAL, DMAX, MAXIMIZER, MINIMIZER, choice, CANCEL_AI;
+var DMM={}, timit;
 
 //#region color constants
 var ColorNames; //see base.js colors

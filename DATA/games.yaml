@@ -671,6 +671,20 @@ gTTT:
   color: '#1e3569'
   controllerType: solo
   numPlayers: 2
+  boardSize: 3
   searchDepth: 9
-  startingPlayer: random  # ai | human | random
+  startPosition: empty # random | seq
+  startPlayer: random  # ai | human | random
+gC4:
+  friendly: Connect4
+  logo: 'abstract-051'
+  color: '#351e69'
+  controllerType: solo
+  numPlayers: 2
+  rows: 6
+  cols: 7
+  stride: 4
+  searchDepth: 4
+  startPosition: empty # random | seq
+  startPlayer: random  # ai | human | random
 

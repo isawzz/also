@@ -1,3 +1,156 @@
+function AIMove1() {
+	let myPromise = new Promise(function (myResolve, myReject) {
+		// "Producing Code" (May take some time)
+		superLengthyFunction();
+		myResolve(); // when successful
+		myReject();  // when error
+	});
+	onclick=()=>{Signal=true;document.getElementById("demo").innerHTML = 'CLICK!'};
+	document.getElementById("demo").innerHTML = 'HALLO!';
+	console.log('hallo'); //das passiert erst nachher weil gequeued wird!
+
+	// "Consuming Code" (Must wait for a fulfilled Promise)
+	myPromise.then(
+		function (value) { console.log("OK!"); /* code if successful */ },
+		function (error) { console.log("ERROR!"); /* code if some error */ }
+	);
+}
+function superLengthyFunction() {
+	for (let i = 0; i < 1000; i++) { console.log('.');if (Signal == true) return; } 
+}
+
+
+function mm10_broken(state, depth=0, alpha=-Infinity, beta=Infinity, maxDepth=9, maxim=true) {
+	if (depth >= maxDepth) return 1;
+
+	let ec = F_END(state, depth); if (ec.reached) return ec.val;
+
+	depth += 1;
+	var availableMoves = F_MOVES(state);
+
+	var move, result;
+	// console.assert(maxim || active_turn != "COMPUTER",'aaaaaaaaaaaaaaaaaaaaaaa')
+	if (maxim) {//active_turn === "COMPUTER") {
+		for (var i = 0; i < availableMoves.length; i++) {
+			move = availableMoves[i];
+			F_APPLYMOVE(state, move, MAXIMIZER);
+			result = mm10(state, depth, alpha, beta, maxDepth, false);
+			F_UNDOMOVE(state, move, MAXIMIZER);
+			if (result > alpha) {
+				alpha = result;
+				if (depth == 1) choice = move;
+			} else if (alpha >= beta) {
+				return alpha;
+			}
+		}
+		return alpha;
+	} else {
+		for (var i = 0; i < availableMoves.length; i++) {
+			move = availableMoves[i];
+			F_APPLYMOVE(state, move, MINIMIZER);
+			result = mm10(state, depth, alpha, beta, maxDepth, true);
+			F_UNDOMOVE(state, move, MINIMIZER);
+			if (result < beta) {
+				beta = result;
+				if (depth == 1) choice = move;
+			} else if (beta <= alpha) {
+				return beta;
+			}
+		}
+		return beta;
+	}
+}
+
+
+class MM {
+	contructor(state) {
+		this.startState = state;
+		// this.fCheckEndCondition = checkEndCondition;
+		// this.fGetAvailableMoves = fGetAvailableMoves;
+		// this.fDo = fDo;
+		// this.fUndo = fUndo;
+		//this.maxDepth = maxDepth;
+		// this.plMax = plMax;
+		// this.plMin = plMin;
+		// this.cancel = false;
+		// this.choice = [];
+	}
+	start() {
+		this.run(this.startState, 0, -Infinity, Infinity, DMAX, true);
+	}
+	run(state, depth, alpha, beta, maxDepth, maxim) {
+		if (depth >= maxDepth) return 1;
+
+		let ec = F_END(state, depth); if (ec.reached) return ec.val;
+
+		depth += 1;
+		var availableMoves = F_MOVES(state);
+
+		var move, result;
+		// console.assert(maxim || active_turn != "COMPUTER",'aaaaaaaaaaaaaaaaaaaaaaa')
+		if (maxim) {//active_turn === "COMPUTER") {
+			for (var i = 0; i < availableMoves.length; i++) {
+				move = availableMoves[i];
+				F_DO(state, move, MAXIMIZER.sym);
+				result = this.run(state, depth, alpha, beta, maxDepth, !maxim);
+				F_UNDO(state, move, ' ');
+				if (result > alpha) {
+					alpha = result;
+					if (depth == 1) this.choice = move;
+				} else if (alpha >= beta) {
+					return alpha;
+				}
+			}
+			return alpha;
+		} else {
+			for (var i = 0; i < availableMoves.length; i++) {
+				move = availableMoves[i];
+				F_DO(state, move, MINIMIZER.sym);
+				result = this.run(state, depth, alpha, beta, maxDepth, !maxim);
+				F_UNDO(state, move, ' ');
+				if (result < beta) {
+					beta = result;
+					if (depth == 1) this.choice = move;
+				} else if (beta <= alpha) {
+					return beta;
+				}
+			}
+			return beta;
+		}
+	}
+}
+
+
+class GAMETTT{
+	computerMove() {
+		let state = this.getState();
+		state = boardToNode(state);
+		prepMM(state, mmab9);
+		//mmab9(state, 0, -Infinity, +Infinity);
+		//console.log('mmab9 returned', choice)
+		var iMove1 = choice;
+
+		//experimental algo:
+		// prepMM(state);
+		choice = []; BestMinusScore = Infinity, BestPlusScore = -Infinity;
+
+		// *** HERE ***
+		// let mm = new MM(state);
+		// mm.start();
+		prepMM(state, mm10);
+		// mm10(state);
+		console.log('mmab9 returned', iMove1)
+		console.log('new returned', choice)
+		var iMove2 = choice;
+		if (iMove1 != iMove2) {
+			console.log('===>DIFFERENT VALUES!!!!! mmab1:' + iMove1, 'new:' + iMove2);
+		}
+
+		return iMove2;
+	}
+
+}
+
 function mpOver_dep(d, dParent, fz, color, picStyle) {
 	//maPicOver
 	//d is pos fixed!!!

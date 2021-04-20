@@ -7,6 +7,64 @@ function bFullRow(arr, irow, rows, cols) {
 	for (let i = iStart + 1; i < iStart + cols; i++) if (arr[i] != x) return null;
 	return x;
 }
+function bStrideRow(arr, irow, rows, cols, stride) {
+	//console.log('hallo!', cols, stride)
+	for (let i = 0; i <= cols - stride; i++) {
+		let ch = bStrideRowFrom(arr, irow, i, rows, cols, stride);
+		//console.log('ch', ch, i)
+		if (ch) return ch;
+	}
+	return null;
+}
+function bStrideRowFrom(arr, irow, icol, rows, cols, stride) {
+	//console.log(cols, icol, stride)
+	if (cols - icol < stride) return null;
+	let iStart = irow * cols + icol;
+	let x = arr[iStart];
+	//console.log('starting el:', x)
+	if (EmptyFunc(x)) return null;
+	for (let i = iStart + 1; i < iStart + stride; i++) if (arr[i] != x) return null;
+	return x;
+}
+function bStrideCol(arr, icol, rows, cols, stride) {
+	//console.log('hallo!', rows, stride)
+	for (let i = 0; i <= rows - stride; i++) {
+		let ch = bStrideColFrom(arr, i, icol, rows, cols, stride);
+		//console.log('ch', ch, i)
+		if (ch) return ch;
+	}
+	return null;
+}
+function bStrideColFrom(arr, irow, icol, rows, cols, stride) {
+	//console.log(irow, icol, rows, cols, stride)
+	if (rows - irow < stride) return null;
+	let iStart = irow * cols + icol;
+	let x = arr[iStart];
+	//console.log('starting el:', x)
+	if (EmptyFunc(x)) return null;
+	for (let i = iStart + cols; i < iStart + cols * stride; i += cols) if (arr[i] != x) return null;
+	return x;
+}
+function bStrideDiagFrom(arr, irow, icol, rows, cols, stride) {
+	//console.log(irow, icol, rows, cols, stride)
+	if (rows - irow < stride || cols - icol < stride) return null;
+	let iStart = irow * cols + icol;
+	let x = arr[iStart];
+	//console.log('starting el:', x)
+	if (EmptyFunc(x)) return null;
+	for (let i = iStart + cols + 1; i < iStart + (cols + 1) * stride; i += cols + 1) if (arr[i] != x) return null;
+	return x;
+}
+function bStrideDiag2From(arr, irow, icol, rows, cols, stride) {
+	//console.log(irow, icol, rows, cols, stride)
+	if (rows - irow < stride || icol - stride + 1 < 0) return null;
+	let iStart = irow * cols + icol;
+	let x = arr[iStart];
+	//console.log('starting el:', x)
+	if (EmptyFunc(x)) return null;
+	for (let i = iStart + cols - 1; i < iStart + (cols - 1) * stride; i += cols - 1) if (arr[i] != x) return null;
+	return x;
+}
 function bFullCol(arr, icol, rows, cols) {
 	let iStart = icol;
 	let x = arr[iStart]; if (EmptyFunc(x)) return null;
@@ -75,9 +133,31 @@ function checkBoardEmpty(arr) { for (const x of arr) { if (!EmptyFunc(x)) return
 function checkBoardFull(arr) { for (const x of arr) if (EmptyFunc(x)) return false; return true; }
 
 //TTT
-function checkPotentialTTT(arr) { return checkWinnerPossible(arr, 3, 3); }
-function checkWinnerTTT(arr) { return checkWinner(arr, 3, 3); }
+function checkPotentialTTT(arr) { return checkWinnerPossible(arr, G.rows, G.cols); }
+function checkWinnerTTT(arr) { return checkWinner(arr, G.rows, G.cols); }
+function checkWinnerC4(arr, rows = 6, cols = 7, stride = 4) {
+	//console.log(arr,rows,cols,stride)
 
+	for (i = 0; i < rows; i++) { let ch = bStrideRow(arr, i, rows, cols, stride); if (ch) return ch; }
+	for (i = 0; i < cols; i++) { let ch = bStrideCol(arr, i, rows, cols, stride); if (ch) return ch; }
+	for (i = 0; i < rows; i++) {
+		for (j = 0; j < cols; j++) {
+			let ch = bStrideDiagFrom(arr, i, j, rows, cols, stride); if (ch) return ch;
+			ch = bStrideDiag2From(arr, i, j, rows, cols, stride); if (ch) return ch;
+		}
+	}
+	return null;
+}
+
+function boardToNode(state) {
+	let res = new Array();
+	for (let i = 0; i < state.length; i++) {
+		if (state[i] == null) res[i] = ' ';
+		else res[i] = state[i];
+		//else if (state[i]=='O')
+	}
+	return res;
+}
 
 
 //TBDEP: deprecate after long time no diff mmab1 and mmab2
@@ -89,62 +169,9 @@ function checkWinnerSpaces(arr, rows, cols) {
 	return false;
 }
 
-//testing
-function bTest01() {
-	let arr = [1, 1, 1, 1, 2, 1, 0, 1, 0], rows = 3, cols = 3, irow = 0;// =>1
-	console.log(bFullRow(arr, irow, rows, cols));
-	console.log('____________')
-	arr = [1, 1, 1, 1, 2, 1, 1, 1, 0], rows = 3, cols = 3, irow = 2;// =>null
-	console.log(bFullRow(arr, irow, rows, cols));
-	console.log('____________')
-	arr = [1, 1, 1, 1, 2, 1, 1, 1, 0], rows = 3, cols = 3, icol = 0;// =>1
-	console.log(bFullCol(arr, icol, rows, cols));
-	console.log('____________')
-	arr = [1, 1, 0, 2, 1, 1, 1, 0, 1], rows = 3, cols = 3;// =>1
-	console.log(bFullDiag(arr, rows, cols));
-	console.log('____________')
-	arr = [2, 1, 0, 2, 1, 1, 1, 0, 1], rows = 3, cols = 3;// =>null
-	console.log(bFullDiag(arr, rows, cols));
-	console.log('____________')
-	arr = [2, 1, 0, 0, 2, 1, 1, 0, 1], rows = 3, cols = 3;// =>null
-	console.log(bFullDiag(arr, rows, cols));
-	console.log('____________')
-	arr = [2, 2, 1, 2, 1, 2, 1, 2, 2], rows = 3, cols = 3;// =>1
-	console.log(bFullDiag2(arr, rows, cols));
-	console.log('____________')
-	arr = [2, 1, 0, 0, 0, 1, 0, 0, 1], rows = 3, cols = 3;// =>0
-	console.log(bFullDiag2(arr, rows, cols));
-	console.log('============================')
-}
-function bTest02() {
-	let arr = [1, null, 1, 1, 2, 1, 0, 1, 0], rows = 3, cols = 3, irow = 0;// =>1
-	console.log(bPartialRow(arr, irow, rows, cols));
-	console.log('____________')
-	arr = [1, 1, 1, 1, 0, 1, 1, 1, 2], rows = 3, cols = 3, irow = 2;// =>null
-	console.log(bPartialRow(arr, irow, rows, cols));
-	console.log('____________')
-	arr = [1, 1, 1, null, 2, 1, 1, 1, 0], rows = 3, cols = 3, icol = 0;// =>1
-	console.log(bPartialCol(arr, icol, rows, cols));
-	console.log('____________')
-	arr = [1, 1, 0, 2, null, 1, 1, 0, 1], rows = 3, cols = 3;// =>1
-	console.log(bPartialDiag(arr, rows, cols));
-	console.log('____________')
-	arr = [2, 1, 0, 2, 1, 1, 1, 0, 1], rows = 3, cols = 3;// =>null
-	console.log(bPartialDiag(arr, rows, cols));
-	console.log('____________')
-	arr = [2, 1, 0, 0, 2, 1, 1, 0, 1], rows = 3, cols = 3;// =>null
-	console.log(bPartialDiag(arr, rows, cols));
-	console.log('____________')
-	arr = [2, 2, 1, 2, null, 2, 1, 2, 2], rows = 3, cols = 3;// =>1
-	console.log(bPartialDiag2(arr, rows, cols));
-	console.log('____________')
-	arr = [2, 1, 0, 0, 0, 1, 0, 0, 1], rows = 3, cols = 3;// =>0
-	console.log(bPartialDiag2(arr, rows, cols));
-}
-
 class Board {
-	constructor(rows, cols, handler) {
-		let styles = { margin: 4, w: 150, h: 150, bg: 'white', fg: 'black' };
+	constructor(rows, cols, handler, cellStyle) {
+		let styles = isdef(cellStyle) ? cellStyle : { margin: 4, w: 150, h: 150, bg: 'white', fg: 'black' };
 		this.rows = rows;
 		this.cols = cols;
 		let items = this.items = iGrid(this.rows, this.cols, dTable, styles);
@@ -159,10 +186,14 @@ class Board {
 		return this.items.map(x => x.label);
 	}
 	setState(arr, colors) {
+
+		if (isEmpty(arr)) return;
+		if (isList(arr[0])) { arr = arrFlatten(arr); }
+
 		for (let i = 0; i < arr.length; i++) {
 			let item = this.items[i];
 			let val = arr[i];
-			if (isdef(val)) {
+			if (!EmptyFunc(val)) {
 				addLabel(item, val, { fz: 60, fg: colors[val] });
 			} else item.label = val;
 			//item.label = arr[i];
@@ -178,7 +209,15 @@ class Board {
 
 }
 
-
+function arrFlatten(arr) {
+	let res = [];
+	for (let i = 0; i < arr.length; i++) {
+		for (let j = 0; j < arr[i].length; j++) {
+			res.push(arr[i][j]);
+		}
+	}
+	return res;
+}
 
 
 

@@ -171,6 +171,7 @@ class SettingsClass {
 
 		copyKeys(settings, this.o);
 		this.updateSettings();
+
 		//return settings;
 
 	}

@@ -1,8 +1,7 @@
 function canAct() { return (aiActivated || uiActivated) && !auxOpen; }
 function canHumanAct() { return uiActivated && !auxOpen; }
 function canAIAct() { return aiActivated && !auxOpen; }
-
-function setGame(game, immediate=false) {
+function setGame(game, immediate = false) {
 	cleanupOldGame();
 	if (isdef(G) && G.id != game) Score.gameChange = true;
 
@@ -19,16 +18,14 @@ function setGame(game, immediate=false) {
 	Settings.updateGameValues(U, G);
 	saveUser();
 
-	switch(G.controllerType){
-		case 'solitaire': GC = new ControllerSolitaire(G,U); break;
-		case 'solo': GC = new ControllerTTT(G,U); break;
+	switch (G.controllerType) {
+		case 'solitaire': GC = new ControllerSolitaire(G, U); break;
+		case 'solo': GC = new ControllerTTT(G, U); break;
 	}
 	G.controller = GC;
 	showGameTitle();
 	if (immediate) GC.startGame();
 }
-
-
 class ItemViewerClass {
 	constructor(dParent, dButtons, keys) {
 		this.options = {
@@ -48,7 +45,7 @@ class ItemViewerClass {
 		console.log(this.allItems.length);
 		this.iStart = 0;
 
-		dButtons = mDiv(dButtons, { display: 'flex', 'flex-direction': 'column', matop:-12 });
+		dButtons = mDiv(dButtons, { display: 'flex', 'flex-direction': 'column', matop: -12 });
 		mButton('download', this.saveSpecialKeys.bind(this), dButtons, { outline: 'none' });
 		if (this.allItems.length > 100) mButton('next', this.itemViewerNext.bind(this), dButtons, { outline: 'none', mabottom: 6, matop: 10 });
 
@@ -64,9 +61,9 @@ class ItemViewerClass {
 		// console.log('total',this.items.length,'items from:', items[0].index, 'to', items[options.n - 1].index);
 		clearElement(options.dArea);
 		options.fzText = 20;
-		
-		items.map(x=>makeItemDiv(x,options));
-		items.map(x=>mAppend(options.dArea,iDiv(x)));
+
+		items.map(x => makeItemDiv(x, options));
+		items.map(x => mAppend(options.dArea, iDiv(x)));
 
 		// present00(items, options);
 	}
@@ -84,3 +81,30 @@ class ItemViewerClass {
 		downloadAsYaml(dict, 'specialKeys');
 	}
 }
+
+// async function bTest03_async() {
+// 	return await superLengthyFunction();
+// }
+
+// async function superLengthyFunction() {
+// 	for (let i = 0; i < 100000; i++) {
+// 		for (let j = 0; j < 100000; j++) {
+// 			for (let k = 0; k < 100000; k++) {
+// 				if (CANCEL_AI == true) return;
+// 				console.log('.');
+// 			}
+
+// 		}
+
+// 	}
+// }
+
+
+
+
+
+
+
+
+
+

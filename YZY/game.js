@@ -1748,6 +1748,8 @@ function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
 	//console.log('spoken', spoken, 'written', written);
 	return [written, spoken, corr];
 }
+function justClick(ev){console.log('click',ev.target,'item',evToItemC(ev));}
+
 function makeSurePlayerColorsAreContrasting(human, ai) {
 	ai.color = RED;// bestContrastingColor(human,[GREEN,RED,YELLOW])
 }
