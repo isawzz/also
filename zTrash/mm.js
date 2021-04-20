@@ -1,5 +1,29 @@
-var CCC = 0;
+function AIMove(g, callback) {
+	//console.log('AI starts moving!')
+	let state = g.getState();
+	state = boardToNode(state);
+	let searchDepth = g.searchDepth;
+	let iMove1, iMove2;
+	console.log('==>AI search: mm13 (maxDepth',searchDepth+')');
+	iMove1 = prepMM(state, mm13, g.evalState, searchDepth);
+
+	//setTimeout(()=>{CANCEL_AI=true;},500);
+	// if (!CANCEL_AI) {
+	// 	iMove2 = prepMM(state, mm13, g.evalStateL2, searchDepth);
+	// 	if (iMove1 != iMove2) { console.log('===>DIFFERENT VALUES!!!!! mmab1:' + iMove1, 'new:' + iMove2); }
+	// 	else { console.log('OK! mmab9 returned', iMove1, 'new returned', iMove2); }
+	// } else {
+	// 	let m = F_MOVES(state);
+	// 	iMove2 = chooseRandom(m);
+	// 	console.log('clicked cancel! choosing random move!', iMove2);
+	// }
+
+	//console.log('AI MOVE FINISHED!')
+	callback(iMove1);
+
+}
 function prepMM(state, algorithm, feval, maxDepth) {
+	//
 	F_END = feval;
 	F_MOVES = G.getAvailableMoves;
 	F_APPLYMOVE = G.applyMove; //arrReplaceAtInPlace;
@@ -18,6 +42,49 @@ function prepMM(state, algorithm, feval, maxDepth) {
 
 }
 
+//fuer async: nicht gegangen!
+function showCancelButton() {
+	CANCEL_AI = false;
+	let b = mBy('bCancelAI');
+	if (nundef(b)) {
+		let d = mButton('Stop!', () => { console.log('clik!'); CANCEL_AI = true; hide('bCancelAI') }, dLeiste, { bg: 'red' }, ['buttonClass']);
+		d.id = 'bCancelAI';
+	} else show(b);
+
+}
+
+
+//geht!
+function mm15(node, depth, alpha, beta, maxDepth, maxim) {
+	if (depth >= maxDepth) return 1;
+	let ec = F_END(node, depth); if (ec.reached) return ec.val;
+	depth += 1;
+	var move, result;
+	var availableMoves = F_MOVES(node);
+	let player = maxim ? MAXIMIZER : MINIMIZER;
+	for (var i = 0; i < availableMoves.length; i++) {
+		move = availableMoves[i];
+		F_APPLYMOVE(node, move, player);
+		result = mm15(node, depth, alpha, beta, maxDepth, !maxim);
+		F_UNDOMOVE(node, move, player);
+		if (maxim) {
+			if (result > alpha) {
+				//console.log('new best', result, move);
+				alpha = result;
+				if (depth == 1) SelectedMove = move;
+			} else if (alpha >= beta) { return alpha; }
+		} else {
+			if (result < beta) {
+				beta = result;
+				if (depth == 1) SelectedMove = move;
+			} else if (beta <= alpha) { return beta; }
+		}
+	}
+	return maxim ? alpha : beta;
+}
+
+
+//geht!
 function mm13(node, depth, alpha, beta, maxDepth, maxim) {
 	if (depth >= maxDepth) return 1;
 	let ec = F_END(node, depth); if (ec.reached) return ec.val;
@@ -34,19 +101,19 @@ function mm13(node, depth, alpha, beta, maxDepth, maxim) {
 			if (result > alpha) {
 				//console.log('new best', result, move);
 				alpha = result;
-				if (depth == 1) choice = move;
+				if (depth == 1) SelectedMove = move;
 			} else if (alpha >= beta) { return alpha; }
 		} else {
 			if (result < beta) {
 				beta = result;
-				if (depth == 1) choice = move;
+				if (depth == 1) SelectedMove = move;
 			} else if (beta <= alpha) { return beta; }
 		}
 	}
 	return maxim ? alpha : beta;
 }
 
-
+//geht nicht!
 async function mm14(node, depth, alpha, beta, maxDepth, maxim) {
 	if (CCC > 1000) { CCC = 0; console.log('cancelai', CCC, CANCEL_AI); } else CCC += 1;
 	if (depth >= maxDepth) return 1;
@@ -60,23 +127,14 @@ async function mm14(node, depth, alpha, beta, maxDepth, maxim) {
 		F_APPLYMOVE(node, move, player);
 		result = await mm14(node, depth, alpha, beta, maxDepth, !maxim);
 		F_UNDOMOVE(node, move, player);
-		if (maxim) { if (result > alpha) { alpha = result; if (depth == 1) choice = move; } else if (alpha >= beta) { return alpha; } }
-		else { if (result < beta) { beta = result; if (depth == 1) choice = move; } else if (beta <= alpha) { return beta; } }
+		if (maxim) { if (result > alpha) { alpha = result; if (depth == 1) SelectedMove = move; } else if (alpha >= beta) { return alpha; } }
+		else { if (result < beta) { beta = result; if (depth == 1) SelectedMove = move; } else if (beta <= alpha) { return beta; } }
 	}
 	return maxim ? alpha : beta;
 }
 
-function showCancelButton() {
-	CANCEL_AI = false;
-	let b = mBy('bCancelAI');
-	if (nundef(b)) {
-		let d = mButton('Stop!', () => { console.log('clik!'); CANCEL_AI = true; hide('bCancelAI') }, dLeiste, { bg: 'red' }, ['buttonClass']);
-		d.id = 'bCancelAI';
-	} else show(b);
 
-}
-
-
+//geht
 function mm12(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 	if (depth >= maxDepth) return 1;
 
@@ -93,12 +151,12 @@ function mm12(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 		F_UNDOMOVE(node, move, player);
 		if (maxim && result > alpha) {
 			alpha = result;
-			if (depth == 1) choice = move;
+			if (depth == 1) SelectedMove = move;
 		} else if (maxim && alpha >= beta) {
 			return alpha;
 		} else if (!maxim && result < beta) {
 			beta = result;
-			if (depth == 1) choice = move;
+			if (depth == 1) SelectedMove = move;
 		} else if (!maxim && beta <= alpha) {
 			return beta;
 		}
@@ -107,6 +165,7 @@ function mm12(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 
 }
 
+//geht!
 function mm11(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 	if (depth >= maxDepth) return 1;
 
@@ -124,7 +183,7 @@ function mm11(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 			F_UNDOMOVE(node, move, MAXIMIZER);
 			if (result > alpha) {
 				alpha = result;
-				if (depth == 1) choice = move;
+				if (depth == 1) SelectedMove = move;
 			} else if (alpha >= beta) {
 				return alpha;
 			}
@@ -138,7 +197,7 @@ function mm11(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 			F_UNDOMOVE(node, move, MINIMIZER);
 			if (result < beta) {
 				beta = result;
-				if (depth == 1) choice = move;
+				if (depth == 1) SelectedMove = move;
 			} else if (beta <= alpha) {
 				return beta;
 			}
@@ -169,7 +228,7 @@ function mm10(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 			// arrReplaceAtInPlace(node, move, ' ');
 			if (result > alpha) {
 				alpha = result;
-				if (depth == 1) choice = move;
+				if (depth == 1) SelectedMove = move;
 			} else if (alpha >= beta) {
 				return alpha;
 			}
@@ -186,7 +245,7 @@ function mm10(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 			F_UNDOMOVE(node, move, MINIMIZER);
 			if (result < beta) {
 				beta = result;
-				if (depth == 1) choice = move;
+				if (depth == 1) SelectedMove = move;
 			} else if (beta <= alpha) {
 				return beta;
 			}
@@ -195,7 +254,7 @@ function mm10(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 	}
 }
 
-
+//orig!
 function mmab9(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 	if (CANCEL_AI) return 1;
 	if (depth >= maxDepth) return 1;
@@ -215,7 +274,7 @@ function mmab9(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 			arrReplaceAtInPlace(node, move, ' ');
 			if (result > alpha) {
 				alpha = result;
-				if (depth == 1) choice = move;
+				if (depth == 1) SelectedMove = move;
 			} else if (alpha >= beta) {
 				return alpha;
 			}
@@ -229,7 +288,7 @@ function mmab9(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 			arrReplaceAtInPlace(node, move, ' ');
 			if (result < beta) {
 				beta = result;
-				if (depth == 1) choice = move;
+				if (depth == 1) SelectedMove = move;
 			} else if (beta <= alpha) {
 				return beta;
 			}
@@ -238,22 +297,11 @@ function mmab9(node, depth, alpha, beta, maxDepth = 9, maxim = true) {
 	}
 }
 
-function printState(state) {
-	//console.log('___________',state)
-	let formattedString = '';
-	state.forEach((cell, index) => {
-		formattedString += isdef(cell) ? ` ${cell == '0' ? ' ' : cell} |` : '   |';
-		if ((index + 1) % G.cols == 0) {
-			formattedString = formattedString.slice(0, -1);
-			if (index < G.rows * G.cols - 1) {
-				let s = '\u2015\u2015\u2015 '.repeat(G.cols);
-				formattedString += '\n' + s + '\n'; //\u2015\u2015\u2015 \u2015\u2015\u2015 \u2015\u2015\u2015\n';
-				// formattedString += '\n\u2015\u2015\u2015 \u2015\u2015\u2015 \u2015\u2015\u2015\n';
-			}
-		}
-	});
-	console.log('%c' + formattedString, 'color: #6d4e42;font-size:10px');
-	console.log();
+
+//TBDEP: deprecate after long time no diff mmab1 and mmab2
+function prepMM(state, algorithm, feval, maxDepth) {
+	return SelectedMove;
+
 }
 function checkEndCondition(node, depth) {
 	let x = checkWinnerTTT(node);
@@ -264,3 +312,11 @@ function checkEndCondition(node, depth) {
 	}
 	return { reached: false };
 }
+function checkWinnerSpaces(arr, rows, cols) {
+	for (i = 0; i < rows; i++) { let ch = bFullRow(arr, i, rows, cols); if (isdef(ch) && ch != ' ') return true; }
+	for (i = 0; i < cols; i++) { let ch = bFullCol(arr, i, rows, cols); if (isdef(ch) && ch != ' ') return true; }
+	let ch = bFullDiag(arr, rows, cols); if (isdef(ch) && ch != ' ') return true;
+	ch = bFullDiag2(arr, rows, cols); if (isdef(ch) && ch != ' ') return true;
+	return false;
+}
+

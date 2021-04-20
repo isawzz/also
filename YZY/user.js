@@ -12,7 +12,7 @@ function cleanupOldGame() {
 	if (isdef(G)) { G.clear(); }
 	clearTable();
 	clearStats();
-	clearFleetingMessage();	
+	clearFleetingMessage();
 
 }
 function editableUsernameUi(dParent) {
@@ -74,19 +74,21 @@ function setNextGame() {
 function updateUserScore() {
 	if (nundef(Score.nTotal) || Score.nTotal <= 0) return;
 
-	let sc = { nTotal: Score.nTotal, nCorrect: Score.nCorrect, nCorrect1: Score.nCorrect1 };
+	let sc = { nTotal: Score.nTotal, nCorrect: Score.nCorrect, nCorrect1: Score.nCorrect1, nWins: Score.nWins, nLoses: Score.nLoses, nTied: Score.nTied };
 	let g = G.id;
 
-	let recOld = lookupSet(U, ['games', g], { startLevel: 0, nTotal: 0, nCorrect: 0, nCorrect1: 0 });
-	let recSession = lookupSet(U, ['session', g], { startLevel: 0, nTotal: 0, nCorrect: 0, nCorrect1: 0 });
+	let recOld = lookupSet(U, ['games', g], { startLevel: 0, nTotal: 0, nCorrect: 0, nCorrect1: 0, nWins: 0, nLoses: 0, nTied: 0 });
+	let recSession = lookupSet(U, ['session', g], { startLevel: 0, nTotal: 0, nCorrect: 0, nCorrect1: 0, nWins: 0, nLoses: 0, nTied: 0 });
 
 	addByKey(sc, recSession);
-	recSession.percentage = Math.round(100 * recSession.nCorrect / recSession.nTotal);
+	let counts = DB.games[g].controllerType == 'solo' ? recSession.nWins : recSession.nCorrect;
+	recSession.percentage = Math.round(100 * counts / recSession.nTotal);
 
 	addByKey(sc, recOld);
+	counts = DB.games[g].controllerType == 'solo' ? recOld.nWins : recOld.nCorrect;
 	recOld.percentage = Math.round(100 * recOld.nCorrect / recOld.nTotal);
 
-	//console.log('updated user score for', g, sc, recOld);
+	// console.log('updated user score for', U.id, g, sc, recSession);
 	//console.log('updated user score session', recSession);
 	Score.nTotal = Score.nCorrect = Score.nCorrect1 = 0;
 	saveUser();

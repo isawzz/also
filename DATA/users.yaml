@@ -1,7 +1,7 @@
 nil:
   id: nil
-  avGames: [gC4, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gC4
+  avGames: [gReversi, gC4, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  lastGame: gReversi
   settings:
     # settings common to all games
     userColor: green
@@ -212,7 +212,7 @@ gunter:
 gul:
   id: gul
   avGames: [gC4, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gC4
+  lastGame: gTTT
   settings:
     # settings common to all games
     userColor: blue
@@ -234,10 +234,10 @@ gul:
     gTTT:
       startPosition: empty # random | seq
       startPlayer: random  # ai | human | random
-      searchDepth: 3
+      searchDepth: 5
     gC4:
       startPosition: empty # random | seq
-      startPlayer: ai  # ai | human | random
+      startPlayer: random  # ai | human | random
       searchDepth: 5
     gAbacus:
       startLevel: 2

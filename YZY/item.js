@@ -225,6 +225,14 @@ function newItemSelection(item, items, onSelectSelected = null) {
 	else if (onSelectSelected && selectedItem) { onSelectSelected(item); }
 	toggleItemSelection(item);
 }
+function modLabel(item,newLabel,styles){
+	//assumes that this item already has a label!
+	let dLabel = iLabel(item);
+	console.log(dLabel,newLabel,styles)
+	dLabel.innerHTML=newLabel;
+	mStyleX(dLabel,styles);
+	return dLabel;
+}
 function addLabel(item, label, styles) {
 	item.label = label;
 	let div = iDiv(item);

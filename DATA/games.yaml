@@ -687,4 +687,15 @@ gC4:
   searchDepth: 4
   startPosition: empty # random | seq
   startPlayer: random  # ai | human | random
+gReversi:
+  friendly: Reversi
+  logo: 'first quarter moon'
+  color: '#ff93c4'
+  controllerType: solo
+  numPlayers: 2
+  rows: 6
+  cols: 6
+  searchDepth: 4
+  startPosition: seq # random | seq
+  startPlayer: human  # ai | human | random
 

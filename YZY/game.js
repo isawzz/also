@@ -1324,7 +1324,10 @@ function aniGameOver(msg, silent = false) {
 	for (const gname in U.session) {
 		let sc = U.session[gname];
 		if (sc.nTotal == 0) continue;
-		mText(`${DB.games[gname].friendly}: ${sc.nCorrect}/${sc.nTotal} correct answers (${sc.percentage}%) `, d, style);
+		if (DB.games[gname].controllerType == 'solitaire') mText(`${DB.games[gname].friendly}: ${sc.nCorrect}/${sc.nTotal} correct answers (${sc.percentage}%) `, d, style);
+		else if (DB.games[gname].controllerType == 'solo') {
+			mText(`${DB.games[gname].friendly}: Won:${sc.nWins}, Lost:${sc.nLoses}, Tied:${sc.nTied} `, d, style);
+		}
 	}
 
 	mClass(mBy('freezer2'), 'aniSlowlyAppear');
@@ -1748,7 +1751,7 @@ function getOrdinalColorLabelInstruction(cmd, ordinal, color, label) {
 	//console.log('spoken', spoken, 'written', written);
 	return [written, spoken, corr];
 }
-function justClick(ev){console.log('click',ev.target,'item',evToItemC(ev));}
+function justClick(ev) { console.log('click', ev.target, 'item', evToItemC(ev)); }
 
 function makeSurePlayerColorsAreContrasting(human, ai) {
 	ai.color = RED;// bestContrastingColor(human,[GREEN,RED,YELLOW])

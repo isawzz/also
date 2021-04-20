@@ -1,6 +1,56 @@
 //board utilities
 var StateDict = {};
 var EmptyFunc = x => nundef(x) || x == ' ';
+function bNei(arr, idx, rows, cols, includeDiagonals = true) {
+	let nei = [];
+	//ang tile ist 0,0
+	//get r,c from index: 
+	let [r, c] = iToRowCol(idx, rows, cols);
+
+	if (r > 0) nei.push(idx - cols); else nei.push(null);
+	if (r > 0 && c < cols - 1 && includeDiagonals) nei.push(idx - cols + 1); else nei.push(null);
+	if (c < cols - 1) nei.push(idx - c + 1); else nei.push(null);
+	if (r < rows - 1 && c < cols - 1 && includeDiagonals) nei.push(idx + cols + 1); else nei.push(null);
+	if (r < rows - 1) nei.push(idx + cols); else nei.push(null);
+	if (r < rows - 1 && c > 0 && includeDiagonals) nei.push(idx + cols - 1); else nei.push(null);
+	if (r > 0) nei.push(idx - 1); else nei.push(null);
+	if (r > 0 && c > 0 && includeDiagonals) nei.push(idx - cols - 1); else nei.push(null);
+	console.log('idx', idx, 'rows', rows, 'cols', cols, 'r', r, 'c', c);
+	return nei;
+
+}
+function iToRowCol(idx, rows, cols) { let c = idx % cols; let r = (idx - c) / rows; return [r, c]; }
+function bNeiDir(arr, idx, dir, rows, cols) {
+	let [r, c] = iToRowCol(idx, rows, cols);
+	switch (dir) {
+		case 0: if (r > 0) return (idx - cols); else return (null);
+		case 1: if (r > 0 && c < cols - 1 && includeDiagonals) return (idx - cols + 1); else return (null);
+		case 2: if (c < cols - 1) return (idx - c + 1); else return (null);
+		case 3: if (r < rows - 1 && c < cols - 1 && includeDiagonals) return (idx + cols + 1); else return (null);
+		case 4: if (r < rows - 1) return (idx + cols); else return (null);
+		case 5: if (r < rows - 1 && c > 0 && includeDiagonals) return (idx + cols - 1); else return (null);
+		case 6: if (r > 0) return (idx - 1); else return (null);
+		case 7: if (r > 0 && c > 0 && includeDiagonals) return (idx - cols - 1); else return (null);
+	}
+	return null;
+}
+function isOppPiece(sym, plSym) { return sym && sym != plSym; }
+function bCapturedPieces(plSym, arr, idx, rows, cols, includeDiagonals = true) {
+	let res=[];
+	let nei = bNei(arr, idx, rows, cols, includeDiagonals);
+	for (let dir = 0; dir < 8; dir++) {
+		let i=nei[dir];
+		let el = arr[i];
+		if (!el || el == plSym) continue;
+		let inew=[];
+		while (isOppPiece(el,plSym)) {inew.push(i);i=bNeiDir(arr,i,dir,rows,cols);el=arr[i];}
+		if (el==plSym) {
+			//add all the captured pieces to res
+			res=res.concat(inew);
+		}
+	}
+	return res;
+}
 function bFullRow(arr, irow, rows, cols) {
 	let iStart = irow * cols;
 	let x = arr[iStart]; if (EmptyFunc(x)) return null;
@@ -158,16 +208,24 @@ function boardToNode(state) {
 	}
 	return res;
 }
-
-
-//TBDEP: deprecate after long time no diff mmab1 and mmab2
-function checkWinnerSpaces(arr, rows, cols) {
-	for (i = 0; i < rows; i++) { let ch = bFullRow(arr, i, rows, cols); if (isdef(ch) && ch != ' ') return true; }
-	for (i = 0; i < cols; i++) { let ch = bFullCol(arr, i, rows, cols); if (isdef(ch) && ch != ' ') return true; }
-	let ch = bFullDiag(arr, rows, cols); if (isdef(ch) && ch != ' ') return true;
-	ch = bFullDiag2(arr, rows, cols); if (isdef(ch) && ch != ' ') return true;
-	return false;
+function printState(state) {
+	//console.log('___________',state)
+	let formattedString = '';
+	state.forEach((cell, index) => {
+		formattedString += isdef(cell) ? ` ${cell == '0' ? ' ' : cell} |` : '   |';
+		if ((index + 1) % G.cols == 0) {
+			formattedString = formattedString.slice(0, -1);
+			if (index < G.rows * G.cols - 1) {
+				let s = '\u2015\u2015\u2015 '.repeat(G.cols);
+				formattedString += '\n' + s + '\n'; //\u2015\u2015\u2015 \u2015\u2015\u2015 \u2015\u2015\u2015\n';
+				// formattedString += '\n\u2015\u2015\u2015 \u2015\u2015\u2015 \u2015\u2015\u2015\n';
+			}
+		}
+	});
+	console.log('%c' + formattedString, 'color: #6d4e42;font-size:10px');
+	console.log();
 }
+
 
 class Board {
 	constructor(rows, cols, handler, cellStyle) {
@@ -181,6 +239,16 @@ class Board {
 			d.onclick = handler;
 		});
 		//console.log(this.items)
+	}
+	get(ir,c){
+		if (isdef(c)){
+			// interpret as row,col
+			let idx=ir*this.cols+c;
+			return this.items[idx];
+		}else{
+			//interpret as index
+			return this.items[ir];
+		}
 	}
 	getState() {
 		return this.items.map(x => x.label);

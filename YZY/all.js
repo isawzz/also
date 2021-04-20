@@ -41,7 +41,8 @@ class ItemViewerClass {
 
 		//items
 		//let keys = genKeys(options);	keys[0] = 'spiral shell';	let items = genItemsFromKeys(keys,options);
-		this.allItems = genItemsFromKeys(isdef(keys) ? keys : SymKeys, this.options);
+		let items = this.allItems = genItemsFromKeys(isdef(keys) ? keys : SymKeys, this.options);
+
 		console.log(this.allItems.length);
 		this.iStart = 0;
 
@@ -62,6 +63,7 @@ class ItemViewerClass {
 		clearElement(options.dArea);
 		options.fzText = 20;
 
+		items.map(x=>x.label = x.key);
 		items.map(x => makeItemDiv(x, options));
 		items.map(x => mAppend(options.dArea, iDiv(x)));
 
@@ -81,27 +83,6 @@ class ItemViewerClass {
 		downloadAsYaml(dict, 'specialKeys');
 	}
 }
-
-// async function bTest03_async() {
-// 	return await superLengthyFunction();
-// }
-
-// async function superLengthyFunction() {
-// 	for (let i = 0; i < 100000; i++) {
-// 		for (let j = 0; j < 100000; j++) {
-// 			for (let k = 0; k < 100000; k++) {
-// 				if (CANCEL_AI == true) return;
-// 				console.log('.');
-// 			}
-
-// 		}
-
-// 	}
-// }
-
-
-
-
 
 
 

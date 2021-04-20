@@ -37,11 +37,14 @@ class ControllerTTT {
 		if (this.g.gameOver) {
 			let msg, sp;
 			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins!'; sp = 'A.I. wins!'; this.ai.score += 1; }
-			else if (this.g.winner) { msg = 'You win!!!'; sp = msg; this.human.score += 1; }
-			else { msg = "It's a tie"; }
+			else if (this.g.winner) { msg = sp = 'You win!!!'; this.human.score += 1; }
+			else { msg = "It's a tie";sp = 'tie: no one wins'; if (nundef(this.tie)) this.tie=1; else this.tie+=1; }
 
 			Score.nTotal += 1;
-			Score.nCorrect = this.human.score;
+			Score.nCorrect = Score.nWins = this.human.score;
+			Score.nLoses = this.ai.score;
+			Score.nTied = this.tie;
+
 
 			showScore();
 			showInstruction('', msg, dTitle, !this.g.silentMode, sp);

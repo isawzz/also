@@ -17,29 +17,52 @@ class AIPlayer {
 	setData(o) { copyKeys(o, this); }
 }
 
-function AIMove(g, callback) {
-	//console.log('AI starts moving!')
+var CCC = 0;
+function AIMinimax(g, callback) {
 	let state = g.getState();
 	state = boardToNode(state);
-	let searchDepth = g.searchDepth;
-	let iMove1, iMove2;
-	console.log('==>AI search: mm13 (maxDepth',searchDepth+')');
-	iMove1 = prepMM(state, mm13, g.evalState, searchDepth);
+	console.log('==>AI search: minimax (maxDepth', g.searchDepth + ')');
+	F_END = g.evalState;
+	F_MOVES = g.getAvailableMoves;
+	F_APPLYMOVE = g.applyMove;
+	F_UNDOMOVE = g.undoMove;
+	MAXIMIZER = g.plTurn; 
+	MINIMIZER = g.plOpp; 
+	SelectedMove = null; 
+	let val = minimax(state, 0, -Infinity, Infinity, g.searchDepth, true);
+	console.log('chosen move has value', val, 'nodes inspected:',CCC);
+	CCC = 0;
 
-	//setTimeout(()=>{CANCEL_AI=true;},500);
-	// if (!CANCEL_AI) {
-	// 	iMove2 = prepMM(state, mm13, g.evalStateL2, searchDepth);
-	// 	if (iMove1 != iMove2) { console.log('===>DIFFERENT VALUES!!!!! mmab1:' + iMove1, 'new:' + iMove2); }
-	// 	else { console.log('OK! mmab9 returned', iMove1, 'new returned', iMove2); }
-	// } else {
-	// 	let m = F_MOVES(state);
-	// 	iMove2 = chooseRandom(m);
-	// 	console.log('clicked cancel! choosing random move!', iMove2);
-	// }
-
-	//console.log('AI MOVE FINISHED!')
-	callback(iMove1);
-
+	callback(SelectedMove);
 }
+function minimax(node, depth, alpha, beta, maxDepth, maxim) {
+	CCC+=1;
+	if (depth >= maxDepth) return 1;
+	let ec = F_END(node, depth); if (ec.reached) return ec.val;
+	depth += 1;
+	var move, result;
+	var availableMoves = F_MOVES(node);
+	let player = maxim ? MAXIMIZER : MINIMIZER;
+	for (var i = 0; i < availableMoves.length; i++) {
+		move = availableMoves[i];
+		F_APPLYMOVE(node, move, player);
+		result = minimax(node, depth, alpha, beta, maxDepth, !maxim);
+		F_UNDOMOVE(node, move, player);
+		if (maxim) {
+			if (result > alpha) {
+				//console.log('new best', result, move);
+				alpha = result;
+				if (depth == 1) SelectedMove = move;
+			} else if (alpha >= beta) { return alpha; }
+		} else {
+			if (result < beta) {
+				beta = result;
+				if (depth == 1) SelectedMove = move;
+			} else if (beta <= alpha) { return beta; }
+		}
+	}
+	return maxim ? alpha : beta;
+}
+
 
 

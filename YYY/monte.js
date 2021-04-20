@@ -111,7 +111,7 @@ class MonteCarlo {
 	backpropagate(node, winner) {
 		while (node !== null) {
 			node.n_plays += 1
-			// Parent's choice
+			// Parent's SelectedMove
 			if (node.state.isPlayer(-winner)) {
 				node.n_wins += 1
 			}

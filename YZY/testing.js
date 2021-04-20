@@ -131,8 +131,8 @@ function bTest05() {
 		[0, 'O', 0, 0, 0, 0, 0],
 		['O', 'X', 'O', 0, 0, 0, 0],
 		['O', 'O', 'O', 'O', 0, 0, 0]]
-	let arrf = arrFlatten(arr), rows = 6, cols = 7,irow=2, icol = 0, stride = 4;// =>1
-	console.log('stride in diag', irow,icol + ':', bStrideDiagFrom(arrf, irow,icol, rows, cols, stride));
+	let arrf = arrFlatten(arr), rows = 6, cols = 7, irow = 2, icol = 0, stride = 4;// =>1
+	console.log('stride in diag', irow, icol + ':', bStrideDiagFrom(arrf, irow, icol, rows, cols, stride));
 	console.log('____________');
 	arr = [
 		[0, 0, 0, 0, 0, 0, 0],
@@ -141,8 +141,8 @@ function bTest05() {
 		[0, 'O', 0, 0, 0, 0, 0],
 		['O', 'X', 'O', 0, 0, 0, 0],
 		['O', 'O', 'O', 'O', 0, 0, 0]]
-	arrf = arrFlatten(arr), rows = 6, cols = 7,irow=1, icol = 5, stride = 4;// =>1
-	console.log('stride in diag', irow,icol + ':', bStrideDiagFrom(arrf, irow,icol, rows, cols, stride));
+	arrf = arrFlatten(arr), rows = 6, cols = 7, irow = 1, icol = 5, stride = 4;// =>1
+	console.log('stride in diag', irow, icol + ':', bStrideDiagFrom(arrf, irow, icol, rows, cols, stride));
 	console.log('____________');
 	arr = [
 		[0, 0, 0, 0, 0, 0, 'X'],
@@ -151,8 +151,8 @@ function bTest05() {
 		[0, 'O', 0, 'X', 0, 0, 0],
 		['O', 'X', 'O', 0, 0, 0, 0],
 		['O', 'O', 'O', 'O', 0, 0, 0]]
-	arrf = arrFlatten(arr), rows = 6, cols = 7,irow=0, icol = 6, stride = 4;// =>1
-	console.log('stride in diag2', irow,icol + ':', bStrideDiag2From(arrf, irow,icol, rows, cols, stride));
+	arrf = arrFlatten(arr), rows = 6, cols = 7, irow = 0, icol = 6, stride = 4;// =>1
+	console.log('stride in diag2', irow, icol + ':', bStrideDiag2From(arrf, irow, icol, rows, cols, stride));
 	console.log('____________');
 	arr = [
 		[0, 0, 0, 0, 0, 0, 'X'],
@@ -161,11 +161,11 @@ function bTest05() {
 		[0, 'O', 'O', 'X', 0, 0, 0],
 		['O', 'O', 'O', 0, 0, 0, 0],
 		['O', 'O', 'O', 'O', 0, 0, 0]]
-	arrf = arrFlatten(arr), rows = 6, cols = 7,irow=2, icol = 3, stride = 4;// =>1
-	console.log('stride in diag2', irow,icol + ':', bStrideDiag2From(arrf, irow,icol, rows, cols, stride));
+	arrf = arrFlatten(arr), rows = 6, cols = 7, irow = 2, icol = 3, stride = 4;// =>1
+	console.log('stride in diag2', irow, icol + ':', bStrideDiag2From(arrf, irow, icol, rows, cols, stride));
 	console.log('____________');
 }
-function bTest06(){
+function bTest06() {
 	let pos = [
 		[0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0],
@@ -175,27 +175,42 @@ function bTest06(){
 		['O', 'X', 0, 'O', 0, 0, 0]];
 
 	let arr = arrFlatten(pos);
-	let str=bStrideCol(arr,1,6,7,4);
-	console.log('stride',str)	
-	let w = checkWinnerC4(arr,6,7,4);
+	let str = bStrideCol(arr, 1, 6, 7, 4);
+	console.log('stride', str)
+	let w = checkWinnerC4(arr, 6, 7, 4);
 	printState(arr)
 	console.log('w', w);
 
 }
-function bTest07(){
-	let arr=[0, 0, 0, 0, 0, 0, 0, "X", 0, 0, 0, 0, 0, 0, "X", 0, 0, "X", "X", 0, "O", "X", 0, "X", "O", "O", "O", "X", "O", "X", "O", "O", "O", "X", "O", "O", "X", "O", "O", "O", "X", "O"];
-	let w = checkWinnerC4(arr,6,7,4);
+function bTest07() {
+	let arr = [0, 0, 0, 0, 0, 0, 0, "X", 0, 0, 0, 0, 0, 0, "X", 0, 0, "X", "X", 0, "O", "X", 0, "X", "O", "O", "O", "X", "O", "X", "O", "O", "O", "X", "O", "O", "X", "O", "O", "O", "X", "O"];
+	let w = checkWinnerC4(arr, 6, 7, 4);
 	printState(arr)
 	console.log('w', w);
 }
-function bTest08(){
-	let arr=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "X", 0, 0, 0, "X", 0, 0, "O", 0, 0, 0, "O", "X", 0, "O", 0, 0, 0, "O", "X", "O", "O", "O", "O", 0];
-	let w = checkWinnerC4(arr,6,7,4);
+function bTest08() {
+	let arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "X", 0, 0, 0, "X", 0, 0, "O", 0, 0, 0, "O", "X", 0, "O", 0, 0, 0, "O", "X", "O", "O", "O", "O", 0];
+	let w = checkWinnerC4(arr, 6, 7, 4);
 	printState(arr)
 	console.log('w', w);
 }
 
+function bTest09() {
+	let pos = [
+		[0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0],
+		[0, 'X', 0, 0, 0],
+		[0, 'X', 0, 'O', 0],
+		['O', 'X', 0, 'O', 0]];
 
+	let arr = arrFlatten(pos);
+	let nei = bNei(arr, 6, 5, 5);
+	console.log(nei)	
+	nei = bNei(arr, 0, 5, 5);
+	console.log(nei)	
+	nei = bNei(arr, 24, 5, 5);
+	console.log(nei)	
+}
 
 
 
