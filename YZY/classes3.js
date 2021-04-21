@@ -322,6 +322,15 @@ class GReversi extends GTTT {
 			let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;
 		} else this.iPosition = 0;
 
+		if (this.startPosition == 'empty' || this.rows != 6 || this.cols != 6) {
+			//in der mitte muss o,x und x,o haben!
+			//board braucht  even*even
+			let pos = bCreateEmpty(this.rows, this.cols);
+			let r1 = this.rows / 2 - 1, r2 = this.rows / 2, c1 = this.cols / 2 - 1, c2 = this.cols / 2;
+			pos[r1 * this.cols + c1] = pos[r2 * this.cols + c2] = 'O';
+			pos[r1 * this.cols + c2] = pos[r2 * this.cols + c1] = 'X';
+			positions[0] = pos;
+		}
 		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0]
 			: this.startPosition == 'random' ? chooseRandom(positions)
 				: positions[this.iPosition];
@@ -330,14 +339,6 @@ class GReversi extends GTTT {
 	startGame() {
 		super.startGame();
 		this.setStartPosition();
-	}
-	checkFinal(state) {
-		if (nundef(state)) state = this.getState();
-		let isTie = false;
-		let isWin = checkWinnerC4(state, this.rows, this.cols, this.stride);
-		//console.log('winner', isWin, state)
-		if (!isWin) { isTie = checkBoardFull(state); }// || !checkPotentialC4(state); }
-		return isWin ? 2 : isTie ? 1 : 0;
 	}
 	checkLegal(tile) {
 		//tile must be empty
@@ -362,10 +363,10 @@ class GReversi extends GTTT {
 
 		let state = this.getState();
 		let iCapt = bCapturedPieces(pl.sym, state, tile.index, this.rows, this.cols);
-		console.log('captured', iCapt);
+		//console.log('captured', iCapt);
 		for (const i of iCapt) {
 			let item = this.board.get(i);
-			console.log('item',item);
+			//console.log('item', item);
 			modLabel(item, this.plTurn.sym, { fg: this.plTurn.color });
 		}
 
@@ -374,39 +375,89 @@ class GReversi extends GTTT {
 	activate() {
 		let pl = this.plTurn;
 
-		return;
+		// let m = this.getAvailableMoves(this.getState()); m.sort((a, b) => a - b);
+		// console.log('possible moves', m);
+
+		// return;
 		let autoplay = false;
 		if (autoplay || pl == this.ai) {
 			if (this.ai == pl) uiActivated = false;
 			setTimeout(() => AIMinimax(this, this.afterComputerMove.bind(this)), 200);
 		}
 	}
+	checkFinal(state, pl1, pl2) {
+		if (nundef(state)) state = this.getState();
+		if (nundef(pl1)) pl1 = this.plTurn;
+		if (nundef(pl2)) pl2 = this.plOpp;
+		return GReversi.checkEnd(state, pl1, pl2);
+	}
+	static checkEnd(state, pl1, pl2) {
+		let hasPl1 = false, hasPl2 = false, s1 = pl1.sym, s2 = pl2.sym, hasEmpty = false;
+		for (const s of state) {
+			if (!hasPl1 && s == s1) hasPl1 = true;
+			else if (!hasPl2 && s == s2) hasPl2 = true;
+			else if (!hasEmpty && EmptyFunc(s)) hasEmpty = true;
+			if (hasPl1 && hasPl2 && hasEmpty) return false;
+		}
+		let winner = !hasPl2 ? pl1 : !hasPl1 ? pl2 : 0;
+		let full = !hasEmpty;
+		if (full) {
+			let n1 = arrCount(state, x => x == s1);
+			let n2 = arrCount(state, x => x == s2);
+			if (!winner && n1 != n2) {
+				if (n1 > n2) winner = pl1; else winner = pl2;
+			}
+		}
+		return winner ? { reached: true, winner: winner } : full ? { reached: true, winner: null } : { reached: false };
+	}
+	eval() {
+		this.moveCounter += 1;
+		let info = this.checkFinal();
+		this.gameOver = info.reached;
+		if (this.gameOver) {
+			this.winner = info.winner;
+			this.tie = !info.winner;
+			if (this.winner) {
+				this.loser = this.winner == this.ai ? this.human : this.ai;
+				let state = this.getState();
+				let nWinner = arrCount(state, x => x == this.winner.sym);
+				let nLoser = arrCount(state, x => x == this.loser.sym);
+				this.info = '(' + nWinner + ':' + nLoser + ')';
+			}
+
+
+		}
+
+	}
 
 	getAvailableMoves(state) {
 		let moves = [];
-		for (let c = 0; c < G.cols; c++) {
-			for (let r = G.rows - 1; r >= 0; r--) {
-				let i = r * G.cols + c;
-				if (EmptyFunc(state[i])) { moves.push(i); break; }
+		for (let i = 0; i < state.length; i++) {
+			if (EmptyFunc(state[i])) {
+				let nei = bNei(state, i, G.rows, G.cols, true);
+				let iFull = firstCond(nei, x => !EmptyFunc(state[x]));
+				if (iFull) moves.push(i);
 			}
 		}
-		shuffle(moves)
+		//console.log(moves)
+		//shuffle(moves);
 		return moves;
 	}
 	evalState(node, depth) {
-		let x = checkWinnerC4(node);
+		let info = GReversi.checkEnd(node, MAXIMIZER, MINIMIZER);
+		let val = info.reached && info.winner ? (10 - depth) * (info.winner == MAXIMIZER ? 1 : -1) : 0;
+		return { reached: info.reached, val: val };
+	}
+	applyMove(state, move, player) {
+		//console.log('______________\nmove',move,'by player',player.sym);
+		//printState(state);
+		arrReplaceAtInPlace(state, move, player.sym);
+		let iCapt = bCapturedPieces(player.sym, state, move, G.rows, G.cols);
+		//console.log('capture:',iCapt);
+		for (const i of iCapt) { state[i] = player.sym; }
+		//console.log('=>')
+		//printState(state)
 
-		if (checkBoardFull(node) || x) {
-			//console.log('found end condition!!!! winner',x)
-			let res = { reached: true, val: (!x ? 0 : (10 - depth) * (x == MAXIMIZER.sym ? 1 : -1)) };
-			//console.log(res)
-			// console.log('__________________',depth); printState(node)
-			if (x) console.log('_____winning move', x, 'd=' + depth, '\n', res);
-
-			return res;
-			//return { reached: true, val: (!x ? 0 : x == MAXIMIZER.sym ? (10 - depth) : (depth - 10)) };
-		}
-		return { reached: false };
 	}
 
 }

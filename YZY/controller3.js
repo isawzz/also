@@ -40,6 +40,8 @@ class ControllerTTT {
 			else if (this.g.winner) { msg = sp = 'You win!!!'; this.human.score += 1; }
 			else { msg = "It's a tie";sp = 'tie: no one wins'; if (nundef(this.tie)) this.tie=1; else this.tie+=1; }
 
+			if (this.g.info) msg+=' '+this.g.info;
+
 			Score.nTotal += 1;
 			Score.nCorrect = Score.nWins = this.human.score;
 			Score.nLoses = this.ai.score;

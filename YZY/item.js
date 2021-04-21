@@ -228,9 +228,10 @@ function newItemSelection(item, items, onSelectSelected = null) {
 function modLabel(item,newLabel,styles){
 	//assumes that this item already has a label!
 	let dLabel = iLabel(item);
-	console.log(dLabel,newLabel,styles)
+	//console.log(dLabel,newLabel,styles)
 	dLabel.innerHTML=newLabel;
 	mStyleX(dLabel,styles);
+	item.label = newLabel;
 	return dLabel;
 }
 function addLabel(item, label, styles) {

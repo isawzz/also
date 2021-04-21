@@ -696,6 +696,7 @@ gReversi:
   rows: 6
   cols: 6
   searchDepth: 4
+  copyState: true
   startPosition: seq # random | seq
   startPlayer: human  # ai | human | random
 

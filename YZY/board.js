@@ -9,41 +9,57 @@ function bNei(arr, idx, rows, cols, includeDiagonals = true) {
 
 	if (r > 0) nei.push(idx - cols); else nei.push(null);
 	if (r > 0 && c < cols - 1 && includeDiagonals) nei.push(idx - cols + 1); else nei.push(null);
-	if (c < cols - 1) nei.push(idx - c + 1); else nei.push(null);
+	if (c < cols - 1) nei.push(idx + 1); else nei.push(null);
 	if (r < rows - 1 && c < cols - 1 && includeDiagonals) nei.push(idx + cols + 1); else nei.push(null);
 	if (r < rows - 1) nei.push(idx + cols); else nei.push(null);
 	if (r < rows - 1 && c > 0 && includeDiagonals) nei.push(idx + cols - 1); else nei.push(null);
-	if (r > 0) nei.push(idx - 1); else nei.push(null);
+	if (c > 0) nei.push(idx - 1); else nei.push(null);
 	if (r > 0 && c > 0 && includeDiagonals) nei.push(idx - cols - 1); else nei.push(null);
-	console.log('idx', idx, 'rows', rows, 'cols', cols, 'r', r, 'c', c);
+	//console.log('idx', idx, 'rows', rows, 'cols', cols, 'r', r, 'c', c);
 	return nei;
 
 }
 function iToRowCol(idx, rows, cols) { let c = idx % cols; let r = (idx - c) / rows; return [r, c]; }
-function bNeiDir(arr, idx, dir, rows, cols) {
+function bNeiDir(arr, idx, dir, rows, cols, includeDiagonals=true) {
 	let [r, c] = iToRowCol(idx, rows, cols);
 	switch (dir) {
 		case 0: if (r > 0) return (idx - cols); else return (null);
 		case 1: if (r > 0 && c < cols - 1 && includeDiagonals) return (idx - cols + 1); else return (null);
-		case 2: if (c < cols - 1) return (idx - c + 1); else return (null);
+		case 2: if (c < cols - 1) return (idx+ 1); else return (null);
 		case 3: if (r < rows - 1 && c < cols - 1 && includeDiagonals) return (idx + cols + 1); else return (null);
 		case 4: if (r < rows - 1) return (idx + cols); else return (null);
 		case 5: if (r < rows - 1 && c > 0 && includeDiagonals) return (idx + cols - 1); else return (null);
-		case 6: if (r > 0) return (idx - 1); else return (null);
+		case 6: if (c > 0) return (idx - 1); else return (null);
 		case 7: if (r > 0 && c > 0 && includeDiagonals) return (idx - cols - 1); else return (null);
 	}
 	return null;
 }
 function isOppPiece(sym, plSym) { return sym && sym != plSym; }
 function bCapturedPieces(plSym, arr, idx, rows, cols, includeDiagonals = true) {
+	//console.log('player sym',plSym,'arr',arr,'idx', idx,'rows', rows,'cols', cols);
 	let res=[];
 	let nei = bNei(arr, idx, rows, cols, includeDiagonals);
+	//console.log('nei',nei);
 	for (let dir = 0; dir < 8; dir++) {
 		let i=nei[dir];
+		if (nundef(i)) continue;
+
 		let el = arr[i];
-		if (!el || el == plSym) continue;
+		//console.log('___i',i,'el',el,'checking dir',dir);
+		if (EmptyFunc(el) || el == plSym) continue;
 		let inew=[];
-		while (isOppPiece(el,plSym)) {inew.push(i);i=bNeiDir(arr,i,dir,rows,cols);el=arr[i];}
+		let MAX=100,cmax=0;
+
+		while (isOppPiece(el,plSym)) {
+			//console.log('index',i,'is opp',el)
+			if (cmax>MAX) break; cmax+=1;
+			inew.push(i);
+			i=bNeiDir(arr,i,dir,rows,cols);
+			//console.log(i,cmax,'dir',dir);
+			if (nundef(i)) break; 
+			el=arr[i];
+			//console.log('i',i,'el',el,'max',cmax);
+		}
 		if (el==plSym) {
 			//add all the captured pieces to res
 			res=res.concat(inew);
@@ -225,7 +241,7 @@ function printState(state) {
 	console.log('%c' + formattedString, 'color: #6d4e42;font-size:10px');
 	console.log();
 }
-
+function bCreateEmpty(rows,cols){return new Array(rows*cols).fill(null);}
 
 class Board {
 	constructor(rows, cols, handler, cellStyle) {

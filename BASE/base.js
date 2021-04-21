@@ -1829,6 +1829,7 @@ function arrRotate(arr, count) {
 	unshift.apply(arr1, splice.call(arr1, count % len, len));
 	return arr1;
 }
+function arrCount(arr,func){	let filt=arr.filter(func);	return filt.length;}
 function arrChildren(elem) { return [...elem.children]; }
 function arrCreate(n, func) { let res = []; for (let i = 0; i < n; i++) { res.push(func(i)); } return res; }
 function arrFirst(arr) { return arr.length > 0 ? arr[0] : null; }

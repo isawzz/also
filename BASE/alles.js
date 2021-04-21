@@ -10346,18 +10346,6 @@ var PROD_START = !IS_TESTING;
 
 //#endregion
 
-//#region
-
-//#endregion
-
-//#region
-
-//#endregion
-
-//#region
-
-//#endregion
-
 //#region live
 //uses _globals
 //manages (writes) Live
