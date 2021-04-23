@@ -1,9 +1,11 @@
 async function _start() {
 	initTable(); initSidebar(); initAux(); initScore(); loadUser(); //timit = new TimeIt('*timer', true);
 
+	//let list = getRandomFractions(4);console.log('fractions',list);
 	startUnit();
 
-	//bTest10();//bTest09(); //bTest08();//bTest07();	//bTest06();//bTest05();//bTest04(); //bTest03();
+
+	//btest11_fractions();//bTest10();//bTest09(); //bTest08();//bTest07();	//bTest06();//bTest05();//bTest04(); //bTest03();
 	
 	//#region tests
 	// let x=bTest03_async();

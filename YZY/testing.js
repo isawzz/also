@@ -229,5 +229,15 @@ function bTest10() {
 	console.log(nei);	
 }
 
-
+function btest11_fractions(){
+	
+	let a=math.fraction(1,4);
+	let b=math.fraction(1,4);
+	let c = math.multiply(a,b);
+	console.log(a,b,c);
+	let d=math.add(a,b);
+	console.log(d)
+	let e = math.multiply(2,a);
+	console.log(e)
+}
 

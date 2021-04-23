@@ -642,11 +642,13 @@ gRiddle:
     0:
       maxIndex: 6
     1:
-      maxIndex: 10
+      maxIndex: 15
     2:
-      maxIndex: 20
+      maxIndex: 25
     3:
-      maxIndex: 30
+      maxIndex: 35
+    4:
+      maxIndex: 40
 gGuess:
   friendly: 'Guess'
   logo: 'input latin letters'
@@ -695,7 +697,7 @@ gReversi:
   numPlayers: 2
   rows: 6
   cols: 6
-  searchDepth: 4
+  searchDepth: 7
   copyState: true
   startPosition: seq # random | seq
   startPlayer: human  # ai | human | random

@@ -1,11 +1,11 @@
 nil:
   id: nil
-  avGames: [gReversi, gC4, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gReversi
+  avGames: [gC4, gElim, gSentence, gReversi, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  lastGame: gRiddle
   settings:
     # settings common to all games
     userColor: green
-    samplesPerGame: 2
+    samplesPerGame: 20
     minutesPerUnit: 0
     incrementLevelOnPositiveStreak: 10
     decrementLevelOnNegativeStreak: 6
@@ -211,8 +211,8 @@ gunter:
       open: false
 gul:
   id: gul
-  avGames: [gC4, gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gTTT
+  avGames: [gC4, gElim, gSentence, gReversi, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  lastGame: gSentence
   settings:
     # settings common to all games
     userColor: blue

@@ -1,3 +1,4 @@
+
 function getOperand(type) { let x = OPS[type]; return randomNumber(Math.max(2, x.min), x.max); }
 function getRandomWP(min = 0, max = 35) { return jsCopy(WordP[randomNumber(min, max)]); }// chooseRandom(WordP.slice(min,max));}
 function instantiateNames(wp) {
@@ -14,7 +15,7 @@ function instantiateNames(wp) {
 	for (const part of parts) {
 		let textPart = stringAfter(part, ' ');
 
-		let hasDot = part[2]=='.';
+		let hasDot = part[2] == '.';
 
 		//console.log('==>',part)
 		let key = part.substring(0, 2);
@@ -32,16 +33,18 @@ function instantiateNames(wp) {
 				tnew += ' ' + diNames[key];
 			}
 		}
-		tnew += (hasDot?'. ':' ') + textPart.trim();
+		tnew += (hasDot ? '. ' : ' ') + textPart.trim();
 	}
 	wp.text = tnew.trim();
 
 	if (wp.sol[0] == 'p') {
 		//console.log('diNames',diNames,'\nsol',wp.sol);
-		
-		let k=wp.sol.trim().substring(4);
+
+		let k = wp.sol.trim().substring(3);
 		//console.log('key',k)
-		wp.result = { number: 0, text: diNames[k] }; return true;
+		wp.result = { number: 0, text: diNames[k] };
+		//console.log(wp.result,wp.diNames,k)
+		return true;
 	} else { return false; }
 }
 function instantiateNumbers(wp) {
@@ -67,22 +70,25 @@ function instantiateNumbers(wp) {
 	wp.result.text = '' + wp.result.number;
 	for (const k in diop) {
 		if (k == 'R') continue;
-		text = text.replace('@' + k, diop[k]);
+		text = replaceAll(text, '@' + k, valToString(diop[k]));
 	}
 	wp.text = text;
+	fractionConvert(wp, diop);
 	return [diop, eq];
 }
+function valToString(n) { if (isFractionType(n)) return getTextForFraction(n.n, n.d); else return n; }
 function replaceSol(sol, diop) {
 	//sol = R*N2=N1
 	let rhs = stringBefore(sol, '=');
-	//console.log('rhs', rhs)
+	//console.log('_________\nrhs', rhs);
+	//console.log('sol', sol);
 
 	let type = rhs.includes('*') ? rhs.includes('R') ? 'div' : 'mult' : rhs.includes('R') ? 'minus' : 'plus';
 	//replace R and Nx in rhs by operands
 	let i = 0;
 	while (i < rhs.length) {
 		if (rhs[i] == 'R') { diop.R = getOperand(type); i += 1; }
-		else if (rhs[i] == 'r') { if (nundef(diop.r)) diop.r = getOperand(type); i += 1; } //zwischenergebnis
+		else if (rhs[i] == 'r' && !rhs.includes('round')) { if (nundef(diop.r)) diop.r = getOperand(type); i += 1; } //zwischenergebnis
 		else if (rhs[i] == 'N') {
 			i += 1;
 			let inum = Number(rhs[i]);
@@ -93,9 +99,56 @@ function replaceSol(sol, diop) {
 			i += 1;
 			let inum = Number(rhs[i]);
 			let k = 'D' + inum;
-			if (nundef(diop[k])) diop[k] = randomNumber(2, 9); //getOperand(type);
 			i += 1;
+			if (rhs[i] == '{') {
+				let subs = rhs.substring(i);
+				let inKlammern = stringBefore(subs, '}');
+				//console.log('rhs war',rhs, 'inKlammern',inKlammern)
+				rhs = rhs.substring(0, i) + stringAfter(subs, '}');
+				//console.log('rhs is now',rhs)
+				i += inKlammern.length;
+				let nums = allNumbers(inKlammern);
+				diop[k] = chooseRandom(nums);
+			} else if (nundef(diop[k])) {
+				diop[k] = randomNumber(2, 9); //getOperand(type);
+			}
+			//i += 1; //vorgezogen! => repeat tests mit D
+		} else if (rhs[i] == 'F') {
 
+			if (isdef(diop[rhs.substring(i, i + 2)])) { i += 2; continue; }
+
+			// example for fraction: F1(D2,D3)
+			let s_ab_i = rhs.substring(i);
+			let s_vor_klammer_zu = stringBefore(s_ab_i, ')');
+			let lenRaus = s_vor_klammer_zu.length + 1;
+			//console.log('_________', s_ab_i, s_vor_klammer_zu, lenRaus);
+			let s_nach_fraction = stringAfter(s_ab_i, ')');
+
+			let kFraction = s_ab_i.substring(0, 2);
+			//console.log('s_ab_i', s_ab_i)
+			let kNum = s_ab_i.substring(3); kNum = stringBefore(kNum, ',');
+			let kDenom = stringAfter(s_ab_i, ','); kDenom = stringBefore(kDenom, ')'); //s_ab_i.substring(6, 8);
+
+			//console.log('kFraction', kFraction, '\nkNum', kNum, '\nkDenom', kDenom);
+
+			rhs = rhs.substring(0, i) + 'math.fraction(' + kNum + ',' + kDenom + ')' + s_nach_fraction;
+			//console.log('new rhs', rhs);
+
+			//get a random fraction
+			let num = isNumber(kNum) ? Number(kNum) : isdef(diop[kNum]) ? diop[kNum] : null;
+			let denom = isNumber(kDenom) ? Number(kDenom) : isdef(diop[kDenom]) ? diop[kDenom] : null;
+
+			let fr = getRandomFraction(num, denom);
+			//console.log('fraction is', fr);
+			diop[kFraction] = fr;
+			if (!num) diop[kNum] = fr.n;
+			if (!denom) diop[kDenom] = fr.d;
+			// if (nundef(diop[kNum]) && !isNumber(kNum)) diop[kNum] = fr.n;
+			// if (nundef(diop[kDenom]) && !isNumber(kDenom)) diop[kDenom] = fr.d;
+			console.log('dict', diop)
+			//rhs=rhs.substring(0,i)+
+			i += 20; //length of new rhs middle text
+			//console.log('rhs rest is', rhs.substring(i));
 		} else i += 1;
 	}
 
@@ -120,12 +173,16 @@ function replaceSol(sol, diop) {
 	//replace in sol each rhs by its operand, the eval rhs
 	let eq = rhs;
 	for (const k in diop) {
-		eq = eq.replace(k, diop[k]);
+		let val = diop[k];
+		if (isFractionType(val)) val = `math.fraction(${val.n},${val.d})`;
+		eq = eq.replace(k, val); //diop[k]);
 	}
 	//console.log('diop',diop);
-	//console.log('eq',eq);
+
+	//eq = 'math.add(math.fraction(2,9)'
+	console.log('eq', eq);
 	let result = eval(eq);
-	//console.log('result',result);
+	console.log('result', result);
 
 	//now, assign result to lhs
 	let lhs = stringAfter(sol, '=').trim();
@@ -137,85 +194,28 @@ function replaceSol(sol, diop) {
 	return [result, eq];
 }
 
-
-
-
-
-
-
-
-
-//old code
-
-function all2DigitFractionsExpanded() {
-	let f = all2DigitFractions();
-	let res = [];
-	for (const i in f) {
-		for (const j of f[i]) {
-			res.push({ numer: i, denom: j });
-		}
+function isFractionType(x) { return isDict(x) && isdef(x.n) && isdef(x.d); }
+function fractionConvert(wp, diop) {
+	let n = wp.result.number;
+	let t = typeof n;
+	//console.log('num is', n, 'type', t);
+	if (isFractionType(n)) {
+		//console.log('haaaaaaaaaaaaaaaaaaaaaaaa');
+		wp.isFractionResult = true;
+		wp.result.text = getTextForFraction(n.n, n.d);
 	}
-	return res;
-}
-function all2DigitFractionsUnder1Expanded() {
-	let f = all2DigitFractionsUnder1();
-	let res = [];
-	for (const i in f) {
-		for (const j of f[i]) {
-			res.push({ numer: i, denom: j });
-		}
-	}
-	return res;
-}
-function all2DigitFractions() {
-	let fr = {
-		1: [2, 3, 4, 5, 6, 7, 8, 9],
-		2: [3, 5, 7, 9],
-		3: [2, 4, 5, 7, 8],
-		4: [3, 5, 7, 9],
-		5: [2, 3, 4, 6, 7, 8, 9],
-		6: [5, 7],
-		7: [2, 3, 4, 5, 6, 8, 9],
-		8: [3, 5, 7, 9],
-		9: [2, 4, 5, 7, 8],
-	};
-	return fr;
-}
-function fractionsUnder1ByDenominator() {
-	let fr = {
-		2: [1],
-		3: [1, 2],
-		4: [1, 3],
-		5: [1, 2, 3, 4],
-		6: [1, 5],
-		7: [1, 2, 3, 4, 5, 6],
-		8: [1, 3, 5, 7],
-		9: [1, 2, 4, 5, 7, 8],
-	};
-	return fr;
 }
 
-function all2DigitFractionsUnder1() {
-	let fr = {
-		1: [2, 3, 4, 5, 6, 7, 8, 9],
-		2: [3, 5, 7, 9],
-		3: [4, 5, 7, 8],
-		4: [5, 7, 9],
-		5: [6, 7, 8, 9],
-		6: [7],
-		7: [8, 9],
-		8: [9],
-	};
-	return fr;
-}
 
-function simplifyFraction(numerator, denominator) {
-	var gcd = function gcd(a, b) {
-		return b ? gcd(b, a % b) : a;
-	};
-	gcd = gcd(numerator, denominator);
-	return [numerator / gcd, denominator / gcd];
-}
+
+
+
+
+
+
+
+
+
 
 function instantiateNumbersIncludingFractions(wp) {
 	//sol = simplify({N2(3,8)}/{N1(12,24)})
@@ -322,7 +322,6 @@ function evalWP(wp) {
 
 	}
 }
-function getTextForFraction(num, denom) { return '&frac' + num + denom; }
 
 function instantiateNumbers_dep(wp) {
 

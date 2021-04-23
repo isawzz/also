@@ -31,7 +31,8 @@ function AIMinimax(g, callback) {
 	SelectedMove = null;
 	let algorithm = g.copyState==true ? minimaxCopy : minimax;
 	let val = algorithm(state, 0, -Infinity, Infinity, g.searchDepth, true);
-	//console.log('chosen move has value', val, 'nodes inspected:', CCC);
+	console.log('chosen move has value', val, 'nodes inspected:', CCC);
+	//if (!SelectedMove)
 	CCC = 0;
 
 	callback(SelectedMove);
@@ -72,7 +73,7 @@ function minimaxCopy(node, depth, alpha, beta, maxDepth, maxim) {
 	depth += 1;
 	var move, result;
 	var availableMoves = F_MOVES(node);
-	//console.log(availableMoves)
+	//if (depth == 1) console.log(availableMoves)
 	let player = maxim ? MAXIMIZER : MINIMIZER;
 	let nodeSafe = jsCopy(node);
 	for (var i = 0; i < availableMoves.length; i++) {
@@ -81,12 +82,12 @@ function minimaxCopy(node, depth, alpha, beta, maxDepth, maxim) {
 		console.assert(sameList(nodeSafe,node),'HA!');
 		//printState(node1);
 		F_APPLYMOVE(node1, move, player);
-		result = minimax(node1, depth, alpha, beta, maxDepth, !maxim);
-
+		result = minimaxCopy(node1, depth, alpha, beta, maxDepth, !maxim);
+		//if (depth == 1)console.log(result);
 		//if (CCC>0) {SelectedMove = move;return 1;}
 		if (maxim) {
 			if (result > alpha) {
-				//console.log('new best', result, move);
+				//console.log('new best', result, move, depth);
 				alpha = result;
 				if (depth == 1) SelectedMove = move;
 			} else if (alpha >= beta) { return alpha; }

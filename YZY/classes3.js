@@ -334,6 +334,8 @@ class GReversi extends GTTT {
 		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0]
 			: this.startPosition == 'random' ? chooseRandom(positions)
 				: positions[this.iPosition];
+
+		//state = [['X', 0, 0, 'X'], [0, 'O', 'X', 0], [0, 'O', 'O', 0], [0, 'O', 0, 'O']]; //tricky test!
 		this.board.setState(state, { X: this.ai.color, O: this.human.color });
 	}
 	startGame() {
@@ -436,7 +438,8 @@ class GReversi extends GTTT {
 			if (EmptyFunc(state[i])) {
 				let nei = bNei(state, i, G.rows, G.cols, true);
 				let iFull = firstCond(nei, x => !EmptyFunc(state[x]));
-				if (iFull) moves.push(i);
+				//if (i==4) console.log('nei',nei,'iFull',iFull);
+				if (iFull != null) moves.push(i);
 			}
 		}
 		//console.log(moves)

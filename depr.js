@@ -1,3 +1,16 @@
+function fraction00(wp, diop) {
+	math.config({ number: 'Fraction' });
+
+	// use the expression parser
+	let n = wp.result.number;
+	let f = math.evaluate(diop.N2 / diop.N1) // Fraction, 2/556b2f
+	let f1 = math.fraction(diop.N2, diop.N1);
+	//console.log('hallo',math.simplify(f1));
+	console.log('n', n, '\nf', f, '\nf1', f1, '\ndiop', diop);
+}
+
+
+
 function AIMove1() {
 	let myPromise = new Promise(function (myResolve, myReject) {
 		// "Producing Code" (May take some time)

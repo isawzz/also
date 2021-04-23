@@ -628,9 +628,14 @@ class GRiddle extends Game {
 		this.trials = 1;
 		showInstruction('', 'Solve the Riddle:', dTitle, true);
 
-		let wp = this.wp = getRandomWP(1, this.maxIndex);
+		let wp = this.wp = jsCopy(WordP[42]); //getRandomWP(1, this.maxIndex);
+		//let wp = this.wp = getRandomWP(0, this.maxIndex);
 		let haveResult = wp.isTextResult = instantiateNames(wp);
+		//console.log('haveResult',haveResult)
 		if (!haveResult) instantiateNumbers(wp);
+
+		//console.log(wp)
+		//for(let i=0;i<37;i++){console.log(WordP[i].sol)}
 
 		mLinebreak(dTable, 2);
 
@@ -644,6 +649,8 @@ class GRiddle extends Game {
 
 		// this.createInputElements();
 		Goal = { label: wp.result.text };
+
+		//console.log('====>', Goal)
 		this.createMultipleChoiceElements();
 
 		mLinebreak(dTable);
@@ -654,39 +661,82 @@ class GRiddle extends Game {
 	createMultipleChoiceElements() {
 		let wp = this.wp;
 
-		let choices = [];
-		if (wp.isTextResult) {
-			choices = Object.values(wp.diNames);
+		let choices = [], nums = [], texts = [];
+		if (wp.isTextResult == true) {
 
+			texts = Object.values(wp.diNames);
+			for (let i = 0; i < texts.length; i++) { choices.push({ number: 0, text: texts[i] }); }
+			Goal.correctChoice = firstCond(choices, x => x.text == Goal.label);
+
+		} else if (wp.isFractionResult == true) {
+			let res = wp.result.number;
+			//console.log('res',res); ok
+
+			nums = getRandomFractions(8);
+			let resInList = firstCond(nums, x => x.n == res.n && x.d == res.d);
+			if (!resInList) nums.push(res);
+
+			//von den nums eliminate 
+			let finalNums = nums.filter(x => x.n == res.n);
+			let otherNums = nums.filter(x => x.n != res.n);
+			if (finalNums.length < 4) {
+				let nMissing = 4 - finalNums.length;
+				let additional = choose(otherNums, nMissing);
+				finalNums = finalNums.concat(additional);
+			}
+			nums = finalNums;
+			texts = nums.map(x => getTextForFraction(x.n, x.d));
+			for (let i = 0; i < texts.length; i++) { choices.push({ number: nums[i], text: texts[i] }); }
+			// console.log('res',res,'\nwp',wp.result,'\nnums',nums,'\ntexts',texts)
+			
+			Goal.correctChoice = firstCond(choices,x=>x.text == wp.result.text);
+
+			//<span id="amount2">'&frac12;'</span>
+			//console.log('choices',choices);
 		} else {
 			let res = wp.result.number;
-			choices = [res, res + randomNumber(1, 25), res / randomNumber(2, 5), res * randomNumber(2, 5)];
-			choices = choices.map(x => (Math.round(x * 100) / 100));
+			nums = [res, res + randomNumber(1, 25), res / randomNumber(2, 5), res * randomNumber(2, 5)];
+			texts = nums.map(x => (Math.round(x * 100) / 100));
+			for (let i = 0; i < texts.length; i++) { choices.push({ number: nums[i], text: texts[i] }); }
+			Goal.correctChoice = choices[0];
 		}
 
+		//console.log('choices', choices, 'correct', Goal.correctChoice);
+		//return;
 		shuffle(choices);
+		Goal.choices = choices;
 		let dParent = this.dResult;
+		let idx = 0;
 		for (const ch of choices) {
-
-			let dButton = mButton(ch, (ev) => {
-				let id = evToClosestId(ev);
-				let b = mBy(id);
-				let x = b.innerHTML;
-				if (x == Goal.label) { mStyleX(b, { bg: 'green' }); mCheckit(this.textArea, 100); }
-				else { let d = mXit(b, 100); }
-
-				Goal.buttonClicked = ev.target;
-				this.controller.evaluate.bind(this.controller)(ch, Goal.label);
-			}, dParent, { wmin: 100, fz: 36, margin: 20, rounding: 4, vpadding: 4, hpadding: 10 }, ['toggleButtonClass']);
-			dButton.id = 'b_' + ch;
-			if (ch.toString() == wp.result.text) Goal.buttonCorrect = dButton;
+			////'&frac57;', //'&frac12;', 
+			let dButton = mButton(ch.text, this.onClickChoice.bind(this), dParent, { wmin: 100, fz: 36, margin: 20, rounding: 4, vpadding: 4, hpadding: 10 }, ['toggleButtonClass']);
+			dButton.id = 'bChoice_' + idx; idx += 1;
+			//	console.log('==============',ch,wp.result)
+			if (ch.text == wp.result.text) {
+				Goal.choice = ch.toString();
+				Goal.buttonCorrect = dButton; //else console.log('ch', ch.toString(), 'res', wp.result.text)
+			}
 		}
 
 	}
-	eval(answer, reqAnswer) {
+	onClickChoice(ev) {
+		let id = evToClosestId(ev);
+		let b = mBy(id);
+		let index = Number(stringAfter(id, '_'));
+		Goal.choice = Goal.choices[index];
+		Goal.buttonClicked = b;
+		//console.log('clicked:',Goal.choice,Goal.correctChoice)
+		if (Goal.choice == Goal.correctChoice) { mStyleX(b, { bg: 'green' }); mCheckit(this.textArea, 100); }
+		else { mXit(b, 100); }
+		this.controller.evaluate.bind(this.controller)();
+	}
+	eval() {
 		clearFleetingMessage();
-		Selected = { delay: 5000, reqAnswer: reqAnswer, answer: answer, feedbackUI: Goal.button };
-		return (answer == reqAnswer);
+		Selected = { delay: 5000, reqAnswer: this.wp.result.number, answer: Goal.choice.number, feedbackUI: Goal.buttonClicked };
+		if (this.wp.isTextResult) { Selected.reqAnswer = this.wp.result.text; Selected.answer = Goal.choice.text; }
+
+		//console.log('Selected', Selected);
+		return (Goal.buttonClicked == Goal.buttonCorrect);
 	}
 
 	createInputElements() {
@@ -1216,7 +1266,7 @@ class GMissingNumber extends Game {
 	start_Level() {
 		if (!isList(this.steps)) this.steps = [this.steps];
 		this.numPics = 2;
-		this.labels = false; 
+		this.labels = false;
 	}
 	prompt() {
 		mLinebreak(dTable, 12);

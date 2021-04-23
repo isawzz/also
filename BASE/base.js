@@ -2153,7 +2153,7 @@ function sameList(l1, l2) {
 	}
 	return true;
 }
-function shuffle(arr) { return fisherYates(arr); }
+function shuffle(arr) { if (isEmpty(arr)) return [];else return fisherYates(arr); }
 function shuffleChildren(dParent) {
 	let arr = arrChildren(dParent);
 	//console.log(arr);
