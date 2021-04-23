@@ -670,11 +670,18 @@ class GRiddle extends Game {
 
 		} else if (wp.isFractionResult == true) {
 			let res = wp.result.number; //das ist eine fraction
-			console.log('res',res); ok
+
+			if (res.n / res.d > 2) {
+				wp.result.isMixed=true;
+				wp.result.mixed = getMixedNumber(res.n, res.d);
+			}
+			console.log('res',res); //ok
 
 			nums = get3FractionVariants(res);
+			console.log('nums',nums)
 			//nums = getFractionVariantsTrial1(res);
 			texts = nums.map(x => getTextForFractionX(x.n, x.d));
+			wp.result.text = texts[0];
 			for (let i = 0; i < texts.length; i++) { choices.push({ number: nums[i], text: texts[i] }); }
 			// console.log('res',res,'\nwp',wp.result,'\nnums',nums,'\ntexts',texts)
 
@@ -691,7 +698,7 @@ class GRiddle extends Game {
 			Goal.correctChoice = choices[0];
 		}
 
-		//console.log('choices', choices, 'correct', Goal.correctChoice);
+		console.log('choices', choices, 'correct', Goal.correctChoice);
 		//return;
 		shuffle(choices);
 		Goal.choices = choices;

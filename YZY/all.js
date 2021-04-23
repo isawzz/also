@@ -145,12 +145,18 @@ function fractionsUnder1ByDenominator() {
 	};
 	return fr;
 }
-function getTextForMixed(full, num, denom) { let s = '' + full + ' ' + num + '&frasl;' + denom; return s; }
+function getTextForMixed(full, num, denom) { 
+	let s = '' + full;
+	if (isdef(num) && isdef(denom)) s+= ' ' + num + '&frasl;' + denom; 
+	return s; 
+}
 function getTextForFractionX(num, denom) {
 	if (num == denom) return '1';
+	else if (denom==1) return num;
 	else if (num / denom > 2) {
 		let mixed = getMixedNumber(num, denom);
-		return getTextForMixed(mixed.full, mixed.num, mixed.denom);
+		console.log('mixed',mixed)
+		return getTextForMixed(mixed.full, mixed.n, mixed.d);
 	} else {
 		let s = '' + num + '&frasl;' + denom; return s;
 	}
@@ -162,9 +168,9 @@ function getMixedNumber(num, denom) {
 	const quotient = Math.floor(num / denom);
 	const remainder = num % denom;
 	if (remainder === 0) {
-		return { full: quotient, frac: null };
+		return { full: quotient, frac: null, n:null,d:null };
 	} else {
-		return { full: quotient, frac: math.fraction(remainder, denom) };
+		return { full: quotient, frac: math.fraction(remainder, denom),n:remainder,d:denom };
 	};
 }
 function getRandomFraction(num, denom) {
@@ -212,6 +218,7 @@ function get3FractionVariants(fr,sameNum=false,sameDenom=true) {
 	let den=fr.d;
 	let denoms = sameDenom?[den,den,den,den]	:sameNum?[den,den+1,den+2,den>2?den-1:den+3]
 	:[den,den+1,den+2,den];
+	console.log('res',fr,'\nnums',nums,'\ndenoms',denoms);
 
 	let frlist=[];
 	for(let i=0;i<4;i++){
