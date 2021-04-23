@@ -669,30 +669,20 @@ class GRiddle extends Game {
 			Goal.correctChoice = firstCond(choices, x => x.text == Goal.label);
 
 		} else if (wp.isFractionResult == true) {
-			let res = wp.result.number;
-			//console.log('res',res); ok
+			let res = wp.result.number; //das ist eine fraction
+			console.log('res',res); ok
 
-			nums = getRandomFractions(8);
-			let resInList = firstCond(nums, x => x.n == res.n && x.d == res.d);
-			if (!resInList) nums.push(res);
-
-			//von den nums eliminate 
-			let finalNums = nums.filter(x => x.n == res.n);
-			let otherNums = nums.filter(x => x.n != res.n);
-			if (finalNums.length < 4) {
-				let nMissing = 4 - finalNums.length;
-				let additional = choose(otherNums, nMissing);
-				finalNums = finalNums.concat(additional);
-			}
-			nums = finalNums;
-			texts = nums.map(x => getTextForFraction(x.n, x.d));
+			nums = get3FractionVariants(res);
+			//nums = getFractionVariantsTrial1(res);
+			texts = nums.map(x => getTextForFractionX(x.n, x.d));
 			for (let i = 0; i < texts.length; i++) { choices.push({ number: nums[i], text: texts[i] }); }
 			// console.log('res',res,'\nwp',wp.result,'\nnums',nums,'\ntexts',texts)
-			
-			Goal.correctChoice = firstCond(choices,x=>x.text == wp.result.text);
+
+			Goal.correctChoice = firstCond(choices, x => x.text == wp.result.text);
 
 			//<span id="amount2">'&frac12;'</span>
 			//console.log('choices',choices);
+
 		} else {
 			let res = wp.result.number;
 			nums = [res, res + randomNumber(1, 25), res / randomNumber(2, 5), res * randomNumber(2, 5)];

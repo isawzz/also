@@ -1,3 +1,20 @@
+function getTextForFraction_dep1(num, denom) {
+	// num=5,denom=7;
+	const remainder = {
+		"1/2": "½", "1/3": "⅓", "2/3": "⅔", "1/4": "¼", "3/4": "¾",
+		"1/5": "⅕", "2/5": "⅖", "3/5": "⅗", "4/5": "⅘",
+		"1/6": "⅙", "5/6": "⅚", "1/7": "⅐", "1/8": "⅛",
+		"3/8": "⅜", "5/8": "⅝", "7/8": "⅞", "1/9": "⅑", "1/10": "⅒"
+	};
+	let s = remainder['' + num + '/' + denom];
+	if (isdef(s)) return s;
+	//console.log('hallo!!!!', num, denom)
+	s = '' + num + '&frasl;' + denom;
+	// s = '1&frasl;16';
+	return s;
+}
+function getTextForFraction_dep(num, denom) { return '&frac' + num + denom + ';'; }
+
 function fraction00(wp, diop) {
 	math.config({ number: 'Fraction' });
 

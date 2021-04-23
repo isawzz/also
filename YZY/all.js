@@ -145,46 +145,81 @@ function fractionsUnder1ByDenominator() {
 	};
 	return fr;
 }
+function getTextForMixed(full, num, denom) { let s = '' + full + ' ' + num + '&frasl;' + denom; return s; }
+function getTextForFractionX(num, denom) {
+	if (num == denom) return '1';
+	else if (num / denom > 2) {
+		let mixed = getMixedNumber(num, denom);
+		return getTextForMixed(mixed.full, mixed.num, mixed.denom);
+	} else {
+		let s = '' + num + '&frasl;' + denom; return s;
+	}
+}
 function getTextForFraction(num, denom) {
-	let s = '' + num + '&frasl;' + denom;
-	// s = '1&frasl;16';
-	return s;
+	let s = '' + num + '&frasl;' + denom; return s;
 }
-function getTextForFraction_dep1(num, denom) {
-	// num=5,denom=7;
-	const remainder = {
-		"1/2": "½", "1/3": "⅓", "2/3": "⅔", "1/4": "¼", "3/4": "¾",
-		"1/5": "⅕", "2/5": "⅖", "3/5": "⅗", "4/5": "⅘",
-		"1/6": "⅙", "5/6": "⅚", "1/7": "⅐", "1/8": "⅛",
-		"3/8": "⅜", "5/8": "⅝", "7/8": "⅞", "1/9": "⅑", "1/10": "⅒"
+function getMixedNumber(num, denom) {
+	const quotient = Math.floor(num / denom);
+	const remainder = num % denom;
+	if (remainder === 0) {
+		return { full: quotient, frac: null };
+	} else {
+		return { full: quotient, frac: math.fraction(remainder, denom) };
 	};
-	let s = remainder['' + num + '/' + denom];
-	if (isdef(s)) return s;
-	//console.log('hallo!!!!', num, denom)
-	s = '' + num + '&frasl;' + denom;
-	// s = '1&frasl;16';
-	return s;
 }
-function getTextForFraction_dep(num, denom) { return '&frac' + num + denom + ';'; }
 function getRandomFraction(num, denom) {
 
 	if (isdef(denom)) {
-		if (nundef(num)) num=randomNumber(1,denom-1);
-		return math.fraction(num,denom);
-	}else if (isdef(num)){
+		if (nundef(num)) num = randomNumber(1, denom - 1);
+		return math.fraction(num, denom);
+	} else if (isdef(num)) {
 		//num defined but denom not
-		denom=randomNumber(2,9);
-		return math.fraction(num,denom);
+		denom = randomNumber(2, 9);
+		return math.fraction(num, denom);
 	}
 
 	let flist = all2DigitFractionsUnder1Expanded();
 	// if (isdef(num)) flist = flist.filter(x => x.numer == num);
 	// if (isdef(denom)) flist = flist.filter(x => x.denom == num);
-	
+
 	//console.log('flist', flist);
 	let fr = chooseRandom(flist);
 	return math.fraction(Number(fr.numer), Number(fr.denom));
 }
+function getFractionVariantsTrial1(res){
+	let num = getRandomFractions(res, 8);
+	let resInList = firstCond(nums, x => x.n == res.n && x.d == res.d);
+	if (!resInList) nums.push(res);
+
+	//von den nums eliminate 
+	let finalNums = nums.filter(x => x.n == res.n);
+	let otherNums = nums.filter(x => x.n != res.n);
+	if (finalNums.length < 4) {
+		let nMissing = 4 - finalNums.length;
+		let additional = choose(otherNums, nMissing);
+		finalNums = finalNums.concat(additional);
+	}
+	nums = finalNums;
+	return nums;
+}
+function get3FractionVariants(fr,sameNum=false,sameDenom=true) {
+	let num = fr.n;
+	let rnd1=randomNumber(1, 2);
+	let rnd2=rnd1+randomNumber(1, 3);
+	let rnd3=rnd2+randomNumber(1, 5);
+	let nums= sameNum?[num,num,num,num]: [num, num + rnd1, num>5?(num -rnd2):num+rnd2, num+rnd3];
+
+	let den=fr.d;
+	let denoms = sameDenom?[den,den,den,den]	:sameNum?[den,den+1,den+2,den>2?den-1:den+3]
+	:[den,den+1,den+2,den];
+
+	let frlist=[];
+	for(let i=0;i<4;i++){
+		frlist.push(math.fraction(nums[i],denoms[i]));
+	}
+	return frlist;
+}
+
 function getRandomFractions(n) {
 	let flist = all2DigitFractionsUnder1Expanded();
 	let frlist = choose(flist, n);
