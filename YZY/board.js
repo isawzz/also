@@ -34,6 +34,35 @@ function bNeiDir(arr, idx, dir, rows, cols, includeDiagonals = true) {
 	}
 	return null;
 }
+function bRayDir(arr, idx, dir, rows, cols) {
+	let indices = [];
+	let i = idx;
+	while (i < arr.length) {
+		let i = bNeiDir(arr, i, dir, rows, cols);
+		if (!i) break; else indices.push(i);
+	}
+	return indices;
+}
+function bFreeRayDir(arr, idx, dir, rows, cols) {
+	let indices = [];
+	let i = idx;
+	while (i < arr.length) {
+		i = bNeiDir(arr, i, dir, rows, cols);
+		if (!i || !EmptyFunc(arr[i])) break; else indices.push(i);
+	}
+	return indices;
+}
+function bFreeRayDir1(arr, idx, dir, rows, cols) {
+	let indices = [];
+	let i = idx;
+	while (i < arr.length) {
+		i = bNeiDir(arr, i, dir, rows, cols);
+		if (!i) break;
+		else indices.push(i);
+		if (!EmptyFunc(arr[i])) break;
+	}
+	return indices;
+}
 function isOppPiece(sym, plSym) { return sym && sym != plSym; }
 function bCapturedPieces(plSym, arr, idx, rows, cols, includeDiagonals = true) {
 	//console.log('player sym',plSym,'arr',arr,'idx', idx,'rows', rows,'cols', cols);
@@ -298,11 +327,14 @@ class ChessBoard extends Board {
 		super(rows, cols, handler, cellStyle);
 
 		let i = 0;
+		let dark = 'saddlebrown'; //'sienna'
+		let light = 'burlywood'; //'navajowhite'
 		for (let r = 0; r < this.rows; r += 1) {
 			for (let c = 0; c < this.cols; c += 1) {
 				let item = this.items[i]; i++;
-				let bgOdd = r % 2 ? 'beige' : 'sienna';
-				let bgEven = r % 2 ? 'sienna' : 'beige';
+
+				let bgOdd = r % 2 ? light : dark; //'beige' : 'sienna';
+				let bgEven = r % 2 ? dark : light; //'sienna' : 'beige';
 				mStyleX(iDiv(item), { bg: (c % 2 ? bgOdd : bgEven) });
 			}
 		}
@@ -311,23 +343,23 @@ class ChessBoard extends Board {
 		{ id: 'bb', color: 'black', key: 'chess-bishop' }, { id: 'bk', color: 'black', key: 'chess-king' }, { id: 'bq', color: 'black', key: 'chess-queen' }, { id: 'bp', color: 'black', key: 'chess-pawn' }, { id: 'br', color: 'black', key: 'chess-rook' }, { id: 'bi', color: 'black', key: 'chess-knight' },
 		];
 
-		this.setInitialPosition();
+		//this.setInitialPosition();
 	}
 	setInitialPosition() {
 		let pos = this.pos = arrFlatten(this.getInitialPosition());
-		for(let i=0;i<pos.length;i++){
+		for (let i = 0; i < pos.length; i++) {
 			if (EmptyFunc(pos[i])) continue;
 			let item = this.items[i];
-			let idx=pos[i];
+			let idx = pos[i];
 			//console.log('pos',idx);
 			let piece = this.pieces[idx];
 			let key = piece.key;
 			let fg = piece.color;
-			console.log('item',i,':',idx,piece,key,fg);
+			//console.log('item', i, ':', idx, piece, key, fg);
 			let info = item.info = Syms[key];
 
 			// let info = item.info = Syms[this.pieces[piece]];
-			addLabel(item,info.text,{family:info.family,fz:50,fg:fg});
+			addLabel(item, info.text, { family: info.family, fz: 50, fg: fg });
 		}
 	}
 	getInitialPosition() {
@@ -347,6 +379,80 @@ class ChessBoard extends Board {
 }
 
 
+class Piece {
+	static getMoves(arr, i, rows, cols) { return []; }
+}
+class Rook {
+	static getMoves(arr, i, rows, cols) {
+		let iPossible = [];
+		for (const dir of [0, 2, 4, 6]) {
+			let iNew = bFreeRayDir1(arr, i, dir, rows, cols);
+			//console.log('in dir',dir,'move:',iNew);
+			iPossible = iPossible.concat(iNew);
+		}
+		return iPossible;
+	}
+}
+class Bishop {
+	static getMoves(arr, i, rows, cols) {
+		let iPossible = [];
+		for (const dir of [1, 3, 5, 7]) {
+			let iNew = bFreeRayDir1(arr, i, dir, rows, cols);
+			//console.log('in dir',dir,'move:',iNew);
+			iPossible = iPossible.concat(iNew);
+		}
+		return iPossible;
+	}
+}
+class Queen {
+	static getMoves(arr, i, rows, cols) {
+		let iPossible = [];
+		for (const dir of [0, 1, 2, 3, 4, 5, 6, 7]) {
+			let iNew = bFreeRayDir1(arr, i, dir, rows, cols);
+			//console.log('in dir',dir,'move:',iNew);
+			iPossible = iPossible.concat(iNew);
+		}
+		return iPossible;
+	}
+}
+function bCheck(r, c, rows, cols) {
+	return r >= 0 && r < rows && c >= 0 && c < cols ? r * cols + c : null;
+}
+class Knight {
+	static getMoves(arr, idx, rows, cols) {
+		let [r, c] = iToRowCol(idx, rows, cols);
+		let poss = [];
+		let m = bCheck(r + 1, c + 2); if (m) poss.push(m);
+		m = bCheck(r + 1, c - 2); if (m) poss.push(m);
+		m = bCheck(r - 1, c + 2); if (m) poss.push(m);
+		m = bCheck(r - 1, c - 2); if (m) poss.push(m);
+		m = bCheck(r + 2, c + 1); if (m) poss.push(m);
+		m = bCheck(r + 2, c - 1); if (m) poss.push(m);
+		m = bCheck(r - 2, c + 1); if (m) poss.push(m);
+		m = bCheck(r - 2, c - 1); if (m) poss.push(m);
+		return poss;
+	}
+}
+class Pawn {
+	static getMoves(arr, idx, rows, cols, fromNorth = true) {
+		let [r, c] = iToRowCol(idx, rows, cols);
+
+		let poss = [];
+
+		let inc = fromNorth ? 1 : -1;
+		let m = bCheck(r + inc, c); if (m && EmptyFunc(m)) poss.push(m);
+		if (fromNorth && r == 1 || !fromNorth && r == 6) { m = bCheck(r + 2 * inc, c); if (m && EmptyFunc(m)) poss.push(m); }
+
+		//diag schlagen!
+		m = bCheck(r + inc, c + 1); if (m && !EmptyFunc(m)) poss.push(m);
+		m = bCheck(r + inc, c - 1); if (m && !EmptyFunc(m)) poss.push(m);
+
+		return poss;
+	}
+}
+class King {
+	static getMoves(arr, i, rows, cols) { return bNei(arr, i, rows, cols, true); }
+}
 
 
 

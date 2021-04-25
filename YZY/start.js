@@ -1,9 +1,8 @@
 async function _start() {
 	initTable(); initSidebar(); initAux(); initScore(); loadUser(); //timit = new TimeIt('*timer', true);
 
-	// startUnit();
-	setBackgroundColor('green')
-	let b = new ChessBoard();
+	startUnit();
+	//setBackgroundColor('green');	let b = new ChessBoard();
 
 	//#region tests
 	//let list = getRandomFractions(4);console.log('fractions',list);

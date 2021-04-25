@@ -467,37 +467,17 @@ class GReversi extends GTTT {
 
 class GChess extends G2Player {
 	createBoard() {
-		this.rows = this.cols = this.boardSize;
 		this.board = new ChessBoard(this.rows, this.cols, this.controller.uiInteract.bind(this.controller));
 	}
-	setStartPosition() {
-		let positions = [
-			new Array(9).fill(null),
-			['X', 'X', null, 'O', null, null, 'O', null, null],
-			[null, 'X', null, 'X', null, 'O', null, 'O', null],
-			[null, null, null, null, 'X', 'O', null, 'O', null],
-		];
-		if (isdef(this.iPosition)) {
-			let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;
-		} else this.iPosition = 0;
-
-		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0]
-			: this.startPosition == 'random' ? chooseRandom(positions)
-				: positions[this.iPosition];
-		//state =['X', 'X', null, 'O', null, null, 'O', null, null];
-		//state =[null, 'X', null, 'X', null, 'O', null, 'O', null];
-		//state=[null, null, null, null, 'X', 'O', null, 'O', null];
-		this.board.setState(state, { X: this.ai.color, O: this.human.color }); //AI wins! ok
-		//console.log('state',state)
-	}
+	setStartPosition() { this.board.setInitialPosition(); }
 	startGame() {
 		super.startGame();
 		this.createBoard();
-		this.human.sym = 'O';
-		this.ai.sym = 'X';
+		this.setStartPosition();
 	}
 	interact(ev) {
 		let tile = evToItemC(ev);
+
 		if (isdef(tile.label)) return; //illegal move!
 		let pl = this.plTurn;
 
@@ -536,6 +516,18 @@ class GChess extends G2Player {
 			// 	AIMinimax(this,this.afterComputerMove.bind(this));
 			// 	console.log('...sollte das gleich schreiben!!!')
 			// }, 10); //DELAY
+		}else{
+			//activate board:
+			let state = this.getState();
+			let movesPerPiece={};
+		  for(let i=0;i<state.length;i++){
+				
+				if (!EmptyFunc(state[i])) {
+					
+					movesPerPiece[i]=Rook.getMoves(state,i,8,8);
+					console.log('rook moves for piece',i,movesPerPiece[i]);
+				}
+			}
 		}
 	}
 	afterComputerMove(iMove) {

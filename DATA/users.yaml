@@ -1,7 +1,7 @@
 nil:
   id: nil
-  avGames: [gC4, gElim, gSentence, gReversi, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gRiddle
+  avGames: [gChess, gC4, gElim, gSentence, gReversi, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
+  lastGame: gChess
   settings:
     # settings common to all games
     userColor: green
