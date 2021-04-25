@@ -78,23 +78,28 @@ gAnagram:
       minWordLength: 6
       maxWordLength: 7
     5:
+      vocab: lifePlus
       minWordLength: 3
       maxWordLength: 4
       showWord: false
     6:
+      vocab: lifePlus
       minWordLength: 4
       maxWordLength: 5
       showWord: false
     7:
+      vocab: lifePlus
       minWordLength: 5
       maxWordLength: 7
       showWord: false
     8:
+      vocab: lifePlus
       minWordLength: 3
       maxWordLength: 4
       showWord: false
       hidden: true
     9:
+      vocab: lifePlus
       minWordLength: 4
       maxWordLength: 5
       showWord: false
@@ -624,7 +629,6 @@ gRiddle:
   color: seagreen
   controllerType: solitaire
   maxIndex: 10
-  numMissing: 1
   minPlus: 0
   maxPlus: 10
   minMinus: 0
@@ -636,19 +640,17 @@ gRiddle:
   exactDivisor: true
   roundDecimalsTo: .25
   singleDigitFractions: true
-  posMissing: end
-  ops: [plus,minus,mult]
   levels:
     0:
-      maxIndex: 6
+      maxIndex: 8
     1:
-      maxIndex: 15
+      maxIndex: 20
     2:
-      maxIndex: 25
+      maxIndex: 30
     3:
-      maxIndex: 35
-    4:
       maxIndex: 40
+    4:
+      maxIndex: 51
 gGuess:
   friendly: 'Guess'
   logo: 'input latin letters'

@@ -76,7 +76,7 @@ function instantiateNumbers(wp) {
 	fractionConvert(wp, diop);
 	return [diop, eq];
 }
-function valToString(n) { if (isFractionType(n)) return getTextForFraction(n.n, n.d); else return n; }
+function valToString(n) { if (isFractionType(n)) return getTextForFractionX(n.n, n.d); else return n; }
 function replaceSol(sol, diop) {
 	//sol = R*N2=N1
 	let rhs = stringBefore(sol, '=');
@@ -88,7 +88,7 @@ function replaceSol(sol, diop) {
 	let i = 0;
 	while (i < rhs.length) {
 		if (rhs[i] == 'R') { diop.R = getOperand(type); i += 1; }
-		else if (rhs[i] == 'r' && !rhs.includes('round')) { if (nundef(diop.r)) diop.r = getOperand(type); i += 1; } //zwischenergebnis
+		else if (rhs[i] == 'r' && !isLetter(rhs[i+1])) { if (nundef(diop.r)) diop.r = getOperand(type); i += 1; } //zwischenergebnis
 		else if (rhs[i] == 'N') {
 			i += 1;
 			let inum = Number(rhs[i]);
@@ -145,7 +145,7 @@ function replaceSol(sol, diop) {
 			if (!denom) diop[kDenom] = fr.d;
 			// if (nundef(diop[kNum]) && !isNumber(kNum)) diop[kNum] = fr.n;
 			// if (nundef(diop[kDenom]) && !isNumber(kDenom)) diop[kDenom] = fr.d;
-			console.log('dict', diop)
+			//console.log('dict', diop)
 			//rhs=rhs.substring(0,i)+
 			i += 20; //length of new rhs middle text
 			//console.log('rhs rest is', rhs.substring(i));
@@ -180,9 +180,9 @@ function replaceSol(sol, diop) {
 	//console.log('diop',diop);
 
 	//eq = 'math.add(math.fraction(2,9)'
-	console.log('eq', eq);
+	//console.log('eq', eq);
 	let result = eval(eq);
-	console.log('result', result);
+	//console.log('result', result);
 
 	//now, assign result to lhs
 	let lhs = stringAfter(sol, '=').trim();

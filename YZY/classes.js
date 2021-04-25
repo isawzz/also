@@ -160,8 +160,8 @@ class GAnagram extends Game {
 	}
 	clear() { super.clear(); if (isdef(this.language)) this.language = this.language; }
 	start_Level() {
-		this.keys = setKeysG(this, filterWordByLengthG, 25);
-		if (this.keys.length < 25) { this.keys = setKeysG(this, filterWordByLengthG, 25, 'all'); }
+		this.keys = setKeysG(this, filterWordByLengthG, 10);
+		if (this.keys.length < 10) { this.keys = setKeysG(this, filterWordByLengthG, 10, 'all'); }
 		//console.log(this.keys)
 	}
 	prompt() {
@@ -179,6 +179,14 @@ class GAnagram extends Game {
 		this.letters = createDragLetters();
 
 		if (this.hidden) showFleetingMessage('category: ' + Pictures[0].info.subgroup, 5000);
+		else if (!this.showWord) {
+			let len = Goal.label.length;
+			let sublen=Math.floor(len/2); let restlen=len-sublen;
+			let hintWord = Goal.label.substring(0,sublen);
+			for(let i=0;i<restlen;i++) hintWord+=' _';
+			hintWord = hintWord.toUpperCase();
+			showFleetingMessage(hintWord,6000,{fz:32});
+		}
 		this.controller.activateUi.bind(this.controller)();
 
 	}
@@ -628,13 +636,14 @@ class GRiddle extends Game {
 		this.trials = 1;
 		showInstruction('', 'Solve the Riddle:', dTitle, true);
 
-		let wp = this.wp = jsCopy(WordP[42]); //getRandomWP(1, this.maxIndex);
-		//let wp = this.wp = getRandomWP(0, this.maxIndex);
+		//let wp = this.wp = jsCopy(WordP[51]); //getRandomWP(1, this.maxIndex);
+		let wp = this.wp = getRandomWP(0, this.maxIndex);
 		let haveResult = wp.isTextResult = instantiateNames(wp);
 		//console.log('haveResult',haveResult)
 		if (!haveResult) instantiateNumbers(wp);
 
-		//console.log(wp)
+
+		//console.log(wp.result)
 		//for(let i=0;i<37;i++){console.log(WordP[i].sol)}
 
 		mLinebreak(dTable, 2);
@@ -672,13 +681,13 @@ class GRiddle extends Game {
 			let res = wp.result.number; //das ist eine fraction
 
 			if (res.n / res.d > 2) {
-				wp.result.isMixed=true;
+				wp.result.isMixed = true;
 				wp.result.mixed = getMixedNumber(res.n, res.d);
 			}
-			console.log('res',res); //ok
+			//console.log('res',res); //ok
 
 			nums = get3FractionVariants(res);
-			console.log('nums',nums)
+			//console.log('nums',nums)
 			//nums = getFractionVariantsTrial1(res);
 			texts = nums.map(x => getTextForFractionX(x.n, x.d));
 			wp.result.text = texts[0];
@@ -698,9 +707,10 @@ class GRiddle extends Game {
 			Goal.correctChoice = choices[0];
 		}
 
-		console.log('choices', choices, 'correct', Goal.correctChoice);
+		//console.log('choices', choices, 'correct', Goal.correctChoice);
 		//return;
 		shuffle(choices);
+		if (coin()) shuffle(choices);
 		Goal.choices = choices;
 		let dParent = this.dResult;
 		let idx = 0;

@@ -155,7 +155,7 @@ function getTextForFractionX(num, denom) {
 	else if (denom==1) return num;
 	else if (num / denom > 2) {
 		let mixed = getMixedNumber(num, denom);
-		console.log('mixed',mixed)
+		//console.log('mixed',mixed)
 		return getTextForMixed(mixed.full, mixed.n, mixed.d);
 	} else {
 		let s = '' + num + '&frasl;' + denom; return s;
@@ -174,7 +174,6 @@ function getMixedNumber(num, denom) {
 	};
 }
 function getRandomFraction(num, denom) {
-
 	if (isdef(denom)) {
 		if (nundef(num)) num = randomNumber(1, denom - 1);
 		return math.fraction(num, denom);
@@ -218,7 +217,7 @@ function get3FractionVariants(fr,sameNum=false,sameDenom=true) {
 	let den=fr.d;
 	let denoms = sameDenom?[den,den,den,den]	:sameNum?[den,den+1,den+2,den>2?den-1:den+3]
 	:[den,den+1,den+2,den];
-	console.log('res',fr,'\nnums',nums,'\ndenoms',denoms);
+	//console.log('res',fr,'\nnums',nums,'\ndenoms',denoms);
 
 	let frlist=[];
 	for(let i=0;i<4;i++){

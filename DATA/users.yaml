@@ -212,9 +212,8 @@ gunter:
 gul:
   id: gul
   avGames: [gC4, gElim, gSentence, gReversi, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gSentence
+  lastGame: gAnagram
   settings:
-    # settings common to all games
     userColor: blue
     samplesPerGame: 10
     minutesPerUnit: 10
@@ -227,7 +226,6 @@ gul:
     spokenFeedback: true
     silentMode: false
     switchGame: true
-    #indiv game settings default
     trials: 2
     showHint: no
   games:
@@ -238,26 +236,26 @@ gul:
     gC4:
       startPosition: empty # random | seq
       startPlayer: random  # ai | human | random
-      searchDepth: 5
+      searchDepth: 4
     gAbacus:
-      startLevel: 2
-    gAnagram:
       startLevel: 3
+    gAnagram:
+      startLevel: 5
     gCats:
-      startLevel: 2
+      startLevel: 3
       trials: 2
     gElim:
-      startLevel: 2
+      startLevel: 3
     gMem:
-      startLevel: 4
+      startLevel: 5
       showHint: false
       trials: 1
     gMissingLetter:
-      startLevel: 3
+      startLevel: 4
     gMissingNumber:
       startLevel: 2
     gNamit:
-      startLevel: 3
+      startLevel: 4
     gPasscode:
       startLevel: 0
     gPremem:
@@ -269,15 +267,15 @@ gul:
     gSteps:
       startLevel: 3
     gRiddle:
-      startLevel: 0
+      startLevel: 1
     gSwap:
       startLevel: 0
     gTouchColors:
-      startLevel: 5
+      startLevel: 4
     gTouchPic:
       startLevel: 4
     gWritePic:
-      startLevel: 2
+      startLevel: 5
   avAddons: [aPasscode, aAddress, aPassword]
   addons:
     aPasscode:
