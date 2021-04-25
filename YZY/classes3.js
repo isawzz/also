@@ -465,5 +465,148 @@ class GReversi extends GTTT {
 
 }
 
+class GChess extends G2Player {
+	createBoard() {
+		this.rows = this.cols = this.boardSize;
+		this.board = new ChessBoard(this.rows, this.cols, this.controller.uiInteract.bind(this.controller));
+	}
+	setStartPosition() {
+		let positions = [
+			new Array(9).fill(null),
+			['X', 'X', null, 'O', null, null, 'O', null, null],
+			[null, 'X', null, 'X', null, 'O', null, 'O', null],
+			[null, null, null, null, 'X', 'O', null, 'O', null],
+		];
+		if (isdef(this.iPosition)) {
+			let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;
+		} else this.iPosition = 0;
+
+		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0]
+			: this.startPosition == 'random' ? chooseRandom(positions)
+				: positions[this.iPosition];
+		//state =['X', 'X', null, 'O', null, null, 'O', null, null];
+		//state =[null, 'X', null, 'X', null, 'O', null, 'O', null];
+		//state=[null, null, null, null, 'X', 'O', null, 'O', null];
+		this.board.setState(state, { X: this.ai.color, O: this.human.color }); //AI wins! ok
+		//console.log('state',state)
+	}
+	startGame() {
+		super.startGame();
+		this.createBoard();
+		this.human.sym = 'O';
+		this.ai.sym = 'X';
+	}
+	interact(ev) {
+		let tile = evToItemC(ev);
+		if (isdef(tile.label)) return; //illegal move!
+		let pl = this.plTurn;
+
+		addLabel(tile, pl.sym, { fz: 60, fg: pl.color });
+		this.controller.evaluate(tile);
+	}
+	prompt() {
+		let msg = this.plTurn == this.ai ? 'Ai thinking...' : 'click an empty field!';
+		showInstruction('', msg, dTitle, false);
+		// if (isAI(this.plTurn)) clearElement(dTitle); else showInstruction('', 'click an empty field!', dTitle, false);
+		this.controller.activateUi();
+	}
+	computerMove_old() {
+		let state = this.getState();
+		state = boardToNode(state);
+		let searchDepth = this.searchDepth;
+		var iMove1 = prepMM(state, mmab9, this.evalState, searchDepth);
+		var iMove2 = prepMM(state, mm13, this.evalStateL2, searchDepth);
+		if (iMove1 != iMove2) { console.log('===>DIFFERENT VALUES!!!!! mmab1:' + iMove1, 'new:' + iMove2); }
+		else { console.log('OK! mmab9 returned', iMove1, 'new returned', iMove2); }
+		return iMove2;
+	}
+	activate() {
+		let pl = this.plTurn;
+		let autoplay = false;
+		if (autoplay || pl == this.ai) {
+			if (this.ai == pl) uiActivated = false;
+			//showCancelButton();
+
+			//AIMinimax(this,this.afterComputerMove)		
+			setTimeout(() => AIMinimax(this, this.afterComputerMove.bind(this)), 200);
+
+			//console.log('halloooooooooooooooooo')
+
+			// this.TO = setTimeout(() => {
+			// 	AIMinimax(this,this.afterComputerMove.bind(this));
+			// 	console.log('...sollte das gleich schreiben!!!')
+			// }, 10); //DELAY
+		}
+	}
+	afterComputerMove(iMove) {
+		//console.log('CALLBACK!!!', iMove)
+		//hide(mBy('bCancelAI'));
+		let tile = this.board.items[iMove];
+		this.interact({ target: iDiv(tile) });
+	}
+	eval() {
+		//let sym = this.plTurn.sym;
+		//console.log('eval: state',state,'sym',sym,'label',tile.label);
+		let done = this.checkFinal();
+		this.gameOver = done > 0;
+		if (this.gameOver) { this.winner = done > 1 ? this.plTurn : null; this.tie = done == 1; }
+	}
+
+	checkFinal(state) {
+		if (nundef(state)) state = this.getState();
+		let isTie = false;
+		let isWin = checkWinnerTTT(state);
+		if (!isWin) { isTie = checkBoardFull(state) || !checkPotentialTTT(state); }
+		return isWin ? 2 : isTie ? 1 : 0;
+	}
+	getState() { return this.board.getState(); }
+
+	//static mm functions
+	//state is modified by player doing move
+	applyMove(state, move, player) { arrReplaceAtInPlace(state, move, player.sym); }
+	undoMove(state, move, player) { arrReplaceAtInPlace(state, move, ' '); }
+	getAvailableMoves(state) {
+		let moves = [];
+		for (let i = 0; i < state.length; i++) {
+			if (EmptyFunc(state[i])) moves.push(i);
+		}
+		shuffle(moves);
+		return moves;
+	}
+	heuristic1(node, depth) { }
+	evalState(node, depth) {
+		let x = checkWinnerTTT(node);
+		if (checkBoardFull(node) || x) {
+			//var score = x;
+			return { reached: true, val: (!x ? 0 : (10 - depth) * (x == MAXIMIZER.sym ? 1 : -1)) };
+			// return evalState8(node, depth);
+		}
+		return { reached: false };
+	}
+	evalStateL(node, depth) {
+		let key = node.join('');
+		let val = DMM[key];
+		let x = isdef(val) ? val : checkWinnerTTT(node);
+		DMM[key] = x;
+		if (checkBoardFull(node) || x) {
+			return { reached: true, val: (!x ? 0 : (10 - depth) * (x == MAXIMIZER.sym ? 1 : -1)) };
+		}
+		return { reached: false };
+	}
+	evalStateL2(node, depth) {
+		let full = checkBoardFull(node);
+		if (full) {
+			let key = JSON.stringify(node);
+			let x = DMM[key];
+			if (nundef(x)) DMM[key] = x = checkWinnerTTT(node);
+			return { reached: true, val: (!x ? 0 : (10 - depth) * (x == MAXIMIZER.sym ? 1 : -1)) };
+		} else {
+			let x = checkWinnerTTT(node);
+			if (x) return { reached: true, val: (!x ? 0 : (10 - depth) * (x == MAXIMIZER.sym ? 1 : -1)) };
+			return { reached: false };
+		}
+	}
+}
+
 
 

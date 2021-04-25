@@ -20,12 +20,12 @@ function bNei(arr, idx, rows, cols, includeDiagonals = true) {
 
 }
 function iToRowCol(idx, rows, cols) { let c = idx % cols; let r = (idx - c) / rows; return [r, c]; }
-function bNeiDir(arr, idx, dir, rows, cols, includeDiagonals=true) {
+function bNeiDir(arr, idx, dir, rows, cols, includeDiagonals = true) {
 	let [r, c] = iToRowCol(idx, rows, cols);
 	switch (dir) {
 		case 0: if (r > 0) return (idx - cols); else return (null);
 		case 1: if (r > 0 && c < cols - 1 && includeDiagonals) return (idx - cols + 1); else return (null);
-		case 2: if (c < cols - 1) return (idx+ 1); else return (null);
+		case 2: if (c < cols - 1) return (idx + 1); else return (null);
 		case 3: if (r < rows - 1 && c < cols - 1 && includeDiagonals) return (idx + cols + 1); else return (null);
 		case 4: if (r < rows - 1) return (idx + cols); else return (null);
 		case 5: if (r < rows - 1 && c > 0 && includeDiagonals) return (idx + cols - 1); else return (null);
@@ -37,32 +37,32 @@ function bNeiDir(arr, idx, dir, rows, cols, includeDiagonals=true) {
 function isOppPiece(sym, plSym) { return sym && sym != plSym; }
 function bCapturedPieces(plSym, arr, idx, rows, cols, includeDiagonals = true) {
 	//console.log('player sym',plSym,'arr',arr,'idx', idx,'rows', rows,'cols', cols);
-	let res=[];
+	let res = [];
 	let nei = bNei(arr, idx, rows, cols, includeDiagonals);
 	//console.log('nei',nei);
 	for (let dir = 0; dir < 8; dir++) {
-		let i=nei[dir];
+		let i = nei[dir];
 		if (nundef(i)) continue;
 
 		let el = arr[i];
 		//console.log('___i',i,'el',el,'checking dir',dir);
 		if (EmptyFunc(el) || el == plSym) continue;
-		let inew=[];
-		let MAX=100,cmax=0;
+		let inew = [];
+		let MAX = 100, cmax = 0;
 
-		while (isOppPiece(el,plSym)) {
+		while (isOppPiece(el, plSym)) {
 			//console.log('index',i,'is opp',el)
-			if (cmax>MAX) break; cmax+=1;
+			if (cmax > MAX) break; cmax += 1;
 			inew.push(i);
-			i=bNeiDir(arr,i,dir,rows,cols);
+			i = bNeiDir(arr, i, dir, rows, cols);
 			//console.log(i,cmax,'dir',dir);
-			if (nundef(i)) break; 
-			el=arr[i];
+			if (nundef(i)) break;
+			el = arr[i];
 			//console.log('i',i,'el',el,'max',cmax);
 		}
-		if (el==plSym) {
+		if (el == plSym) {
 			//add all the captured pieces to res
-			res=res.concat(inew);
+			res = res.concat(inew);
 		}
 	}
 	return res;
@@ -241,7 +241,7 @@ function printState(state) {
 	console.log('%c' + formattedString, 'color: #6d4e42;font-size:10px');
 	console.log();
 }
-function bCreateEmpty(rows,cols){return new Array(rows*cols).fill(null);}
+function bCreateEmpty(rows, cols) { return new Array(rows * cols).fill(null); }
 
 class Board {
 	constructor(rows, cols, handler, cellStyle) {
@@ -256,12 +256,12 @@ class Board {
 		});
 		//console.log(this.items)
 	}
-	get(ir,c){
-		if (isdef(c)){
+	get(ir, c) {
+		if (isdef(c)) {
 			// interpret as row,col
-			let idx=ir*this.cols+c;
+			let idx = ir * this.cols + c;
 			return this.items[idx];
-		}else{
+		} else {
 			//interpret as index
 			return this.items[ir];
 		}
@@ -290,20 +290,61 @@ class Board {
 			if (isdef(dLabel)) { removeLabel(item); item.label = null; }
 		}
 	}
-
 }
 
-function arrFlatten(arr) {
-	let res = [];
-	for (let i = 0; i < arr.length; i++) {
-		for (let j = 0; j < arr[i].length; j++) {
-			res.push(arr[i][j]);
+const CHESS = { wb: 1, wk: 2, wq: 3, wp: 4, wr: 5, wi: 6, bb: 7, bk: 8, bq: 9, bp: 10, br: 11, bi: 12, };
+class ChessBoard extends Board {
+	constructor(rows = 8, cols = 8, handler = null, cellStyle = { w: 60, h: 60 }) {
+		super(rows, cols, handler, cellStyle);
+
+		let i = 0;
+		for (let r = 0; r < this.rows; r += 1) {
+			for (let c = 0; c < this.cols; c += 1) {
+				let item = this.items[i]; i++;
+				let bgOdd = r % 2 ? 'beige' : 'sienna';
+				let bgEven = r % 2 ? 'sienna' : 'beige';
+				mStyleX(iDiv(item), { bg: (c % 2 ? bgOdd : bgEven) });
+			}
+		}
+		this.pieces = [{},
+		{ id: 'wb', color: 'white', key: 'chess-bishop' }, { id: 'wk', color: 'white', key: 'chess-king' }, { id: 'wq', color: 'white', key: 'chess-queen' }, { id: 'wp', color: 'white', key: 'chess-pawn' }, { id: 'wr', color: 'white', key: 'chess-rook' }, { id: 'wi', color: 'white', key: 'chess-knight' },
+		{ id: 'bb', color: 'black', key: 'chess-bishop' }, { id: 'bk', color: 'black', key: 'chess-king' }, { id: 'bq', color: 'black', key: 'chess-queen' }, { id: 'bp', color: 'black', key: 'chess-pawn' }, { id: 'br', color: 'black', key: 'chess-rook' }, { id: 'bi', color: 'black', key: 'chess-knight' },
+		];
+
+		this.setInitialPosition();
+	}
+	setInitialPosition() {
+		let pos = this.pos = arrFlatten(this.getInitialPosition());
+		for(let i=0;i<pos.length;i++){
+			if (EmptyFunc(pos[i])) continue;
+			let item = this.items[i];
+			let idx=pos[i];
+			//console.log('pos',idx);
+			let piece = this.pieces[idx];
+			let key = piece.key;
+			let fg = piece.color;
+			console.log('item',i,':',idx,piece,key,fg);
+			let info = item.info = Syms[key];
+
+			// let info = item.info = Syms[this.pieces[piece]];
+			addLabel(item,info.text,{family:info.family,fz:50,fg:fg});
 		}
 	}
-	return res;
+	getInitialPosition() {
+		let pos = [
+			[CHESS.br, CHESS.bi, CHESS.bb, CHESS.bq, CHESS.bk, CHESS.bb, CHESS.bi, CHESS.br],
+			[CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp],
+			[0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0],
+			[CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp],
+			[CHESS.wr, CHESS.wi, CHESS.wb, CHESS.wq, CHESS.wk, CHESS.wb, CHESS.wi, CHESS.wr],
+		];
+		return pos;
+	}
+
 }
-
-
 
 
 
