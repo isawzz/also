@@ -179,14 +179,8 @@ class GAnagram extends Game {
 		this.letters = createDragLetters();
 
 		if (this.hidden) showFleetingMessage('category: ' + Pictures[0].info.subgroup, 5000);
-		else if (!this.showWord) {
-			let len = Goal.label.length;
-			let sublen=Math.floor(len/2); let restlen=len-sublen;
-			let hintWord = Goal.label.substring(0,sublen);
-			for(let i=0;i<restlen;i++) hintWord+=' _';
-			hintWord = hintWord.toUpperCase();
-			showFleetingMessage(hintWord,6000,{fz:32});
-		}
+		else if (!this.showWord) { showLabelPercentHintAfter(50,6000);}
+
 		this.controller.activateUi.bind(this.controller)();
 
 	}

@@ -1907,6 +1907,15 @@ function showPictureHints(items, dParentProp) {
 		let dHint = item.dHint = miPic(item, d1);
 	}
 }
+function showLabelPercentHintAfter(percent, msecs) {
+	let len = Goal.label.length;
+	let sublen = Math.floor(len*percent / 100); let restlen = len - sublen;
+	let hintWord = Goal.label.substring(0, sublen);
+	for (let i = 0; i < restlen; i++) hintWord += ' _';
+	hintWord = hintWord.toUpperCase();
+	showFleetingMessage(hintWord, msecs, { fz: 32 });
+
+}
 function showTextHints(items, dParentProp, textProp, removeFirst = true) {
 	for (const item of items) {
 		let d1 = item[dParentProp];
