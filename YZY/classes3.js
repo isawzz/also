@@ -533,7 +533,8 @@ class GChess extends G2Player {
 	}
 	onSelect(ev) {
 		let item = evToItemC(ev);
-		if (isdef(this.selectedItem)) unselectPreviousItemAndTargets(this.selectedItem);
+		if (item == this.selectedItem) return;
+		else if (isdef(this.selectedItem)) unselectPreviousItemAndTargets(this.selectedItem);
 		this.selectedItem = selectItemAndTargets(item);
 	}
 	activate() {
@@ -559,7 +560,7 @@ class GChess extends G2Player {
 			//check if king is in check
 
 			let movesPerPiece = getMovesPerPiece(state, this.rows, this.cols, pl);
-			console.log(movesPerPiece)
+			//console.log(movesPerPiece)
 			for (const k in movesPerPiece) {
 				let moves = movesPerPiece[k];
 				if (isEmpty(moves)) continue;

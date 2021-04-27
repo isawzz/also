@@ -105,10 +105,10 @@ function getMovesPerPiece(arr, rows, cols, pl) {
 
 			let moves = movesPerPiece[i] = piece.fMoves(arr, i, rows, cols, piece.color == 'black');
 
-			if (i == 63 || i == 50) {
-				let x = bNeiDir(arr, i, i == 63 ? 6 : 0, rows, cols);
-				console.log('x', x, isdef(x) ? arr[x] : 'no nei!');
-			}
+			// if (i == 63 || i == 50) {
+			// 	let x = bNeiDir(arr, i, i == 63 ? 6 : 0, rows, cols);
+			// 	console.log('x', x, isdef(x) ? arr[x] : 'no nei!');
+			// }
 			// if (piece.name == 'king') {
 			// 	console.log('piece auf', i, piece.color, piece.name);
 			// 	console.log('moves', moves)
@@ -126,12 +126,9 @@ function getMovesRook(arr, i, rows, cols) {
 	let iPossible = [];
 	for (const dir of [0, 2, 4, 6]) {
 		let iNew = bFreeRayDirChess1(arr, i, dir, rows, cols);
-		if (i==63) console.log('in dir',dir,'move:',iNew);
+		//if (i==63) console.log('in dir',dir,'move:',iNew);
 		iPossible = iPossible.concat(iNew);
 	}
-
-
-
 	return iPossible;
 }
 function getMovesBishop(arr, i, rows, cols) {
