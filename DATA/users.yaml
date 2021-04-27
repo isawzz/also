@@ -212,7 +212,7 @@ gunter:
 gul:
   id: gul
   avGames: [gC4, gElim, gSentence, gReversi, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gTTT, gSteps, gAnagram, gCats, gAbacus, gRiddle]
-  lastGame: gAnagram
+  lastGame: gReversi
   settings:
     userColor: blue
     samplesPerGame: 10
@@ -229,6 +229,8 @@ gul:
     trials: 2
     showHint: no
   games:
+    gReversi:
+      searchDepth: 4
     gTTT:
       startPosition: empty # random | seq
       startPlayer: random  # ai | human | random

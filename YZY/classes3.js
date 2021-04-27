@@ -18,6 +18,7 @@ class G2Player {
 		let idx = this.iPlayer = (this.iPlayer + 1) % this.players.length;
 		this.setPlayers();
 	}
+	heuristic(state){return 1;}
 	setPlayers() {
 		this.plTurn = this.playerOrder[this.iPlayer];
 		this.plOpp = this.plTurn == this.ai ? this.human : this.ai;
@@ -412,6 +413,24 @@ class GReversi extends GTTT {
 		}
 		return winner ? { reached: true, winner: winner } : full ? { reached: true, winner: null } : { reached: false };
 	}
+	heuristic(state, plMax, plMin) {
+		let vmax=0,vmin=0;
+		// let corners = [0, G.cols, G.cols * (G.rows - 1), G.cols * G.rows - 1];
+		// let vmax = 0, vmin = 0;
+		// for (const i of corners) {
+		// 	if (state[i] == pl1.sym) vmax += 4;
+		// 	else if (state[i] == pl2.sym) vmin += 4;
+		// }
+		vmax = vmax + arrCount(state, x => x == plMax.sym);
+		vmin = vmin + arrCount(state, x => x == plMin.sym);
+
+		return vmax-vmin;
+	}
+	heureval(state) {
+			let heurinfo = GReversi.heuristic(state, MAXIMIZER, MINIMIZER);
+			let val = heurinfo.val; //* (info.winner == MAXIMIZER ? 1 : -1)
+			return val;
+	}
 	eval() {
 		this.moveCounter += 1;
 		let info = this.checkFinal();
@@ -446,9 +465,11 @@ class GReversi extends GTTT {
 		//shuffle(moves);
 		return moves;
 	}
-	evalState(node, depth) {
-		let info = GReversi.checkEnd(node, MAXIMIZER, MINIMIZER);
-		let val = info.reached && info.winner ? (10 - depth) * (info.winner == MAXIMIZER ? 1 : -1) : 0;
+	evalState(state, depth) {
+		let info = GReversi.checkEnd(state, MAXIMIZER, MINIMIZER);
+
+		let val = info.reached && info.winner ? (100 - depth) * (info.winner == MAXIMIZER ? 1 : -1) : 0;
+
 		return { reached: info.reached, val: val };
 	}
 	applyMove(state, move, player) {
@@ -468,12 +489,15 @@ class GReversi extends GTTT {
 class GChess extends G2Player {
 	createBoard() {
 		this.board = new ChessBoard(this.rows, this.cols, this.controller.uiInteract.bind(this.controller));
+
 	}
 	setStartPosition() { this.board.setInitialPosition(); }
 	startGame() {
 		super.startGame();
 		this.createBoard();
 		this.setStartPosition();
+		this.human.color = 'white';
+		this.ai.color = 'black';
 	}
 	interact(ev) {
 		let tile = evToItemC(ev);
@@ -485,25 +509,38 @@ class GChess extends G2Player {
 		this.controller.evaluate(tile);
 	}
 	prompt() {
-		let msg = this.plTurn == this.ai ? 'Ai thinking...' : 'click an empty field!';
-		showInstruction('', msg, dTitle, false);
-		// if (isAI(this.plTurn)) clearElement(dTitle); else showInstruction('', 'click an empty field!', dTitle, false);
+		let msg = this.plTurn == this.ai ? 'Ai thinking...' : 'Player on turn:';
+		showInstruction(this.plTurn.color, msg, dTitle, false);
+
+
 		this.controller.activateUi();
 	}
-	computerMove_old() {
-		let state = this.getState();
-		state = boardToNode(state);
-		let searchDepth = this.searchDepth;
-		var iMove1 = prepMM(state, mmab9, this.evalState, searchDepth);
-		var iMove2 = prepMM(state, mm13, this.evalStateL2, searchDepth);
-		if (iMove1 != iMove2) { console.log('===>DIFFERENT VALUES!!!!! mmab1:' + iMove1, 'new:' + iMove2); }
-		else { console.log('OK! mmab9 returned', iMove1, 'new returned', iMove2); }
-		return iMove2;
+	getPiece(state, idx) {
+		let arr = state;
+		let pieceKey = arr[idx];
+
+	}
+	getPlayerPieces(state, pl) {
+		let pieces = [];
+		for (let i = 0; i < state.length; i++) {
+			if (state[i][0] == pl.color[0]) {
+				//let [r,c]=
+				pieces.push({ piece: state[i], idx: i });
+				movesPerPiece[i] = Rook.getMoves(state, i, 8, 8);
+				console.log('rook moves for piece', i, movesPerPiece[i]);
+			}
+		}
+	}
+	onSelect(ev) {
+		let item = evToItemC(ev);
+		if (isdef(this.selectedItem)) unselectPreviousItemAndTargets(this.selectedItem);
+		this.selectedItem = selectItemAndTargets(item);
 	}
 	activate() {
 		let pl = this.plTurn;
 		let autoplay = false;
-		if (autoplay || pl == this.ai) {
+		let manual = true;
+		if (!manual && (autoplay || pl == this.ai)) {
 			if (this.ai == pl) uiActivated = false;
 			//showCancelButton();
 
@@ -516,17 +553,21 @@ class GChess extends G2Player {
 			// 	AIMinimax(this,this.afterComputerMove.bind(this));
 			// 	console.log('...sollte das gleich schreiben!!!')
 			// }, 10); //DELAY
-		}else{
+		} else {
 			//activate board:
 			let state = this.getState();
-			let movesPerPiece={};
-		  for(let i=0;i<state.length;i++){
-				
-				if (!EmptyFunc(state[i])) {
-					
-					movesPerPiece[i]=Rook.getMoves(state,i,8,8);
-					console.log('rook moves for piece',i,movesPerPiece[i]);
-				}
+			//check if king is in check
+
+			let movesPerPiece = getMovesPerPiece(state, this.rows, this.cols, pl);
+			console.log(movesPerPiece)
+			for (const k in movesPerPiece) {
+				let moves = movesPerPiece[k];
+				if (isEmpty(moves)) continue;
+
+				// show field bg in darker
+				let item = this.board.items[k];
+				iEnableSelect(item, this.onSelect.bind(this));
+				item.targets = moves;
 			}
 		}
 	}
@@ -545,6 +586,7 @@ class GChess extends G2Player {
 	}
 
 	checkFinal(state) {
+		return false;
 		if (nundef(state)) state = this.getState();
 		let isTie = false;
 		let isWin = checkWinnerTTT(state);

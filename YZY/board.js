@@ -20,6 +20,7 @@ function bNei(arr, idx, rows, cols, includeDiagonals = true) {
 
 }
 function iToRowCol(idx, rows, cols) { let c = idx % cols; let r = (idx - c) / rows; return [r, c]; }
+function bCheck(r, c, rows, cols) { return r >= 0 && r < rows && c >= 0 && c < cols ? r * cols + c : null; }
 function bNeiDir(arr, idx, dir, rows, cols, includeDiagonals = true) {
 	let [r, c] = iToRowCol(idx, rows, cols);
 	switch (dir) {
@@ -63,6 +64,18 @@ function bFreeRayDir1(arr, idx, dir, rows, cols) {
 	}
 	return indices;
 }
+function bFreeRayDirChess1(arr, idx, dir, rows, cols) {
+	let indices = [];
+	let i = idx;
+	while (i < arr.length) {
+		i = bNeiDir(arr, i, dir, rows, cols);
+		if (!i) break;
+		else if (EmptyFunc(arr[i]) || isOppPieceChess(arr[idx],arr[i])) indices.push(i);
+		if (!EmptyFunc(arr[i])) break;
+	}
+	return indices;
+}
+function isOppPieceChess(iPiece1,iPiece2){	return iPiece1<=6 && iPiece2>6 || iPiece1>6 && iPiece2<=6;}
 function isOppPiece(sym, plSym) { return sym && sym != plSym; }
 function bCapturedPieces(plSym, arr, idx, rows, cols, includeDiagonals = true) {
 	//console.log('player sym',plSym,'arr',arr,'idx', idx,'rows', rows,'cols', cols);
@@ -319,139 +332,6 @@ class Board {
 			if (isdef(dLabel)) { removeLabel(item); item.label = null; }
 		}
 	}
-}
-
-const CHESS = { wb: 1, wk: 2, wq: 3, wp: 4, wr: 5, wi: 6, bb: 7, bk: 8, bq: 9, bp: 10, br: 11, bi: 12, };
-class ChessBoard extends Board {
-	constructor(rows = 8, cols = 8, handler = null, cellStyle = { w: 60, h: 60 }) {
-		super(rows, cols, handler, cellStyle);
-
-		let i = 0;
-		let dark = 'saddlebrown'; //'sienna'
-		let light = 'burlywood'; //'navajowhite'
-		for (let r = 0; r < this.rows; r += 1) {
-			for (let c = 0; c < this.cols; c += 1) {
-				let item = this.items[i]; i++;
-
-				let bgOdd = r % 2 ? light : dark; //'beige' : 'sienna';
-				let bgEven = r % 2 ? dark : light; //'sienna' : 'beige';
-				mStyleX(iDiv(item), { bg: (c % 2 ? bgOdd : bgEven) });
-			}
-		}
-		this.pieces = [{},
-		{ id: 'wb', color: 'white', key: 'chess-bishop' }, { id: 'wk', color: 'white', key: 'chess-king' }, { id: 'wq', color: 'white', key: 'chess-queen' }, { id: 'wp', color: 'white', key: 'chess-pawn' }, { id: 'wr', color: 'white', key: 'chess-rook' }, { id: 'wi', color: 'white', key: 'chess-knight' },
-		{ id: 'bb', color: 'black', key: 'chess-bishop' }, { id: 'bk', color: 'black', key: 'chess-king' }, { id: 'bq', color: 'black', key: 'chess-queen' }, { id: 'bp', color: 'black', key: 'chess-pawn' }, { id: 'br', color: 'black', key: 'chess-rook' }, { id: 'bi', color: 'black', key: 'chess-knight' },
-		];
-
-		//this.setInitialPosition();
-	}
-	setInitialPosition() {
-		let pos = this.pos = arrFlatten(this.getInitialPosition());
-		for (let i = 0; i < pos.length; i++) {
-			if (EmptyFunc(pos[i])) continue;
-			let item = this.items[i];
-			let idx = pos[i];
-			//console.log('pos',idx);
-			let piece = this.pieces[idx];
-			let key = piece.key;
-			let fg = piece.color;
-			//console.log('item', i, ':', idx, piece, key, fg);
-			let info = item.info = Syms[key];
-
-			// let info = item.info = Syms[this.pieces[piece]];
-			addLabel(item, info.text, { family: info.family, fz: 50, fg: fg });
-		}
-	}
-	getInitialPosition() {
-		let pos = [
-			[CHESS.br, CHESS.bi, CHESS.bb, CHESS.bq, CHESS.bk, CHESS.bb, CHESS.bi, CHESS.br],
-			[CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp],
-			[0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0],
-			[CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp],
-			[CHESS.wr, CHESS.wi, CHESS.wb, CHESS.wq, CHESS.wk, CHESS.wb, CHESS.wi, CHESS.wr],
-		];
-		return pos;
-	}
-
-}
-
-
-class Piece {
-	static getMoves(arr, i, rows, cols) { return []; }
-}
-class Rook {
-	static getMoves(arr, i, rows, cols) {
-		let iPossible = [];
-		for (const dir of [0, 2, 4, 6]) {
-			let iNew = bFreeRayDir1(arr, i, dir, rows, cols);
-			//console.log('in dir',dir,'move:',iNew);
-			iPossible = iPossible.concat(iNew);
-		}
-		return iPossible;
-	}
-}
-class Bishop {
-	static getMoves(arr, i, rows, cols) {
-		let iPossible = [];
-		for (const dir of [1, 3, 5, 7]) {
-			let iNew = bFreeRayDir1(arr, i, dir, rows, cols);
-			//console.log('in dir',dir,'move:',iNew);
-			iPossible = iPossible.concat(iNew);
-		}
-		return iPossible;
-	}
-}
-class Queen {
-	static getMoves(arr, i, rows, cols) {
-		let iPossible = [];
-		for (const dir of [0, 1, 2, 3, 4, 5, 6, 7]) {
-			let iNew = bFreeRayDir1(arr, i, dir, rows, cols);
-			//console.log('in dir',dir,'move:',iNew);
-			iPossible = iPossible.concat(iNew);
-		}
-		return iPossible;
-	}
-}
-function bCheck(r, c, rows, cols) {
-	return r >= 0 && r < rows && c >= 0 && c < cols ? r * cols + c : null;
-}
-class Knight {
-	static getMoves(arr, idx, rows, cols) {
-		let [r, c] = iToRowCol(idx, rows, cols);
-		let poss = [];
-		let m = bCheck(r + 1, c + 2); if (m) poss.push(m);
-		m = bCheck(r + 1, c - 2); if (m) poss.push(m);
-		m = bCheck(r - 1, c + 2); if (m) poss.push(m);
-		m = bCheck(r - 1, c - 2); if (m) poss.push(m);
-		m = bCheck(r + 2, c + 1); if (m) poss.push(m);
-		m = bCheck(r + 2, c - 1); if (m) poss.push(m);
-		m = bCheck(r - 2, c + 1); if (m) poss.push(m);
-		m = bCheck(r - 2, c - 1); if (m) poss.push(m);
-		return poss;
-	}
-}
-class Pawn {
-	static getMoves(arr, idx, rows, cols, fromNorth = true) {
-		let [r, c] = iToRowCol(idx, rows, cols);
-
-		let poss = [];
-
-		let inc = fromNorth ? 1 : -1;
-		let m = bCheck(r + inc, c); if (m && EmptyFunc(m)) poss.push(m);
-		if (fromNorth && r == 1 || !fromNorth && r == 6) { m = bCheck(r + 2 * inc, c); if (m && EmptyFunc(m)) poss.push(m); }
-
-		//diag schlagen!
-		m = bCheck(r + inc, c + 1); if (m && !EmptyFunc(m)) poss.push(m);
-		m = bCheck(r + inc, c - 1); if (m && !EmptyFunc(m)) poss.push(m);
-
-		return poss;
-	}
-}
-class King {
-	static getMoves(arr, i, rows, cols) { return bNei(arr, i, rows, cols, true); }
 }
 
 
