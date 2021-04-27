@@ -69,7 +69,7 @@ function bFreeRayDirChess1(arr, idx, dir, rows, cols) {
 	let i = idx;
 	while (i < arr.length) {
 		i = bNeiDir(arr, i, dir, rows, cols);
-		if (!i) break;
+		if (nundef(i)) break;
 		else if (EmptyFunc(arr[i]) || isOppPieceChess(arr[idx],arr[i])) indices.push(i);
 		if (!EmptyFunc(arr[i])) break;
 	}

@@ -81,6 +81,16 @@ class ChessBoard extends Board {
 				[0, 0, 0, 0, 0, 0, 0, 0],
 				[0, 0, 0, 0, 0,CHESS.wk, 0, 0],
 			],
+			[
+				[0, CHESS.wk, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, CHESS.bk, CHESS.bq, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0,0, 0, 0],
+			],
 		];
 		return positions[i];
 	}
@@ -119,13 +129,14 @@ function isKingInCheck(state,pl,opp,rows=8,cols=8){
 	let plPieces = getMovesPerPiece(state, rows, cols, pl);
 	let oppPieces = getMovesPerPiece(state, rows, cols, opp);
 	let king = firstCondDictKeys(plPieces,x=>plPieces[x].piece.name=='king');
+	console.log('king',king)
 	//console.log('player king:',king);
 	//wie finde heraus ob player king bedroht ist?
 	// king in check
 	let isCheck = false;
 	for (const i in oppPieces) {
 		let moves = oppPieces[i].moves;
-		//console.log(moves)
+		console.log('moves',i,moves)
 		for(const m of moves) if (m==king) {isCheck = true;break;}
 		if (isCheck) break;
 	}
@@ -151,6 +162,7 @@ function getMovesPerPiece(arr, rows, cols, pl) {
 			let piece = ChessPieces[iPiece];
 			//console.log(iPiece,piece)
 			let moves = piece.fMoves(arr, i, rows, cols, piece.color == 'black');
+			if (piece.name == 'queen') console.log('__________',moves)
 			playerPieces[i]={piece:piece,loc:i,moves:moves};
 			// if (i == 63 || i == 50) {
 			// 	let x = bNeiDir(arr, i, i == 63 ? 6 : 0, rows, cols);

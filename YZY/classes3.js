@@ -491,7 +491,7 @@ class GChess extends G2Player {
 		this.board = new ChessBoard(this.rows, this.cols, this.controller.uiInteract.bind(this.controller));
 
 	}
-	setStartPosition() { this.board.setInitialPosition(2); }
+	setStartPosition() { this.board.setInitialPosition(3); }
 	startGame() {
 		super.startGame();
 		this.createBoard();
@@ -556,37 +556,40 @@ class GChess extends G2Player {
 			// 	console.log('...sollte das gleich schreiben!!!')
 			// }, 10); //DELAY
 		} else {
-			//activate board:
 			let state = this.getState();
-			let plPieces = getMovesPerPiece(state, this.rows, this.cols, pl);
-			let avMoves = [];
-			clearChessPieces();
-			for (const from in plPieces) {
-				for (const to of plPieces[from].moves) {
-					let move = { from: from, to: to };
-					//console.log('checking move',move);
-					let newState = this.applyMove(state, move, pl);
-					//console.log('state',state,'newState',newState);
-					//return;
-					//check if in the new situation, king is in check or not!
-					let isCheck = isKingInCheck(newState, pl, opp, this.rows, this.cols);
-					//console.log('done!',isCheck)
-					if (!isCheck) avMoves.push(move);
-					//if yes, this move is discarded!
-				}
-			}
-			console.log('avMoves', avMoves);
-			this.activateMoves(plPieces, avMoves);
-			// this.activatePiecesThatCanMove(plPieces);
-			//console.log(movesPerPiece)
+			let [plPieces, avMoves] = this.getAvailableMoves(state, pl, opp);
+			if (isEmpty(avMoves)) { this.controller.evaluate(); }
+			else this.activatePiecesThatCanMove(plPieces);
 		}
 	}
+	getAvailableMoves(state, pl, opp) {
+		let plPieces = getMovesPerPiece(state, this.rows, this.cols, pl);
+		for (const p in plPieces) { plPieces[p].avMoves = []; }
+		let avMoves = [];
+		//clearChessPieces();
+		for (const from in plPieces) {
+			for (const to of plPieces[from].moves) {
+				let move = { from: from, to: to };
+				//console.log('checking move',move);
+				let newState = this.applyMove(state, move, pl);
+				//console.log('state',state,'newState',newState);
+				//return;
+				//check if in the new situation, king is in check or not!
+				let isCheck = isKingInCheck(newState, pl, opp, this.rows, this.cols);
+				if (to == 0) console.log('done!', to, isCheck)
+				if (!isCheck) { avMoves.push(move); plPieces[from].avMoves.push(move.to); }
+				//if yes, this move is discarded!
+			}
+		}
+		console.log('avMoves', avMoves);
+		return [plPieces, avMoves];
+	}
 	activateMoves(plPieces, avMoves) {
-		for (const p in plPieces) { plPieces[p].avMoves = []; this.board.items[p].targets = []; }
+		for (const p in plPieces) { this.board.items[p].targets = []; }
 		for (const m of avMoves) {
 			let k = m.from;
-			let piece = plPieces[k];
-			piece.avMoves.push(m.to);
+			// let piece = plPieces[k];
+			// piece.avMoves.push(m.to);
 			let item = this.board.items[k];
 			iEnableSelect(item, this.onSelect.bind(this));
 			item.targets.push(m.to);
@@ -594,7 +597,7 @@ class GChess extends G2Player {
 	}
 	activatePiecesThatCanMove(plPieces) {
 		for (const k in plPieces) {
-			let moves = plPieces[k].moves;
+			let moves = plPieces[k].avMoves;
 			if (isEmpty(moves)) continue;
 
 			// show field bg in darker
@@ -638,14 +641,6 @@ class GChess extends G2Player {
 		return state;
 	}
 	undoMove(state, move, player) { arrReplaceAtInPlace(state, move, ' '); }
-	getAvailableMoves(state) {
-		let moves = [];
-		for (let i = 0; i < state.length; i++) {
-			if (EmptyFunc(state[i])) moves.push(i);
-		}
-		shuffle(moves);
-		return moves;
-	}
 	heuristic1(node, depth) { }
 	evalState(node, depth) {
 		let x = checkWinnerTTT(node);
