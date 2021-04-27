@@ -69,7 +69,7 @@ nil:
     aPassword:
       open: false
 guest0:
-  id: guest
+  id: guest0
   avGames: [gElim, gSentence, gMissingLetter, gNamit, gTouchPic, gPremem, gTouchColors, gSayPic, gSwap, gMem, gWritePic, gSteps, gAnagram, gCats, gAbacus, gRiddle]
   lastGame: gNamit
   settings:

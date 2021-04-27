@@ -40,8 +40,8 @@ class ChessBoard extends Board {
 
 		//this.setInitialPosition();
 	}
-	setInitialPosition() {
-		let pos = this.pos = arrFlatten(this.getInitialPosition());
+	setInitialPosition(i=0) {
+		let pos = this.pos = arrFlatten(this.getInitialPosition(i));
 		for (let i = 0; i < pos.length; i++) {
 			if (EmptyFunc(pos[i])) continue;
 
@@ -49,18 +49,40 @@ class ChessBoard extends Board {
 			this.addPiece(item, pos[i]);
 		}
 	}
-	getInitialPosition() {
-		let pos = [
-			[CHESS.br, CHESS.bi, CHESS.bb, CHESS.bq, CHESS.bk, CHESS.bb, CHESS.bi, CHESS.br],
-			[CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp],
-			[0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0],
-			[CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp],
-			[CHESS.wr, CHESS.wi, CHESS.wb, CHESS.wq, CHESS.wk, CHESS.wb, CHESS.wi, CHESS.wr],
+	getInitialPosition(i = 0) {
+		let positions = [
+			[
+				[CHESS.br, CHESS.bi, CHESS.bb, CHESS.bq, CHESS.bk, CHESS.bb, CHESS.bi, CHESS.br],
+				[CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp, CHESS.bp],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp, CHESS.wp],
+				[CHESS.wr, CHESS.wi, CHESS.wb, CHESS.wq, CHESS.wk, CHESS.wb, CHESS.wi, CHESS.wr],
+			],
+			[
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, CHESS.bk, 0, 0, CHESS.bq, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, CHESS.wq, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0,CHESS.wk, 0, 0],
+			],
+			[
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, CHESS.bk, 0, 0, CHESS.bq, 0, 0],
+				[0, 0, CHESS.wq, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0,CHESS.wk, 0, 0],
+			],
 		];
-		return pos;
+		return positions[i];
 	}
 	getState() {
 		return this.items.map(x => x.iPiece);
@@ -93,18 +115,43 @@ class ChessBoard extends Board {
 		return iPiece;
 	}
 }
-function isOwnItem(item,pl){return isPlayerPiece(item.iPiece,isdef(pl)?pl:G.plTurn);}
-function isPlayerPiece(iPiece, pl) { return pl.color == 'white' ? iPiece <= 6 : iPiece > 6; }
+function isKingInCheck(state,pl,opp,rows=8,cols=8){
+	let plPieces = getMovesPerPiece(state, rows, cols, pl);
+	let oppPieces = getMovesPerPiece(state, rows, cols, opp);
+	let king = firstCondDictKeys(plPieces,x=>plPieces[x].piece.name=='king');
+	//console.log('player king:',king);
+	//wie finde heraus ob player king bedroht ist?
+	// king in check
+	let isCheck = false;
+	for (const i in oppPieces) {
+		let moves = oppPieces[i].moves;
+		//console.log(moves)
+		for(const m of moves) if (m==king) {isCheck = true;break;}
+		if (isCheck) break;
+	}
+	//console.log('king in check',isCheck);
+
+	return isCheck;
+
+}
+function clearChessPieces(){
+
+}
+function isOwnItem(item, pl) { return isPlayerPiece(item.iPiece, isdef(pl) ? pl : G.plTurn); }
+function isPlayerPiece(iPiece, pl) { return isdef(iPiece) && pl.color == 'white' ? iPiece <= 6 : iPiece > 6; }
 function getMovesPerPiece(arr, rows, cols, pl) {
-	let movesPerPiece = {};
+	//let movesPerPiece = {};
+	let playerPieces = {};
+	//let king=null;
 	for (let i = 0; i < arr.length; i++) {
 		let iPiece = arr[i];
 		//console.log(iPiece);
 		if (isPlayerPiece(iPiece, pl)) {
+			
 			let piece = ChessPieces[iPiece];
-
-			let moves = movesPerPiece[i] = piece.fMoves(arr, i, rows, cols, piece.color == 'black');
-
+			//console.log(iPiece,piece)
+			let moves = piece.fMoves(arr, i, rows, cols, piece.color == 'black');
+			playerPieces[i]={piece:piece,loc:i,moves:moves};
 			// if (i == 63 || i == 50) {
 			// 	let x = bNeiDir(arr, i, i == 63 ? 6 : 0, rows, cols);
 			// 	console.log('x', x, isdef(x) ? arr[x] : 'no nei!');
@@ -118,10 +165,10 @@ function getMovesPerPiece(arr, rows, cols, pl) {
 			//console.log('rook moves for piece', i, movesPerPiece[i]);
 		}
 	}
+
 	//console.log('movesPerPiece',movesPerPiece);
-	return movesPerPiece;
+	return playerPieces; // [movesPerPiece,playerPieces];
 }
-function getPieceMoves(name, arr, i, rows, cols) { return window['getMoves' + name.toUpperCase()](arr, i, rows, cols); }
 function getMovesRook(arr, i, rows, cols) {
 	let iPossible = [];
 	for (const dir of [0, 2, 4, 6]) {
@@ -189,7 +236,7 @@ function getMovesKing(arr, i, rows, cols) {
 	let iPossible = [];
 	for (const c of cand) {
 		if (c == null) continue;
-		if (EmptyFunc(arr[c]) || isOppPieceChess(arr[c])) iPossible.push(c);
+		if (EmptyFunc(arr[c]) || isOppPieceChess(arr[i],arr[c])) iPossible.push(c);
 	}
 	return iPossible;
 }

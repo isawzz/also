@@ -18,7 +18,7 @@ class G2Player {
 		let idx = this.iPlayer = (this.iPlayer + 1) % this.players.length;
 		this.setPlayers();
 	}
-	heuristic(state){return 1;}
+	heuristic(state) { return 1; }
 	setPlayers() {
 		this.plTurn = this.playerOrder[this.iPlayer];
 		this.plOpp = this.plTurn == this.ai ? this.human : this.ai;
@@ -414,7 +414,7 @@ class GReversi extends GTTT {
 		return winner ? { reached: true, winner: winner } : full ? { reached: true, winner: null } : { reached: false };
 	}
 	heuristic(state, plMax, plMin) {
-		let vmax=0,vmin=0;
+		let vmax = 0, vmin = 0;
 		// let corners = [0, G.cols, G.cols * (G.rows - 1), G.cols * G.rows - 1];
 		// let vmax = 0, vmin = 0;
 		// for (const i of corners) {
@@ -424,12 +424,12 @@ class GReversi extends GTTT {
 		vmax = vmax + arrCount(state, x => x == plMax.sym);
 		vmin = vmin + arrCount(state, x => x == plMin.sym);
 
-		return vmax-vmin;
+		return vmax - vmin;
 	}
 	heureval(state) {
-			let heurinfo = GReversi.heuristic(state, MAXIMIZER, MINIMIZER);
-			let val = heurinfo.val; //* (info.winner == MAXIMIZER ? 1 : -1)
-			return val;
+		let heurinfo = GReversi.heuristic(state, MAXIMIZER, MINIMIZER);
+		let val = heurinfo.val; //* (info.winner == MAXIMIZER ? 1 : -1)
+		return val;
 	}
 	eval() {
 		this.moveCounter += 1;
@@ -491,7 +491,7 @@ class GChess extends G2Player {
 		this.board = new ChessBoard(this.rows, this.cols, this.controller.uiInteract.bind(this.controller));
 
 	}
-	setStartPosition() { this.board.setInitialPosition(); }
+	setStartPosition() { this.board.setInitialPosition(2); }
 	startGame() {
 		super.startGame();
 		this.createBoard();
@@ -539,6 +539,7 @@ class GChess extends G2Player {
 	}
 	activate() {
 		let pl = this.plTurn;
+		let opp = this.plOpp;
 		let autoplay = false;
 		let manual = true;
 		if (!manual && (autoplay || pl == this.ai)) {
@@ -557,19 +558,49 @@ class GChess extends G2Player {
 		} else {
 			//activate board:
 			let state = this.getState();
-			//check if king is in check
-
-			let movesPerPiece = getMovesPerPiece(state, this.rows, this.cols, pl);
-			//console.log(movesPerPiece)
-			for (const k in movesPerPiece) {
-				let moves = movesPerPiece[k];
-				if (isEmpty(moves)) continue;
-
-				// show field bg in darker
-				let item = this.board.items[k];
-				iEnableSelect(item, this.onSelect.bind(this));
-				item.targets = moves;
+			let plPieces = getMovesPerPiece(state, this.rows, this.cols, pl);
+			let avMoves = [];
+			clearChessPieces();
+			for (const from in plPieces) {
+				for (const to of plPieces[from].moves) {
+					let move = { from: from, to: to };
+					//console.log('checking move',move);
+					let newState = this.applyMove(state, move, pl);
+					//console.log('state',state,'newState',newState);
+					//return;
+					//check if in the new situation, king is in check or not!
+					let isCheck = isKingInCheck(newState, pl, opp, this.rows, this.cols);
+					//console.log('done!',isCheck)
+					if (!isCheck) avMoves.push(move);
+					//if yes, this move is discarded!
+				}
 			}
+			console.log('avMoves', avMoves);
+			this.activateMoves(plPieces, avMoves);
+			// this.activatePiecesThatCanMove(plPieces);
+			//console.log(movesPerPiece)
+		}
+	}
+	activateMoves(plPieces, avMoves) {
+		for (const p in plPieces) { plPieces[p].avMoves = []; this.board.items[p].targets = []; }
+		for (const m of avMoves) {
+			let k = m.from;
+			let piece = plPieces[k];
+			piece.avMoves.push(m.to);
+			let item = this.board.items[k];
+			iEnableSelect(item, this.onSelect.bind(this));
+			item.targets.push(m.to);
+		}
+	}
+	activatePiecesThatCanMove(plPieces) {
+		for (const k in plPieces) {
+			let moves = plPieces[k].moves;
+			if (isEmpty(moves)) continue;
+
+			// show field bg in darker
+			let item = this.board.items[k];
+			iEnableSelect(item, this.onSelect.bind(this));
+			item.targets = moves;
 		}
 	}
 	afterComputerMove(iMove) {
@@ -598,7 +629,14 @@ class GChess extends G2Player {
 
 	//static mm functions
 	//state is modified by player doing move
-	applyMove(state, move, player) { arrReplaceAtInPlace(state, move, player.sym); }
+	applyMove(state, move, player) {
+		state = jsCopy(state);
+		let from = move.from;
+		let to = move.to;
+		state[to] = state[from];
+		state[from] = null;
+		return state;
+	}
 	undoMove(state, move, player) { arrReplaceAtInPlace(state, move, ' '); }
 	getAvailableMoves(state) {
 		let moves = [];

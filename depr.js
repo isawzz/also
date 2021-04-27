@@ -1,3 +1,6 @@
+function getPieceMoves(name, arr, i, rows, cols) { return window['getMoves' + name.toUpperCase()](arr, i, rows, cols); }
+
+
 function getTextForFraction_dep1(num, denom) {
 	// num=5,denom=7;
 	const remainder = {

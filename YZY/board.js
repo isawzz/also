@@ -75,7 +75,10 @@ function bFreeRayDirChess1(arr, idx, dir, rows, cols) {
 	}
 	return indices;
 }
-function isOppPieceChess(iPiece1,iPiece2){	return iPiece1<=6 && iPiece2>6 || iPiece1>6 && iPiece2<=6;}
+function isOppPieceChess(iPiece1,iPiece2){	
+	let isCapture =iPiece1<=6 && iPiece2>6 || iPiece1>6 && iPiece2<=6;
+	return isCapture;
+}
 function isOppPiece(sym, plSym) { return sym && sym != plSym; }
 function bCapturedPieces(plSym, arr, idx, rows, cols, includeDiagonals = true) {
 	//console.log('player sym',plSym,'arr',arr,'idx', idx,'rows', rows,'cols', cols);
