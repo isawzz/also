@@ -47,7 +47,6 @@ class ControllerTTT {
 			Score.nLoses = this.ai.score;
 			Score.nTied = this.tie;
 
-
 			showScore();
 			showInstruction('', msg, dTitle, !this.g.silentMode, sp);
 

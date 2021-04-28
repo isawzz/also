@@ -1,3 +1,215 @@
+class exTTT{
+	computerMove_old() {
+		let state = this.getState();
+		state = boardToNode(state);
+		let searchDepth = this.searchDepth;
+		var iMove1 = prepMM(state, mmab9, this.evalState, searchDepth);
+		var iMove2 = prepMM(state, mm13, this.evalStateL2, searchDepth);
+		if (iMove1 != iMove2) { console.log('===>DIFFERENT VALUES!!!!! mmab1:' + iMove1, 'new:' + iMove2); }
+		else { console.log('OK! mmab9 returned', iMove1, 'new returned', iMove2); }
+		return iMove2;
+	}
+
+}
+class GChess extends G2Player {
+	createBoard() {
+		this.board = new ChessBoard(this.rows, this.cols, this.controller.uiInteract.bind(this.controller));
+
+	}
+	setStartPosition() { this.board.setInitialPosition(); }
+	startGame() {
+		super.startGame();
+		this.createBoard();
+		this.setStartPosition();
+		this.human.color = 'white';
+		this.ai.color = 'black';
+	}
+	interact(ev) {
+		let tile = evToItemC(ev);
+
+		if (isdef(tile.label)) return; //illegal move!
+		let pl = this.plTurn;
+
+		addLabel(tile, pl.sym, { fz: 60, fg: pl.color });
+		this.controller.evaluate(tile);
+	}
+	prompt() {
+		let msg = this.plTurn == this.ai ? 'Ai thinking...' : 'Player on turn:';
+		showInstruction(this.plTurn.color, msg, dTitle, false);
+
+
+		this.controller.activateUi();
+	}
+	getPiece(state, idx) {
+		let arr = state;
+		let pieceKey = arr[idx];
+
+	}
+	getPlayerPieces(state, pl) {
+		let pieces = [];
+		for (let i = 0; i < state.length; i++) {
+			if (state[i][0] == pl.color[0]) {
+				//let [r,c]=
+				pieces.push({ piece: state[i], idx: i });
+				movesPerPiece[i] = Rook.getMoves(state, i, 8, 8);
+				console.log('rook moves for piece', i, movesPerPiece[i]);
+			}
+		}
+	}
+	onSelect(ev) {
+		let item = evToItemC(ev);
+		if (item == this.selectedItem) return;
+		else if (isdef(this.selectedItem)) unselectPreviousItemAndTargets(this.selectedItem);
+		this.selectedItem = selectItemAndTargets(item);
+	}
+	activate() {
+		let pl = this.plTurn;
+		let opp = this.plOpp;
+		let autoplay = false;
+		let manual = true;
+		if (!manual && (autoplay || pl == this.ai)) {
+			if (this.ai == pl) uiActivated = false;
+			//showCancelButton();
+
+			//AIMinimax(this,this.afterComputerMove)		
+			setTimeout(() => AIMinimax(this, this.afterComputerMove.bind(this)), 200);
+
+			//console.log('halloooooooooooooooooo')
+
+			// this.TO = setTimeout(() => {
+			// 	AIMinimax(this,this.afterComputerMove.bind(this));
+			// 	console.log('...sollte das gleich schreiben!!!')
+			// }, 10); //DELAY
+		} else {
+			let state = this.getState();
+			let [plPieces, avMoves] = this.getAvailableMoves(state, pl, opp);
+			if (isEmpty(avMoves)) { this.controller.evaluate(true); }
+			else this.activatePiecesThatCanMove(plPieces);
+		}
+	}
+	getAvailableMoves(state, pl, opp) {
+		let plPieces = getMovesPerPiece(state, pl, G.rows, G.cols);
+
+		let rochadeMoves = getMoveRochade(state,pl,G.rows, G.cols);
+
+
+		for (const p in plPieces) { plPieces[p].avMoves = []; }
+		let avMoves = [];
+		//clearChessPieces();
+		for (const from in plPieces) {
+			for (const to of plPieces[from].moves) {
+				let move = { from: from, to: to };
+				//console.log('checking move',move);
+				let newState = G.applyMove(state, move, pl);
+				//console.log('state',state,'newState',newState);
+				//return;
+				//check if in the new situation, king is in check or not!
+				let isCheck = isKingInCheck(newState, pl, opp, G.rows, G.cols);
+				if (to == 0) console.log('done!', to, isCheck)
+				if (!isCheck) { avMoves.push(move); plPieces[from].avMoves.push(move.to); }
+				//if yes, this move is discarded!
+			}
+		}
+		console.log('avMoves', avMoves);
+		return [plPieces, avMoves];
+	}
+	activateMoves(plPieces, avMoves) {
+		for (const p in plPieces) { this.board.items[p].targets = []; }
+		for (const m of avMoves) {
+			let k = m.from;
+			// let piece = plPieces[k];
+			// piece.avMoves.push(m.to);
+			let item = this.board.items[k];
+			iEnableSelect(item, this.onSelect.bind(this));
+			item.targets.push(m.to);
+		}
+	}
+	activatePiecesThatCanMove(plPieces) {
+		for (const k in plPieces) {
+			let moves = plPieces[k].avMoves;
+			if (isEmpty(moves)) continue;
+
+			// show field bg in darker
+			let item = this.board.items[k];
+			iEnableSelect(item, this.onSelect.bind(this));
+			item.targets = moves;
+		}
+	}
+	afterComputerMove(iMove) {
+		//console.log('CALLBACK!!!', iMove)
+		//hide(mBy('bCancelAI'));
+		let tile = this.board.items[iMove];
+		this.interact({ target: iDiv(tile) });
+	}
+	eval(isEnd) {
+		this.gameOver = isdef(isEnd);
+		let state = this.getState();
+		if (this.gameOver) {
+			if (isKingInCheck(state, this.plTurn, this.plOpp, this.rows, this.cols)) {
+				showFleetingMessage('CHECK MATE');
+				this.winner = this.plOpp;
+			} else {
+				showFleetingMessage('' + this.plTurn.color + " can't move: draw!");
+				this.tie = true;
+			}
+		}
+	}
+	applyMove(state, move, player) {
+		state = jsCopy(state);
+		let from = move.from;
+		let to = move.to;
+		state[to] = state[from];
+		state[from] = null;
+		return state;
+	}
+	heuristic(state){
+		// einfach punkte zusammen zaehlen
+		// aber schach sagen soll auch gut sein!
+	}
+	evalState(state, depth) {
+		//soll draws ohne patt oder matt feststellen
+		//zB wenn 3x hintereinander gleicher move : ignore
+		//oder: wenn nur noch 2 kings da sind : ignore
+		return { reached: false };
+	}
+	getState(){return this.board.getState();}
+}
+
+
+class GChess {
+	checkFinal(state) { }
+	getState() { return this.board.getState(); }
+
+	//static mm functions
+	//state is modified by player doing move
+	undoMove(state, move, player) { arrReplaceAtInPlace(state, move, ' '); }
+	heuristic1(node, depth) { }
+	evalStateL(node, depth) {
+		let key = node.join('');
+		let val = DMM[key];
+		let x = isdef(val) ? val : checkWinnerTTT(node);
+		DMM[key] = x;
+		if (checkBoardFull(node) || x) {
+			return { reached: true, val: (!x ? 0 : (10 - depth) * (x == MAXIMIZER.sym ? 1 : -1)) };
+		}
+		return { reached: false };
+	}
+	evalStateL2(node, depth) {
+		let full = checkBoardFull(node);
+		if (full) {
+			let key = JSON.stringify(node);
+			let x = DMM[key];
+			if (nundef(x)) DMM[key] = x = checkWinnerTTT(node);
+			return { reached: true, val: (!x ? 0 : (10 - depth) * (x == MAXIMIZER.sym ? 1 : -1)) };
+		} else {
+			let x = checkWinnerTTT(node);
+			if (x) return { reached: true, val: (!x ? 0 : (10 - depth) * (x == MAXIMIZER.sym ? 1 : -1)) };
+			return { reached: false };
+		}
+	}
+}
+
+
 function getPieceMoves(name, arr, i, rows, cols) { return window['getMoves' + name.toUpperCase()](arr, i, rows, cols); }
 
 
@@ -38,7 +250,7 @@ function AIMove1() {
 		myResolve(); // when successful
 		myReject();  // when error
 	});
-	onclick=()=>{Signal=true;document.getElementById("demo").innerHTML = 'CLICK!'};
+	onclick = () => { Signal = true; document.getElementById("demo").innerHTML = 'CLICK!' };
 	document.getElementById("demo").innerHTML = 'HALLO!';
 	console.log('hallo'); //das passiert erst nachher weil gequeued wird!
 
@@ -49,11 +261,11 @@ function AIMove1() {
 	);
 }
 function superLengthyFunction() {
-	for (let i = 0; i < 1000; i++) { console.log('.');if (Signal == true) return; } 
+	for (let i = 0; i < 1000; i++) { console.log('.'); if (Signal == true) return; }
 }
 
 
-function mm10_broken(state, depth=0, alpha=-Infinity, beta=Infinity, maxDepth=9, maxim=true) {
+function mm10_broken(state, depth = 0, alpha = -Infinity, beta = Infinity, maxDepth = 9, maxim = true) {
 	if (depth >= maxDepth) return 1;
 
 	let ec = F_END(state, depth); if (ec.reached) return ec.val;
@@ -154,7 +366,7 @@ class MM {
 }
 
 
-class GAMETTT{
+class GAMETTT {
 	computerMove() {
 		let state = this.getState();
 		state = boardToNode(state);
@@ -279,9 +491,9 @@ class ControllerTTT {
 		this.deactivateUi();
 		this.g.eval(...arguments);
 		if (this.g.gameOver) {
-			let msg,sp;
-			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins!';sp='A.I. wins!'; this.ai.score += 1; }
-			else if (this.g.winner) { msg = 'You win!!!'; sp=msg;this.human.score += 1; }
+			let msg, sp;
+			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins!'; sp = 'A.I. wins!'; this.ai.score += 1; }
+			else if (this.g.winner) { msg = 'You win!!!'; sp = msg; this.human.score += 1; }
 			else { msg = "It's a tie"; }
 
 			Score.nTotal += 1;
@@ -318,7 +530,7 @@ function checkPotentialTTT_dep(arr, rows, cols) {
 }
 
 
-class SAMMELCLASS{
+class SAMMELCLASS {
 	isWinningState(state, sym) {
 		for (let i = 0; i <= 6; i += 3) { if (state[i] === sym && state[i + 1] === sym && state[i + 2] === sym) return true; }
 
@@ -400,7 +612,7 @@ class SAMMELCLASS{
 
 }
 
-class AIPlayer_0{
+class AIPlayer_0 {
 
 	move(possibleMoves) { return chooseRandom(possibleMoves); }
 
@@ -1141,17 +1353,17 @@ function getStartLevels(user) {
 }
 
 
-function showHiddenThumbsUpDown(sz=100) {
-	let d=mDiv(dTable,{hmin:sz*1.5});
+function showHiddenThumbsUpDown(sz = 100) {
+	let d = mDiv(dTable, { hmin: sz * 1.5 });
 	mCenterFlex(d);
 	let keys = ['thumbs up', 'thumbs down'];
-	let options = getOptionsMinimalistic(d,null,300,100,{bg:'transparent',display:'inline'});//,{fzPic:50,w:60,h:60});
-	let items = Pictures = genItemsFromKeys(keys,options);
-	for(const item of items){
-		let d1=makeItemDiv(item,options);
-		mAppend(d,d1);
-		mStyleX(d1.firstChild,{fz:sz, mabottom:12});
-		mStyleX(d1,{opacity:0});
+	let options = getOptionsMinimalistic(d, null, 300, 100, { bg: 'transparent', display: 'inline' });//,{fzPic:50,w:60,h:60});
+	let items = Pictures = genItemsFromKeys(keys, options);
+	for (const item of items) {
+		let d1 = makeItemDiv(item, options);
+		mAppend(d, d1);
+		mStyleX(d1.firstChild, { fz: sz, mabottom: 12 });
+		mStyleX(d1, { opacity: 0 });
 	}
 	//console.log('items',items);
 
