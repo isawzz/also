@@ -520,7 +520,8 @@ class GChess extends G2Player {
 	prompt() {
 		let msg = this.plTurn == this.ai && !this.manual ? `Ai (${this.ai.color.toUpperCase()}) thinking...`
 			: `player: ${this.plTurn.color.toUpperCase()}`;
-		showInstruction(this.game.in_check()?'CHECK!':'', msg, dTitle, false);
+
+		showInstruction(this.game.in_check()?'- CHECK!!!':'', msg, dTitle, false);
 		//this.controller.activateUi();
 	}
 	activate() { }
