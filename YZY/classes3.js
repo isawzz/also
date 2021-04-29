@@ -8,7 +8,7 @@ class G2Player {
 		this.moveCounter = 0;
 	}
 	startGame() {
-		console.log('starting', this.name);
+		//console.log('starting', this.name);
 		this.moveCounter = 0;
 		this.winner = null;
 		this.setStartPlayer();
@@ -16,7 +16,7 @@ class G2Player {
 	clear() { clearTimeout(this.TO); }
 	changePlayer() {
 		let idx = this.iPlayer = (this.iPlayer + 1) % this.players.length;
-		console.log('changePlayer to', this.players[idx].id);
+		//console.log('changePlayer to', this.players[idx].id);
 		this.setPlayers();
 	}
 	heuristic(state) { return 1; }
@@ -32,7 +32,7 @@ class G2Player {
 		this.iPlayer = 0;
 		this.setPlayers();
 	}
-	startRound() { console.log('startRound', this.name); }
+	startRound() { }//console.log('startRound', this.name); }
 	prompt() { }
 }
 class GTTT extends G2Player {
@@ -467,33 +467,20 @@ class GReversi extends GTTT {
 		//printState(state);
 		arrReplaceAtInPlace(state, move, player.sym);
 		let iCapt = bCapturedPieces(player.sym, state, move, G.rows, G.cols);
-		//console.log('capture:',iCapt);
 		for (const i of iCapt) { state[i] = player.sym; }
-		//console.log('=>')
-		//printState(state)
-
 	}
 
 }
 
 class GChess extends G2Player {
 	startGame() {
-		super.startGame(); 
-		//jetzt ist this.plTurn = startPlayer
+		super.startGame();
 		this.createBoard();
-		//this.game = new Chess(this.board.fen());
 		this.game = new Chess();
 		this.setStartPosition();
-
-		let c=this.game.turn();
-		if (c=='b') {this.plTurn.color = 'black';this.plOpp.color='white';}else{this.plTurn.color = 'white';this.plOpp.color='black';}
-		// console.log('turn', this.game.turn());
-		// let cTurn = this.game.turn() == 'b' ? 'black' : 'white';
-		// let other = cTurn == 'black' ? 'white' : 'black';
-		// this.human.color = this.plTurn == this.human ? "white":'black';//cTurn : other;
-		// this.ai.color = this.plTurn == this.ai ? "white":'black'; //cTurn : other;
-		console.log('players', this.players)
-		showFleetingMessage(`Human player plays ${this.human.color}`)
+		let c = this.game.turn();
+		if (c == 'b') { this.plTurn.color = 'black'; this.plOpp.color = 'white'; } else { this.plTurn.color = 'white'; this.plOpp.color = 'black'; }
+		showFleetingMessage(`You play ${this.human.color}`)
 	}
 	createBoard() {
 		let d = mDiv(dTable, { h: 500, w: 500 }, 'dChessBoard');
@@ -565,23 +552,38 @@ class GChess extends G2Player {
 		this.board.position(this.game.fen());
 
 		let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;//advance iPosition for next time!
-		//console.log('state',state)
 	}
 	prompt() {
 		let msg = this.plTurn == this.ai && !this.manual ? `Ai (${this.ai.color.toUpperCase()}) thinking...`
 			: `player: ${this.plTurn.color.toUpperCase()}`;
 
 		showInstruction(this.game.in_check() ? '- CHECK!!!' : '', msg, dTitle, false);
-		//this.controller.activateUi();
+		this.controller.activateUi();
 	}
-	activate() { }
-	getTurnColor() { return this.getPlayer(this.game.turn()=='b'?'black':'white'); }
-	getOppColor() { return this.getPlayer(this.game.turn()=='b'?'white':'black'); }
+	activate() {
+		let pl = this.plTurn;
+		let autoplay = false;
+		if (autoplay || pl == this.ai) {
+			if (this.ai == pl) uiActivated = false;
+			setTimeout(() => {
+				// let x = makeBestMove('b'); console.log('x', x);
+				let color = this.game.turn();
+				if (color === 'b') { var move = getBestMove(this.game, color, globalSum)[0]; }
+				else { var move = getBestMove(this.game, color, -globalSum)[0]; }
+				globalSum = evaluateBoard(move, globalSum, 'b');
+				this.game.move(move);
+				this.board.position(this.game.fen());
+				this.controller.evaluate();
+			}, 100);
+		}
+	}
+	getTurnColor() { return this.getPlayer(this.game.turn() == 'b' ? 'black' : 'white'); }
+	getOppColor() { return this.getPlayer(this.game.turn() == 'b' ? 'white' : 'black'); }
 	getPlayer(color) { return firstCond(this.players, x => x.color == color); }
 	changePlayer() { this.plTurn = this.game.turn() == 'b' ? this.getPlayer('black') : this.getPlayer('white'); }
 	onDragStart(source, piece, position, orientation) {
 		// do not pick up pieces if the this.game is over
-		if (this.game.game_over()) return false
+		if (this.game.game_over() || !uiActivated) return false;
 
 		// only pick up pieces for the side to move
 		if ((this.game.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -596,30 +598,23 @@ class GChess extends G2Player {
 			to: target,
 			promotion: 'q' // NOTE: always promote to a queen for example simplicity
 		});
-
-		// illegal move
 		if (move === null) return 'snapback';
-
 		this.controller.evaluate();
 	}
 	onSnapEnd() { this.board.position(this.game.fen()) }
 
 	eval() {
-		console.log('eval');
-		this.info=null;
+		this.info = null;
 		let over = this.gameOver = this.game.game_over();
-		if (this.game.in_draw()) { this.tie = true; console.log('in_draw'); }
-		if (this.game.in_stalemate()) { this.tie = true; console.log('in_stalemate'); }
-		if (this.game.in_threefold_repetition()) { this.tie = true; console.log('in_threefold_repetition'); }
+		if (this.game.in_draw()) { this.tie = true; console.log('in_draw'); this.info = '(draw)'; }
+		if (this.game.in_stalemate()) { this.tie = true; console.log('in_stalemate'); this.info = '(stalemate)'; }
+		if (this.game.in_threefold_repetition()) { this.tie = true; console.log('in_threefold_repetition'); this.info = '(threefold repetition)'; }
 		if (this.game.in_checkmate()) {
 			this.tie = false;
 			this.winner = this.getOppColor();
 			console.log('in_checkmate');
-			//this.info = ` ${this.winner.color.toUpperCase()} (${this.winner==this.ai?'AI':'human'}) wins!`
 			this.info = `(${this.winner.color.toUpperCase()})`;
 		}
-
-
 	}
 }
 
