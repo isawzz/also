@@ -550,11 +550,11 @@ gChess:
   numPlayers: 2
   rows: 8
   cols: 8
-  searchDepth: 4
+  searchDepth: 3
   copyState: true
   iPosition: 0 #0-based index of position defined in G.setStartPosition
-  startPosition: seq # random | seq
-  startPlayer: ai  # ai | human | random
+  startPosition: empty # random | seq
+  startPlayer: human  # ai | human | random
   manual: true #ai is manual
 
 #unused:
