@@ -36,6 +36,7 @@ class ControllerTTT {
 		this.g.eval(...arguments);
 		if (this.g.gameOver) {
 			let msg, sp;
+			console.log('winner',this.g.winner)
 			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins!'; sp = 'A.I. wins!'; this.ai.score += 1; }
 			else if (this.g.winner) { msg = sp = 'You win!!!'; this.human.score += 1; }
 			else { msg = "It's a tie";sp = 'tie: no one wins'; if (nundef(this.tie)) this.tie=1; else this.tie+=1; }

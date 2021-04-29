@@ -713,7 +713,7 @@ gChess:
   cols: 8
   searchDepth: 7
   copyState: true
-  iPosition: 0 #0-based index of position defined in G.setStartPosition
+  iPosition: 4 #0-based index of position defined in G.setStartPosition
   startPosition: seq # random | seq
   startPlayer: human  # ai | human | random
   manual: true #ai is manual

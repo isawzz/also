@@ -478,41 +478,91 @@ class GReversi extends GTTT {
 
 class GChess extends G2Player {
 	startGame() {
-		super.startGame();
+		super.startGame(); 
+		//jetzt ist this.plTurn = startPlayer
 		this.createBoard();
-		this.human.color = this.plTurn == this.human ? 'white' : 'black';
-		this.ai.color = this.plTurn == this.ai ? 'white' : 'black';
+		//this.game = new Chess(this.board.fen());
 		this.game = new Chess();
+		this.setStartPosition();
+
+		let c=this.game.turn();
+		if (c=='b') {this.plTurn.color = 'black';this.plOpp.color='white';}else{this.plTurn.color = 'white';this.plOpp.color='black';}
+		// console.log('turn', this.game.turn());
+		// let cTurn = this.game.turn() == 'b' ? 'black' : 'white';
+		// let other = cTurn == 'black' ? 'white' : 'black';
+		// this.human.color = this.plTurn == this.human ? "white":'black';//cTurn : other;
+		// this.ai.color = this.plTurn == this.ai ? "white":'black'; //cTurn : other;
+		console.log('players', this.players)
+		showFleetingMessage(`Human player plays ${this.human.color}`)
 	}
 	createBoard() {
-		this.rows = this.cols = this.boardSize;
-		//console.log(mBy(dTable.id));
 		let d = mDiv(dTable, { h: 500, w: 500 }, 'dChessBoard');
 		let config = {
 			pieceTheme: '/alibs/chessBoard/img/chesspieces/wikipedia/{piece}.png',
 			draggable: true,
-			// dropOffBoard: 'snapback', // this is the default
-			position: 'start',
 			onDragStart: this.onDragStart.bind(this),
 			onDrop: this.onDrop.bind(this),
 			onSnapEnd: this.onSnapEnd.bind(this),
 
 		}
 		this.board = ChessBoard('dChessBoard', config);
-		this.setStartPosition();
+		mLinebreak(dTable);
 	}
 	setStartPosition() {
+		//this code works!!!
+		// this.game.load('r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1');
+		// this.board.position(this.game.fen());
+		// return;
 		let positions = [
-			'start',
-			'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R',
-			{ a4: 'bK', c4: 'wK', a7: 'wR' },
+			'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', //default start pos
+			'8/8/8/8/8/8/8/8 w KQkq - 0 1', //empty board
+			'8/8/8/8/8/8/8/8 b KQkq - 0 1', //black starts
+			'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e3 0 2',
+			{
+				arr: [
+					['em', 'em', 'bk', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'wq', 'em', 'em'],
+					['em', 'em', 'wk', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'wp', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+				], plStart: 'w'
+			},
+			{
+				arr: [
+					['em', 'em', 'bk', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'wq', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'wk', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'wp', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+				], plStart: 'w'
+			},
+			{
+				arr: [
+					['em', 'em', 'bk', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'wq', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'wk', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'bp', 'em'],
+					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+				], plStart: 'b'
+			},
+
 		];
 		if (nundef(this.iPosition)) this.iPosition = 0;
 
-		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0]
-			: this.startPosition == 'random' ? chooseRandom(positions)
-				: positions[this.iPosition];
-		this.board.position(state);
+		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0] : this.startPosition == 'random' ? chooseRandom(positions) : positions[this.iPosition];
+		if (!isString(state)) state = arrToFen(state.arr, state.plStart);
+
+		this.game.load(state); //'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1');
+		this.board.position(this.game.fen());
 
 		let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;//advance iPosition for next time!
 		//console.log('state',state)
@@ -521,11 +571,12 @@ class GChess extends G2Player {
 		let msg = this.plTurn == this.ai && !this.manual ? `Ai (${this.ai.color.toUpperCase()}) thinking...`
 			: `player: ${this.plTurn.color.toUpperCase()}`;
 
-		showInstruction(this.game.in_check()?'- CHECK!!!':'', msg, dTitle, false);
+		showInstruction(this.game.in_check() ? '- CHECK!!!' : '', msg, dTitle, false);
 		//this.controller.activateUi();
 	}
 	activate() { }
-	getTurnColor(){return this.getPlayer(this.game.turn());}
+	getTurnColor() { return this.getPlayer(this.game.turn()=='b'?'black':'white'); }
+	getOppColor() { return this.getPlayer(this.game.turn()=='b'?'white':'black'); }
 	getPlayer(color) { return firstCond(this.players, x => x.color == color); }
 	changePlayer() { this.plTurn = this.game.turn() == 'b' ? this.getPlayer('black') : this.getPlayer('white'); }
 	onDragStart(source, piece, position, orientation) {
@@ -555,11 +606,18 @@ class GChess extends G2Player {
 
 	eval() {
 		console.log('eval');
+		this.info=null;
 		let over = this.gameOver = this.game.game_over();
-		if (this.game.in_draw()) {this.tie=true; console.log('in_draw');}
-		if (this.game.in_stalemate()) {this.tie=true; console.log('in_stalemate');}
-		if (this.game.in_threefold_repetition()) {this.tie=true; console.log('in_threefold_repetition');}
-		if (this.game.in_checkmate()) {this.winner=this.getTurnColor(); console.log('in_checkmate');}
+		if (this.game.in_draw()) { this.tie = true; console.log('in_draw'); }
+		if (this.game.in_stalemate()) { this.tie = true; console.log('in_stalemate'); }
+		if (this.game.in_threefold_repetition()) { this.tie = true; console.log('in_threefold_repetition'); }
+		if (this.game.in_checkmate()) {
+			this.tie = false;
+			this.winner = this.getOppColor();
+			console.log('in_checkmate');
+			//this.info = ` ${this.winner.color.toUpperCase()} (${this.winner==this.ai?'AI':'human'}) wins!`
+			this.info = `(${this.winner.color.toUpperCase()})`;
+		}
 
 
 	}

@@ -70,7 +70,7 @@ function updateStatus () {
 
 var config = {
   draggable: true,
-  position: 'start',
+  position: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e3 0 2',
   onDragStart: onDragStart,
   onDrop: onDrop,
   onSnapEnd: onSnapEnd
