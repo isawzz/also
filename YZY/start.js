@@ -1,11 +1,12 @@
 async function _start() {
 	initTable(); initSidebar(); initAux(); initScore(); loadUser(); //timit = new TimeIt('*timer', true);
 
-	//testPos02();
 	startUnit();
-	//setBackgroundColor('green');	let b = new ChessBoard();
+	//cTest03_2HandsRandom();
 
 	//#region tests
+	//chessTestPos02(); //setBackgroundColor('green');	let b = new ChessBoard();
+
 	//let list = getRandomFractions(4);console.log('fractions',list);
 	//btest11_fractions();//bTest10();//bTest09(); //bTest08();//bTest07();	//bTest06();//bTest05();//bTest04(); //bTest03();
 	

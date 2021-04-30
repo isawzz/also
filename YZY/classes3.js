@@ -166,7 +166,6 @@ class GTTT extends G2Player {
 		}
 	}
 }
-
 class GC4 extends GTTT {
 	startGame() {
 		super.startGame();
@@ -292,7 +291,6 @@ class GC4 extends GTTT {
 	}
 
 }
-
 class GReversi extends GTTT {
 	createBoard() {
 		this.board = new Board(this.rows, this.cols, this.controller.uiInteract.bind(this.controller), { margin: 6, w: 60, h: 60, bg: 'white', fg: 'black', rounding: '50%' });
@@ -471,9 +469,8 @@ class GReversi extends GTTT {
 	}
 
 }
-
 class GChess extends G2Player {
-	clear(){ super.clear(); if (isdef(this.game)) this.game.reset(); }
+	clear() { super.clear(); if (isdef(this.game)) { this.game.reset(); } }
 	startGame() {
 		super.startGame();
 		this.createBoard();
@@ -565,9 +562,11 @@ class GChess extends G2Player {
 		let pl = this.plTurn;
 		let autoplay = false;
 		if (autoplay || pl == this.ai) {
-			if (this.ai == pl) {uiActivated = false; aiActivated = true; }
-			setTimeout(() => {
+			if (this.ai == pl) { uiActivated = false; aiActivated = true; }
+			this.TO = setTimeout(() => {
+				//wenn er da reingeht, dann kann er nicht mehr unterbrochen werden!!!
 				// let x = makeBestMove('b'); console.log('x', x);
+				//if (!this.game) return;
 				let color = this.game.turn();
 				if (color === 'b') { var move = getBestMove(this.game, color, globalSum)[0]; }
 				else { var move = getBestMove(this.game, color, -globalSum)[0]; }
@@ -576,7 +575,7 @@ class GChess extends G2Player {
 				this.board.position(this.game.fen());
 				this.controller.evaluate();
 			}, 100);
-		} else {aiActivated = false; uiActivated = true;}
+		} else { aiActivated = false; uiActivated = true; }
 	}
 	getTurnColor() { return this.getPlayer(this.game.turn() == 'b' ? 'black' : 'white'); }
 	getOppColor() { return this.getPlayer(this.game.turn() == 'b' ? 'white' : 'black'); }
@@ -618,4 +617,94 @@ class GChess extends G2Player {
 		}
 	}
 }
+class GKrieg extends G2Player {
+	startGame() {
+		super.startGame();
 
+		//this.createBoard(); //soll ich hier sowas wie createZones machen?
+		this.game = new GKriegBack();
+		this.setStartPosition();
+		// let c = this.game.turn();
+		// if (c == 'b') { this.plTurn.color = 'black'; this.plOpp.color = 'white'; } else { this.plTurn.color = 'white'; this.plOpp.color = 'black'; }
+		// showFleetingMessage(`You play ${this.human.color}`)
+		// //jeder bekommt halbes paket von karten!
+		// let h1 = this.plTurn.hand = iMakeHand([0, 1, 2, 3, 4], 'h1');
+		// let h2 = this.plOpp.hand = iMakeHand([5, 6, 7, 8, 9], 'h2');
+
+	}
+	setStartPosition() {
+		//this code works!!!
+		// this.game.load('r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1');
+		// this.board.position(this.game.fen());
+		// return;
+		let positions = [
+			null,
+			[
+				[['2S', '3S', 'TS', 'QH'], ['4S', '5S', 'JS', 'QC']], //hands pl1,pl2
+				[[['QD'], ['AH', '2D', 'JH']], [['QS'], ['AD', '8D', 'KD']]], // trick / war on table
+			],
+
+			//more compressed state reps:
+			[['2S,3S,TS,QH', '4S,5S,JS,QC'], [['QD', 'AH,2D,JH'], ['QS', 'AD,8D,KD']]], // hands, trick/war on table per player
+			'2S,3S,TS,QH/4S,5S,JS,QC - QD.AH,2D,JH/QS.AD,8D,KD', // hands, trick/war on table per player
+		];
+		// console.log('iPosition', this.iPosition);
+		if (nundef(this.iPosition)) this.iPosition = 0;
+
+		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0] : this.startPosition == 'random' ? chooseRandom(positions) : positions[this.iPosition];
+		// console.log('state', state)
+		this.game.load(state);
+
+		console.log('players', this.game.pl1, this.game.pl2, 'rest of deck', this.game.deck.data);
+
+
+
+		let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;//advance iPosition for next time!
+	}
+
+	getState() { }
+	prompt() {
+		// wo sind die cards?
+
+	}
+}
+
+class GKriegBack {
+
+	load(state) {
+		let deck = this.deck = new Deck('52');
+		this.pl1 = { hand: null, trick: [] };
+		this.pl2 = { hand: null, trick: [] };
+		console.log('deck', this.deck);
+		if (nundef(state)) {
+			//load default position meaning halfDeck,halfDeck,player1
+			//how to get a half deck?
+			let h1 = this.pl1.hand = deck.deal(26);
+			let h2 = this.pl2.hand = deck.deal(26);
+		} else {
+			/* example of a state:
+			state = [
+				[['2S', '3S', 'TS', 'QH'], ['4S', '5S', 'JS', '6C']], //hands pl1,pl2
+				[[['QD'],['AH', '2D', 'JH'],...],[['QS'],['AD', '8D', 'KD'],...], // trick / war on table
+			];
+			*/
+			let hands = state[0];
+			[this.pl1.hand, this.pl2.hand] = hands.map(x => parseHand(x, deck));
+			console.log(this.pl1.hand, this.pl2.hand, deck.data);
+			if (!isEmpty(state[1])) {
+				let [arr1, arr2] = [state[1][0], state[1][1]];
+				for (let i = 0; i < arr1.length; i++) this.pl1.trick.push(parseHand(arr1[i], deck));
+				for (let i = 0; i < arr2.length; i++) this.pl2.trick.push(parseHand(arr2[i], deck));
+			}
+		}
+	}
+
+	
+}
+
+function parseHand(keys, deck) {
+	let h1 = keys.map(x => Card52._fromKey(x));
+	console.log('h1', h1)
+	h1.map(x => deck.remove(x));
+	return h1;
+}

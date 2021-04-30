@@ -8,7 +8,8 @@ async function _start() {
 	//showGroupsSubgroups();
 
 	//test05_solCats();
-	test03_sortDeck(); test03_2Hands(); //test03_2HandsRandom();
+	//test03_sortDeck(); test03_2Hands(); //
+	test03_2HandsRandom();
 
 }
 

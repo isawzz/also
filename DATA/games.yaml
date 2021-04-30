@@ -550,13 +550,22 @@ gChess:
   numPlayers: 2
   rows: 8
   cols: 8
-  searchDepth: 3
+  searchDepth: 3 #do NOT set this >4 =>depth 8 takes HOURS!!!
   copyState: true
   iPosition: 0 #0-based index of position defined in G.setStartPosition
   startPosition: empty # random | seq
   startPlayer: human  # ai | human | random
   manual: true #ai is manual
-
+gKrieg:
+  friendly: 'Krieg'
+  logo: 'fencing'
+  color: steelblue
+  controllerType: solo
+  numPlayers: 2
+  iPosition: 1 #0-based index of position defined in G.setStartPosition
+  startPosition: seq # random | seq
+  startPlayer: human  # ai | human | random
+  manual: true #ai is manual
 #unused:
 gMissingNumber:
   friendly: 'Sequence!'
@@ -717,9 +726,3 @@ gAristo:
   color: indigo
   controllerType: c52
   numPlayers: [2, 3, 4, 5]
-gKrieg:
-  friendly: 'Krieg'
-  logo: 'fencing'
-  color: steelblue
-  controllerType: solo
-  numPlayers: 2

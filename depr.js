@@ -1,4 +1,19 @@
+class GKriegBack {
+	humanToFen(human) {
+		//human rep of this game
+		human = [
+			[['2S', '3S', 'TS', 'QH'], ['4S', '5S', 'JS', 'QC']], //hands pl1,pl2
+			[['AH', '2D', 'JH'], ['AH', '2D', 'JH']], // war pl1,pl2,...
+			['QD'], // trick on table or half trick (which means pl2's turn) 
+		];
+		//fen rep of this game: no needed if simple game!
+		fen = 'bchK/ABCD/abc stu/x/2';
+	}
+	load(fen) {
+		var tokens = fen.split(/\s+/)
 
+	}
+}
 
 
 

@@ -284,7 +284,7 @@ function arrToFen(board, plStart = 'w') {
 	return result;
 }
 
-function testPos02() {
+function chessTestPos02() {
 	let board = [
 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
@@ -298,7 +298,7 @@ function testPos02() {
 
 	console.log(arrToFen(board, 'b'));
 }
-function testPos01() {
+function chessTestPos01() {
 	let board = [
 		['bk', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
 		['em', 'bn', 'em', 'wr', 'em', 'wp', 'em', 'em'],

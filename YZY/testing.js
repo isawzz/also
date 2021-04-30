@@ -1,4 +1,48 @@
-//testing
+//testing cards
+function cTest03_2HandsRandom(){
+	let h1 = iMakeHand([0, 1, 2, 3, 4], 'h1');
+	let h2 = iMakeHand([13, 14, 15, 16, 17], 'h2');
+	//console.log('DA', DA)
+
+	setTimeout(cTest03_2Hands_transferStarts, 1000);
+	
+}
+function cTest03_2Hands_transferStarts() {
+
+	let h1 = DA.h1.iHand;
+	let n1 = h1.items.length;
+	//console.log('hand h1 has', n1, 'cards');
+	let h2 = DA.h2.iHand;
+	let n2 = h2.items.length;
+	//console.log('hand h2 has', n2, 'cards');
+	//console.assert(n2 == DA.h2.deck.count());
+
+	let c = chooseRandom(h2.items);
+	DA.item = c;
+
+	let w = c.w;
+	let ov = w / 4;
+	let xOffset = n1 * ov;
+	console.log('w',w,'ov',ov,'xOffset',xOffset)
+
+	iMoveFromTo(c, h2.div, h1.div, cTest03_2Hands_transfer, { x: xOffset, y: 0 });
+}
+function cTest03_2Hands_transfer() {
+	//modify the deck object
+	let deck1 = DA.h1.deck;
+	let deck2 = DA.h2.deck;
+	let item = DA.item;
+
+	deck1.addTop(item.val);
+	deck2.remove(item.val);
+
+	iPresentHand(DA.h1);
+	iPresentHand(DA.h2);
+	iSortHand(DA.h1)
+
+}
+
+//testing board
 function bTest01() {
 	let arr = [1, 1, 1, 1, 2, 1, 0, 1, 0], rows = 3, cols = 3, irow = 0;// =>1
 	console.log(bFullRow(arr, irow, rows, cols));
@@ -194,7 +238,6 @@ function bTest08() {
 	printState(arr)
 	console.log('w', w);
 }
-
 function bTest09() {
 	let pos = [
 		[0, 0, 0, 0, 0],
