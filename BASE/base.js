@@ -1818,6 +1818,9 @@ function addIfDict(key, val, dict) { if (!(key in dict)) { dict[key] = [val]; } 
 function any(arr, cond) { return !isEmpty(arr.filter(cond)); }
 function anyStartsWith(arr, prefix) { return any(arr, el => startsWith(el, prefix)); }
 function arrTake(arr, n) { return takeFromStart(arr, n); }
+function arrTakeFromEnd(arr,n){
+	if (arr.length<=n) return arr; else return arr.slice(arr.length-n);
+}
 function arrRotate(arr, count) {
 	// usage:
 	// let arr = [1,2,3,4,5];let arr1=jsCopy(arr); arr2=arrRotate(arr1,2);
@@ -1842,6 +1845,7 @@ function arrFlatten(arr) {
 	}
 	return res;
 }
+function arrLastOfLast(arr) { if (arr.length > 0) { let l = arrLast(arr); return isList(l) ? arrLast(l) : null; } else return null; }
 function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
 function arrTail(arr) { return arr.slice(1); }
 function arrFromIndex(arr, i) { return arr.slice(i); }
@@ -1869,6 +1873,7 @@ function arrMinMax(arr, func) {
 
 	return { min: min, imin: imin, max: max, imax: imax };
 }
+
 function arrReplaceAt(arr, index, val, inPlace = true) { return inPlace ? arrReplaceAtInPlace(arr, index, val) : arrReplaceAtCopy(arr, index, val); }
 function arrReplaceAtInPlace(arr, index, val) { arr[index] = val; }
 function arrReplaceAtCopy(arr, index, val) {

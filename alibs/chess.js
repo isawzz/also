@@ -661,7 +661,7 @@ var Chess = function (fen) {
 			}
 			undo_move()
 		}
-
+		console.log('legal_moves',legal_moves);
 		return legal_moves
 	}
 
@@ -1721,9 +1721,7 @@ var Chess = function (fen) {
 			return ascii()
 		},
 
-		turn: function () {
-			return turn
-		},
+		turn: function () { return turn },
 
 		move: function (move, options) {
 			/* The move function can be called with in the following parameters:

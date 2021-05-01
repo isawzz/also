@@ -99,13 +99,13 @@ class Card52 {
 
 	}
 	//returns index 0..51
-	static _fromKey(k){
-		let ranks='A23456789TJQK';
-		let suits='SHDC';
+	static _fromKey(k) {
+		let ranks = 'A23456789TJQK';
+		let suits = 'SHDC';
 		//ex k='2H';
-		let ir=ranks.indexOf(k[0]); //=> zahl zwischen 0 und 12
-		let is=suits.indexOf(k[1]); //=> zahle zwischen 0 und 3
-		return is*13+ir;
+		let ir = ranks.indexOf(k[0]); //=> zahl zwischen 0 und 12
+		let is = suits.indexOf(k[1]); //=> zahle zwischen 0 und 3
+		return is * 13 + ir;
 	}
 	static getRank(i) {
 		let rank = 1 + (i % 13);
@@ -206,6 +206,7 @@ class Deck {
 	remove(i) { removeInPlace(this.data, i); return this; }
 	removeAtIndex(i) { return this.data.splice(i, 1)[0]; }
 	removeFromIndex(i, n) { return this.data.splice(i, n); }
+	setData(arr, shuffled = false) { this.data = arr; if (shuffled) this.shuffle(); }
 	sort() {
 		//console.log('cards:', this.data.join(','));
 		this.data.sort((a, b) => Number(a) - Number(b));
@@ -214,7 +215,7 @@ class Deck {
 	}
 	shuffle() { shuffle(this.data); return this; }
 	top() { return arrLast(this.data); }
-	toString(){ return this.data.toString();}//.join(','); }
+	toString() { return this.data.toString(); }//.join(','); }
 }
 
 
