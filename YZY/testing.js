@@ -1,32 +1,64 @@
 //test areas
-function rTest07(){
-	let items = rTest06_clean_OK();
-	let card=Card52._createUi('Q','H',70,110);
-	console.log(card)
-	let item=items[0];
-	let dContent = diContent(item);
-	console.log(item,dContent)
-	iAddContent(item,iDiv(card));
+function test09() {
+	let areas;
+	function prepare(dParent) {
+		areas = makeAreas(dTable);
+	}
+	function presentState(state, dParent) {
+		let trick = arrFlatten(state.pl1.trick).concat(arrFlatten(state.pl2.trick));
+		let pl1Hand = state.pl1.hand;
+		let pl2Hand = state.pl2.hand;
+		let arrs = [trick, pl1Hand, pl2Hand];
+		for (let i = 0; i < 3; i++) {
+			let arr = arrs[i];
+			let item = areas[i];
+			let d = diContent(item);
+			let id = 'h' + i;
+			iMessage(item, '');
+			// iMakeHand_test(d, arr, id);
+			iH00(arr, d, { bg: 'blue' }, id);
 
-	iMakeHand_test(diContent(items[1]), [33, 7, 1, 2, 3, 4], 'h1');
-	iMakeHand_test(diContent(items[2]), [34, 37, 31, 2, 3, 4], 'h2');
-	iMakeHand_test(diContent(items[2]), [10,11], 'h4');
+		}
+	}
+	return {
+		
+	}
+
 }
-function rTest06_clean_OK() {
+function presentState(state, dParent) {
+	let trick = arrFlatten(state.pl1.trick).concat(arrFlatten(state.pl2.trick));
+	let pl1Hand = state.pl1.hand;
+	let pl2Hand = state.pl2.hand;
+	let arrs = [trick, pl1Hand, pl2Hand];
+	let items = makeAreas(dParent);
+	for (let i = 0; i < 3; i++) {
+		let arr = arrs[i];
+		let item = items[i];
+		let d = diContent(item);
+		let id = 'h' + i;
+		iMessage(item, '');
+		// iMakeHand_test(d, arr, id);
+		iH00(arr, d, { bg: 'blue' }, id);
+
+	}
+}
+function makeAreas(dTable) {
 	setBackgroundColor('random');
-	let dGrid = mDiv(dTable, { gap: 10, bg: 'white', w: '80%', hmin: 400, padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
+	let dGrid = mDiv(dTable, { gap: 10, bg: 'white', w: '90%', padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
 	let layout = ['T', 'H A'];
+	//let layout = ['t', 'H A'];
 
 	//more intricate layout!
-	let areaStyles = { bg: 'random', rounding: 6};
-	let contentStyles = { bg: 'dimgray', lowerRounding:6};
-	let messageStyles = { bg: 'dimgray' ,fg: 'yellow' };
-	let titleStyles = { family: 'AlgerianRegular', upperRounding: 6 };
+	let areaStyles = { bg: 'green', rounding: 6 };//,box:true, padding:10};
+	let contentStyles = { lowerRounding: 6 };
+	let messageStyles = { fg: 'yellow' };
+	let titleStyles = { bg: 'dimgray', family: 'AlgerianRegular', upperRounding: 6 };
 	let areas = {
 		T: { title: 'table', id: 'dTrick', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
 		H: { title: 'YOU', id: 'dHuman', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
 		A: { title: 'opponent', id: 'dAI', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
 	};
+	// areas.T.areaStyles.w='100%';
 
 	let x = createGridLayout(dGrid, layout);
 	console.log('result', x);
@@ -37,10 +69,123 @@ function rTest06_clean_OK() {
 		let item = areas[k];
 		item.areaStyles['grid-area'] = k;
 		let dCell = mTitledMessageDiv(item.title, dGrid, item.id, item.areaStyles, item.contentStyles, item.titleStyles, item.messageStyles)
-		iRegister(item,item.id);
-		iAdd(item,{div:dCell,dTitle:dCell.children[0],dMessage:dCell.children[1],dContent:dCell.children[2]});
+		iRegister(item, item.id);
+		iAdd(item, { div: dCell, dTitle: dCell.children[0], dMessage: dCell.children[1], dContent: dCell.children[2] });
 		mCenterCenterFlex(diContent(item));
-		mStyleX(diContent(item),{gap:4});
+		mStyleX(diContent(item), { gap: 10 });//,padding:10, box:true});
+		items.push(item);
+	}
+	return items;
+
+
+}
+function rTest08() {
+	let state = {
+		pl1: { hand: [1, 2, 3, 4, 5], trick: [[6]] },
+		pl2: { hand: [11, 12, 13, 14, 15], trick: [[16]] },
+	};
+	let trick = arrFlatten(state.pl1.trick).concat(arrFlatten(state.pl2.trick));
+	let pl1Hand = state.pl1.hand;
+	let pl2Hand = state.pl2.hand;
+	let arrs = [trick, pl1Hand, pl2Hand];
+	let items = rTest07_helper();
+	for (let i = 0; i < 3; i++) {
+		let arr = arrs[i];
+		let item = items[i];
+		let d = diContent(item);
+		let id = 'h' + i;
+		iMessage(item, '');
+		// iMakeHand_test(d, arr, id);
+		iH00(arr, d, { bg: 'blue' }, id);
+
+	}
+}
+function rTest07() {
+	let items = rTest07_helper();
+	// let card = Card52._createUi('Q', 'H', 70, 110);
+	// console.log(card);
+	// let item = items[0];
+	// let dContent = diContent(item);
+	// console.log(item, dContent);
+	//iAddContent(item,iDiv(card));
+
+	for (let i = 0; i < 3; i++) {
+		let arr = [0, 1, 2, 10, 11].map(x => 1 + (x + i * 13) % 52);
+		let d = diContent(items[i]);
+		let id = 'h' + i;
+		// iMakeHand_test(d, arr, id);
+		iH00(arr, d, { bg: 'blue' }, id);
+
+	}
+}
+function rTest07_helper() {
+	setBackgroundColor('random');
+	let dGrid = mDiv(dTable, { gap: 10, bg: 'white', w: '90%', padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
+	let layout = ['T', 'H A'];
+	//let layout = ['t', 'H A'];
+
+	//more intricate layout!
+	let areaStyles = { bg: 'green', rounding: 6 };//,box:true, padding:10};
+	let contentStyles = { lowerRounding: 6 };
+	let messageStyles = { fg: 'yellow' };
+	let titleStyles = { bg: 'dimgray', family: 'AlgerianRegular', upperRounding: 6 };
+	let areas = {
+		T: { title: 'table', id: 'dTrick', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
+		H: { title: 'YOU', id: 'dHuman', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
+		A: { title: 'opponent', id: 'dAI', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
+	};
+	// areas.T.areaStyles.w='100%';
+
+	let x = createGridLayout(dGrid, layout);
+	console.log('result', x);
+
+	//createAreas(dGrid, x, 'dGrid');
+	let items = [];
+	for (const k in areas) {
+		let item = areas[k];
+		item.areaStyles['grid-area'] = k;
+		let dCell = mTitledMessageDiv(item.title, dGrid, item.id, item.areaStyles, item.contentStyles, item.titleStyles, item.messageStyles)
+		iRegister(item, item.id);
+		iAdd(item, { div: dCell, dTitle: dCell.children[0], dMessage: dCell.children[1], dContent: dCell.children[2] });
+		mCenterCenterFlex(diContent(item));
+		mStyleX(diContent(item), { gap: 10 });//,padding:10, box:true});
+		items.push(item);
+	}
+	return items;
+
+
+}
+function rTest06_clean_OK() {
+	setBackgroundColor('random');
+	let dGrid = mDiv(dTable, { gap: 10, bg: 'white', w: '90%', hmin: 400, padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
+	let layout = ['T', 'H A'];
+	//let layout = ['t', 'H A'];
+
+	//more intricate layout!
+	let areaStyles = { bg: 'green', rounding: 6 };//,box:true, padding:10};
+	let contentStyles = { lowerRounding: 6 };
+	let messageStyles = { fg: 'yellow' };
+	let titleStyles = { bg: 'dimgray', family: 'AlgerianRegular', upperRounding: 6 };
+	let areas = {
+		T: { title: 'table', id: 'dTrick', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
+		H: { title: 'YOU', id: 'dHuman', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
+		A: { title: 'opponent', id: 'dAI', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
+	};
+	areas.T.areaStyles.w = '100%';
+
+	let x = createGridLayout(dGrid, layout);
+	console.log('result', x);
+
+	//createAreas(dGrid, x, 'dGrid');
+	let items = [];
+	for (const k in areas) {
+		let item = areas[k];
+		item.areaStyles['grid-area'] = k;
+		let dCell = mTitledMessageDiv(item.title, dGrid, item.id, item.areaStyles, item.contentStyles, item.titleStyles, item.messageStyles)
+		iRegister(item, item.id);
+		iAdd(item, { div: dCell, dTitle: dCell.children[0], dMessage: dCell.children[1], dContent: dCell.children[2] });
+		mCenterCenterFlex(diContent(item));
+		mStyleX(diContent(item), { gap: 10 });//,padding:10, box:true});
 		items.push(item);
 	}
 	return items;
@@ -58,9 +203,9 @@ function rTest05() {
 	let layout = ['T', 'H A'];
 
 	//more intricate layout!
-	let areaStyles = { bg: 'random', rounding: 6};//,box:true };
-	let contentStyles = { bg: 'dimgray', lowerRounding:6 };
-	let messageStyles = { bg: 'dimgray' ,fg: 'yellow' };
+	let areaStyles = { bg: 'random', rounding: 6 };//,box:true };
+	let contentStyles = { bg: 'dimgray', lowerRounding: 6 };
+	let messageStyles = { bg: 'dimgray', fg: 'yellow' };
 	let titleStyles = { family: 'AlgerianRegular', upperRounding: 6 };
 	let areas = {
 		T: { title: 'table', id: 'dTrick', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
@@ -84,8 +229,8 @@ function rTest05() {
 		// 	dCell=mTitledDiv(a.title,dCell,{bg: 'green',},{h:'100%', w:'100%', bg: 'yellow',},a.id)
 		// 	// dCell.innerHTML = makeAreaNameDomel(areaName); 
 		// }else {dCell.id=a.id;}
-		iRegister(item,item.id);
-		iAdd(item,{div:dCell,dTitle:dCell.children[0],dMessage:dCell.children[1],dContent:dCell.children[2]});
+		iRegister(item, item.id);
+		iAdd(item, { div: dCell, dTitle: dCell.children[0], dMessage: dCell.children[1], dContent: dCell.children[2] });
 		// item.div = dCell;item.dTitle=dCell.children[0];item.dMessage=dCell.children[1];item.dContent=dCell.children[2];
 		items.push(item);
 	}

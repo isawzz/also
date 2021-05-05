@@ -4,7 +4,7 @@ async function _start() {
 	initTable(); initSidebar(); initAux(); initScore(); loadUser(); //timit = new TimeIt('*timer', true);
 
 	//startUnit();
-	rTest07(); //let x=rTest06_clean_OK(); console.log('result',x);//rTest04(); //rTest03_OK(); //rTest02(); //cTest10(); //rTest01();
+	rTest08(); //rTest07(); //let x=rTest06_clean_OK(); console.log('result',x);//rTest04(); //rTest03_OK(); //rTest02(); //cTest10(); //rTest01();
 	
 	//#region tests
 	//cTest05();//cTest10(); //cTest05(); //cTest04_2HandsRandom();

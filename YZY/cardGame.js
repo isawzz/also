@@ -34,7 +34,7 @@ function netHandSize(nmax, hCard, wCard, ovPercent = 20, splay = 'right') {
 function iHandZone(dParent, styles, nmax) {
 	if (nundef(styles)) styles = { bg: 'random', rounding: 10 };
 	if (isdef(nmax)) {
-		console.log('nmax',nmax)
+		console.log('nmax', nmax)
 		let sz = netHandSize(nmax);
 		styles.w = sz.w;
 		styles.h = sz.h;
@@ -80,11 +80,49 @@ function iRemakeHand(data) {
 	data.iHand = iSplay(items, zone);
 	return data;
 }
+function iH00_dep(iarr, dParent, styles, id) {
+	function iH00Zone(dTable, nmax = 3, padding = 10) {
+		let sz = netHandSize(nmax);
+		//console.log('________________', sz)
+		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding, rounding: 10 });
+	}
+	//should return item={iarr,live.div,styles}
+	let data = DA[id] = {};
+	let h = data.deck = new Deck();
+	h.init(iarr);
+	// iPresentHand_test(dParent, data);
+	// return data;
+	h = data;
+	if (nundef(h.zone)) h.zone = iH00Zone(dParent); else clearElement(h.zone);
+	if (nundef(h.iHand)) {
+		let items = i52(h.deck.cards());
+		h.iHand = iSplay(items, h.zone);
+	} else if (redo) {
+		clearElement(h.zone);
+		let items = i52(h.deck.cards());
+		h.iHand = iSplay(items, h.zone);
+	}
+	return h;
 
+}
+function iH00(iarr, dParent, styles, id) {
+	function iH00Zone(dTable, nmax = 3, padding = 10) {
+		let sz = netHandSize(nmax);
+		//console.log('________________', sz)
+		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding, rounding: 10 });
+	}
+	//should return item={iarr,live.div,styles}
+	let h = isdef(Items[id]) ? Items[id] : { arr: iarr, styles: styles, id: id };
+	if (nundef(h.zone)) h.zone = iH00Zone(dParent); else clearElement(h.zone);
+	let items = i52(iarr);
+	h.iHand = iSplay(items, h.zone);
+	return h;
+
+}
 function iHandZone_test(dTable, nmax = 10, padding = 10) {
 	let sz = netHandSize(nmax);
 	//console.log('________________', sz)
-	return mZone(dTable, { w: sz.w, h: sz.h, bg: 'random', padding: padding, rounding: 10 });
+	return mZone(dTable, { wmin: sz.w, h: sz.h, bg: 'random', padding: padding, rounding: 10 });
 }
 function iSortHand_test(dParent, h) {
 	let d = h.deck;

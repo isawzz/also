@@ -205,7 +205,7 @@ function collapseSmallLetterAreas(m, d) {
 
 
 
-function createGridLayout(d, layout, collapseEmptySmallLetterAreas=false) {
+function createGridLayout(d, layout, collapseEmptySmallLetterAreas=true) {
 	//first need to make each line of grid layout equal sized! do I? what happens if I dont?
 	let s = '';
 	let m = [];
