@@ -185,8 +185,6 @@ function makeItemHintable(item){
 	iAdd(item,{overlay:dov});
 	dov.style.userSelect = 'none';
 }
-function iHighlight(item){let d=iDov(item);mClass(d,'overlaySelected');}
-function iDov(item){return isdef(item.live)?item.live.overlay:null;}
 function makeItemDiv(item, options) {
 
 	//console.log('item',item,'options',options)

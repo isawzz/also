@@ -2,6 +2,7 @@ class ControllerTTT {
 	constructor(g, user) {
 		this.g = g;
 		this.createPlayers(user);
+		GameCounter = 0;
 	}
 	createPlayers(user) {
 		let players = this.players = this.g.players = [];
@@ -35,7 +36,9 @@ class ControllerTTT {
 	evaluate() {
 		this.deactivateUi();
 		this.g.eval(...arguments);
+		//console.log('back from game eval',G.gameOver)
 		if (this.g.gameOver) {
+			console.log('game over!!!')
 			let msg, sp;
 			//console.log('winner', this.g.winner)
 			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins!'; sp = 'A.I. wins!'; this.ai.score += 1; }
@@ -48,18 +51,20 @@ class ControllerTTT {
 			Score.nCorrect = Score.nWins = this.human.score;
 			Score.nLoses = this.ai.score;
 			Score.nTied = this.tie;
-
 			showScore();
-			showInstruction('', msg, dTitle, !this.g.silentMode, sp);
 
+			//hier koennte auch banner display! und die buttons kommen auf das banner!
+			new Banner().message(['Winner:', capitalize(this.g.winner.name)]);
+			showInstruction('', msg, dTitle, !this.g.silentMode, sp);
 			if (GameCounter <= 3) this.bPlay = mButton('play again', () => { resetRound(); this.startGame(); }, dTable, { fz: 28, margin: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
 			this.bPlay = mButton('next game', () => { setNextGame(); GC.startGame(); }, dTable, { fz: 28, margin: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
 
 			// this.bTest = mButton('test', () => { unitTest00(); }, dTable, { fz: 28, matop: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
-		}
-		else {
+		} else {
+
 			this.g.changePlayer();
 			this.startRound();
+			//TOMain=setTimeout(()=>this.startRound(),1500);
 		}
 	}
 }

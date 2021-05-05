@@ -31,23 +31,31 @@ function netHandSize(nmax, hCard, wCard, ovPercent = 20, splay = 'right') {
 	if (nundef(wCard)) wCard = Math.round(hCard * .7);
 	return isHorizontal ? { w: wCard + (nmax - 1) * wCard * ovPercent / 100, h: hCard } : { w: wCard, h: hCard + (nmax - 1) * hCard * ovPercent / 100 };
 }
-function iHandZone(nmax = 10, padding = 10) {
-	let sz = netHandSize(nmax);
-	//console.log('________________', sz)
-	return mZone(dTable, { w: sz.w, h: sz.h, bg: 'random', padding: padding, rounding: 10 });
+function iHandZone(dParent, styles, nmax) {
+	if (nundef(styles)) styles = { bg: 'random', rounding: 10 };
+	if (isdef(nmax)) {
+		console.log('nmax',nmax)
+		let sz = netHandSize(nmax);
+		styles.w = sz.w;
+		styles.h = sz.h;
+	}
+	//console.log('________________', styles)
+	return mZone(dParent, styles);
 }
-function iSortHand(h) {
+function iSortHand(dParent, h) {
 	let d = h.deck;
 	//console.log(d.cards());
 	d.sort();
 	//console.log(d.cards());
 
-	iPresentHand(h);
+	iPresentHand(dParent, h);
 }
-function iPresentHand(h, redo = true) {
-	if (nundef(h.zone)) h.zone = iHandZone(); else clearElement(h.zone);
+function iPresentHand(h, dParent, styles, redo = true) {
+	//console.log('zone styles',styles)
+	if (nundef(h.zone)) h.zone = iHandZone(dParent, styles); else clearElement(h.zone);
 	if (nundef(h.iHand)) {
 		let items = i52(h.deck.cards());
+		//console.log('items',items)
 		h.iHand = iSplay(items, h.zone);
 	} else if (redo) {
 		clearElement(h.zone);
@@ -56,11 +64,11 @@ function iPresentHand(h, redo = true) {
 	}
 	return h;
 }
-function iMakeHand(iarr, id) {
+function iMakeHand(iarr, dParent, styles, id) {
 	let data = DA[id] = {};
 	let h = data.deck = new Deck();
 	h.init(iarr);
-	iPresentHand(data);
+	iPresentHand(data, dParent, styles);
 	return data;
 }
 function iRemakeHand(data) {
@@ -72,6 +80,40 @@ function iRemakeHand(data) {
 	data.iHand = iSplay(items, zone);
 	return data;
 }
+
+function iHandZone_test(dTable, nmax = 10, padding = 10) {
+	let sz = netHandSize(nmax);
+	//console.log('________________', sz)
+	return mZone(dTable, { w: sz.w, h: sz.h, bg: 'random', padding: padding, rounding: 10 });
+}
+function iSortHand_test(dParent, h) {
+	let d = h.deck;
+	//console.log(d.cards());
+	d.sort();
+	//console.log(d.cards());
+
+	iPresentHand_test(dParent, h);
+}
+function iPresentHand_test(dParent, h, redo = true) {
+	if (nundef(h.zone)) h.zone = iHandZone_test(dParent); else clearElement(h.zone);
+	if (nundef(h.iHand)) {
+		let items = i52(h.deck.cards());
+		h.iHand = iSplay(items, h.zone);
+	} else if (redo) {
+		clearElement(h.zone);
+		let items = i52(h.deck.cards());
+		h.iHand = iSplay(items, h.zone);
+	}
+	return h;
+}
+function iMakeHand_test(dParent, iarr, id) {
+	let data = DA[id] = {};
+	let h = data.deck = new Deck();
+	h.init(iarr);
+	iPresentHand_test(dParent, data);
+	return data;
+}
+
 
 //animations of items or item groups(=layouts)
 function anim1(elem, prop, from, to, ms) {
@@ -107,6 +149,7 @@ class Card52 {
 		let is = suits.indexOf(k[1]); //=> zahle zwischen 0 und 3
 		return is * 13 + ir;
 	}
+	static getRankValue(i) { if (nundef(i)) return null; let r = i % 13; return r == 0 ? 13 : r; }
 	static getRank(i) {
 		let rank = 1 + (i % 13);
 		if (rank == 1) rank = 'A';
@@ -115,7 +158,9 @@ class Card52 {
 		return rank;
 	}
 	static getSuit(i) {
-		return ['S', 'H', 'D', 'C'][divInt(i, 13)];
+		let s = ['S', 'H', 'D', 'C'][divInt(i - 1, 13)];
+		//if (!'SHDC'.includes(s)) console.log('SUIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+		return s;
 	}
 	static turnFaceDown(c, color) {
 		//console.log(c.faceUp)
@@ -188,9 +233,9 @@ class Deck {
 	constructor(f) { this.data = []; if (isdef(f)) this['init' + f](); }
 	init(arr) { this.data = arr; }
 	initEmpty() { this.data = []; }
-	initTest(n, shuffled = true) { this.data = range(0, n); if (shuffled) this.shuffle(); }
-	init52(shuffled = true, jokers = 0) { this.data = range(0, 51 + jokers); if (shuffled) this.shuffle(); }
-	initRandomHand52(n) { this.data = choose(range(0, 51), n); }
+	initTest(n, shuffled = true) { this.data = range(1, n); if (shuffled) this.shuffle(); }
+	init52(shuffled = true, jokers = 0) { this.data = range(1, 52 + jokers); if (shuffled) this.shuffle(); }
+	initRandomHand52(n) { this.data = choose(range(1, 52), n); }
 	addTop(i) { this.data.push(i); return this; }
 	addBottom(i) { this.data.unshift(i); return this; }
 	bottom() { return this.data[0]; }

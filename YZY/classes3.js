@@ -10,7 +10,7 @@ class G2Player {
 	startGame() {
 		//console.log('starting', this.name);
 		this.moveCounter = 0;
-		this.winner = null;
+		this.winner = this.gameOver = null;
 		this.setStartPlayer();
 	}
 	clear() { clearTimeout(this.TO); }
@@ -34,6 +34,54 @@ class G2Player {
 	}
 	startRound() { }//console.log('startRound', this.name); }
 	prompt() { }
+	eval(){} //should set gameOver,winner,tie,info,
+	activate(){}
+
+}
+class GKrieg extends G2Player {
+	startGame() {
+		super.startGame();
+		setBackgroundColor('random');
+		let back = this.back = new GKriegBack();
+		back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'] } }); 
+		this.front = new GKriegFront(130, dTable);
+		mLinebreak(dTable, 50);
+		this.moveButton = mButton('Move!', this.interact.bind(this), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		//back.deck.sort(); back.print_state(); console.log(back.get_state());console.log('back players are',back.pl1,back.pl2);
+	}
+	prompt() {
+		this.front.presentState(this.back.get_state());
+		this.controller.activateUi();
+	}
+	interact() {
+		if (!canAct()) return;
+		let back = this.back;
+		back.make_random_move();
+		this.controller.evaluate();
+		// let x=this.back.resolve();
+		// if (x)this.TO = setTimeout(()=>this.controller.evaluate(),2500);else this.controller.evaluate();
+	}
+	changePlayer(){
+		this.back.swap_turn();
+		this.plTurn = this.players[this.back.player().index]; 
+		this.opp = this.players[this.back.opponent().index];
+		console.log('player',this.plTurn);}
+	eval(){
+		let back = this.back;
+		
+		this.front.presentState(this.back.get_state());
+		//this.back.resolve();
+		//console.log('back',back.is_out_of_cards(),back)
+		if (back.is_out_of_cards()) { 
+			this.gameOver = true; 
+			let w = back.winner();
+			if (isdef(w)) this.winner = this.players[w.index];
+	
+			console.log('ENDE!!!!!!!!!!!!')
+		}
+	}
+
+
 }
 class GTTT extends G2Player {
 	startGame() {
@@ -617,171 +665,14 @@ class GChess extends G2Player {
 		}
 	}
 }
-class GKrieg extends G2Player {
-	startGame() {
-		super.startGame();
-		this.game = new GKriegBack();
-		this.setStartPosition();
-	}
-	setStartPosition() {
-		let positions = [
-			null,
-			{
-				pl1: { hand: ['TH', 'QH'], trick: [['QH']] },
-				pl2: { hand: ['TC', 'QC'], trick: [['KC']] },
-			},
 
-			//old state reps:
-			[
-				[['2S', '3S', 'TS', 'QH'], ['4S', '5S', 'JS', 'QC']], //hands pl1,pl2
-				[[['QD'], ['AH', '2D', 'JH']], [['QS'], ['AD', '8D', 'KD']]], // trick / war on table
-			],
-			//more compressed state reps:
-			[['2S,3S,TS,QH', '4S,5S,JS,QC'], [['QD', 'AH,2D,JH'], ['QS', 'AD,8D,KD']]], // hands, trick/war on table per player
-			'2S,3S,TS,QH/4S,5S,JS,QC - QD.AH,2D,JH/QS.AD,8D,KD', // hands, trick/war on table per player
-		];
-		if (nundef(this.iPosition)) this.iPosition = 0;
-		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0] : this.startPosition == 'random' ? chooseRandom(positions) : positions[this.iPosition];
-		this.game.load(state);
-		// console.log('players', this.game.pl1, this.game.pl2, 'rest of deck', this.game.deck.data);
-		let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;//advance iPosition for next time!
-	}
 
-	getState() { return this.game.fen(); }
-	prompt() {
-		// wo sind die cards?
-
-	}
-}
-
-class GKriegBack {
-	fen() { return }
-	load(state) {
-		let deck = this.deck = new Deck('52');
-		this.pl1 = { hand: null, trick: [], index: 0 };
-		this.pl2 = { hand: null, trick: [], index: 1 };
-		if (nundef(state)) {
-			let n = 5;
-			let h1 = this.pl1.hand = deck.deal(n);
-			let h2 = this.pl2.hand = deck.deal(n);
-		} else {
-			/* example of a state:
-			{
-				pl1: { hand: ['TH', 'QH'], trick: [['QH']] },
-				pl2: { hand: ['TC', 'QC'], trick: [['KC']] },
-			},
-			*/
-			if (isdef(state.pl1.hand)) this.pl1.hand = parseHand(state.pl1.hand, deck);
-			if (isdef(state.pl2.hand)) this.pl2.hand = parseHand(state.pl2.hand, deck);
-			if (isdef(state.pl1.trick)) state.pl1.trick.map(x => this.pl1.trick.push(parseHand(x, deck)));
-			if (isdef(state.pl2.trick)) state.pl2.trick.map(x => this.pl2.trick.push(parseHand(x, deck)));
-			if (isdef(state.deck)) this.deck.setData(parseHand(state.deck));
-		}
-		this.players = [this.pl1, this.pl2];
-		this.iturn = 0;
-	}
-	get_state() { return { pl1: this.pl1, pl2: this.pl2, deck: this.deck } };
-	turn() { return this.iturn; }
-	swap_turn() { this.iturn = this.iturn == 0 ? 1 : 0; }
-	top(pl) {
-		let l = arrLastOfLast(pl.trick);
-		if (isdef(l)) {
-			//console.log('card', l, 'is', Card52._getKey(l));
-			l = l % 13;
-			if (l == 0) l = 13;
-			return l;
-		} //else { console.log('top undefined!', l, pl) }
-		return null;
-	}
-	get_moves() {
-		let pl = this.player()
-		let moves = [];
-		if (this.in_trick()) { moves.push([arrLast(pl.hand)]); }//console.log('in_trick') }
-		else if (this.is_war()) { moves.push(arrTakeFromEnd(pl.hand, 3)); }//console.log('is_war') }
-		else if (this.in_war()) { moves.push(arrTakeFromEnd(pl.hand, 3)); }//console.log('in_war') }
-		else { moves.push([arrLast(pl.hand)]); } //console.log('first!') }
-		return moves;
-	}
-	make_random_move() {
-		let moves = this.get_moves();
-		let move = chooseRandom(moves);
-		this.make_move(move);
-	}
-	make_move(move) {
-		// a move is a list of integers (=cards)
-		let pl = this.player();
-		pl.trick.push(move);
-		move.map(x => removeInPlace(pl.hand, x));
-		//this.print_state();
-		let result = this.resolve();
-		this.push_history(this.iturn, move, result);
-		this.swap_turn();
-		//add move to history!
-	}
-	resolve() {
-		//console.log('...resolve')
-		let pl = this.player(), opp = this.opponent();
-		if (pl == this.pl1) return null;
-		let t1 = this.top(pl); let t2 = this.top(opp);
-		//console.log('t1', t1, 't2', t2)
-		if (isdef(t1) && isdef(t2)) {
-			if (t1 > t2) { return this.add_trick_from_to(opp, pl); }
-			else if (t2 > t1) { return this.add_trick_from_to(pl, opp); }
-			else return null;
-		}
-		return null;
-	}
-	add_trick_from_to(plFrom, plTo) {
-		let t1 = plFrom.trick;
-		let t2 = plTo.trick;
-		let iLoser = plFrom.index;
-		let iWinner = plTo.index;
-		let cards1 = arrFlatten(plFrom.trick); console.log('cards from loser:', cards1);//, plFrom);
-		let cards2 = arrFlatten(plTo.trick); console.log('cards from winner:', cards2);//, plTo);
-		let cards = cards1.concat(cards2);
-		//console.log('cards', cards)
-		plTo.hand = cards.concat(plTo.hand);
-		plFrom.trick = [];
-		plTo.trick = [];
-		return { iWinner: iWinner, winnerTrick: t2, iLoser: iLoser, loserTrick: t1, cards: cards };
-	}
-	undo() {
-		let hist = this.pop_history();
-		if (hist == null) { return null; }
-		let move = hist.move;
-		this.iturn = hist.iturn;
-		// console.log('move is',hist,'this.iturn',this.iturn)
-		let pl = this.player();
-		pl.hand.push(move);
-		move.map(x => removeInPlace(pl.trick, x));
-
-		if (isdef(hist.result)) {
-			let plWin = this.players[hist.iWinner];
-			let plLose = this.players[hist.iLoser];
-			plWin.trick = hist.winnerTrick;
-			plLose.trick = hist.loserTrick;
-			plWin.hand = arrTake(plWin.hand, plWin.hand.length - hist.cards.length);
-		}
-
-		//this.print_state();
-	}
-	print_state() {
-		if (nundef(this.history)) this.history = [];
-		console.log('________ #' + this.history.length, 'turn', this.turn(), '\npl1', this.pl1.hand, 'played', arrFlatten(this.pl1.trick), '\npl2', this.pl2.hand, 'played', arrFlatten(this.pl2.trick), '\ndeck', this.deck.data);
-	}
-	player() { return this.players[this.iturn]; }
-	opponent() { return this.players[(this.iturn + 1) % this.players.length]; }
-	push_history(iturn, move, result) { if (nundef(this.history)) this.history = []; this.history.push({ iturn: iturn, move: move, result: result }); return this.history; }
-	pop_history() { if (nundef(this.history)) this.history = []; return this.history.pop(); }
-	is_war() { let pl = this.player(), opp = this.opponent(); return pl.trick.length > 0 && pl.trick.length == opp.trick.length && this.top(pl) == this.top(opp); }
-	in_war() { let pl = this.player(), opp = this.opponent(); return pl.trick.length == opp.trick.length - 1 && pl.trick.length >= 1; }
-	in_trick() { let pl = this.player(), opp = this.opponent(); return pl.trick.length == 0 && opp.trick.length == 1; }
-	is_out_of_cards() { let pl = this.player(), opp = this.opponent(); return (isEmpty(pl.hand.length) || isEmpty(opp.hand)); }
-}
+function iToValue(l){	if (isdef(l)) l=l%13;return isdef(l)?l==0?13: l:null;}
 
 function parseHand(keys, deck) {
 	let h1 = keys.map(x => Card52._fromKey(x));
 	//console.log('h1', h1)
 	if (isdef(deck)) h1.map(x => deck.remove(x));
+	//console.log('parse',keys,h1)
 	return h1;
 }

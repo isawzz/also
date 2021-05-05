@@ -1,3 +1,573 @@
+function createAreas(d, areaNames, prefix) {
+	let ipal = 1;
+	for (const areaName of areaNames) {
+		//create this area
+		let d1 = document.createElement('div');
+		let id = (isdef(prefix)?prefix + '.':'') + areaName;
+		d1.id = id;
+
+		d1.style.gridArea = areaName;
+		if (SPEC.shadeAreaBackgrounds) { d1.style.backgroundColor = colorPalette[ipal]; ipal = (ipal + 1) % colorPalette.length; }
+		if (SPEC.showAreaNames) { d1.innerHTML = makeAreaNameDomel(areaName); }
+		UIS[id] = { elem: d1, children: [] };
+		d.appendChild(d1);
+
+		//if this area is listed in areaTypes, need to create additional layout!
+		if (SPEC.areaTypes[areaName]) {
+			//areaName zB opps
+			let atype = SPEC.areaTypes[areaName];
+			console.log(atype);
+			if (atype.foreach) {
+				console.log(atype.foreach); // its a string gsm.players.opponent
+				let pool = serverData[atype.foreach.pool];
+				if (pool) {
+					let selProp = atype.foreach.selectionProperty;
+					let selVal = atype.foreach.selectionValue;
+					let nameProp = atype.foreach.nameProperty;
+					for (const oid in pool) {
+						let o = pool[oid];
+						if (o[selProp] == selVal) {
+							//create sub area 
+							let name = o[nameProp];
+
+						}
+					}
+				}
+				return;
+			}
+			createLayout(id, atype.layout)
+		} else {
+			//need to enter leaf area id into areaSubTypes[areaName]!!!
+			//=>suche function dafuer! 
+		}
+
+	}
+
+}
+
+function createGridLayout(dGrid, layout, collapseEmptySmallLetterAreas=false) {
+	//first need to make each line of grid layout equal sized! do I? what happens if I dont?
+	let s = '';
+	let m = [];
+	let maxNum = 0;
+	let areaNames = [];
+	// console.log('layout', layout)
+	for (const line of layout) {
+		let letters = line.split(' ');
+		let arr = [];
+		for (const l of letters) {
+			if (!isEmpty(l)) {
+				addIf(areaNames, l);
+				arr.push(l);
+			}
+		}
+		m.push(arr);
+		if (arr.length > maxNum) maxNum = arr.length;
+	}
+	//console.log('jagged matrix:', m)
+
+	//habe jagged array, muss into matrix verwandeln!
+	//last letter of each row will be repeated!
+	for (const line of m) {
+		let el = line[line.length - 1];
+		while (line.length < maxNum) line.push(el);
+		s += '"' + line.join(' ') + '" ';
+
+	}
+	console.log('matrix:', m)
+
+	//console.log(m);
+	dGrid.style.gridTemplateAreas = s;// eg. '"z z z" "a b c" "d e f"';
+
+	if (collapseEmptySmallLetterAreas) { collapseSmallLetterAreas(m, d); }
+	else fixedSizeGrid(m, d);
+
+	return areaNames;
+}
+
+class GKrieg extends G2Player {
+	startGame() {
+		super.startGame();
+		//console.log('players are',this.players[0],this.players[1]);
+		setBackgroundColor('random');
+		let back = this.back = new GKriegBack();
+
+		back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'] } }); 
+		//back.deck.sort(); back.print_state();
+		//console.log(back.get_state())
+		this.front = new GKriegFront(130, dTable);
+		//console.log('back players are',back.pl1,back.pl2);
+	}
+	showState(){
+		//clearTable(dTable);
+		this.front.presentState(this.back.get_state());
+	}
+	prompt() {
+		this.showState();
+		mLinebreak(dTable, 50);
+		this.moveButton = mButton('Move!', this.interact.bind(this), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+	}
+	interact() {
+		let back = this.back;
+		// let front = this.front;
+		//if (back.is_out_of_cards()) { this.controller.evaluate(); }
+		// { console.log('!!!!!!!!!!!!!!!!'); front.presentGameover(back.winner(), this.startGame.bind(this)); return; }
+		
+		back.make_random_move();
+		//this.showState();
+		let x=this.back.resolve();
+		// back.make_random_moveX();
+		// back.print_state();
+		// this.moveButton.remove();
+		if (x)this.TO = setTimeout(()=>this.controller.evaluate(),2500);else this.controller.evaluate();
+		
+
+		// front.presentState(back.get_state(), dTable);
+		// if (back.is_out_of_cards()) { console.log('game over!'); front.presentGameover(back.winner(), this.startGame.bind(this)); return; }
+		// mLinebreak(dTable, 50);
+		// mButton('Move!', () => this.gameStep(back, front), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+
+	}
+	changePlayer(){
+		this.back.swap_turn();
+		this.plTurn = this.players[this.back.player().index]; 
+		this.opp = this.players[this.back.opponent().index];
+		console.log('player',this.plTurn);}
+	eval(){
+		let back = this.back;
+		
+		this.showState();
+		//this.back.resolve();
+		//console.log('back',back.is_out_of_cards(),back)
+		if (back.is_out_of_cards()) { 
+			this.gameOver = true; 
+			let w = back.winner();
+			if (isdef(w)) this.winner = this.players[w.index];
+	
+			console.log('ENDE!!!!!!!!!!!!')
+		}
+	}
+
+
+}
+class GKriegFront {
+	constructor(hPlayer, dParent) {
+		this.hPlayer = hPlayer;
+		let dGrid = mDiv100(dParent, { bg: 'yellow' });
+		let areas = this.areas = mAreas(dGrid);
+		areas.map(x=>mCenterFlex(x.div));
+		console.log(areas);
+	}
+	clear(){
+		this.areas.map(x=>clearElement(x));
+	}
+	presentState(state) {
+		this.clear();
+		this.showTrick(dTrick)
+	}
+	showTrick(dParent) {
+		//mCenterFlex(dParent)
+		let idx = G.back.turn();
+		let pl = G.players[idx], opp = G.players[idx == 0 ? 1 : 0];
+		let bpl = G.back.player(), bopp = G.back.opponent();
+		let order = [opp, pl];
+		for (let i = 0; i < Math.max(bpl.trick.length, bopp.trick.length); i++) {
+			let hand = [];
+			if (bopp.trick.length > i) hand = hand.concat(bopp.trick[i]);
+			if (bpl.trick.length > i) hand = hand.concat(bpl.trick[i]);
+			let h = iMakeHand(hand, dParent, { hpadding: 10, hmargin: 10 }, getUID());
+			console.log('i',i,'hand',hand)
+		}
+	}
+	presentState_dep(state, dParent) {
+
+
+		mCenterFlex(dParent);
+		let dTrick = mDiv(dParent, { w: '80%', h: 130 }); mCenterFlex(dTrick);
+		mLinebreak(dParent, 25);
+		let dPlayers = mDiv(dParent, { w: '80%', h: 130, padding: 10 }); mCenterFlex(dPlayers)
+
+
+		//top most kommt die table
+		//immer als oberstes der letzte
+		//turn player? state muss player order haben!
+		this.showTrick(dTrick);
+
+		//drunter links kommen human cards: da steht: your cards
+		//brauch den index in back von human player!
+		let human = firstCond(G.back.players, x => x.name == G.human.id);
+		console.log('human player is', human);
+		let hpl = iMakeHand(human.hand, dPlayers, { hpadding: 10, hmargin: 10 }, getUID());
+		//this.presentCardHand(human.hand, dParent);
+
+		let ai = firstCond(G.back.players, x => x.name == G.ai.id);
+		console.log('human player is', ai);
+		hpl = iMakeHand(ai.hand, dPlayers, { hpadding: 10, hmargin: 10 }, getUID());
+		//this.presentCardHand(ai.hand, dParent);
+		//rechts kommt die AI: 
+		//links kommt das deck
+
+
+		// for (const k in state) {
+		// 	let x = state[k];
+		// 	this.presentType(x, dParent);
+		// }
+	}
+	presentGameover(winner, callback) {
+		console.log('winner', winner)
+		new Banner().message(['Winner:', capitalize(winner.name)], callback);
+	}
+	presentType(x, dParent) {
+		if (isPlayer(x)) { this.presentPlayer(x, dParent); mGap(dParent, 50); }
+		else if (isBoard(x)) { this.presentBoard(x, dParent); }
+		else if (isDict(x)) this.presentState(x, dParent);
+		else if (isCardHand(x)) this.presentCardHand(x, dParent);
+	}
+	presentBoard() { }
+	presentPlayer(pl, dParent) {
+		let title = isdef(pl.name) ? pl.name : isdef(pl.id) ? pl.id : 'player';
+		let dPlayer = mTitledDiv(title, dParent, { h: this.hPlayer, wmin: '80%' }, { padding: 4 }, 'dPlayer' + pl.index);
+
+		for (const k in pl) {
+			let o = pl[k];
+			if (isCardHand(o)) { this.presentCardHand(o, dPlayer); }
+			else this.presentState(o, dPlayer);
+		}
+	}
+	presentCardHand(o, dParent) {
+		//console.log('o', o)
+		let h = iMakeHand(o, dParent, { hpadding: 10, hmargin: 10 }, getUID());
+		mLinebreak(dParent)
+		//was mach ich mit dem h1 object?
+		//console.log('card hand', h);
+
+	}
+}
+class GKriegFront {
+	constructor(hPlayer) { this.hPlayer = hPlayer; }
+	presentState(state, dParent) {
+		mCenterFlex(dParent);
+		for (const k in state) {
+			let x = state[k];
+			this.presentType(x, dParent);
+		}
+	}
+	presentGameover(winner,callback) {
+		console.log('winner', winner)
+		new Banner().message(['Winner:', capitalize(winner.name)],callback);
+	}
+	presentType(x, dParent) {
+		if (isPlayer(x)) { this.presentPlayer(x, dParent); mGap(dParent, 50); }
+		else if (isBoard(x)) { this.presentBoard(x, dParent); }
+		else if (isDict(x)) this.presentState(x, dParent);
+		else if (isCardHand(x)) this.presentCardHand(x, dParent);
+	}
+	presentBoard() { }
+	presentPlayer(pl, dParent) {
+		let title = isdef(pl.name) ? pl.name : isdef(pl.id) ? pl.id : 'player';
+		let dPlayer = mTitledDiv(title, dParent, { h: this.hPlayer, wmin: '80%' }, { padding: 4 }, 'dPlayer' + pl.index);
+
+		for (const k in pl) {
+			let o = pl[k];
+			if (isCardHand(o)) { this.presentCardHand(o, dPlayer); }
+			else this.presentState(o, dPlayer);
+		}
+	}
+	presentCardHand(o, dParent) {
+		//console.log('o', o)
+		let h = iMakeHand(o, dParent, { hpadding: 10, hmargin: 10 }, getUID());
+		mLinebreak(dParent)
+		//was mach ich mit dem h1 object?
+		//console.log('card hand', h);
+
+	}
+}
+
+
+class GKriegMinimalistisch extends G2Player{
+	startGame() {
+		setBackgroundColor('random');
+		clearElement(dTable)
+		let back = this.back = new GKriegBack();
+		back.load({ pl1: { name: 'felix', hand: ['TH', 'KH'] }, pl2: { name: 'tom', hand: ['9C', 'QC'] } }); back.deck.sort(); back.print_state();
+		let front = this.front = new GKriegFront(130);
+		front.presentState(back.get_state(), dTable);
+	
+		mLinebreak(dTable, 50);
+		mButton('Move!', () => this.gameStep(back, front), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+	
+	}
+	gameStep(){
+		let back = this.back;
+		let front = this.front;
+		if (back.is_out_of_cards()) { console.log('!!!!!!!!!!!!!!!!'); front.presentGameover(back.winner(),this.startGame.bind(this)); return; }
+
+		clearTable(dTable);
+		back.make_random_moveX();
+		back.make_random_moveX();
+		back.print_state();
+		front.presentState(back.get_state(), dTable);
+		if (back.is_out_of_cards()) { console.log('game over!'); front.presentGameover(back.winner(),this.startGame.bind(this)); return; }
+	
+		mLinebreak(dTable, 50);
+		mButton('Move!', () => this.gameStep(back, front), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+	
+	}
+
+	
+}
+
+
+
+class GKrieg extends G2Player {
+	constructor(name,o){
+		super(name,o);
+		this.game = new GKriegBack();
+		this.front = new GKriegFront(130);
+	}
+	startGame() {
+		super.startGame();
+		this.setStartPosition();
+		//game.turn ist IMMER 0
+		this.plTurn.index = 0; this.plOpp.index = 1;
+
+		// showFleetingMessage(`You play index ${this.human.index}`)
+	}
+	setStartPosition() {
+		let positions = [
+			null,
+			{
+				pl1: { hand: ['TH', 'AH'], trick: [['QH']] },
+				pl2: { hand: ['TC', '2C'], trick: [['QC']] },
+			},
+
+			//old state reps:
+			[
+				[['2S', '3S', 'TS', 'QH'], ['4S', '5S', 'JS', 'QC']], //hands pl1,pl2
+				[[['QD'], ['AH', '2D', 'JH']], [['QS'], ['AD', '8D', 'KD']]], // trick / war on table
+			],
+			//more compressed state reps:
+			[['2S,3S,TS,QH', '4S,5S,JS,QC'], [['QD', 'AH,2D,JH'], ['QS', 'AD,8D,KD']]], // hands, trick/war on table per player
+			'2S,3S,TS,QH/4S,5S,JS,QC - QD.AH,2D,JH/QS.AD,8D,KD', // hands, trick/war on table per player
+		];
+		if (nundef(this.iPosition)) this.iPosition = 0;
+		let state = nundef(this.startPosition) || this.startPosition == 'empty' ? positions[0] : this.startPosition == 'random' ? chooseRandom(positions) : positions[this.iPosition];
+		//state = null;
+		this.game.load(state);
+		// console.log('players', this.game.pl1, this.game.pl2, 'rest of deck', this.game.deck.data);
+		let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;//advance iPosition for next time!
+	}
+
+	getState() { 
+		let state = this.game.get_state();
+		console.log(state)
+		state['pl'+(this.human.index+1)].name='YOU';
+		state['pl'+(this.ai.index+1)].name='opponent';
+		
+		//copyKeys(state.pl1,)
+		return this.game.get_state(); 
+	}
+	prompt() {
+		// wo sind die cards?
+		let state = this.getState();
+		console.log('_______state',state)
+		clearTable();
+		this.front.presentState(state,dTable);
+
+		//turn player div should get different bg
+		let iturn = this.game.turn();
+		mStyleX(mBy('dPlayer'+iturn),{bg:'red'});
+
+		//ein button for play card
+		mLinebreak(dTable, 50);
+		mButton('Move!', this.move.bind(this), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+
+	}
+	move(){
+		this.game.make_random_moveX();
+		//this.game.make_random_move();
+
+		this.prompt();
+	}
+}
+
+function presentPlayer_dep(pl, dParent) {
+	let dPlayer = mDiv(dParent, {}, null, isdef(pl.name) ? pl.name : isdef(pl.id) ? pl.id : 'player');
+	mLinebreak(dPlayer)
+
+	for (const k in pl) {
+		let o = pl[k];
+		if (isCardHand(o)) { this.presentCardHand(o, dPlayer); }
+		else this.presentState(o, dPlayer);
+	}
+}
+
+class GKriegBack {
+	load(state) {
+		let deck = this.deck = new Deck('52');
+		let n = 4;
+		this.pl1 = { hand: deck.deal(n), trick: [], index: 0 }; if (isdef(state) && isdef(state.pl1)) addKeys(state.pl1, this.pl1);
+		this.pl2 = { hand: deck.deal(n), trick: [], index: 1 }; if (isdef(state) && isdef(state.pl2)) addKeys(state.pl2, this.pl2);
+		this.players = [this.pl1, this.pl2];
+		this.iturn = 0;
+		if (nundef(state)) return;
+		/* example of a state:
+		{
+			pl1: { hand: ['TH', 'QH'], trick: [['QH']] },
+			pl2: { hand: ['TC', 'QC'], trick: [['KC']] },
+		},
+		*/
+		if (isdef(state.pl1.hand)) this.pl1.hand = parseHand(state.pl1.hand, deck);
+		if (isdef(state.pl2.hand)) this.pl2.hand = parseHand(state.pl2.hand, deck);
+		if (isdef(state.pl1.trick)) state.pl1.trick.map(x => this.pl1.trick.push(parseHand(x, deck)));
+		if (isdef(state.pl2.trick)) state.pl2.trick.map(x => this.pl2.trick.push(parseHand(x, deck)));
+		if (isdef(state.deck)) this.deck.setData(parseHand(state.deck));
+
+		if (!isEmpty(this.pl1.trick)) {
+			let len1 = this.pl1.trick.length;
+			let len2 = this.pl2.trick.length;
+
+			if (len1 > len2) this.iturn = 1;
+			else {
+				this.resolve();
+				this.iturn = 0;
+			}
+		}
+	}
+	get_state() { return { pl1: this.pl1, pl2: this.pl2, deck: this.deck } };
+	turn() { return this.iturn; }
+	top(pl) { return iToValue(arrFirstOfLast(pl.trick)); }
+	top_dep(pl) {
+		let l = arrFirstOfLast(pl.trick);
+		//console.log('top of trick',arrString(jsCopy(pl.trick)),'is',l)
+		if (isdef(l)) {
+			//console.log('card', l, 'is', Card52._getKey(l));
+			l = l % 13;
+			if (l == 0) l = 13;
+			return l;
+		} //else { console.log('top undefined!', l, pl) }
+		return null;
+	}
+	get_moves() {
+		let pl = this.player()
+		let moves = [];
+		if (this.in_trick()) { moves.push([arrLast(pl.hand)]); }//console.log('in_trick') }
+		else if (this.is_war()) {
+			let x = arrTakeFromEnd(pl.hand, 3);
+			moves.push(x);
+			//console.log('hand',pl.hand,'x',x,'moves',jsCopy(moves)); 
+			//console.log('is_war');
+		}
+		else if (this.in_war()) { moves.push(arrTakeFromEnd(pl.hand, 3)); }//console.log('in_war') }
+		else { moves.push([arrLast(pl.hand)]); } //console.log('first!') }
+		return moves;
+	}
+	make_random_move() {
+		let moves = this.get_moves();
+		//console.log('moves',arrString(moves)); 
+		let move = chooseRandom(moves);
+		//console.log('move chosen',move)
+		this.make_move(move);
+	}
+	make_move(move) {
+		// a move is a list of integers (=cards)
+		let pl = this.player();
+		pl.trick.push(move);
+		move.map(x => removeInPlace(pl.hand, x));
+		//console.log('hand',arrString(pl.hand),'trick in make_move',arrString(pl.trick));
+		//this.print_state();
+		this.lastMove = move;
+	}
+	resolve() {
+
+		let result = this._resolve();
+		this.push_history(this.iturn, this.lastMove, result);//add move to history!
+
+	}
+	swap_turn() { this.iturn = this.iturn == 0 ? 1 : 0; }
+	make_random_moveX() {
+		let moves = this.get_moves();
+		let move = chooseRandom(moves);
+		this.make_moveX(move);
+	}
+	make_moveX(move) {
+		this.make_move(move);
+		let result = this._resolve();
+		this.push_history(this.iturn, move, result);//add move to history!
+		this.swap_turn();
+	}
+	_resolve() {
+		//console.log('...resolve')
+		let pl = this.player(), opp = this.opponent();
+		if (this.in_trick()) return null;
+		let t1 = this.top(pl); let t2 = this.top(opp);
+		//console.log('resolve: compare t1', t1, 't2', t2);
+		if (isdef(t1) && isdef(t2)) {
+			if (t1 > t2) { return this.add_trick_from_to(opp, pl); }
+			else if (t2 > t1) { return this.add_trick_from_to(pl, opp); }
+			else return null;
+		}
+		return null;
+	}
+	add_trick_from_to(plFrom, plTo) {
+		let t1 = plFrom.trick;
+		let t2 = plTo.trick;
+		let iLoser = plFrom.index;
+		let iWinner = plTo.index;
+		let cards1 = arrFlatten(plFrom.trick); //console.log('cards from loser:', cards1);//, plFrom);
+		let cards2 = arrFlatten(plTo.trick); //console.log('cards from winner:', cards2);//, plTo);
+		let cards = cards1.concat(cards2);
+		//console.log('cards', cards)
+		plTo.hand = cards.concat(plTo.hand);
+		plFrom.trick = [];
+		plTo.trick = [];
+		return { iWinner: iWinner, winnerTrick: t2, iLoser: iLoser, loserTrick: t1, cards: cards };
+	}
+	undo() {
+		let hist = this.pop_history();
+		if (hist == null) { return null; }
+		let move = hist.move;
+		this.iturn = hist.iturn;
+		// console.log('move is',hist,'this.iturn',this.iturn)
+		let pl = this.player();
+		pl.hand.push(move);
+		move.map(x => removeInPlace(pl.trick, x));
+
+		if (isdef(hist.result)) {
+			let plWin = this.players[hist.iWinner];
+			let plLose = this.players[hist.iLoser];
+			plWin.trick = hist.winnerTrick;
+			plLose.trick = hist.loserTrick;
+			plWin.hand = arrTake(plWin.hand, plWin.hand.length - hist.cards.length);
+		}
+
+		//this.print_state();
+	}
+	print_state(comment = '') {
+		if (nundef(this.history)) this.history = [];
+		let state = jsCopy(this.get_state());
+
+		console.log('____' + comment + ' #' + this.history.length, 'turn=' + this.iturn);
+		console.log('pl1: hand:' + arrString(this.pl1.hand, iToValue), 'trick', arrString(this.pl1.trick, iToValue), 'top', this.top(this.pl1));
+		console.log('pl2: hand:' + arrString(this.pl2.hand, iToValue), 'trick', arrString(this.pl2.trick, iToValue), 'top', this.top(this.pl2));
+		//console.log('deck',this.deck.data.toString());
+
+		//console.log('state',state)
+
+
+		//console.log('________ #' + this.history.length, 'turn', this.turn(), '\npl1', this.pl1.hand, 'played', arrFlatten(this.pl1.trick), '\npl2', this.pl2.hand, 'played', arrFlatten(this.pl2.trick), '\ndeck', this.deck.data);
+	}
+	player() { return this.players[this.iturn]; }
+	opponent() { return this.players[(this.iturn + 1) % this.players.length]; }
+	push_history(iturn, move, result) { if (nundef(this.history)) this.history = []; this.history.push({ iturn: iturn, move: move, result: result }); return this.history; }
+	pop_history() { if (nundef(this.history)) this.history = []; return this.history.pop(); }
+	is_war() { let pl = this.player(), opp = this.opponent(); return pl.trick.length > 0 && pl.trick.length == opp.trick.length && this.top(pl) == this.top(opp); }
+	in_war() { let pl = this.player(), opp = this.opponent(); return pl.trick.length == opp.trick.length - 1 && pl.trick.length >= 1; }
+	in_trick() { let pl = this.player(), opp = this.opponent(); return pl.trick.length == 0 && opp.trick.length == 1; }
+	is_out_of_cards() { return this._is_out_of_cards(this.player()) || this._is_out_of_cards(this.opponent()); }
+	_is_out_of_cards(pl) { return (isEmpty(pl.trick) && isEmpty(pl.hand)); }
+	winner() { return firstCond(this.players, x => !isEmpty(x.hand) || !isEmpty(x.trick)); }
+}
 
 
 class GKriegBack {

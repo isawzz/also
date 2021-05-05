@@ -94,16 +94,7 @@ function miAddLabel(item, styles) {
 	}
 	return d;
 }
-function miPic(item, dParent, styles, classes) {
-	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
-	let d = mDiv(dParent);
-	d.innerHTML = info.text;
-	if (nundef(styles)) styles = {};
-	addKeys({ family: info.family, fz: 50, display: 'inline-block' }, styles);
-	mStyleX(d, styles);
-	if (isdef(classes)) mClass(d, classes);
-	return d;
-}
+function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }
 function mIfNotRelative(d) { if (nundef(d.style.position)) d.style.position = 'relative'; }
 function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent, styles); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
@@ -133,12 +124,23 @@ function mLine3(dParent, index, ids, styles) {
 }
 function mMoveBy(elem, dx, dy) { let rect = getRect(elem); mPos(elem, rect.x + dx, rect.y + dy); }
 function mParent(elem) { return elem.parentNode; }
+function miPic(item, dParent, styles, classes) {
+	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
+	let d = mDiv(dParent);
+	d.innerHTML = info.text;
+	if (nundef(styles)) styles = {};
+	addKeys({ family: info.family, fz: 50, display: 'inline-block' }, styles);
+	mStyleX(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	return d;
+}
 function mPos(d, x, y, unit = 'px') { mStyleX(d, { left: x, top: y, position: 'absolute' }, unit); }
 function mRemove(elem) { mDestroy(elem); }
 function mRemoveChildrenFromIndex(dParent, i) { while (dParent.children[i]) { mRemove(dParent.children[i]); } }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
 function mRemoveStyle(d, styles) { for (const k of styles) d.style[k] = null; }
 function mReveal(d) { d.style.opacity = 1; }
+function mScreen(dParent, styles) { let d = mDover(dParent); if (isdef(styles)) mStyleX(d, styles); return d; }
 function mSize(d, w, h, unit = 'px') { mStyleX(d, { width: w, height: h }, unit); }
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
@@ -182,6 +184,16 @@ function mStyleX(elem, styles, unit = 'px') {
 		styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
 		//console.log('::::::::::::::', styles.vpadding, styles.hpadding)
 	}
+	if (isdef(styles.upperRounding)) {
+		let rtop=''+valf(styles.upperRounding, 0) + unit;
+		let rbot='0' + unit;
+		styles['border-radius'] = rtop+' '+rtop+' '+rbot+' '+rbot;
+	}else if(isdef(styles.lowerRounding)) {
+		let rbot=''+valf(styles.lowerRounding, 0) + unit;
+		let rtop='0' + unit;
+		styles['border-radius'] = rtop+' '+rtop+' '+rbot+' '+rbot;
+	}
+
 	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
 	//console.log(styles.bg,styles.fg);
 
@@ -277,7 +289,7 @@ function mText(text, dParent, styles, classes) {
 	if (isdef(classes)) mClass(d, classes);
 	return d;
 }
-function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
+function mTitledDiv(title, dParent, outerStyles = {}, innerStyles = {}, id) {
 	let d = mDiv(dParent, outerStyles);
 	let dTitle = mDiv(d);
 	dTitle.innerHTML = title;
@@ -286,7 +298,25 @@ function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
 	let dContent = mDiv(d, innerStyles, id);
 	return dContent;
 }
+function mTitledMessageDiv(title, dParent, id, outerStyles = {}, contentStyles = {}, titleStyles = {}, messageStyles = {}) {
+	let d = mDiv(dParent, outerStyles, id);
+	//console.log('outerStyles',outerStyles);
+	let dTitle = mDiv(d, titleStyles, id + '.title');
+	dTitle.innerHTML = title;
+	let dMessage = mDiv(d, messageStyles, id + '.message');
+	dMessage.innerHTML = 'hallo!';
+	contentStyles.w = '100%';
+	//console.log('outer rect',getRect(d))
+	let hTitle=getRect(dTitle).h,hMessage=getRect(dMessage).h,hArea=getRect(d).h;
+	let hContent=hArea-hTitle-hMessage-4;
+	mStyleX(dMessage,{h:hMessage+2});
+	mStyleX(dTitle,{h:hTitle+2});
+	contentStyles.hmin = hContent; //getRect(d).h - getRect(dTitle).h - getRect(dMessage).h - 4;
+	let dContent = mDiv(d, contentStyles, id + '.content');
+	return d;
+}
 function mZone(dParent, styles, pos) {
+	//console.log('mZone',dParent,styles,pos)
 	let d = mDiv(dParent);
 	if (isdef(styles)) mStyleX(d, styles);
 	if (isdef(pos)) {
@@ -339,6 +369,13 @@ function iDetect(itemInfoKey) {
 }
 function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
 function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
+function iDov(item){return isdef(item.live)?item.live.overlay:null;}
+function diMessage(item){return isdef(item.live)?item.live.dMessage:null;}
+function iMessage(item,msg){let dm=diMessage(item);if (isdef(dm)) dm.innerHTML=msg;}
+function diTitle(item){return isdef(item.live)?item.live.dTitle:null;}
+function iTitle(item,msg){let dm=diTitle(item);if (isdef(dm)) dm.innerHTML=msg;}
+function diContent(item){return isdef(item.live)?item.live.dContent:null;}
+function iAddContent(item,d){let dm=diContent(item);if (isdef(dm)) mAppend(dm,d);}
 function iGrid(rows, cols, dParent, styles) {
 	styles.display = 'inline-block';
 	let items = [];
@@ -355,6 +392,7 @@ function iGrid(rows, cols, dParent, styles) {
 	}
 	return items;
 }
+function iHighlight(item){let d=iDov(item);mClass(d,'overlaySelected');}
 function iLabel(i) { return isdef(i.live) ? i.live.dLabel : isdef(i.dLabel) ? i.dLabel : null; }
 function iMoveFromTo(item, d1, d2, callback, offset) {
 	let bi = iBounds(item);
@@ -407,6 +445,9 @@ function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ov
 		iParent = iContainer;
 
 	} else dParent = iContainer;
+
+	containerStyles.hmin = items[0].h;
+	//console.log('contStyles',containerStyles,items[0])
 	mStyleX(dParent, containerStyles);
 
 	//phase 4: add items to container
@@ -586,6 +627,20 @@ function getHueWheel(contrastTo, minDiff = 25, mod = 30, start = 0) {
 		start += mod;
 	}
 	return wheel;
+}
+function getPalette(color, type = 'shade') {
+	color = anyColorToStandardString(color);
+	return colorPalShade(color);
+}
+function getTransPalette(color = '#000000') {
+	let res = [];
+	for (const alpha of [.0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1]) res.push(colorTrans(color, alpha));
+	return res;
+}
+function getTransPalette9(color = '#000000') {
+	let res = [];
+	for (const alpha of [.1, .2, .3, .4, .5, .6, .7, .8, .9]) res.push(colorTrans(color, alpha));
+	return res;
 }
 function colorHue(cAny) {
 	let hsl = colorHSL(cAny, true);
@@ -1817,25 +1872,12 @@ function addSimpleProps(ofrom, oto = {}) { for (const k in ofrom) { if (nundef(o
 function addIfDict(key, val, dict) { if (!(key in dict)) { dict[key] = [val]; } }
 function any(arr, cond) { return !isEmpty(arr.filter(cond)); }
 function anyStartsWith(arr, prefix) { return any(arr, el => startsWith(el, prefix)); }
-function arrTake(arr, n) { return takeFromStart(arr, n); }
-function arrTakeFromEnd(arr,n){
-	if (arr.length<=n) return arr; else return arr.slice(arr.length-n);
-}
-function arrRotate(arr, count) {
-	// usage:
-	// let arr = [1,2,3,4,5];let arr1=jsCopy(arr); arr2=arrRotate(arr1,2);
-	var unshift = Array.prototype.unshift,
-		splice = Array.prototype.splice;
-	var len = arr.length >>> 0, count = count >> 0;
 
-	let arr1 = jsCopy(arr);
-	unshift.apply(arr1, splice.call(arr1, count % len, len));
-	return arr1;
-}
 function arrCount(arr, func) { let filt = arr.filter(func); return filt.length; }
 function arrChildren(elem) { return [...elem.children]; }
 function arrCreate(n, func) { let res = []; for (let i = 0; i < n; i++) { res.push(func(i)); } return res; }
 function arrFirst(arr) { return arr.length > 0 ? arr[0] : null; }
+function arrFirstOfLast(arr) { if (arr.length > 0) { let l = arrLast(arr); return isList(l) ? arrFirst(l) : null; } else return null; }
 function arrFlatten(arr) {
 	let res = [];
 	for (let i = 0; i < arr.length; i++) {
@@ -1845,15 +1887,10 @@ function arrFlatten(arr) {
 	}
 	return res;
 }
-function arrLastOfLast(arr) { if (arr.length > 0) { let l = arrLast(arr); return isList(l) ? arrLast(l) : null; } else return null; }
-function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
-function arrTail(arr) { return arr.slice(1); }
 function arrFromIndex(arr, i) { return arr.slice(i); }
 function arrFromTo(arr, iFrom, iTo) { return takeFromTo(arr, iFrom, iTo); }
-function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
-function arrPlus(a, b) { let res = a.concat(b); return res; }
-function arrWithout(a, b) { return arrMinus(a, b); }
-function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
+function arrLastOfLast(arr) { if (arr.length > 0) { let l = arrLast(arr); return isList(l) ? arrLast(l) : null; } else return null; }
+function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
 function arrMinMax(arr, func) {
 	//console.log('====arr',arr)
 	if (nundef(func)) func = x => x;
@@ -1873,6 +1910,9 @@ function arrMinMax(arr, func) {
 
 	return { min: min, imin: imin, max: max, imax: imax };
 }
+function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
+function arrPlus(a, b) { let res = a.concat(b); return res; }
+function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
 
 function arrReplaceAt(arr, index, val, inPlace = true) { return inPlace ? arrReplaceAtInPlace(arr, index, val) : arrReplaceAtCopy(arr, index, val); }
 function arrReplaceAtInPlace(arr, index, val) { arr[index] = val; }
@@ -1884,10 +1924,36 @@ function arrReplaceAtCopy(arr, index, val) {
 	}
 	return res;
 }
+function arrRotate(arr, count) {
+	// usage:
+	// let arr = [1,2,3,4,5];let arr1=jsCopy(arr); arr2=arrRotate(arr1,2);
+	var unshift = Array.prototype.unshift,
+		splice = Array.prototype.splice;
+	var len = arr.length >>> 0, count = count >> 0;
 
-function arrSum(arr, props) {
-	if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0);
+	let arr1 = jsCopy(arr);
+	unshift.apply(arr1, splice.call(arr1, count % len, len));
+	return arr1;
 }
+function arrString(arr, func) {
+	if (isEmpty(arr)) return '[]';
+	let s = '[';
+	for (const el of arr) {
+		if (isList(el)) s += arrString(el, func) + ','; else s += (isdef(func) ? func(el) : el) + ',';
+
+	}
+	s = s.substring(0, s.length - 1);
+	s += ']';
+	return s;
+}
+function arrSum(arr, props) { if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0); }
+function arrTail(arr) { return arr.slice(1); }
+function arrTake(arr, n) { return takeFromStart(arr, n); }
+function arrTakeFromEnd(arr, n) {
+	if (arr.length <= n) return arr.map(x => x); else return arr.slice(arr.length - n);
+}
+function arrWithout(a, b) { return arrMinus(a, b); }
+
 function classByName(name) { return eval(name); }
 function copyKeys(ofrom, oto, except = {}, only) {
 	let keys = isdef(only) ? only : Object.keys(ofrom);

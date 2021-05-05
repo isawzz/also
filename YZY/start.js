@@ -3,18 +3,23 @@
 async function _start() {
 	initTable(); initSidebar(); initAux(); initScore(); loadUser(); //timit = new TimeIt('*timer', true);
 
+	//startUnit();
+	rTest07(); //let x=rTest06_clean_OK(); console.log('result',x);//rTest04(); //rTest03_OK(); //rTest02(); //cTest10(); //rTest01();
+	
+	//#region tests
+	//cTest05();//cTest10(); //cTest05(); //cTest04_2HandsRandom();
+
+	//let game = new GKriegBack(); //game.load(); game.print_state();
+	//kriegTest06(game); //kriegTest04(game); //kriegTest03(game); //kriegTest01(game); //kriegTest00(game);
+	//kriegTest00UI();
+
 	//let arr=[5,4,3,2,1,0];console.log(arr.slice(4),arrTakeFromEnd(arr,3),arrTakeFromEnd([0,1],3));
 	//let game=new Chess();	game.load('r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 1');	console.log('moves',game.ugly_moves());//console.log('turn',game.turn(),game.moves());
-	let game = new GKriegBack(); game.load(); game.print_state();
 
-	game.load({ pl1: { hand: ['TH', 'QH'], trick: [['QH']] }, pl2: { hand: ['TC', 'QC'], trick: [['KC']] }, deck:['AH','AC'] },);
-	game.deck.sort();game.print_state();
-	//for (let i = 0; i < 5; i++) game.make_random_move();
+	//cTest03_2HandsRandom(); //let x=Card52.getItem(0, 100, 70); console.log('x',x)
 
-	//startUnit();
-	//cTest03_2HandsRandom();
+	//console.log(arrString([]));	console.log(arrString([[4],1,2,3]));	console.log(arrString([[1,2,3],[],[1,2]]));
 
-	//#region tests
 	//chessTestPos02(); //setBackgroundColor('green');	let b = new ChessBoard();
 
 	//let list = getRandomFractions(4);console.log('fractions',list);

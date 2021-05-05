@@ -632,7 +632,7 @@ div{
 #divControls > div:active{
 	background-color: red;
 }
-#freezer,#dPassPlay,#dAddons{
+#freezer,#dPassPlay,#dBanner{
 	background-color: #000000C0;
 	position:fixed;
 	top:0px;

@@ -1781,7 +1781,7 @@ function resetScore() {
 function resetState() {
 	clearTimeouts();
 	pauseSound();
-	onkeydown = null; onkeypress = null; onkeyup = null;
+	onkeydown = null; onkeypress = null; onkeyup = null; //onclick = null;
 	lastPosition = 0;
 	DELAY = 1000;
 	setBackgroundColor();
@@ -1798,7 +1798,7 @@ function sayRandomVoice(e, g, voice = 'random') {
 	if (!G.silentMode) Speech.say(G.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
 }
 function sayTryAgain() { sayRandomVoice('try again!', 'nochmal'); }
-function setBackgroundColor(c) { document.body.style.backgroundColor = getColorDictColor(isdef(c) ? c : G.color); }
+function setBackgroundColor(c) { mStyleX(document.body,{bg:getColorDictColor(isdef(c) ? c : G.color)}); }
 function setGoal(index) {
 	if (nundef(index)) {
 		let rnd = G.numPics < 2 ? 0 : randomNumber(0, G.numPics - 2);
@@ -1909,13 +1909,14 @@ function showPictureHints(items, dParentProp) {
 }
 function showLabelPercentHintAfter(percent, msecs) {
 	let len = Goal.label.length;
-	let sublen = Math.floor(len*percent / 100); let restlen = len - sublen;
+	let sublen = Math.floor(len * percent / 100); let restlen = len - sublen;
 	let hintWord = Goal.label.substring(0, sublen);
 	for (let i = 0; i < restlen; i++) hintWord += ' _';
 	hintWord = hintWord.toUpperCase();
 	showFleetingMessage(hintWord, msecs, { fz: 32 });
 
 }
+function showListOfLists(arr) { let s='';arr.map(x => {s+='['+x.toString()+'] '});return s; }
 function showTextHints(items, dParentProp, textProp, removeFirst = true) {
 	for (const item of items) {
 		let d1 = item[dParentProp];
