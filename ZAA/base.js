@@ -64,6 +64,10 @@ function mEditableInput(dParent, label, val) {
 	return elem;
 }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
+function mHasClass(el, className) {
+	if (el.classList) return el.classList.contains(className);
+	else return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+}
 function miAddLabel(item, styles) {
 	let d = iDiv(item);
 	//console.log('firstChild',d.firstChild, getTypeOf(d.firstChild));
@@ -90,20 +94,21 @@ function miAddLabel(item, styles) {
 	}
 	return d;
 }
-function miPic(item, dParent, styles, classes) {
-	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
-	let d = mDiv(dParent);
-	d.innerHTML = info.text;
-	if (nundef(styles)) styles = {};
-	addKeys({ family: info.family, fz: 50, display: 'inline-block' }, styles);
-	mStyleX(d, styles);
-	if (isdef(classes)) mClass(d, classes);
-	return d;
-}
+function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }
 function mIfNotRelative(d) { if (nundef(d.style.position)) d.style.position = 'relative'; }
 function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent, styles); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
-function mLinebreak(d, gap) { mGap(d, gap); }
+function mInsertAfter(dParent, el, index = 0) { dParent.insertAfter(el, dParent.childNodes[index]); }
+function mLinebreakNew(d, gap) { mGap(d, gap); }
+function mLinebreak(dParent, gap) {
+	if (isString(dParent)) dParent = mBy(dParent);
+	let d = mDiv(dParent);
+	if (dParent.style.display == 'flex' || mHasClass(dParent, 'flexWrap')) mClass(d, 'linebreak');
+	else d.innerHTML = '<br>';
+	if (isdef(gap)) { d.style.minHeight = gap + 'px'; d.innerHTML = ' &nbsp; '; d.style.opacity = .2; }//return mLinebreak(dParent);}
+	return d;
+}
+
 function mLine3(dParent, index, ids, styles) {
 	let html = `<div class="lineOuter">
 		<div>
@@ -120,12 +125,23 @@ function mLine3(dParent, index, ids, styles) {
 }
 function mMoveBy(elem, dx, dy) { let rect = getRect(elem); mPos(elem, rect.x + dx, rect.y + dy); }
 function mParent(elem) { return elem.parentNode; }
+function miPic(item, dParent, styles, classes) {
+	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
+	let d = mDiv(dParent);
+	d.innerHTML = info.text;
+	if (nundef(styles)) styles = {};
+	addKeys({ family: info.family, fz: 50, display: 'inline-block' }, styles);
+	mStyleX(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	return d;
+}
 function mPos(d, x, y, unit = 'px') { mStyleX(d, { left: x, top: y, position: 'absolute' }, unit); }
 function mRemove(elem) { mDestroy(elem); }
 function mRemoveChildrenFromIndex(dParent, i) { while (dParent.children[i]) { mRemove(dParent.children[i]); } }
 function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
 function mRemoveStyle(d, styles) { for (const k of styles) d.style[k] = null; }
 function mReveal(d) { d.style.opacity = 1; }
+function mScreen(dParent, styles) { let d = mDover(dParent); if (isdef(styles)) mStyleX(d, styles); return d; }
 function mSize(d, w, h, unit = 'px') { mStyleX(d, { width: w, height: h }, unit); }
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
@@ -169,6 +185,16 @@ function mStyleX(elem, styles, unit = 'px') {
 		styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
 		//console.log('::::::::::::::', styles.vpadding, styles.hpadding)
 	}
+	if (isdef(styles.upperRounding)) {
+		let rtop = '' + valf(styles.upperRounding, 0) + unit;
+		let rbot = '0' + unit;
+		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
+	} else if (isdef(styles.lowerRounding)) {
+		let rbot = '' + valf(styles.lowerRounding, 0) + unit;
+		let rtop = '0' + unit;
+		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
+	}
+
 	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
 	//console.log(styles.bg,styles.fg);
 
@@ -264,7 +290,7 @@ function mText(text, dParent, styles, classes) {
 	if (isdef(classes)) mClass(d, classes);
 	return d;
 }
-function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
+function mTitledDiv(title, dParent, outerStyles = {}, innerStyles = {}, id) {
 	let d = mDiv(dParent, outerStyles);
 	let dTitle = mDiv(d);
 	dTitle.innerHTML = title;
@@ -273,7 +299,49 @@ function mTitledDiv(title, dParent, outerStyles, innerStyles, id) {
 	let dContent = mDiv(d, innerStyles, id);
 	return dContent;
 }
+function mMoveChild(dParent, fromIndex, toIndex) {
+
+}
+function mSwap(obj1, obj2) {
+	// save the location of obj2
+	var parent2 = obj2.parentNode;
+	var next2 = obj2.nextSibling;
+	// special case for obj1 is the next sibling of obj2
+	if (next2 === obj1) {
+		// just put obj1 before obj2
+		parent2.insertBefore(obj1, obj2);
+	} else {
+		// insert obj2 right before obj1
+		obj1.parentNode.insertBefore(obj2, obj1);
+
+		// now insert obj1 where obj2 was
+		if (next2) {
+			// if there was an element after obj2, then insert obj1 right before that
+			parent2.insertBefore(obj1, next2);
+		} else {
+			// otherwise, just append as last child
+			parent2.appendChild(obj1);
+		}
+	}
+}
+function mTitledMessageDiv(title, dParent, id, outerStyles = {}, contentStyles = {}, titleStyles = {}, messageStyles = {}, titleOnTop = true) {
+	let d = mDiv(dParent, outerStyles, id);
+	//console.log('outerStyles',outerStyles);
+	let dTitle = mDiv(d, titleStyles, id + '.title'); dTitle.innerHTML = title;
+	let dMessage = mDiv(d, messageStyles, id + '.message'); dMessage.innerHTML = 'hallo!';
+	contentStyles.w = '100%';
+	//console.log('outer rect',getRect(d))
+	let hTitle = getRect(dTitle).h, hMessage = getRect(dMessage).h, hArea = getRect(d).h;
+	let hContent = hArea - hTitle - hMessage - 4;
+	mStyleX(dMessage, { h: hMessage + 2 });
+	mStyleX(dTitle, { h: hTitle + 2 });
+	contentStyles.hmin = hContent; //getRect(d).h - getRect(dTitle).h - getRect(dMessage).h - 4;
+	let dContent = mDiv(d, contentStyles, id + '.content');
+	if (!titleOnTop) { mAppend(d, dTitle); }
+	return d;
+}
 function mZone(dParent, styles, pos) {
+	//console.log('mZone',dParent,styles,pos)
 	let d = mDiv(dParent);
 	if (isdef(styles)) mStyleX(d, styles);
 	if (isdef(pos)) {
@@ -289,17 +357,23 @@ function mZone(dParent, styles, pos) {
 //#region i
 function iAdd(item, props) {
 	let id, l;
-	if (isString(item)) { id = item; item = Items[id]; } else if (nundef(item.id)) { id = iRegister(item); } else id = item.id;
+	if (isString(item)) { id = item; item = Items[id]; }
+	else if (nundef(item.id)) {
+		id = item.id = iRegister(item);
+		//console.log('id of item is',id, item)
+	} else id = item.id;
 	if (nundef(item.live)) item.live = {}; l = item.live;
 	for (const k in props) {
 		let val = props[k];
 		l[k] = val;
-		if (isDict(val) && !isEmpty(val.id)) {
+		//console.log('ist ein dom ein dict?',isDict(val))
+		if (isDict(val) && (!isEmpty(val.id) || k == 'div')) {
 			// console.log('val.id is defined:',val.id)
 			val.liveId = id;
 			//console.log('type of',k,'is',typeof(val),getTypeOf(val));
 			// if is elem should go to UIS!
 			if (isDOM(val)) {
+				if (isEmpty(val.id)) val.id = id;
 				// console.log('found DOM elem w/ id!!!!',val.id,k);
 				lookupSet(l, ['uids', k], val.id);
 			}
@@ -320,13 +394,22 @@ function iDetect(itemInfoKey) {
 }
 function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
 function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
+function iDov(item) { return isdef(item.live) ? item.live.overlay : null; }
+function diMessage(item) { return isdef(item.live) ? item.live.dMessage : null; }
+function iMessage(item, msg) { let dm = diMessage(item); if (isdef(dm)) dm.innerHTML = msg; }
+function diTitle(item) { return isdef(item.live) ? item.live.dTitle : null; }
+function iTitle(item, msg) { let dm = diTitle(item); if (isdef(dm)) dm.innerHTML = msg; }
+function diContent(item) { return isdef(item.live) ? item.live.dContent : null; }
+function iAddContent(item, d) { let dm = diContent(item); if (isdef(dm)) mAppend(dm, d); }
 function iGrid(rows, cols, dParent, styles) {
 	styles.display = 'inline-block';
 	let items = [];
+	let index = 0;
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			let d = mDiv(dParent, styles);
-			let item = { row: i, col: j };
+			let item = { row: i, col: j, index: index }; //, id:getUID() };
+			index += 1;
 			iAdd(item, { div: d });
 			items.push(item);
 		}
@@ -334,6 +417,7 @@ function iGrid(rows, cols, dParent, styles) {
 	}
 	return items;
 }
+function iHighlight(item) { let d = iDov(item); mClass(d, 'overlaySelected'); }
 function iLabel(i) { return isdef(i.live) ? i.live.dLabel : isdef(i.dLabel) ? i.dLabel : null; }
 function iMoveFromTo(item, d1, d2, callback, offset) {
 	let bi = iBounds(item);
@@ -386,6 +470,9 @@ function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ov
 		iParent = iContainer;
 
 	} else dParent = iContainer;
+
+	containerStyles.hmin = items[0].h;
+	//console.log('contStyles',containerStyles,items[0])
 	mStyleX(dParent, containerStyles);
 
 	//phase 4: add items to container
@@ -565,6 +652,20 @@ function getHueWheel(contrastTo, minDiff = 25, mod = 30, start = 0) {
 		start += mod;
 	}
 	return wheel;
+}
+function getPalette(color, type = 'shade') {
+	color = anyColorToStandardString(color);
+	return colorPalShade(color);
+}
+function getTransPalette(color = '#000000') {
+	let res = [];
+	for (const alpha of [.0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1]) res.push(colorTrans(color, alpha));
+	return res;
+}
+function getTransPalette9(color = '#000000') {
+	let res = [];
+	for (const alpha of [.1, .2, .3, .4, .5, .6, .7, .8, .9]) res.push(colorTrans(color, alpha));
+	return res;
 }
 function colorHue(cAny) {
 	let hsl = colorHSL(cAny, true);
@@ -1330,6 +1431,19 @@ function safeLoop(func, params) {
 	console.log('safeLoop: max reached!!!!!!!!!');
 	return null;
 }
+function sleepX(msecs) {
+	//#region doc 
+	/*	
+example: 
+	flag = false;
+	functionWithSetTimeouts (after last timeout flag should be set)
+	while (!flag) { await sleepX(3000); }
+	... continuing code after last timeout!
+
+	*/
+	//#endregion 
+	return new Promise(r => setTimeout(r, msecs));
+}
 
 //#endregion
 
@@ -1767,7 +1881,7 @@ function mergeOverride(base, drueber) { return _deepMerge(base, drueber, { array
 
 //#endregion
 
-//#region objects (arrays, dictionaries...)
+//#region objects ( *** ARRAYS ***, dictionaries...)
 function addIf(arr, el) {
 	if (!arr.includes(el)) arr.push(el);
 }
@@ -1791,21 +1905,24 @@ function arrRotate(arr, count) {
 		splice = Array.prototype.splice;
 	var len = arr.length >>> 0, count = count >> 0;
 
-	let arr1 = jsCopy(arr);
-	unshift.apply(arr1, splice.call(arr1, count % len, len));
-	return arr1;
-}
+function arrCount(arr, func) { let filt = arr.filter(func); return filt.length; }
 function arrChildren(elem) { return [...elem.children]; }
 function arrCreate(n, func) { let res = []; for (let i = 0; i < n; i++) { res.push(func(i)); } return res; }
 function arrFirst(arr) { return arr.length > 0 ? arr[0] : null; }
-function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
-function arrTail(arr) { return arr.slice(1); }
+function arrFirstOfLast(arr) { if (arr.length > 0) { let l = arrLast(arr); return isList(l) ? arrFirst(l) : null; } else return null; }
+function arrFlatten(arr) {
+	let res = [];
+	for (let i = 0; i < arr.length; i++) {
+		for (let j = 0; j < arr[i].length; j++) {
+			res.push(arr[i][j]);
+		}
+	}
+	return res;
+}
 function arrFromIndex(arr, i) { return arr.slice(i); }
 function arrFromTo(arr, iFrom, iTo) { return takeFromTo(arr, iFrom, iTo); }
-function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
-function arrPlus(a, b) { let res = a.concat(b); return res; }
-function arrWithout(a, b) { return arrMinus(a, b); }
-function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
+function arrLastOfLast(arr) { if (arr.length > 0) { let l = arrLast(arr); return isList(l) ? arrLast(l) : null; } else return null; }
+function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
 function arrMinMax(arr, func) {
 	//console.log('====arr',arr)
 	if (nundef(func)) func = x => x;
@@ -1825,9 +1942,50 @@ function arrMinMax(arr, func) {
 
 	return { min: min, imin: imin, max: max, imax: imax };
 }
-function arrSum(arr, props) {
-	if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0);
+function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
+function arrPlus(a, b) { let res = a.concat(b); return res; }
+function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
+
+function arrReplaceAt(arr, index, val, inPlace = true) { return inPlace ? arrReplaceAtInPlace(arr, index, val) : arrReplaceAtCopy(arr, index, val); }
+function arrReplaceAtInPlace(arr, index, val) { arr[index] = val; }
+function arrReplaceAtCopy(arr, index, val) {
+	//console.log('index',index,'val',val)
+	let res = new Array();
+	for (let i = 0; i < arr.length; i++) {
+		if (i == index) res[i] = val; else res[i] = arr[i];
+	}
+	return res;
 }
+function arrRotate(arr, count) {
+	// usage:
+	// let arr = [1,2,3,4,5];let arr1=jsCopy(arr); arr2=arrRotate(arr1,2);
+	var unshift = Array.prototype.unshift,
+		splice = Array.prototype.splice;
+	var len = arr.length >>> 0, count = count >> 0;
+
+	let arr1 = jsCopy(arr);
+	unshift.apply(arr1, splice.call(arr1, count % len, len));
+	return arr1;
+}
+function arrString(arr, func) {
+	if (isEmpty(arr)) return '[]';
+	let s = '[';
+	for (const el of arr) {
+		if (isList(el)) s += arrString(el, func) + ','; else s += (isdef(func) ? func(el) : el) + ',';
+
+	}
+	s = s.substring(0, s.length - 1);
+	s += ']';
+	return s;
+}
+function arrSum(arr, props) { if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0); }
+function arrTail(arr) { return arr.slice(1); }
+function arrTake(arr, n) { return takeFromStart(arr, n); }
+function arrTakeFromEnd(arr, n) {
+	if (arr.length <= n) return arr.map(x => x); else return arr.slice(arr.length - n);
+}
+function arrWithout(a, b) { return arrMinus(a, b); }
+
 function classByName(name) { return eval(name); }
 function copyKeys(ofrom, oto, except = {}, only) {
 	let keys = isdef(only) ? only : Object.keys(ofrom);
@@ -1929,6 +2087,14 @@ function intersection(arr1, arr2) {
 		}
 	}
 	return res;
+}
+function lastCond(arr, func) {
+	//return first elem that fulfills condition
+	for (let i = arr.length - 1; i >= 0; i--) {
+		if (func(arr[i])) return arr[i];
+	}
+
+	return null;
 }
 function loop(n) { return range(1, n); }
 function lookup(dict, keys) {
@@ -2099,7 +2265,7 @@ function sameList(l1, l2) {
 	}
 	return true;
 }
-function shuffle(arr) { return fisherYates(arr); }
+function shuffle(arr) { if (isEmpty(arr)) return []; else return fisherYates(arr); }
 function shuffleChildren(dParent) {
 	let arr = arrChildren(dParent);
 	//console.log(arr);
@@ -2222,6 +2388,7 @@ function capitalize(s) {
 }
 function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
 function extendWidth(w) { return replaceEvery(w, 'w', 2); }
+function filterByLength(w, min, max, allowSpaces = false) { return w.length <= max && w.length >= min && (allowSpaces || !w.includes(' ')); }
 function findCommonPrefix(s1, s2) {
 	let i = 0;
 	let res = '';
@@ -2242,7 +2409,38 @@ function firstNumber(s) {
 	}
 	return null;
 }
-function getCorrectPrefix(label, text) {
+function toUmlaut(w) {
+	//ue ü, ae ä, oe ö
+	if (isList(w)) {
+		let res = [];
+		for (const w1 of w) res.push(toUmlaut(w1));
+		return res;
+	} else {
+		w = replaceAll(w, 'ue', 'ü');
+		w = replaceAll(w, 'ae', 'ä');
+		w = replaceAll(w, 'oe', 'ö');
+		w = replaceAll(w, 'UE', 'Ü');
+		w = replaceAll(w, 'AE', 'Ä');
+		w = replaceAll(w, 'OE', 'Ö');
+		return w;
+	}
+}
+function fromUmlaut(w) {
+	if (isList(w)) {
+		let res = [];
+		for (const w1 of w) res.push(fromUmlaut(w1));
+		return res;
+	} else {
+		//ue ü, ae ä, oe ö
+		w = replaceAll(w, 'ü', 'ue');
+		w = replaceAll(w, 'ä', 'ae');
+		w = replaceAll(w, 'ö', 'oe');
+		w = replaceAll(w, 'Ü', 'UE');
+		w = replaceAll(w, 'Ä', 'AE');
+		w = replaceAll(w, 'Ö', 'OE');
+		return w;
+	}
+} function getCorrectPrefix(label, text) {
 
 	// let txt = this.input.value;
 	// console.log('input value',txt);
@@ -2298,6 +2496,7 @@ function replaceAll(str, sSub, sBy) {
 	return str.replace(regex, sBy);
 }
 function replaceAllSpecialChars(str, sSub, sBy) { return str.split(sSub).join(sBy); }
+function replaceAtString(s, i, ssub) { return s.substring(0, i) + ssub + s.substring(i + 1); }
 function replaceEvery(w, letter, nth) {
 	let res = '';
 	for (let i = 1; i < w.length; i += 2) {
@@ -2386,6 +2585,63 @@ function msToTime(ms) {
 }
 function msElapsedSince(msStart) { return Date.now() - msStart; }
 function timeToMs(h, m, s) { return ((((h * 60) + m) * 60) + s) * 1000; }
+//#endregion
+
+//#region Timit
+class TimeIt {
+	constructor(msg, showOutput = true) {
+		this.showOutput = showOutput;
+		this.init(msg);
+	}
+	getTotalTimeElapsed() {
+		let tNew = new Date();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		return tDiffStart;
+	}
+	tacit() { this.showOutput = false; }
+	timeStamp(name) {
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - this.namedTimestamps.start.getTime();// this.t.getTime();
+		if (this.showOutput) console.log('___', tDiff, 'msecs * to', name);
+		this.t = tNew;
+		this.namedTimestamps[name] = tNew;
+	}
+	reset() { this.init('timing start') }
+	init(msg) {
+		this.t = new Date();
+		if (this.showOutput) console.log('___', msg);
+		this.namedTimestamps = { start: this.t };
+	}
+	showSince(name, msg = 'now') {
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tNamed = this.namedTimestamps[name];
+		if (this.showOutput) if (!tNamed) { console.log(name, 'is not a timestamp!'); return; } //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - tNamed.getTime();
+		if (this.showOutput) console.log('___', tDiff, 'msecs', name, 'to', msg);
+		this.t = tNew;
+	}
+	format(t) { return '___' + t.getSeconds() + ':' + t.getMilliseconds(); }
+	show(msg) { this.showTime(msg); }
+	showTime(msg) {
+		//shows ticks diff to last call of show
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - this.t.getTime();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		//if (this.showOutput) console.log(this.format(tNew), ':', tDiff, 'msecs to', msg, '(' + tDiffStart, 'total)');
+		if (this.showOutput) console.log('___ ', tDiff, 'msecs to', msg, '(' + tDiffStart, 'total)');
+		this.t = tNew;
+	}
+	start_of_cycle(msg) {
+		this.init(msg);
+	}
+	end_of_cycle(msg) {
+		//shows ticks diff to last call of show
+		let tNew = new Date(); //new Date().getTime() - this.t;
+		let tDiff = tNew.getTime() - this.t.getTime();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		if (this.showOutput) console.log('___ ' + tDiff + ' msecs', msg, 'to EOC (total: ' + tDiffStart + ')');
+	}
+}
 //#endregion
 
 //#region type checking / checking

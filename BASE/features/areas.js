@@ -234,7 +234,7 @@ function createGridLayout(d, layout, collapseEmptySmallLetterAreas=true) {
 		s += '"' + line.join(' ') + '" ';
 
 	}
-	console.log('matrix:', m)
+	//console.log('matrix:', m)
 
 	//console.log(m);
 	d.style.gridTemplateAreas = s;// eg. '"z z z" "a b c" "d e f"';

@@ -34,55 +34,101 @@ class G2Player {
 	}
 	startRound() { }//console.log('startRound', this.name); }
 	prompt() { }
-	eval(){} //should set gameOver,winner,tie,info,
-	activate(){}
+	eval() { } //should set gameOver,winner,tie,info,
+	activate() { }
 
 }
 class GKrieg extends G2Player {
+	write() { write('game', ...arguments); }
 	startGame() {
+		this.write('start game')
 		super.startGame();
-		setBackgroundColor('random');
+		//setBackgroundColor('random');
 		let back = this.back = new GKriegBack();
-		back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'] } }); 
+		back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'] } });
 		this.front = new GKriegFront(130, dTable);
+		this.front.presentState(this.back.get_state());
 		mLinebreak(dTable, 50);
 		this.moveButton = mButton('Move!', this.interact.bind(this), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 		//back.deck.sort(); back.print_state(); console.log(back.get_state());console.log('back players are',back.pl1,back.pl2);
 	}
 	prompt() {
-		this.front.presentState(this.back.get_state());
+		this.write('prompt')
+		// mLinebreak(dTable, 50);
+		// this.moveButton = mButton('Move!', this.interact.bind(this), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+		let msg = this.plTurn == this.ai ? 'Ai thinking...' : 'Deterministic: click Move!';
+		showInstruction('', msg, dTitle, false);
 		this.controller.activateUi();
 	}
+	activate() {
+		//console.log('activate','ai',aiActivated,'ui',uiActivated);
+		let pl = this.plTurn;
+		let autoplay = false;
+		let manual = true;
+		if (!manual && (autoplay || pl == this.ai)) {
+			if (this.ai == pl) uiActivated = false;
+			setTimeout(this.interact.bind(this), 500);
+		} else {
+			this.moveButton.style.opacity = 1;
+		}
+
+	}
 	interact() {
-		if (!canAct()) return;
+		if (!canAct()) { console.log('NOPE!!!!', 'ai', aiActivated, 'ui', uiActivated); return; }
+		this.controller.deactivateUi();
+		this.write('interact');
 		let back = this.back;
 		back.make_random_move();
-		this.controller.evaluate();
-		// let x=this.back.resolve();
-		// if (x)this.TO = setTimeout(()=>this.controller.evaluate(),2500);else this.controller.evaluate();
+		this.front.animatePlayerMove(back.turn(), this.onPlayerMoveCompleted.bind(this));
 	}
-	changePlayer(){
-		this.back.swap_turn();
-		this.plTurn = this.players[this.back.player().index]; 
-		this.opp = this.players[this.back.opponent().index];
-		console.log('player',this.plTurn);}
-	eval(){
-		let back = this.back;
-		
+	onPlayerMoveCompleted() {
 		this.front.presentState(this.back.get_state());
+		console.log('...player move completed!',this.back.get_state()); //return;
+		// this.controller.evaluate(); return;
+		let x = this.back.resolve();
+		if (x) {
+			console.log('...resolve is starting!!',this.back.get_state()); //return;
+			this.moveButton.style.opacity = .3;
+			// this.front.animateResolve(() => this.controller.evaluate(x));
+			this.front.animateResolve(() => {
+				console.log('...resolve completed!',this.front);
+				GC.evaluate(x);
+			});
+
+			// this.front.animateResolve(() => console.log('...resolve completed!',this.front));
+			//this.TO = setTimeout(()=>this.controller.evaluate(x),1500);
+		} else this.controller.evaluate(x);
+	}
+	changePlayer() {
+		this.write('change player')
+		this.back.swap_turn();
+		this.plTurn = this.players[this.back.player().index];
+		this.opp = this.players[this.back.opponent().index];
+		//console.log('changed player to',this.plTurn);
+	}
+	eval(x) {
+		let back = this.back;
+		this.write('eval', x)
+
+		if (x) this.front.presentState(this.back.get_state());
 		//this.back.resolve();
 		//console.log('back',back.is_out_of_cards(),back)
-		if (back.is_out_of_cards()) { 
-			this.gameOver = true; 
+		if (back.is_out_of_cards()) {
+			this.moveButton.remove();
+			this.gameOver = true;
 			let w = back.winner();
 			if (isdef(w)) this.winner = this.players[w.index];
-	
-			console.log('ENDE!!!!!!!!!!!!')
+			console.log(this.winner)
+
+			this.bannerPos = -480;
+			console.log('ENDE!!!!!!!!!!!!');
 		}
 	}
 
 
 }
+
+//working games chronologisch
 class GTTT extends G2Player {
 	startGame() {
 		super.startGame();
@@ -667,7 +713,7 @@ class GChess extends G2Player {
 }
 
 
-function iToValue(l){	if (isdef(l)) l=l%13;return isdef(l)?l==0?13: l:null;}
+function iToValue(l) { if (isdef(l)) l = l % 13; return isdef(l) ? l == 0 ? 13 : l : null; }
 
 function parseHand(keys, deck) {
 	let h1 = keys.map(x => Card52._fromKey(x));

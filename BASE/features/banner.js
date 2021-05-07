@@ -1,5 +1,5 @@
 class Banner {
-	constructor(dParent) { this.dParent = isdef(dParent) ? dParent : dBanner; this.init(); }
+	constructor(pos,dParent) { this.pos=pos; this.dParent = isdef(dParent) ? dParent : dBanner; this.init(); }
 	clear() { clearElement(this.dParent); this.dParent.onclick = null; hide(this.dParent); }
 	_createDivs() {
 		this.dInstruction = mDiv(this.dContent);
@@ -11,6 +11,7 @@ class Banner {
 		let bg = colorTrans('silver', .25);
 		let d = mScreen(this.dParent, { bg: bg, display: 'flex', layout: 'fvcc' });
 		let dContent = mDiv(d, { display: 'flex', layout: 'fvcs', fg: 'contrast', fz: 24, bg: 'silver', patop: 50, pabottom: 50, matop: -50, w: '100vw' });
+		if (isdef(this.pos)) mStyleX(dContent,{matop:this.pos});
 		return [d, dContent];
 	}
 	init() {

@@ -109,6 +109,22 @@ function iMoveFromTo(item, d1, d2, callback, offset) {
 	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
 	a.onfinish = () => { mAppend(d2, item.div); item.div.style.zIndex = item.z = iZMax(); if (isdef(callback)) callback(); };
 }
+function iMoveFromToPure(item, d1, d2, callback, offset) {
+	let bi = iBounds(item);
+	let b1 = iBounds(d1);
+	let b2 = iBounds(d2);
+	//console.log('item', bi);
+	//console.log('d1', b1);
+	//console.log('d2', b2);
+
+	//animate item to go translateY by d2.y-d1.y
+	if (nundef(offset)) offset = { x: 0, y: 0 };
+	let dist = { x: b2.x - b1.x + offset.x, y: b2.y - b1.y + offset.y };
+
+	item.div.style.zIndex = 100;
+	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
+	a.onfinish = () => { if (isdef(callback)) callback(); };
+}
 function iParentBounds(i) {
 	if (isdef(i.div)) i = i.div;
 	let b = getBounds(i);

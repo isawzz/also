@@ -1,84 +1,46 @@
 //test areas
-function test09() {
-	let areas;
-	function prepare(dParent) {
-		areas = makeAreas(dTable);
-	}
-	function presentState(state, dParent) {
-		let trick = arrFlatten(state.pl1.trick).concat(arrFlatten(state.pl2.trick));
-		let pl1Hand = state.pl1.hand;
-		let pl2Hand = state.pl2.hand;
-		let arrs = [trick, pl1Hand, pl2Hand];
-		for (let i = 0; i < 3; i++) {
-			let arr = arrs[i];
-			let item = areas[i];
-			let d = diContent(item);
-			let id = 'h' + i;
-			iMessage(item, '');
-			// iMakeHand_test(d, arr, id);
-			iH00(arr, d, { bg: 'blue' }, id);
-
-		}
-	}
-	return {
-		
-	}
-
+function rTest09() {
+	let state = {
+		pl1: { hand: [1, 2, 3, 4, 5], trick: [[6], [7, 8, 9]] },
+		pl2: { hand: [11, 12, 13, 14, 15], trick: [[16], [17, 18, 19]] },
+	};
+	let areaItems = makeAreas(dTable);
+	presentState1(state, areaItems);
 }
-function presentState(state, dParent) {
-	let trick = arrFlatten(state.pl1.trick).concat(arrFlatten(state.pl2.trick));
+function presentState1(state, areas) {
+	let trick1 = arrFlatten(state.pl1.trick)
+	let trick2 = arrFlatten(state.pl2.trick);
+
 	let pl1Hand = state.pl1.hand;
 	let pl2Hand = state.pl2.hand;
-	let arrs = [trick, pl1Hand, pl2Hand];
-	let items = makeAreas(dParent);
+	// let arrs = [[{trick1:trick1}, {trick2:trick2}], [{pl1Hand:pl1Hand}], [{pl2Hand:pl2Hand}]];
+	let arrs = [[trick1, trick2], [pl1Hand], [pl2Hand]];
+	let hands = [];
 	for (let i = 0; i < 3; i++) {
-		let arr = arrs[i];
-		let item = items[i];
-		let d = diContent(item);
-		let id = 'h' + i;
-		iMessage(item, '');
-		// iMakeHand_test(d, arr, id);
-		iH00(arr, d, { bg: 'blue' }, id);
-
+		let area = areas[i];
+		let d = diContent(area);
+		iMessage(area, '');
+		for (let j = 0; j < arrs[i].length; j++) {
+			let arr = arrs[i][j]; //arr is an object {key:cardArr} cardArr can be empty!
+			//if (isEmpty(arr)) continue;
+			//let key =
+			let id = 'a' + i + '_h' + j;
+			let what = iH00(arr, d, {}, id);
+			hands.push(what);
+			//console.log('iH00 returns', what)
+		}
+	}
+	//turn around all the cards in tricks except last one!
+	for (let i = 0; i < 2; i++) {
+		let cards = hands[i].iHand.items;
+		if (isEmpty(hands[i].arr)) continue;
+		console.log('cards',cards,'hands[i]',hands[i])
+		for (let j = 0; j < cards.length-1; j++) {
+			Card52.turnFaceDown(cards[j]);
+		}
 	}
 }
-function makeAreas(dTable) {
-	setBackgroundColor('random');
-	let dGrid = mDiv(dTable, { gap: 10, bg: 'white', w: '90%', padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
-	let layout = ['T', 'H A'];
-	//let layout = ['t', 'H A'];
 
-	//more intricate layout!
-	let areaStyles = { bg: 'green', rounding: 6 };//,box:true, padding:10};
-	let contentStyles = { lowerRounding: 6 };
-	let messageStyles = { fg: 'yellow' };
-	let titleStyles = { bg: 'dimgray', family: 'AlgerianRegular', upperRounding: 6 };
-	let areas = {
-		T: { title: 'table', id: 'dTrick', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
-		H: { title: 'YOU', id: 'dHuman', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
-		A: { title: 'opponent', id: 'dAI', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles },
-	};
-	// areas.T.areaStyles.w='100%';
-
-	let x = createGridLayout(dGrid, layout);
-	console.log('result', x);
-
-	//createAreas(dGrid, x, 'dGrid');
-	let items = [];
-	for (const k in areas) {
-		let item = areas[k];
-		item.areaStyles['grid-area'] = k;
-		let dCell = mTitledMessageDiv(item.title, dGrid, item.id, item.areaStyles, item.contentStyles, item.titleStyles, item.messageStyles)
-		iRegister(item, item.id);
-		iAdd(item, { div: dCell, dTitle: dCell.children[0], dMessage: dCell.children[1], dContent: dCell.children[2] });
-		mCenterCenterFlex(diContent(item));
-		mStyleX(diContent(item), { gap: 10 });//,padding:10, box:true});
-		items.push(item);
-	}
-	return items;
-
-
-}
 function rTest08() {
 	let state = {
 		pl1: { hand: [1, 2, 3, 4, 5], trick: [[6]] },
@@ -88,7 +50,7 @@ function rTest08() {
 	let pl1Hand = state.pl1.hand;
 	let pl2Hand = state.pl2.hand;
 	let arrs = [trick, pl1Hand, pl2Hand];
-	let items = rTest07_helper();
+	let items = makeAreas(dTable); //rTest07_helper();
 	for (let i = 0; i < 3; i++) {
 		let arr = arrs[i];
 		let item = items[i];
@@ -284,10 +246,6 @@ function rTest01() {
 
 	rAreas();
 }
-
-
-
-
 //testing cards
 function cTest03_2HandsRandom() {
 	let h1 = iMakeHand_test(dTable, [33, 7, 1, 2, 3, 4], 'h1');
@@ -769,7 +727,7 @@ function kriegTest06(game) {
 	game.load();//{ pl1: { name:'felix',hand: ['TH'], trick: [['2H']] }, pl2: { name:'max',hand: ['9C'], trick: [['2C']] } }); game.deck.sort(); //game.print_state();
 	// game.load({ pl1: { hand: ['TH', 'QH'], trick: [['QD']] }, pl2: { hand: ['TC', 'QC'], trick: [['KC']] }, deck:['AH','AC'] },);	game.deck.sort();game.print_state();
 	game.print_state('start:');
-	let front = new GKriegFront();
+	let front = new GKriegFront(130,dTable);
 	front.presentState(game.get_state(), dTable);
 	return;
 
@@ -795,7 +753,7 @@ function kriegTest00UI() {
 	clearElement(dTable)
 	let back = new GKriegBack();
 	back.load({ pl1: { name: 'felix', hand: ['TH', 'KH'] }, pl2: { name: 'tom', hand: ['9C', 'QC'] } }); back.deck.sort(); back.print_state();
-	let front = new GKriegFront(130);
+	let front = new GKriegFront(130,dTable);
 	front.presentState(back.get_state(), dTable);
 
 	mLinebreak(dTable, 50);

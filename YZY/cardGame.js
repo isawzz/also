@@ -109,7 +109,7 @@ function iH00(iarr, dParent, styles, id) {
 	function iH00Zone(dTable, nmax = 3, padding = 10) {
 		let sz = netHandSize(nmax);
 		//console.log('________________', sz)
-		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding, rounding: 10 });
+		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding});//, rounding: 10, bg:'random' });
 	}
 	//should return item={iarr,live.div,styles}
 	let h = isdef(Items[id]) ? Items[id] : { arr: iarr, styles: styles, id: id };

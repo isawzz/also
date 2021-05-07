@@ -98,6 +98,7 @@ function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyl
 function mIfNotRelative(d) { if (nundef(d.style.position)) d.style.position = 'relative'; }
 function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent, styles); }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
+function mInsertAfter(dParent, el, index = 0) { dParent.insertAfter(el, dParent.childNodes[index]); }
 function mLinebreakNew(d, gap) { mGap(d, gap); }
 function mLinebreak(dParent, gap) {
 	if (isString(dParent)) dParent = mBy(dParent);
@@ -185,13 +186,13 @@ function mStyleX(elem, styles, unit = 'px') {
 		//console.log('::::::::::::::', styles.vpadding, styles.hpadding)
 	}
 	if (isdef(styles.upperRounding)) {
-		let rtop=''+valf(styles.upperRounding, 0) + unit;
-		let rbot='0' + unit;
-		styles['border-radius'] = rtop+' '+rtop+' '+rbot+' '+rbot;
-	}else if(isdef(styles.lowerRounding)) {
-		let rbot=''+valf(styles.lowerRounding, 0) + unit;
-		let rtop='0' + unit;
-		styles['border-radius'] = rtop+' '+rtop+' '+rbot+' '+rbot;
+		let rtop = '' + valf(styles.upperRounding, 0) + unit;
+		let rbot = '0' + unit;
+		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
+	} else if (isdef(styles.lowerRounding)) {
+		let rbot = '' + valf(styles.lowerRounding, 0) + unit;
+		let rtop = '0' + unit;
+		styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
 	}
 
 	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
@@ -298,21 +299,44 @@ function mTitledDiv(title, dParent, outerStyles = {}, innerStyles = {}, id) {
 	let dContent = mDiv(d, innerStyles, id);
 	return dContent;
 }
-function mTitledMessageDiv(title, dParent, id, outerStyles = {}, contentStyles = {}, titleStyles = {}, messageStyles = {}) {
+function mMoveChild(dParent, fromIndex, toIndex) {
+
+}
+function mSwap(obj1, obj2) {
+	// save the location of obj2
+	var parent2 = obj2.parentNode;
+	var next2 = obj2.nextSibling;
+	// special case for obj1 is the next sibling of obj2
+	if (next2 === obj1) {
+		// just put obj1 before obj2
+		parent2.insertBefore(obj1, obj2);
+	} else {
+		// insert obj2 right before obj1
+		obj1.parentNode.insertBefore(obj2, obj1);
+
+		// now insert obj1 where obj2 was
+		if (next2) {
+			// if there was an element after obj2, then insert obj1 right before that
+			parent2.insertBefore(obj1, next2);
+		} else {
+			// otherwise, just append as last child
+			parent2.appendChild(obj1);
+		}
+	}
+}
+function mTitledMessageDiv(title, dParent, id, outerStyles = {}, contentStyles = {}, titleStyles = {}, messageStyles = {}, titleOnTop = true) {
 	let d = mDiv(dParent, outerStyles, id);
 	//console.log('outerStyles',outerStyles);
-	let dTitle = mDiv(d, titleStyles, id + '.title');
-	dTitle.innerHTML = title;
-	let dMessage = mDiv(d, messageStyles, id + '.message');
-	dMessage.innerHTML = 'hallo!';
+	let dTitle = mDiv(d, titleStyles, id + '.title'); dTitle.innerHTML = title;
+	let dMessage = mDiv(d, messageStyles, id + '.message'); dMessage.innerHTML = 'hallo!';
 	contentStyles.w = '100%';
-	//console.log('outer rect',getRect(d))
-	let hTitle=getRect(dTitle).h,hMessage=getRect(dMessage).h,hArea=getRect(d).h;
-	let hContent=hArea-hTitle-hMessage-4;
-	mStyleX(dMessage,{h:hMessage+2});
-	mStyleX(dTitle,{h:hTitle+2});
-	contentStyles.hmin = hContent; //getRect(d).h - getRect(dTitle).h - getRect(dMessage).h - 4;
+	let hTitle = getRect(dTitle).h, hMessage = getRect(dMessage).h, hArea = getRect(d).h;
+	let hContent = hArea - hTitle - hMessage - 4;
+	mStyleX(dMessage, { h: hMessage + 2 });
+	mStyleX(dTitle, { h: hTitle + 2 });
+	contentStyles.hmin = hContent;
 	let dContent = mDiv(d, contentStyles, id + '.content');
+	if (!titleOnTop) { mAppend(d, dTitle); }
 	return d;
 }
 function mZone(dParent, styles, pos) {
@@ -369,13 +393,13 @@ function iDetect(itemInfoKey) {
 }
 function iDiv(i) { return isdef(i.live) ? i.live.div : isdef(i.div) ? i.div : i; }
 function iDivs(ilist) { return isEmpty(ilist) ? [] : isItem(ilist[0]) ? ilist.map(x => iDiv(x)) : ilist; }
-function iDov(item){return isdef(item.live)?item.live.overlay:null;}
-function diMessage(item){return isdef(item.live)?item.live.dMessage:null;}
-function iMessage(item,msg){let dm=diMessage(item);if (isdef(dm)) dm.innerHTML=msg;}
-function diTitle(item){return isdef(item.live)?item.live.dTitle:null;}
-function iTitle(item,msg){let dm=diTitle(item);if (isdef(dm)) dm.innerHTML=msg;}
-function diContent(item){return isdef(item.live)?item.live.dContent:null;}
-function iAddContent(item,d){let dm=diContent(item);if (isdef(dm)) mAppend(dm,d);}
+function iDov(item) { return isdef(item.live) ? item.live.overlay : null; }
+function diMessage(item) { return isdef(item.live) ? item.live.dMessage : null; }
+function iMessage(item, msg) { let dm = diMessage(item); if (isdef(dm)) dm.innerHTML = msg; }
+function diTitle(item) { return isdef(item.live) ? item.live.dTitle : null; }
+function iTitle(item, msg) { let dm = diTitle(item); if (isdef(dm)) dm.innerHTML = msg; }
+function diContent(item) { return isdef(item.live) ? item.live.dContent : null; }
+function iAddContent(item, d) { let dm = diContent(item); if (isdef(dm)) mAppend(dm, d); }
 function iGrid(rows, cols, dParent, styles) {
 	styles.display = 'inline-block';
 	let items = [];
@@ -392,9 +416,27 @@ function iGrid(rows, cols, dParent, styles) {
 	}
 	return items;
 }
-function iHighlight(item){let d=iDov(item);mClass(d,'overlaySelected');}
+function iHighlight(item) { let d = iDov(item); mClass(d, 'overlaySelected'); }
 function iLabel(i) { return isdef(i.live) ? i.live.dLabel : isdef(i.dLabel) ? i.dLabel : null; }
+function iMoveFromToPure(item, d1, d2, callback, offset) {
+	let bi = iBounds(item);
+	let b1 = iBounds(d1);
+	let b2 = iBounds(d2);
+	//console.log('item', bi);
+	//console.log('d1', b1);
+	//console.log('d2', b2);
+
+	//animate item to go translateY by d2.y-d1.y
+	if (nundef(offset)) offset = { x: 0, y: 0 };
+	let dist = { x: b2.x - b1.x + offset.x, y: b2.y - b1.y + offset.y };
+
+	item.div.style.zIndex = 100;
+	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
+	a.onfinish = () => { if (isdef(callback)) callback(); };
+}
 function iMoveFromTo(item, d1, d2, callback, offset) {
+
+	//console.log('__ iMove __item',item,'\nd1',d1,'\nd2',d2,'\noffset',offset)	
 	let bi = iBounds(item);
 	let b1 = iBounds(d1);
 	let b2 = iBounds(d2);
@@ -1697,7 +1739,8 @@ async function localOrRoute(key, url) {
 
 //#endregion
 
-//#region measure size and pos
+//#region measure size and pos ARITHMETIC
+function getCenter(elem) { let r = getRect(elem); return { x: (r.w) / 2, y: (r.h) / 2 }; }
 function getRect(elem, relto) {
 
 	if (isString(elem)) elem = document.getElementById(elem);
@@ -1719,20 +1762,6 @@ function getRect(elem, relto) {
 	}
 	return { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
 }
-function idealFontSize(txt, wmax, hmax, fz = 22, fzmin = 6, weight) { return idealFontDims(...arguments).fz; }
-function idealFontDims(txt, wmax, hmax, fz = 22, fzmin = 6, weight) {
-	let tStyles = { fz: fz, family: 'arial' };
-	if (isdef(weight)) tStyles.weight = weight;
-	while (true) {
-		let tSize = getSizeWithStyles(txt, tStyles);
-
-		//console.log('text size of', txt, 'mit font', tStyles.fz, tSize)
-
-		if (tSize.h <= hmax && tSize.w <= wmax || tStyles.fz <= fzmin) return { w: tSize.w, h: tSize.h, fz: tStyles.fz, family: 'arial' };
-		else tStyles.fz -= 1;
-	}
-
-}
 function getSizeWithStyles(text, styles) {
 	var d = document.createElement("div");
 	document.body.appendChild(d);
@@ -1747,6 +1776,20 @@ function getSizeWithStyles(text, styles) {
 	width = d.clientWidth;
 	d.parentNode.removeChild(d);
 	return { w: Math.round(width), h: Math.round(height) };
+}
+function idealFontSize(txt, wmax, hmax, fz = 22, fzmin = 6, weight) { return idealFontDims(...arguments).fz; }
+function idealFontDims(txt, wmax, hmax, fz = 22, fzmin = 6, weight) {
+	let tStyles = { fz: fz, family: 'arial' };
+	if (isdef(weight)) tStyles.weight = weight;
+	while (true) {
+		let tSize = getSizeWithStyles(txt, tStyles);
+
+		//console.log('text size of', txt, 'mit font', tStyles.fz, tSize)
+
+		if (tSize.h <= hmax && tSize.w <= wmax || tStyles.fz <= fzmin) return { w: tSize.w, h: tSize.h, fz: tStyles.fz, family: 'arial' };
+		else tStyles.fz -= 1;
+	}
+
 }
 function measureWord(w, fz) { let styles = { fz: fz, family: 'arial' }; return getSizeWithStyles(w, styles); }
 function percentOf(elem, percentW, percentH) {

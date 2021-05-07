@@ -1,5 +1,3 @@
-
-
 class GKriegBack {
 	load(state) {
 		this.history=[];

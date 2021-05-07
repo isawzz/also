@@ -1,175 +1,148 @@
-function mAreas(dParent, SPEC = { layout: ['T T', 'H A'], showAreaNames: true }) {
-	//let d = mDiv(dParent, { w: '100%', h: '100%', hmin: 270, bg: 'red', display: 'grid' }); //d.style.display = 'inline-grid'; //d.style.justifyContent = 'center'
-	
-	let d=dParent;
-	let s = '';
-	let m = [];
-	for (const line of SPEC.layout) {
-		s += '"' + line + '" ';
-		let letters = line.split(' ');
-		let arr = [];
-		for (const l of letters) { if (!isEmpty(l)) arr.push(l); }
-		m.push(arr);
-	}
-	//console.log(m);
-	console.log('s', s)
-	d.style.gridTemplateAreas = s;// eg. '"z z z" "a b c" "d e f"';
-
-	if (SPEC.collapseEmptySmallLetterAreas) { collapseSmallLetterAreas(m, d); }
-	else fixedSizeGrid(m, d);
-
-	SPEC.areas = { T: 'dTrick', H: 'dHuman', A: 'dAI' };
-	let palette = getTransPalette9(); //getPalette(color);//palette.length-1;
-	let ipal = 1;
-
-	let result = [];
-	for (const k in SPEC.areas) {
-		let areaName = SPEC.areas[k];
-		let dCell = mDiv(d, { h:'100%', w:'100%', bg: 'red', 'grid-area': k, });
-
-		if (SPEC.shadeAreaBackgrounds) { dCell.style.backgroundColor = palette[ipal]; ipal = (ipal + 1) % palette.length; }
-		if (SPEC.showAreaNames) { 
-			dCell=mTitledDiv(areaName,dCell,{bg: 'green',},{h:'100%', w:'100%', bg: 'yellow',},areaName)
-			// dCell.innerHTML = makeAreaNameDomel(areaName); 
-		}else {dCell.id=areaName;}
-		//UIS[areaName] = { elem: d1, children: [] };
-		// d.appendChild(d1);
-		//mStyleX(dCell,{padding:50,box:true})
-		result.push({ name: areaName, div: dCell });
-	}
-	return result;
-}
-
-function makeAreaNameDomel(areaName) { return `<div style='width:100%'>${areaName}</div>`; }
-function mArea() {
-
-}
-function collapseSmallLetterAreas(m, d) {
-	//how many columns does this grid have?
-	let rows = m.length;
-	let cols = m[0].length;
-	//console.log(m);
-
-	let gtc = [];
-	for (let c = 0; c < cols; c++) {
-		gtc[c] = 'min-content';
-		for (let r = 0; r < rows; r++) {
-			let sArea = m[r][c];
-			//console.log(c, r, m[r], m[r][c]);
-			if (sArea[0] == sArea[0].toUpperCase()) gtc[c] = 'auto';
-		}
-	}
-	let cres = gtc.join(' ');
-	//console.log('cols', cres);
-	d.style.gridTemplateColumns = gtc.join(' '); //'min-content 1fr 1fr min-content';// 'min-content'.repeat(rows);
-
-	let gtr = [];
-	for (let r = 0; r < rows; r++) {
-		gtr[r] = 'min-content';
-		for (let c = 0; c < cols; c++) {
-			let sArea = m[r][c];
-			//console.log(r, c, m[r], m[r][c]);
-			if (sArea[0] == sArea[0].toUpperCase()) gtr[r] = 'auto';
-		}
-	}
-	let rres = gtr.join(' ');
-	//console.log('rows', rres);
-	d.style.gridTemplateRows = gtr.join(' '); //'min-content 1fr 1fr min-content';// 'min-content'.repeat(rows);
-
-	// d.style.gridTemplateRows = '1fr 1fr min-content min-content';// 'min-content'.repeat(cols);
-
-}
-function fixedSizeGrid(m, d) {
-	let rows = m.length;
-	let cols = m[0].length;
-	d.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)'; // gtc.join(' '); //'min-content 1fr 1fr min-content';// 'min-content'.repeat(rows);
-	d.style.gridTemplateRows = 'repeat(' + rows + ',1fr)'; // //'min-content 1fr 1fr min-content';// 'min-content'.repeat(rows);
-}
-function mAreas_dep(dTable, SPEC = { layout: ['T T', 'H A'], showAreaNames: true }) {
-	let d = mDiv(dTable, { w: '100%', h: '100%', hmin: 270, bg: 'red', display: 'grid' }); //d.style.display = 'inline-grid'; //d.style.justifyContent = 'center'
-
-	let s = '';
-	let m = [];
-	for (const line of SPEC.layout) {
-		s += '"' + line + '" ';
-		let letters = line.split(' ');
-		let arr = [];
-		for (const l of letters) { if (!isEmpty(l)) arr.push(l); }
-		m.push(arr);
-	}
-	//console.log(m);
-	console.log('s', s)
-	d.style.gridTemplateAreas = s;// eg. '"z z z" "a b c" "d e f"';
-
-	if (SPEC.collapseEmptySmallLetterAreas) { collapseSmallLetterAreas(m, d); }
-	else fixedSizeGrid(m, d);
-
-	SPEC.areas = { T: 'dTrick', H: 'dHuman', A: 'dAI' };
-	let palette = getTransPalette9(); //getPalette(color);//palette.length-1;
-	let ipal = 1;
-
-	let result = [];
-	for (const k in SPEC.areas) {
-		let areaName = SPEC.areas[k];
-		let dCell = mDiv(d, { h:'100%', w:'100%', bg: 'red', 'grid-area': k, });
-
-		if (SPEC.shadeAreaBackgrounds) { dCell.style.backgroundColor = palette[ipal]; ipal = (ipal + 1) % palette.length; }
-		if (SPEC.showAreaNames) { 
-			dCell=mTitledDiv(areaName,dCell,{bg: 'green',},{h:'100%', w:'100%', bg: 'yellow',},areaName)
-			// dCell.innerHTML = makeAreaNameDomel(areaName); 
-		}else {dCell.id=areaName;}
-		//UIS[areaName] = { elem: d1, children: [] };
-		// d.appendChild(d1);
-		//mStyleX(dCell,{padding:50,box:true})
-		result.push({ name: areaName, div: dCell });
-	}
-	return result;
-}
 class GKriegFront {
-	constructor(hPlayer, dParent) {
-		this.hPlayer = hPlayer;
-		let dGrid = mDiv100(dParent, { bg: 'yellow' });
-		let areas = this.areas = mAreas(dGrid);
-		areas.map(x=>mCenterCenterFlex(x.div));
-		console.log(areas);
+	constructor(hPlayer, dParent) { this.hPlayer = hPlayer; this.dParent = dParent; this.setup(); }
+	write() { write('front', ...arguments); }
+	setup() { this.areas = makeAreas(this.dParent); }
+	clear() { this.areas.map(x => clearElement(diContent(x))); }
+	clearZones() { for (const k of ['t0', 't1', 'h0', 'h1']) this.clearZones(k); }
+	clearZone(k) { clearElement(this.getZoneDiv(k)); }
+	getZoneDiv(k) { return this.hands[k].zone; }
+	getTrickZoneDiv(iPlayer) { return this.getZoneDiv('t' + iPlayer); }
+	getHandZoneDiv(iPlayer) { return this.getZoneDiv('h' + iPlayer); }
+	getPlayerCards(iPlayer) { return this.hands['h' + iPlayer].iHand.items; }
+	getTrickCards() {
+		let res = [];
+		let t0 = this.hands.t0; 
+		if (isdef(t0.iHand.items)) {
+			//console.log('trick0 non empty t0:',t0);//,t0.iHand,t0.items)
+			res = res.concat(t0.iHand.items);
+		}
+		let t1 = this.hands.t1; 
+		if (isdef(t1.iHand.items)) {
+			//console.log('trick1 non empty t1:',t1);//,t0.iHand,t0.items)
+			res = res.concat(t1.iHand.items);
+		}
+		//console.log('res is',res)
+		return res;
 	}
-	clear(){
-		this.areas.map(x=>clearElement(x.div));
+	animatePlayerMove(iPlayer, callback) {
+		//need to get last item of this.hands[kFrom].iHand.items: this will be the card!!!
+		let cards = this.getPlayerCards(iPlayer);
+		let c = arrLast(cards);
+		let w = c.w;
+		let ov = w / 4;
+		//console.log('______\ncard', c);
+		//console.log('hands', this.hands);
+		// need center of target zone
+		let dSource = this.hands['h' + iPlayer].zone; // this.getHandZoneDiv(iPlayer);
+		let dTarget = this.hands['t' + iPlayer].zone; // this.getZoneDiv(iPlayer);
+		let offset = { x: 0, y: 0 };//getCenter(dTarget); // n1 * ov;
+		//console.log('w', w, 'ov', ov, 'xOffset', offset);
+
+		iMoveFromTo(c, dSource, dTarget, callback, offset);
+
+	}
+	animateResolve(callback) {
+		//all cards from dTrick need to be moved to player hand!
+		let cards = this.getTrickCards();
+		let dSource = this.hands.t0.zone;  //iDiv(this.areas[0]); // this.getHandZoneDiv(iPlayer);
+		let dTarget = this.hands.h0.zone; //iDiv(this.areas[1]);;//// this.getZoneDiv(iPlayer);
+		//console.log(dSource,dTarget)
+		let offset = { x: 0, y: 0 };//getCenter(dTarget); // n1 * ov;
+		//console.log('w', w, 'ov', ov, 'xOffset', offset);
+
+		let trickCards = this.getTrickCards();
+		let iLast = trickCards.length, i = 0;
+		console.log('trickCards',trickCards,'iLast',iLast,'i',i);
+		for (const c of trickCards) {
+			dSource = iDiv(c);
+			//console.log(c);
+			i++;let f;
+			if (i==iLast) {
+				f=callback;
+				console.log('callback coming up!')
+			}else{
+				console.log('...')
+				f=() => console.log('just moving', c);
+			}
+			//let f = i == iLast ? callback : () => console.log('just moving', c); 
+			iMoveFromToPure(c, dSource, dTarget, f, offset);
+		}
+
 	}
 	presentState(state) {
+		this.write('present', jsCopy(state))
 		this.clear();
-		this.showTrick(dTrick);
-		this.showHands();
-	}
-	showTrick(dParent) {
-		clearElement(dTrick)
-		console.log('hallo!')
-		//mCenterFlex(dParent)
-		let idx = G.back.turn();
-		let pl = G.players[idx], opp = G.players[idx == 0 ? 1 : 0];
-		let bpl = G.back.player(), bopp = G.back.opponent();
-		let order = [opp, pl];
-		for (let i = 0; i < Math.max(bpl.trick.length, bopp.trick.length); i++) {
-			let hand = [];
-			if (bopp.trick.length > i) hand = hand.concat(bopp.trick[i]);
-			if (bpl.trick.length > i) hand = hand.concat(bpl.trick[i]);
-			let h = iMakeHand(hand, dParent, {  }, getUID());
-			console.log('i',i,'hand',hand, h);
-			let d=h.zone;
-			//mStyleX(d,{matop:50,h:'100%'})
-		}
-	}
-	showHands(){
-		let human = firstCond(G.back.players, x => x.name == G.human.id);
-		console.log('human player is', human);
-		console.log('human',human)
-		let hpl = iMakeHand(human.hand, dHuman, { hpadding: 10, hmargin: 10 }, getUID());
+		let trick1 = arrFlatten(state.pl1.trick)
+		let trick2 = arrFlatten(state.pl2.trick);
 
-		let ai = firstCond(G.back.players, x => x.name == G.ai.id);
-		console.log('human player is', ai);
-		hpl = iMakeHand(ai.hand, dAI, { hpadding: 10, hmargin: 10 }, getUID());
+		let pl1Hand = state.pl1.hand;
+		let pl2Hand = state.pl2.hand;
+		// let arrs = [[{trick1:trick1}, {trick2:trick2}], [{pl1Hand:pl1Hand}], [{pl2Hand:pl2Hand}]];
+		let arrs = [[trick1, trick2], [pl1Hand], [pl2Hand]];
+		let hands = [];
+		for (let i = 0; i < 3; i++) {
+			let area = this.areas[i];
+			let d = diContent(area);
+			iMessage(area, '');
+			for (let j = 0; j < arrs[i].length; j++) {
+				let arr = arrs[i][j]; //arr is an object {key:cardArr} cardArr can be empty!
+				//if (isEmpty(arr)) continue;
+				//let key =
+				let id = 'a' + i + '_h' + j;
+				let what = iH00(arr, d, {}, id);
+				hands.push(what);
+				//console.log('iH00 returns', what)
+			}
+		}
+		//turn around all the cards in tricks except last one!
+		for (let i = 0; i < 2; i++) {
+			let cards = hands[i].iHand.items;
+			if (isEmpty(hands[i].arr)) continue;
+			//console.log('cards', cards, 'hands[i]', hands[i])
+			for (let j = 0; j < cards.length - 1; j++) {
+				Card52.turnFaceDown(cards[j]);
+			}
+		}
+		//console.log('hands', hands);
+		this.hands = {};
+		let handNames = ['t0', 't1', 'h0', 'h1'];
+		for (let i = 0; i < 4; i++) { this.hands[handNames[i]] = hands[i]; hands[i].key = handNames[i]; }
 	}
 }
-function isBoard(x) { return false; }
-function isCardHand(x) { return isList(x) && !isEmpty(x) && isNumber(x[0]); }
-function isPlayer(x) { return isdef(x.hand) }
+
+function makeAreas(dParent) {
+	// setBackgroundColor('random');
+	let dGrid = mDiv(dParent, { gap: 10, bg: 'white', w: '90%', padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
+	let layout = ['T', 'H A'];
+	//let layout = ['t', 'H A'];
+	let x = createGridLayout(dGrid, layout); //teilt dGrid in areas ein
+
+	//more intricate layout!
+	let areaStyles = { bg: 'green', rounding: 6 };//,box:true, padding:10};
+	let contentStyles = { lowerRounding: 6 };
+	let messageStyles = { fg: 'yellow' };
+	let titleStyles = { bg: 'dimgray', family: 'AlgerianRegular', upperRounding: 6 };
+	let areas = {
+		T: { title: 'table', id: 'dTrick', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles, titleOnTop: true },
+		H: { title: 'YOU', id: 'dHuman', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles, titleOnTop: false },
+		A: { title: 'opponent', id: 'dAI', showTitle: true, messageArea: true, areaStyles: areaStyles, contentStyles: contentStyles, messageStyles: messageStyles, titleStyles: titleStyles, titleOnTop: false },
+	};
+
+	//createAreas(dGrid, x, 'dGrid');
+	let items = [];
+	for (const k in areas) {
+		let item = areas[k];
+		item.areaStyles['grid-area'] = k;
+		let dCell = mTitledMessageDiv(item.title, dGrid, item.id, item.areaStyles, item.contentStyles, item.titleStyles, item.messageStyles, item.titleOnTop)
+		//console.log('children', dCell.children);
+		iRegister(item, item.id);
+		if (item.titleOnTop) iAdd(item, { div: dCell, dTitle: dCell.children[0], dMessage: dCell.children[1], dContent: dCell.children[2] });
+		else iAdd(item, { div: dCell, dTitle: dCell.children[2], dMessage: dCell.children[0], dContent: dCell.children[1] });
+		mCenterCenterFlex(diContent(item));
+		mStyleX(diContent(item), { gap: 10 });//,padding:10, box:true});
+		items.push(item);
+	}
+	return items;
+
+
+}
