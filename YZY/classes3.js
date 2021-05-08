@@ -45,12 +45,17 @@ class GKrieg extends G2Player {
 		super.startGame();
 		//setBackgroundColor('random');
 		let back = this.back = new GKriegBack();
-		back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'] } });
+		this.setStartPosition();
 		this.front = new GKriegFront(130, dTable);
 		this.front.presentState(this.back.get_state());
 		mLinebreak(dTable, 50);
 		this.moveButton = mButton('Move!', this.interact.bind(this), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 		//back.deck.sort(); back.print_state(); console.log(back.get_state());console.log('back players are',back.pl1,back.pl2);
+	}
+	setStartPosition() {
+		this.back.load(null); 
+		//this.back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'] } });
+		//this.back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'], trick: [['AH']] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'], trick: [['AC']] } });
 	}
 	prompt() {
 		this.write('prompt')
@@ -83,17 +88,16 @@ class GKrieg extends G2Player {
 	}
 	onPlayerMoveCompleted() {
 		this.front.presentState(this.back.get_state());
-		console.log('...player move completed!',this.back.get_state()); //return;
 		// this.controller.evaluate(); return;
 		let x = this.back.resolve();
-		if (x) {
-			console.log('...resolve is starting!!',this.back.get_state()); //return;
+		//console.log('...player move completed! resolve:',x,this.back.get_state()); //return;
+		if (isdef(x)) {
+			//console.log('...resolve is starting!!',this.back.get_state()); //return;
 			this.moveButton.style.opacity = .3;
 			// this.front.animateResolve(() => this.controller.evaluate(x));
-			this.front.animateResolve(() => {
-				console.log('...resolve completed!',this.front);
-				GC.evaluate(x);
-			});
+			this.TO = setTimeout(() => { this.front.animateResolve(x, () => { GC.evaluate(x) }) },	//console.log('...resolve completed!',this.front);}
+				1000
+			);
 
 			// this.front.animateResolve(() => console.log('...resolve completed!',this.front));
 			//this.TO = setTimeout(()=>this.controller.evaluate(x),1500);
@@ -110,7 +114,7 @@ class GKrieg extends G2Player {
 		let back = this.back;
 		this.write('eval', x)
 
-		if (x) this.front.presentState(this.back.get_state());
+		if (isdef(x)) this.front.presentState(this.back.get_state());
 		//this.back.resolve();
 		//console.log('back',back.is_out_of_cards(),back)
 		if (back.is_out_of_cards()) {
@@ -118,10 +122,10 @@ class GKrieg extends G2Player {
 			this.gameOver = true;
 			let w = back.winner();
 			if (isdef(w)) this.winner = this.players[w.index];
-			console.log(this.winner)
+			//console.log(this.winner)
 
 			this.bannerPos = -480;
-			console.log('ENDE!!!!!!!!!!!!');
+			//console.log('ENDE!!!!!!!!!!!!');
 		}
 	}
 
@@ -135,12 +139,14 @@ class GTTT extends G2Player {
 		this.createBoard();
 		this.human.sym = 'O';
 		this.ai.sym = 'X';
+		this.setStartPosition();
 	}
 	createBoard() {
 		this.rows = this.cols = this.boardSize;
 		this.board = new Board(this.rows, this.cols, this.controller.uiInteract.bind(this.controller));
 	}
 	setStartPosition() {
+		return;
 		let positions = [
 			new Array(9).fill(null),
 			['X', 'X', null, 'O', null, null, 'O', null, null],
@@ -263,7 +269,7 @@ class GTTT extends G2Player {
 class GC4 extends GTTT {
 	startGame() {
 		super.startGame();
-		this.setStartPosition();
+		//done in GTTT startGame!!! this.setStartPosition();
 	}
 	createBoard() {
 		this.board = new Board(this.rows, this.cols, this.controller.uiInteract.bind(this.controller), { margin: 6, w: 60, h: 60, bg: 'white', fg: 'black', rounding: '50%' });

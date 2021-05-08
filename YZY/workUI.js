@@ -11,12 +11,12 @@ class GKriegFront {
 	getPlayerCards(iPlayer) { return this.hands['h' + iPlayer].iHand.items; }
 	getTrickCards() {
 		let res = [];
-		let t0 = this.hands.t0; 
+		let t0 = this.hands.t0;
 		if (isdef(t0.iHand.items)) {
 			//console.log('trick0 non empty t0:',t0);//,t0.iHand,t0.items)
 			res = res.concat(t0.iHand.items);
 		}
-		let t1 = this.hands.t1; 
+		let t1 = this.hands.t1;
 		if (isdef(t1.iHand.items)) {
 			//console.log('trick1 non empty t1:',t1);//,t0.iHand,t0.items)
 			res = res.concat(t1.iHand.items);
@@ -28,41 +28,44 @@ class GKriegFront {
 		//need to get last item of this.hands[kFrom].iHand.items: this will be the card!!!
 		let cards = this.getPlayerCards(iPlayer);
 		let c = arrLast(cards);
-		let w = c.w;
-		let ov = w / 4;
+		// let w = c.w;
+		// let ov = w / 4;
 		//console.log('______\ncard', c);
 		//console.log('hands', this.hands);
 		// need center of target zone
 		let dSource = this.hands['h' + iPlayer].zone; // this.getHandZoneDiv(iPlayer);
-		let dTarget = this.hands['t' + iPlayer].zone; // this.getZoneDiv(iPlayer);
-		let offset = { x: 0, y: 0 };//getCenter(dTarget); // n1 * ov;
+		let trick = this.hands['t' + iPlayer];
+		let dTarget = trick.zone; // this.getZoneDiv(iPlayer);
+		let empty = nundef(trick.iHand.items);
+		console.log('empty', empty); //this.hands['t' + iPlayer]);
+		let offset = { x: empty ? -50 : 0, y: 0 };//getCenter(dTarget); // n1 * ov;
 		//console.log('w', w, 'ov', ov, 'xOffset', offset);
 
-		iMoveFromTo(c, dSource, dTarget, callback, offset);
+		iMoveFadeFromToPure(c, dSource, dTarget, callback, offset);
 
 	}
-	animateResolve(callback) {
+	animateResolve(iWinner, callback) {
 		//all cards from dTrick need to be moved to player hand!
 		let cards = this.getTrickCards();
 		let dSource = this.hands.t0.zone;  //iDiv(this.areas[0]); // this.getHandZoneDiv(iPlayer);
-		let dTarget = this.hands.h0.zone; //iDiv(this.areas[1]);;//// this.getZoneDiv(iPlayer);
+		let dTarget = this.hands['h' + iWinner].zone; //iDiv(this.areas[1]);;//// this.getZoneDiv(iPlayer);
 		//console.log(dSource,dTarget)
 		let offset = { x: 0, y: 0 };//getCenter(dTarget); // n1 * ov;
 		//console.log('w', w, 'ov', ov, 'xOffset', offset);
 
 		let trickCards = this.getTrickCards();
 		let iLast = trickCards.length, i = 0;
-		console.log('trickCards',trickCards,'iLast',iLast,'i',i);
+		//console.log('trickCards',trickCards,'iLast',iLast,'i',i);
 		for (const c of trickCards) {
 			dSource = iDiv(c);
 			//console.log(c);
-			i++;let f;
-			if (i==iLast) {
-				f=callback;
-				console.log('callback coming up!')
-			}else{
-				console.log('...')
-				f=() => console.log('just moving', c);
+			i++; let f;
+			if (i == iLast) {
+				f = callback;
+				//console.log('callback coming up!')
+			} else {
+				//console.log('...')
+				f = null;//() => console.log('just moving', c);
 			}
 			//let f = i == iLast ? callback : () => console.log('just moving', c); 
 			iMoveFromToPure(c, dSource, dTarget, f, offset);
@@ -89,7 +92,7 @@ class GKriegFront {
 				//if (isEmpty(arr)) continue;
 				//let key =
 				let id = 'a' + i + '_h' + j;
-				let what = iH00(arr, d, {}, id);
+				let what = iH01(arr, d, {}, id, i == 0 ? 20 : 0); //iH00(arr, d, {}, id);
 				hands.push(what);
 				//console.log('iH00 returns', what)
 			}

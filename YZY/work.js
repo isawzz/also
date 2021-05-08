@@ -1,7 +1,9 @@
 class GKriegBack {
 	load(state) {
-		this.history=[];
+		this.history = [];
 		let deck = this.deck = new Deck('52');
+		//console.log(deck.cards().sort((a,b)=>a-b))
+
 		let n = 4;
 		this.pl1 = { hand: deck.deal(n), trick: [], index: 0 }; if (isdef(state) && isdef(state.pl1)) addKeys(state.pl1, this.pl1);
 		this.pl2 = { hand: deck.deal(n), trick: [], index: 1 }; if (isdef(state) && isdef(state.pl2)) addKeys(state.pl2, this.pl2);
@@ -30,24 +32,16 @@ class GKriegBack {
 				this.iturn = 0;
 			}
 		}
-		
+
 	}
 	get_state() { return { pl1: this.pl1, pl2: this.pl2, deck: this.deck } };
 	turn() { return this.iturn; }
 	top(pl) { return Card52.getRankValue(arrFirstOfLast(pl.trick)); }
 	get_moves() {
-		let pl = this.player()
-		let moves = [];
-		if (this.in_trick()) { moves.push([arrLast(pl.hand)]); }//console.log('in_trick') }
-		else if (this.is_war()) {
-			let x = arrTakeFromEnd(pl.hand, 3);
-			moves.push(x);
-			//console.log('hand',pl.hand,'x',x,'moves',jsCopy(moves)); 
-			//console.log('is_war');
-		}
-		else if (this.in_war()) { moves.push(arrTakeFromEnd(pl.hand, 3)); }//console.log('in_war') }
-		else { moves.push([arrLast(pl.hand)]); } //console.log('first!') }
-		return moves;
+		let pl = this.player();
+		let x = pl.trick.length > 0 ? arrTakeFromEnd(pl.hand, 3) : [arrLast(pl.hand)];
+		x.reverse();
+		return [x];
 	}
 	make_random_move() {
 		let moves = this.get_moves();
@@ -68,7 +62,7 @@ class GKriegBack {
 	resolve() {
 		let result = this._resolve();
 		this.push_history(this.iturn, this.lastMove, result);//add move to history!
-		return result!=null;
+		return result ? result.iWinner : null;
 	}
 	swap_turn() { this.iturn = this.iturn == 0 ? 1 : 0; }
 	make_random_moveX() {
@@ -85,7 +79,7 @@ class GKriegBack {
 	_resolve() {
 		//console.log('...resolve')
 		let pl = this.player(), opp = this.opponent();
-		if (this.in_trick()) return null;
+		if (opp.trick.length != pl.trick.length) return null; //this.in_trick()) return null;
 		let t1 = this.top(pl); let t2 = this.top(opp);
 		//console.log('resolve: compare t1', t1, 't2', t2);
 		if (isdef(t1) && isdef(t2)) {
@@ -148,7 +142,7 @@ class GKriegBack {
 	push_history(iturn, move, result) { if (nundef(this.history)) this.history = []; this.history.push({ iturn: iturn, move: move, result: result }); return this.history; }
 	pop_history() { if (nundef(this.history)) this.history = []; return this.history.pop(); }
 	is_war() { let pl = this.player(), opp = this.opponent(); return pl.trick.length > 0 && pl.trick.length == opp.trick.length && this.top(pl) == this.top(opp); }
-	in_war() { let pl = this.player(), opp = this.opponent(); return pl.trick.length == opp.trick.length - 1 && pl.trick.length >= 1; }
+	in_war() { let pl = this.player(), opp = this.opponent(); return pl.trick.length != opp.trick.length && pl.trick.length > 1; }
 	in_trick() { let pl = this.player(), opp = this.opponent(); return pl.trick.length == 0 && opp.trick.length == 1; }
 	is_out_of_cards() { return this._is_out_of_cards(this.player()) || this._is_out_of_cards(this.opponent()); }
 	player_is_out_of_cards() { return this._is_out_of_cards(this.player()); }

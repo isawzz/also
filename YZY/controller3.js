@@ -48,7 +48,7 @@ class ControllerTTT {
 		//console.log('back from game eval',G.gameOver)
 		this.write('gameOver', this.g.gameOver)
 		if (this.g.gameOver) {
-			console.log('game over!!!');
+			//console.log('game over!!!');
 			let msg, sp;
 			//console.log('winner', this.g.winner)
 			if (this.g.winner && this.g.winner == this.ai) { msg = 'AI wins!'; sp = 'A.I. wins!'; this.ai.score += 1; }
@@ -66,7 +66,7 @@ class ControllerTTT {
 
 			//hier koennte auch banner display! und die buttons kommen auf das banner!
 			TOMain = setTimeout(() => {
-				new Banner(this.g.bannerPos).message(['Winner:', capitalize(this.g.winner.id)]);
+				//new Banner(this.g.bannerPos).message(['Winner:', capitalize(this.g.winner.id)]);
 				if (GameCounter <= 3) this.bPlay = mButton('play again', () => { resetRound(); this.startGame(); }, dTable, { fz: 28, margin: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
 				this.bPlay = mButton('next game', () => { setNextGame(); GC.startGame(); }, dTable, { fz: 28, margin: 20, rounding: 10, vpadding: 6, hpadding: 12, border: 8 }, ['buttonClass']);
 			}, 1500);

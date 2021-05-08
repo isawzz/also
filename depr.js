@@ -1,3 +1,21 @@
+function get_moves_dep() {
+	let pl = this.player()
+	let moves = [];
+	if (this.in_trick()) { moves.push([arrLast(pl.hand)]); }//console.log('in_trick') }
+	else if (pl.trick.length > 0) {
+		let x = arrTakeFromEnd(pl.hand, 3);
+		console.log(jsCopy(x))
+		x.reverse();
+		console.log(jsCopy(x))
+
+		moves.push(x);
+		//console.log('hand',pl.hand,'x',x,'moves',jsCopy(moves)); 
+		//console.log('is_war');
+	}
+	//else if (this.in_war()) { moves.push(arrTakeFromEnd(pl.hand, 3)); }//console.log('in_war') }
+	else { moves.push([arrLast(pl.hand)]); } //console.log('first!') }
+	return moves;
+}
 function makeAreas_dep(dParent) {
 	setBackgroundColor('random');
 	let dGrid = mDiv(dParent, { gap: 10, bg: 'white', w: '90%', padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
@@ -64,8 +82,8 @@ function presentState1_dep(state, areas) {
 	for (let i = 0; i < 2; i++) {
 		let cards = hands[i].iHand.items;
 		if (isEmpty(hands[i].arr)) continue;
-		console.log('cards',cards,'hands[i]',hands[i])
-		for (let j = 0; j < cards.length-1; j++) {
+		console.log('cards', cards, 'hands[i]', hands[i])
+		for (let j = 0; j < cards.length - 1; j++) {
 			Card52.turnFaceDown(cards[j]);
 		}
 	}
@@ -130,8 +148,8 @@ class Presenter {
 }
 function mAreas(dParent, SPEC = { layout: ['T T', 'H A'], showAreaNames: true }) {
 	//let d = mDiv(dParent, { w: '100%', h: '100%', hmin: 270, bg: 'red', display: 'grid' }); //d.style.display = 'inline-grid'; //d.style.justifyContent = 'center'
-	
-	let d=dParent;
+
+	let d = dParent;
 	let s = '';
 	let m = [];
 	for (const line of SPEC.layout) {
@@ -155,13 +173,13 @@ function mAreas(dParent, SPEC = { layout: ['T T', 'H A'], showAreaNames: true })
 	let result = [];
 	for (const k in SPEC.areas) {
 		let areaName = SPEC.areas[k];
-		let dCell = mDiv(d, { h:'100%', w:'100%', bg: 'red', 'grid-area': k, });
+		let dCell = mDiv(d, { h: '100%', w: '100%', bg: 'red', 'grid-area': k, });
 
 		if (SPEC.shadeAreaBackgrounds) { dCell.style.backgroundColor = palette[ipal]; ipal = (ipal + 1) % palette.length; }
-		if (SPEC.showAreaNames) { 
-			dCell=mTitledDiv(areaName,dCell,{bg: 'green',},{h:'100%', w:'100%', bg: 'yellow',},areaName)
+		if (SPEC.showAreaNames) {
+			dCell = mTitledDiv(areaName, dCell, { bg: 'green', }, { h: '100%', w: '100%', bg: 'yellow', }, areaName)
 			// dCell.innerHTML = makeAreaNameDomel(areaName); 
-		}else {dCell.id=areaName;}
+		} else { dCell.id = areaName; }
 		//UIS[areaName] = { elem: d1, children: [] };
 		// d.appendChild(d1);
 		//mStyleX(dCell,{padding:50,box:true})
@@ -241,13 +259,13 @@ function mAreas_dep(dTable, SPEC = { layout: ['T T', 'H A'], showAreaNames: true
 	let result = [];
 	for (const k in SPEC.areas) {
 		let areaName = SPEC.areas[k];
-		let dCell = mDiv(d, { h:'100%', w:'100%', bg: 'red', 'grid-area': k, });
+		let dCell = mDiv(d, { h: '100%', w: '100%', bg: 'red', 'grid-area': k, });
 
 		if (SPEC.shadeAreaBackgrounds) { dCell.style.backgroundColor = palette[ipal]; ipal = (ipal + 1) % palette.length; }
-		if (SPEC.showAreaNames) { 
-			dCell=mTitledDiv(areaName,dCell,{bg: 'green',},{h:'100%', w:'100%', bg: 'yellow',},areaName)
+		if (SPEC.showAreaNames) {
+			dCell = mTitledDiv(areaName, dCell, { bg: 'green', }, { h: '100%', w: '100%', bg: 'yellow', }, areaName)
 			// dCell.innerHTML = makeAreaNameDomel(areaName); 
-		}else {dCell.id=areaName;}
+		} else { dCell.id = areaName; }
 		//UIS[areaName] = { elem: d1, children: [] };
 		// d.appendChild(d1);
 		//mStyleX(dCell,{padding:50,box:true})
@@ -260,11 +278,11 @@ class GKriegFront {
 		this.hPlayer = hPlayer;
 		let dGrid = mDiv100(dParent, { bg: 'yellow' });
 		let areas = this.areas = mAreas(dGrid);
-		areas.map(x=>mCenterCenterFlex(x.div));
+		areas.map(x => mCenterCenterFlex(x.div));
 		console.log(areas);
 	}
-	clear(){
-		this.areas.map(x=>clearElement(x.div));
+	clear() {
+		this.areas.map(x => clearElement(x.div));
 	}
 	presentState(state) {
 		this.clear();
@@ -283,16 +301,16 @@ class GKriegFront {
 			let hand = [];
 			if (bopp.trick.length > i) hand = hand.concat(bopp.trick[i]);
 			if (bpl.trick.length > i) hand = hand.concat(bpl.trick[i]);
-			let h = iMakeHand(hand, dParent, {  }, getUID());
-			console.log('i',i,'hand',hand, h);
-			let d=h.zone;
+			let h = iMakeHand(hand, dParent, {}, getUID());
+			console.log('i', i, 'hand', hand, h);
+			let d = h.zone;
 			//mStyleX(d,{matop:50,h:'100%'})
 		}
 	}
-	showHands(){
+	showHands() {
 		let human = firstCond(G.back.players, x => x.name == G.human.id);
 		console.log('human player is', human);
-		console.log('human',human)
+		console.log('human', human)
 		let hpl = iMakeHand(human.hand, dHuman, { hpadding: 10, hmargin: 10 }, getUID());
 
 		let ai = firstCond(G.back.players, x => x.name == G.ai.id);
@@ -309,7 +327,7 @@ function createAreas(d, areaNames, prefix) {
 	for (const areaName of areaNames) {
 		//create this area
 		let d1 = document.createElement('div');
-		let id = (isdef(prefix)?prefix + '.':'') + areaName;
+		let id = (isdef(prefix) ? prefix + '.' : '') + areaName;
 		d1.id = id;
 
 		d1.style.gridArea = areaName;
@@ -351,7 +369,7 @@ function createAreas(d, areaNames, prefix) {
 
 }
 
-function createGridLayout(dGrid, layout, collapseEmptySmallLetterAreas=false) {
+function createGridLayout(dGrid, layout, collapseEmptySmallLetterAreas = false) {
 	//first need to make each line of grid layout equal sized! do I? what happens if I dont?
 	let s = '';
 	let m = [];
@@ -398,13 +416,13 @@ class GKrieg extends G2Player {
 		setBackgroundColor('random');
 		let back = this.back = new GKriegBack();
 
-		back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'] } }); 
+		back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'] } });
 		//back.deck.sort(); back.print_state();
 		//console.log(back.get_state())
 		this.front = new GKriegFront(130, dTable);
 		//console.log('back players are',back.pl1,back.pl2);
 	}
-	showState(){
+	showState() {
 		//clearTable(dTable);
 		this.front.presentState(this.back.get_state());
 	}
@@ -418,15 +436,15 @@ class GKrieg extends G2Player {
 		// let front = this.front;
 		//if (back.is_out_of_cards()) { this.controller.evaluate(); }
 		// { console.log('!!!!!!!!!!!!!!!!'); front.presentGameover(back.winner(), this.startGame.bind(this)); return; }
-		
+
 		back.make_random_move();
 		//this.showState();
-		let x=this.back.resolve();
+		let x = this.back.resolve();
 		// back.make_random_moveX();
 		// back.print_state();
 		// this.moveButton.remove();
-		if (x)this.TO = setTimeout(()=>this.controller.evaluate(),2500);else this.controller.evaluate();
-		
+		if (x) this.TO = setTimeout(() => this.controller.evaluate(), 2500); else this.controller.evaluate();
+
 
 		// front.presentState(back.get_state(), dTable);
 		// if (back.is_out_of_cards()) { console.log('game over!'); front.presentGameover(back.winner(), this.startGame.bind(this)); return; }
@@ -434,22 +452,23 @@ class GKrieg extends G2Player {
 		// mButton('Move!', () => this.gameStep(back, front), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 
 	}
-	changePlayer(){
+	changePlayer() {
 		this.back.swap_turn();
-		this.plTurn = this.players[this.back.player().index]; 
+		this.plTurn = this.players[this.back.player().index];
 		this.opp = this.players[this.back.opponent().index];
-		console.log('player',this.plTurn);}
-	eval(){
+		console.log('player', this.plTurn);
+	}
+	eval() {
 		let back = this.back;
-		
+
 		this.showState();
 		//this.back.resolve();
 		//console.log('back',back.is_out_of_cards(),back)
-		if (back.is_out_of_cards()) { 
-			this.gameOver = true; 
+		if (back.is_out_of_cards()) {
+			this.gameOver = true;
 			let w = back.winner();
 			if (isdef(w)) this.winner = this.players[w.index];
-	
+
 			console.log('ENDE!!!!!!!!!!!!')
 		}
 	}
@@ -461,11 +480,11 @@ class GKriegFront {
 		this.hPlayer = hPlayer;
 		let dGrid = mDiv100(dParent, { bg: 'yellow' });
 		let areas = this.areas = mAreas(dGrid);
-		areas.map(x=>mCenterFlex(x.div));
+		areas.map(x => mCenterFlex(x.div));
 		console.log(areas);
 	}
-	clear(){
-		this.areas.map(x=>clearElement(x));
+	clear() {
+		this.areas.map(x => clearElement(x));
 	}
 	presentState(state) {
 		this.clear();
@@ -482,7 +501,7 @@ class GKriegFront {
 			if (bopp.trick.length > i) hand = hand.concat(bopp.trick[i]);
 			if (bpl.trick.length > i) hand = hand.concat(bpl.trick[i]);
 			let h = iMakeHand(hand, dParent, { hpadding: 10, hmargin: 10 }, getUID());
-			console.log('i',i,'hand',hand)
+			console.log('i', i, 'hand', hand)
 		}
 	}
 	presentState_dep(state, dParent) {
@@ -558,9 +577,9 @@ class GKriegFront {
 			this.presentType(x, dParent);
 		}
 	}
-	presentGameover(winner,callback) {
+	presentGameover(winner, callback) {
 		console.log('winner', winner)
-		new Banner().message(['Winner:', capitalize(winner.name)],callback);
+		new Banner().message(['Winner:', capitalize(winner.name)], callback);
 	}
 	presentType(x, dParent) {
 		if (isPlayer(x)) { this.presentPlayer(x, dParent); mGap(dParent, 50); }
@@ -590,7 +609,7 @@ class GKriegFront {
 }
 
 
-class GKriegMinimalistisch extends G2Player{
+class GKriegMinimalistisch extends G2Player {
 	startGame() {
 		setBackgroundColor('random');
 		clearElement(dTable)
@@ -598,36 +617,36 @@ class GKriegMinimalistisch extends G2Player{
 		back.load({ pl1: { name: 'felix', hand: ['TH', 'KH'] }, pl2: { name: 'tom', hand: ['9C', 'QC'] } }); back.deck.sort(); back.print_state();
 		let front = this.front = new GKriegFront(130);
 		front.presentState(back.get_state(), dTable);
-	
+
 		mLinebreak(dTable, 50);
 		mButton('Move!', () => this.gameStep(back, front), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
-	
+
 	}
-	gameStep(){
+	gameStep() {
 		let back = this.back;
 		let front = this.front;
-		if (back.is_out_of_cards()) { console.log('!!!!!!!!!!!!!!!!'); front.presentGameover(back.winner(),this.startGame.bind(this)); return; }
+		if (back.is_out_of_cards()) { console.log('!!!!!!!!!!!!!!!!'); front.presentGameover(back.winner(), this.startGame.bind(this)); return; }
 
 		clearTable(dTable);
 		back.make_random_moveX();
 		back.make_random_moveX();
 		back.print_state();
 		front.presentState(back.get_state(), dTable);
-		if (back.is_out_of_cards()) { console.log('game over!'); front.presentGameover(back.winner(),this.startGame.bind(this)); return; }
-	
+		if (back.is_out_of_cards()) { console.log('game over!'); front.presentGameover(back.winner(), this.startGame.bind(this)); return; }
+
 		mLinebreak(dTable, 50);
 		mButton('Move!', () => this.gameStep(back, front), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
-	
+
 	}
 
-	
+
 }
 
 
 
 class GKrieg extends G2Player {
-	constructor(name,o){
-		super(name,o);
+	constructor(name, o) {
+		super(name, o);
 		this.game = new GKriegBack();
 		this.front = new GKriegFront(130);
 	}
@@ -664,32 +683,32 @@ class GKrieg extends G2Player {
 		let idx = this.iPosition + 1; idx = idx % positions.length; this.iPosition = idx;//advance iPosition for next time!
 	}
 
-	getState() { 
+	getState() {
 		let state = this.game.get_state();
 		console.log(state)
-		state['pl'+(this.human.index+1)].name='YOU';
-		state['pl'+(this.ai.index+1)].name='opponent';
-		
+		state['pl' + (this.human.index + 1)].name = 'YOU';
+		state['pl' + (this.ai.index + 1)].name = 'opponent';
+
 		//copyKeys(state.pl1,)
-		return this.game.get_state(); 
+		return this.game.get_state();
 	}
 	prompt() {
 		// wo sind die cards?
 		let state = this.getState();
-		console.log('_______state',state)
+		console.log('_______state', state)
 		clearTable();
-		this.front.presentState(state,dTable);
+		this.front.presentState(state, dTable);
 
 		//turn player div should get different bg
 		let iturn = this.game.turn();
-		mStyleX(mBy('dPlayer'+iturn),{bg:'red'});
+		mStyleX(mBy('dPlayer' + iturn), { bg: 'red' });
 
 		//ein button for play card
 		mLinebreak(dTable, 50);
 		mButton('Move!', this.move.bind(this), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 
 	}
-	move(){
+	move() {
 		this.game.make_random_moveX();
 		//this.game.make_random_move();
 
@@ -897,7 +916,7 @@ class GKriegBack {
 			if (isdef(state.pl2.hand)) this.pl2.hand = parseHand(state.pl2.hand, deck);
 			if (isdef(state.pl1.trick)) state.pl1.trick.map(x => this.pl1.trick.push(parseHand(x, deck)));
 			if (isdef(state.pl2.trick)) state.pl2.trick.map(x => this.pl2.trick.push(parseHand(x, deck)));
-			if (isdef(state.deck)) this.deck.setData(parseHand(state.deck)); 
+			if (isdef(state.deck)) this.deck.setData(parseHand(state.deck));
 			// console.log(this.pl1.hand, this.pl2.hand, deck.data);
 			// if (!isEmpty(state[1])) {
 			// 	let [arr1, arr2] = [state[1][0], state[1][1]];
@@ -1138,7 +1157,7 @@ function testChessPos1() {
 
 
 
-class exTTT{
+class exTTT {
 	computerMove_old() {
 		let state = this.getState();
 		state = boardToNode(state);
@@ -1230,7 +1249,7 @@ class GChess extends G2Player {
 	getAvailableMoves(state, pl, opp) {
 		let plPieces = getMovesPerPiece(state, pl, G.rows, G.cols);
 
-		let rochadeMoves = getMoveRochade(state,pl,G.rows, G.cols);
+		let rochadeMoves = getMoveRochade(state, pl, G.rows, G.cols);
 
 
 		for (const p in plPieces) { plPieces[p].avMoves = []; }
@@ -1302,7 +1321,7 @@ class GChess extends G2Player {
 		state[from] = null;
 		return state;
 	}
-	heuristic(state){
+	heuristic(state) {
 		// einfach punkte zusammen zaehlen
 		// aber schach sagen soll auch gut sein!
 	}
@@ -1312,7 +1331,7 @@ class GChess extends G2Player {
 		//oder: wenn nur noch 2 kings da sind : ignore
 		return { reached: false };
 	}
-	getState(){return this.board.getState();}
+	getState() { return this.board.getState(); }
 }
 
 

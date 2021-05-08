@@ -434,6 +434,22 @@ function iMoveFromToPure(item, d1, d2, callback, offset) {
 	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
 	a.onfinish = () => { if (isdef(callback)) callback(); };
 }
+function iMoveFadeFromToPure(item, d1, d2, callback, offset) {
+	let bi = iBounds(item);
+	let b1 = iBounds(d1);
+	let b2 = iBounds(d2);
+	//console.log('item', bi);
+	//console.log('d1', b1);
+	//console.log('d2', b2);
+
+	//animate item to go translateY by d2.y-d1.y
+	if (nundef(offset)) offset = { x: 0, y: 0 };
+	let dist = { x: b2.x - b1.x + offset.x, y: b2.y - b1.y + offset.y };
+
+	item.div.style.zIndex = 100;
+	let a = aTranslateFadeBy(item.div, dist.x, dist.y, 500);
+	a.onfinish = () => { if (isdef(callback)) callback(); };
+}
 function iMoveFromTo(item, d1, d2, callback, offset) {
 
 	//console.log('__ iMove __item',item,'\nd1',d1,'\nd2',d2,'\noffset',offset)	
@@ -517,7 +533,9 @@ function iZMax(n) { if (isdef(n)) ZMax = n; ZMax += 1; return ZMax; }
 //#endregion
 
 //#region ani
-function aTranslateBy(d, x, y, ms) { return d.animate({ transform: `translate(${x}px,${y}px)` }, ms); }
+var MyEasing = 'cubic-bezier(1,-0.03,.86,.68)';
+function aTranslateFadeBy(d, x, y, ms) { return d.animate({opacity:.5, transform: `translate(${x}px,${y}px)` }, {easing:MyEasing,duration:ms}); }
+function aTranslateBy(d, x, y, ms) { return d.animate({ transform: `translate(${x}px,${y}px)` },ms);}// {easing:'cubic-bezier(1,-0.03,.27,1)',duration:ms}); }
 function aRotate(d, ms) { return d.animate({ transform: `rotate(360deg)` }, ms); }
 function aRotateAccel(d, ms) { return d.animate({ transform: `rotate(1200deg)` }, { easing: 'cubic-bezier(.72, 0, 1, 1)', duration: ms }); }
 //#endregion

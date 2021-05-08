@@ -105,11 +105,25 @@ function iH00_dep(iarr, dParent, styles, id) {
 	return h;
 
 }
-function iH00(iarr, dParent, styles, id) {
-	function iH00Zone(dTable, nmax = 3, padding = 10) {
+function iH01(iarr, dParent, styles, id, overlap) {
+	function iH01Zone(dTable, nmax = 7, padding = 10) {
 		let sz = netHandSize(nmax);
 		//console.log('________________', sz)
-		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding});//, rounding: 10, bg:'random' });
+		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding}); //, rounding: 10, bg:'blue' });
+	}
+	//should return item={iarr,live.div,styles}
+	let h = isdef(Items[id]) ? Items[id] : { arr: iarr, styles: styles, id: id };
+	if (nundef(h.zone)) h.zone = iH01Zone(dParent); else clearElement(h.zone);
+	let items = i52(iarr);
+	h.iHand = iSplay(items, h.zone,{},'right', overlap);
+	return h;
+
+}
+function iH00(iarr, dParent, styles, id) {
+	function iH00Zone(dTable, nmax = 7, padding = 10) {
+		let sz = netHandSize(nmax);
+		//console.log('________________', sz)
+		return mZone(dTable, { wmin: sz.w, h: sz.h, padding: padding}); //, rounding: 10, bg:'blue' });
 	}
 	//should return item={iarr,live.div,styles}
 	let h = isdef(Items[id]) ? Items[id] : { arr: iarr, styles: styles, id: id };
@@ -172,7 +186,7 @@ function anim1(elem, prop, from, to, ms) {
 class Card52 {
 	static toString(c) { return c.rank + ' of ' + c.suit; }
 	static _getKey(i) {
-		if (i > 52) return 'card_J1';
+		if (i >= 52) return 'card_J1';
 		let rank = Card52.getRank(i);
 		let suit = Card52.getSuit(i);
 		return 'card_' + rank + suit;
@@ -185,18 +199,19 @@ class Card52 {
 		//ex k='2H';
 		let ir = ranks.indexOf(k[0]); //=> zahl zwischen 0 und 12
 		let is = suits.indexOf(k[1]); //=> zahle zwischen 0 und 3
+		//console.log(is)
 		return is * 13 + ir;
 	}
-	static getRankValue(i) { if (nundef(i)) return null; let r = i % 13; return r == 0 ? 13 : r; }
+	static getRankValue(i) { if (nundef(i)) return null; let r = i % 13; return r == 0 ? 12 : r-1; }
 	static getRank(i) {
-		let rank = 1 + (i % 13);
-		if (rank == 1) rank = 'A';
-		else if (rank >= 10) rank = ['T', 'J', 'Q', 'K'][rank - 10];
+		let rank = (i % 13);
+		if (rank == 0) rank = 'A';
+		else if (rank >= 9) rank = ['T', 'J', 'Q', 'K'][rank - 9];
 
 		return rank;
 	}
 	static getSuit(i) {
-		let s = ['S', 'H', 'D', 'C'][divInt(i - 1, 13)];
+		let s = ['S', 'H', 'D', 'C'][divInt(i, 13)];
 		//if (!'SHDC'.includes(s)) console.log('SUIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 		return s;
 	}
@@ -271,9 +286,9 @@ class Deck {
 	constructor(f) { this.data = []; if (isdef(f)) this['init' + f](); }
 	init(arr) { this.data = arr; }
 	initEmpty() { this.data = []; }
-	initTest(n, shuffled = true) { this.data = range(1, n); if (shuffled) this.shuffle(); }
-	init52(shuffled = true, jokers = 0) { this.data = range(1, 52 + jokers); if (shuffled) this.shuffle(); }
-	initRandomHand52(n) { this.data = choose(range(1, 52), n); }
+	initTest(n, shuffled = true) { this.data = range(0, n-1); if (shuffled) this.shuffle(); }
+	init52(shuffled = true, jokers = 0) { this.data = range(0, 51 + jokers); if (shuffled) this.shuffle(); }
+	initRandomHand52(n) { this.data = choose(range(0, 51), n); }
 	addTop(i) { this.data.push(i); return this; }
 	addBottom(i) { this.data.unshift(i); return this; }
 	bottom() { return this.data[0]; }
