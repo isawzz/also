@@ -5,14 +5,15 @@ function _start3() {
 	if (RUNNING3) return;	RUNNING3 = true;
 	console.log('the following users are logged in:', lookup(DB,['settings','loggedIn']),'Username',Username);
 	initTable(); initSidebar(); initAux(); initScore(); loadUser(Username); //timit = new TimeIt('*timer', true);
-	//console.log(G)
-	//console.log(GC)
-	startUnit();
-	//console.log(isNumber(0));	cTest100();
-	//let x=Card52._fromKey('AH'); console.log(x)
-	//rTest09(); //rTest08(); //rTest07(); //let x=rTest06_clean_OK(); console.log('result',x);//rTest04(); //rTest03_OK(); //rTest02(); //cTest10(); //rTest01();
+	//startUnit();
 
 	//#region tests
+	// console.log(G);	console.log(GC);	console.log(isNumber(0));	cTest100();
+	// let x=Card52._fromKey('AH'); console.log(x);
+	cardGameTest09(); //cardGameTest08(); //cardGameTest07(); //let x=cardGameTest06_clean_OK(); console.log('result',x);//cardGameTest04(); //cardGameTest03_OK(); //cardGameTest02(); //cTest10(); //cardGameTest01();
+
+
+
 	//cTest05();//cTest10(); //cTest05(); //cTest04_2HandsRandom();
 
 	//let game = new GKriegBack(); //game.load(); game.print_state();

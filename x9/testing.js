@@ -1,5 +1,5 @@
 //test areas
-function rTest09() {
+function cardGameTest09() {
 	let state = {
 		pl1: { hand: [1, 2, 3, 4, 5], trick: [[6], [7, 8, 9]] },
 		pl2: { hand: [11, 12, 13, 14, 15], trick: [[16], [17, 18, 19]] },
@@ -41,7 +41,7 @@ function presentState1(state, areas) {
 	}
 }
 
-function rTest08() {
+function cardGameTest08() {
 	let state = {
 		pl1: { hand: [1, 2, 3, 4, 5], trick: [[6]] },
 		pl2: { hand: [11, 12, 13, 14, 15], trick: [[16]] },
@@ -50,7 +50,7 @@ function rTest08() {
 	let pl1Hand = state.pl1.hand;
 	let pl2Hand = state.pl2.hand;
 	let arrs = [trick, pl1Hand, pl2Hand];
-	let items = makeAreas(dTable); //rTest07_helper();
+	let items = makeAreas(dTable); //cardGameTest07_helper();
 	for (let i = 0; i < 3; i++) {
 		let arr = arrs[i];
 		let item = items[i];
@@ -62,8 +62,8 @@ function rTest08() {
 
 	}
 }
-function rTest07() {
-	let items = rTest07_helper();
+function cardGameTest07() {
+	let items = cardGameTest07_helper();
 	// let card = Card52._createUi('Q', 'H', 70, 110);
 	// console.log(card);
 	// let item = items[0];
@@ -80,7 +80,7 @@ function rTest07() {
 
 	}
 }
-function rTest07_helper() {
+function cardGameTest07_helper() {
 	setBackgroundColor('random');
 	let dGrid = mDiv(dTable, { gap: 10, bg: 'white', w: '90%', padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
 	let layout = ['T', 'H A'];
@@ -117,7 +117,7 @@ function rTest07_helper() {
 
 
 }
-function rTest06_clean_OK() {
+function cardGameTest06_clean_OK() {
 	setBackgroundColor('random');
 	let dGrid = mDiv(dTable, { gap: 10, bg: 'white', w: '90%', hmin: 400, padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
 	let layout = ['T', 'H A'];
@@ -154,7 +154,7 @@ function rTest06_clean_OK() {
 
 
 }
-function rTest05() {
+function cardGameTest05() {
 	setBackgroundColor('random');
 	let dGrid = mDiv(dTable, { gap: 10, bg: 'white', w: '80%', h: 400, padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
 	// let dGrid = mDiv(dTable, { gap: 10, bg: 'white', w: '80%', h: 400, padding: 10, display: 'inline-grid' }, 'dGrid');
@@ -200,7 +200,7 @@ function rTest05() {
 
 
 }
-function rTest04() {
+function cardGameTest04() {
 	setBackgroundColor('random');
 	let dGrid = mDiv(dTable, { bg: 'red', w: '80%', h: 400, padding: 10, display: 'inline-grid', rounding: 10 }, 'dGrid');
 	//mStyleX(dTable, { h: 400, bg: 'black', padding: 10 });
@@ -213,7 +213,7 @@ function rTest04() {
 
 
 }
-function rTest03_OK() {
+function cardGameTest03_OK() {
 	setBackgroundColor('random');
 	mStyleX(dTable, { h: 400, bg: 'black', padding: 10 });
 	let dGrid = mDiv100(dTable, { display: 'inline-grid' });//,'dGrid');
@@ -225,7 +225,7 @@ function rTest03_OK() {
 
 
 }
-function rTest02() {
+function cardGameTest02() {
 	setBackgroundColor('random');
 	mStyleX(dTable, { h: 400, bg: 'black', padding: 10 });
 
@@ -242,7 +242,7 @@ function rTest02() {
 	console.log('m', m, '\ns', s); return;
 
 }
-function rTest01() {
+function cardGameTest01() {
 
 	rAreas();
 }
