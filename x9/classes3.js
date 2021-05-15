@@ -53,7 +53,7 @@ class GKrieg extends G2Player {
 		//back.deck.sort(); back.print_state(); console.log(back.get_state());console.log('back players are',back.pl1,back.pl2);
 	}
 	setStartPosition() {
-		this.back.load(null); 
+		this.back.load(null);
 		//this.back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'] } });
 		//this.back.load({ pl1: { name: this.plTurn.id, hand: ['TH', 'KH'], trick: [['AH']] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC'], trick: [['AC']] } });
 		//this.back.load({ pl1: { name: this.plTurn.id, hand: [], trick: [['AH']] }, pl2: { name: this.plOpp.id, hand: ['9C', 'QC', 'AC'] } });
@@ -91,7 +91,7 @@ class GKrieg extends G2Player {
 		this.front.presentState(this.back.get_state());
 		// this.controller.evaluate(); return;
 		let x = this.back.resolve();
-		//console.log('...player move completed! resolve:',x,this.back.get_state()); //return;
+		//console.log('...player move completed! resolve:', x, this.back.get_state()); //return;
 		if (isdef(x)) {
 			//console.log('...resolve is starting!!',this.back.get_state()); //return;
 			this.moveButton.style.opacity = .3;

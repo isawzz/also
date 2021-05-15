@@ -661,7 +661,7 @@ var Chess = function (fen) {
 			}
 			undo_move()
 		}
-		console.log('legal_moves',legal_moves);
+		//console.log('legal_moves',legal_moves);
 		return legal_moves
 	}
 

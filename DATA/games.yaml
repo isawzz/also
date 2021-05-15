@@ -566,6 +566,16 @@ gKrieg:
   startPosition: seq # random | seq
   startPlayer: human  # ai | human | random
   manual: true #ai is manual
+gPerlen:
+  friendly: 'Perlen'
+  logo: 'prayer beads'
+  color: silver
+  controllerType: multi
+  numPlayers: 3
+  iPosition: 1 #0-based index of position defined in G.setStartPosition
+  startPosition: seq # random | seq
+  startPlayer: random  # ai | human | random
+  manual: true #ai is manual
 #unused:
 gMissingNumber:
   friendly: 'Sequence!'

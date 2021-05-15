@@ -71,7 +71,7 @@ nil:
 guest0:
   id: guest0
   avGames: [gSteps, gSentence, gTouchColors, gSayPic, gReversi, gMissingLetter, gNamit, gTouchPic, gWritePic, gChess, gPremem, gMem, gSwap, gTTT, gElim, gAnagram, gCats, gAbacus, gRiddle,gC4]
-  lastGame: gChess
+  lastGame: gTouchPic
   settings:
     # settings common to all games
     samplesPerGame: 10
@@ -83,7 +83,7 @@ guest0:
     vocab: best25
     showTime: false
     spokenFeedback: true
-    silentMode: false
+    silentMode: true
     switchGame: true
     #indiv game settings default
     trials: 2
@@ -142,7 +142,7 @@ test0:
 gunter:
   id: gunter
   avGames: [gSteps, gSentence, gTouchColors, gSayPic, gReversi, gMissingLetter, gNamit, gTouchPic, gWritePic, gChess, gPremem, gMem, gSwap, gTTT, gElim, gAnagram, gCats, gAbacus, gRiddle,gC4]
-  lastGame: gChess
+  lastGame: gTouchColors
   settings:
     # settings common to all games
     userColor: blue
@@ -287,3 +287,21 @@ gul:
       open: false
     aPassword:
       open: false
+wala:
+  id: wala
+  avGames: [gPerlen, gKrieg, gSteps, gSentence, gTouchColors, gSayPic, gReversi, gMissingLetter, gNamit, gTouchPic, gWritePic, gChess, gPremem, gMem, gSwap, gTTT, gElim, gAnagram, gCats, gAbacus, gRiddle,gC4]
+  lastGame: gPerlen
+  settings:
+    userColor: GREEN
+felix:
+  id: felix
+  avGames: [gPerlen, gKrieg, gSteps, gSentence, gTouchColors, gSayPic, gReversi, gMissingLetter, gNamit, gTouchPic, gWritePic, gChess, gPremem, gMem, gSwap, gTTT, gElim, gAnagram, gCats, gAbacus, gRiddle,gC4]
+  lastGame: gPerlen
+  settings:
+    userColor: BLUE
+ma:
+  id: ma
+  avGames: [gPerlen, gKrieg, gSteps, gSentence, gTouchColors, gSayPic, gReversi, gMissingLetter, gNamit, gTouchPic, gWritePic, gChess, gPremem, gMem, gSwap, gTTT, gElim, gAnagram, gCats, gAbacus, gRiddle,gC4]
+  lastGame: gPerlen
+  settings:
+    userColor: orange

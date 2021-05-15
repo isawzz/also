@@ -8,7 +8,7 @@ decrementLevelOnNegativeStreak: 3
 language: E
 vocab: best25
 spokenFeedback: true
-silentMode: false
+silentMode: true
 pressControlToUnfreeze: false
 reducedAnimations: true
 showHint: true

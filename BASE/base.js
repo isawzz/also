@@ -434,22 +434,6 @@ function iMoveFromToPure(item, d1, d2, callback, offset) {
 	let a = aTranslateBy(item.div, dist.x, dist.y, 500);
 	a.onfinish = () => { if (isdef(callback)) callback(); };
 }
-function iMoveFadeFromToPure(item, d1, d2, callback, offset) {
-	let bi = iBounds(item);
-	let b1 = iBounds(d1);
-	let b2 = iBounds(d2);
-	//console.log('item', bi);
-	//console.log('d1', b1);
-	//console.log('d2', b2);
-
-	//animate item to go translateY by d2.y-d1.y
-	if (nundef(offset)) offset = { x: 0, y: 0 };
-	let dist = { x: b2.x - b1.x + offset.x, y: b2.y - b1.y + offset.y };
-
-	item.div.style.zIndex = 100;
-	let a = aTranslateFadeBy(item.div, dist.x, dist.y, 500);
-	a.onfinish = () => { if (isdef(callback)) callback(); };
-}
 function iMoveFromTo(item, d1, d2, callback, offset) {
 
 	//console.log('__ iMove __item',item,'\nd1',d1,'\nd2',d2,'\noffset',offset)	
@@ -534,6 +518,17 @@ function iZMax(n) { if (isdef(n)) ZMax = n; ZMax += 1; return ZMax; }
 
 //#region ani
 var MyEasing = 'cubic-bezier(1,-0.03,.86,.68)';
+function aMove(d, dSource, dTarget, callback, offset, ms, easing, fade) {
+	let b1 = getRect(dSource);
+	let b2 = getRect(dTarget);
+	if (nundef(offset)) offset = { x: 0, y: 0 };
+	let dist = { x: b2.x - b1.x + offset.x, y: b2.y - b1.y + offset.y };
+	d.style.zIndex = 100;
+	// var MyEasing = 'cubic-bezier(1,-0.03,.86,.68)';
+	let a = d.animate({ opacity: valf(fade, 1), transform: `translate(${dist.x}px,${dist.y}px)` }, { easing: valf(easing, 'EASE'), duration: ms });
+	// let a = aTranslateFadeBy(d.div, dist.x, dist.y, 500);
+	a.onfinish = () => { d.style.zIndex = iZMax(); if (isdef(callback)) callback(); };
+}
 function aTranslateFadeBy(d, x, y, ms) { return d.animate({opacity:.5, transform: `translate(${x}px,${y}px)` }, {easing:MyEasing,duration:ms}); }
 function aTranslateBy(d, x, y, ms) { return d.animate({ transform: `translate(${x}px,${y}px)` },ms);}// {easing:'cubic-bezier(1,-0.03,.27,1)',duration:ms}); }
 function aRotate(d, ms) { return d.animate({ transform: `rotate(360deg)` }, ms); }
@@ -1708,8 +1703,8 @@ async function dbLoad(appName, callback) {
 }
 
 var BlockServerSend = false;
-async function dbSave(appName) {
-	if (BlockServerSend) { setTimeout(() => dbSave(appName), 1000); }
+function dbSave(appName, callback) {
+	if (BlockServerSend) { setTimeout(() => dbSave(appName, callback), 1000); }
 	else {
 		//console.log('saving DB:',appName,DB);
 		let url = SERVERURL + appName;
@@ -1722,7 +1717,7 @@ async function dbSave(appName) {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(DB)
-		}).then(() => { BlockServerSend = false; }); //console.log('unblocked...'); });
+		}).then(() => { BlockServerSend = false; console.log('unblocked...'); if (callback) callback();}); //console.log('unblocked...'); });
 	}
 }
 
@@ -1766,7 +1761,9 @@ function getRect(elem, relto) {
 	let res = elem.getBoundingClientRect();
 	//console.log(res)
 	if (isdef(relto)) {
+		//console.log(relto)
 		let b2 = relto.getBoundingClientRect();
+		let b1 = res;
 		res = {
 			x: b1.x - b2.x,
 			y: b1.y - b2.y,
@@ -2601,7 +2598,25 @@ function toLetterList(s) {
 function toNoun(s) { return capitalize(s.toLowerCase()); }
 //#endregion
 
-//#region time 
+//#region time and date
+
+function formatDate(d) {
+	//usage: formatDate(new Date(2010, 7, 5);
+	if (nundef(d)) d = Date.now();
+	let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+	let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
+	let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+	return `${da}-${mo}-${ye}`;
+}
+function formatDate1(d) {
+	const date = isdef(d)?d:new Date();
+	const month = ('0' + date.getMonth()).slice(0, 2);
+	const day = date.getDate();
+	const year = date.getFullYear();
+	const dateString = `${month}/${day}/${year}`;
+	return dateString;
+}
+
 function format2Digits(i) { return (i < 10) ? "0" + i : i; }
 function msNow() { return Date.now(); }
 function msToTime(ms) {
@@ -2831,7 +2846,7 @@ function isEmpty(arr) {
 function isLetter(s) { return /^[a-zA-Z]$/i.test(s); }
 function isList(arr) { return Array.isArray(arr); }
 function isLiteral(x) { return isString(x) || isNumber(x); }
-function isNumber(x) { return x != ' ' && !isNaN(+x); }
+function isNumber(x) { return x==0 || x != ' ' && !isNaN(+x); }
 function isSingleDigit(s) { return /^[0-9]$/i.test(s); }
 function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
@@ -2907,6 +2922,12 @@ function getUID(pref = '') {
 function resetUIDs() { UIDCounter = 0; }
 //#endregion
 
+//#region functions to be used in node.js:
+if(this && typeof module == "object" && module.exports && this === module.exports) {
+	module.exports = { 
+		isdef 
+	};
+}
 
 
 

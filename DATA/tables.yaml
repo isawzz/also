@@ -1,0 +1,11 @@
+0:
+  game: gPerlen
+  players:
+    diana:
+      color: green
+    felix:
+      color: blue
+    ma: 
+      color: orange
+  table:
+    

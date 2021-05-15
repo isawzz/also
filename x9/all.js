@@ -149,14 +149,14 @@ function fractionsUnder1ByDenominator() {
 	};
 	return fr;
 }
-function getTextForMixed(full, num, denom) { 
+function getTextForMixed(full, num, denom) {
 	let s = '' + full;
-	if (isdef(num) && isdef(denom)) s+= ' ' + num + '&frasl;' + denom; 
-	return s; 
+	if (isdef(num) && isdef(denom)) s += ' ' + num + '&frasl;' + denom;
+	return s;
 }
 function getTextForFractionX(num, denom) {
 	if (num == denom) return '1';
-	else if (denom==1) return num;
+	else if (denom == 1) return num;
 	else if (num / denom > 2) {
 		let mixed = getMixedNumber(num, denom);
 		//console.log('mixed',mixed)
@@ -172,9 +172,9 @@ function getMixedNumber(num, denom) {
 	const quotient = Math.floor(num / denom);
 	const remainder = num % denom;
 	if (remainder === 0) {
-		return { full: quotient, frac: null, n:null,d:null };
+		return { full: quotient, frac: null, n: null, d: null };
 	} else {
-		return { full: quotient, frac: math.fraction(remainder, denom),n:remainder,d:denom };
+		return { full: quotient, frac: math.fraction(remainder, denom), n: remainder, d: denom };
 	};
 }
 function getRandomFraction(num, denom) {
@@ -195,7 +195,7 @@ function getRandomFraction(num, denom) {
 	let fr = chooseRandom(flist);
 	return math.fraction(Number(fr.numer), Number(fr.denom));
 }
-function getFractionVariantsTrial1(res){
+function getFractionVariantsTrial1(res) {
 	let num = getRandomFractions(res, 8);
 	let resInList = firstCond(nums, x => x.n == res.n && x.d == res.d);
 	if (!resInList) nums.push(res);
@@ -211,21 +211,21 @@ function getFractionVariantsTrial1(res){
 	nums = finalNums;
 	return nums;
 }
-function get3FractionVariants(fr,sameNum=false,sameDenom=true) {
+function get3FractionVariants(fr, sameNum = false, sameDenom = true) {
 	let num = fr.n;
-	let rnd1=randomNumber(1, 2);
-	let rnd2=rnd1+randomNumber(1, 3);
-	let rnd3=rnd2+randomNumber(1, 5);
-	let nums= sameNum?[num,num,num,num]: [num, num + rnd1, num>5?(num -rnd2):num+rnd2, num+rnd3];
+	let rnd1 = randomNumber(1, 2);
+	let rnd2 = rnd1 + randomNumber(1, 3);
+	let rnd3 = rnd2 + randomNumber(1, 5);
+	let nums = sameNum ? [num, num, num, num] : [num, num + rnd1, num > 5 ? (num - rnd2) : num + rnd2, num + rnd3];
 
-	let den=fr.d;
-	let denoms = sameDenom?[den,den,den,den]	:sameNum?[den,den+1,den+2,den>2?den-1:den+3]
-	:[den,den+1,den+2,den];
+	let den = fr.d;
+	let denoms = sameDenom ? [den, den, den, den] : sameNum ? [den, den + 1, den + 2, den > 2 ? den - 1 : den + 3]
+		: [den, den + 1, den + 2, den];
 	//console.log('res',fr,'\nnums',nums,'\ndenoms',denoms);
 
-	let frlist=[];
-	for(let i=0;i<4;i++){
-		frlist.push(math.fraction(nums[i],denoms[i]));
+	let frlist = [];
+	for (let i = 0; i < 4; i++) {
+		frlist.push(math.fraction(nums[i], denoms[i]));
 	}
 	return frlist;
 }
