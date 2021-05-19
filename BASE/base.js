@@ -1,4 +1,4 @@
-//region m
+//#region m
 function mAppend(d, child) { d.appendChild(child); }
 function mBackground(bg, fg) { mStyleX(document.body, { bg: bg, fg: fg }); }
 
@@ -17,15 +17,6 @@ function mButton(caption, handler, dParent, styles, classes) {
 function mBy(id) { return document.getElementById(id); }
 function mCenterCenterFlex(d) { mCenterFlex(d, true, true, true); }
 function mCenterFlexNowrap(d) { mCenterFlex(d, true, true, false); }
-function mFlexWrap(d) { mFlex(d, 'w'); }
-function mFlex(d, or = 'h') {
-	d.style.display = 'flex';
-	d.style.flexFlow = (or == 'v' ? 'column' : 'row') + ' ' + (or == 'w' ? 'wrap' : 'nowrap');
-	// d.style.alignItems = 'stretch';
-	// d.style.alignContent = 'stretch';
-	// d.style.justiifyItems = 'stretch';
-	// d.style.justifyContent = 'stretch';
-}
 function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	let styles = { display: 'flex' };
 	if (hCenter) styles['justify-content'] = 'center';
@@ -34,10 +25,20 @@ function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	mStyleX(d, styles);
 }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
+function mContainer(d,styles={}){
+	let defOuterStyles = {
+		display: 'inline-flex', 'flex-direction': 'column',
+		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
+		padding: 0, box: true
+	};
+	addKeys(d,defOuterStyles);
+	mStyleX(d,styles);
+}
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
 function mDiv(dParent = null, styles, id, inner) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; if (isdef(inner)) d.innerHTML = inner; return d; }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
+function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }
 function mEditableOnEdited(id, dParent, label, initialVal, onEdited, onOpening) {
 	let inp = mEditableInput(dParent, label, initialVal);
 	inp.id = id;
@@ -62,6 +63,15 @@ function mEditableInput(dParent, label, val) {
 	mAppend(dui, labelElem);
 	mAppend(dui, elem);
 	return elem;
+}
+function mFlexWrap(d) { mFlex(d, 'w'); }
+function mFlex(d, or = 'h') {
+	d.style.display = 'flex';
+	d.style.flexFlow = (or == 'v' ? 'column' : 'row') + ' ' + (or == 'w' ? 'wrap' : 'nowrap');
+	// d.style.alignItems = 'stretch';
+	// d.style.alignContent = 'stretch';
+	// d.style.justiifyItems = 'stretch';
+	// d.style.justifyContent = 'stretch';
 }
 function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
 function mHasClass(el, className) {
@@ -94,9 +104,28 @@ function miAddLabel(item, styles) {
 	}
 	return d;
 }
-function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }
 function mIfNotRelative(d) { if (nundef(d.style.position)) d.style.position = 'relative'; }
+function mImage() { return mImg(...arguments); }
+function mImg(path, dParent, styles, classes) {
+	//console.log('_______________',path)
+	let d = mCreate('img');
+	d.src = path;
+	mAppend(dParent, d);
+	if (isdef(styles)) mStyleX(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	return d;
+	//<img src="kiwi.svg" alt="Kiwi standing on oval"></img>
+}
 function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent, styles); }
+function mInput(label, value, dParent, styles, id) {
+	let inp = createElementFromHTML(`<input type="text" class="input" value="${value}" />`);
+	let labelui = createElementFromHTML(`<label>${label}</label>`);
+	mAppend(dParent, labelui);
+	mAppend(labelui, inp);
+	if (isdef(styles)) mStyleX(labelui, styles);
+	if (isdef(id)) inp.id=id;
+	return inp;
+}
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
 function mInsertAfter(dParent, el, index = 0) { dParent.insertAfter(el, dParent.childNodes[index]); }
 function mLinebreakNew(d, gap) { mGap(d, gap); }
@@ -283,25 +312,6 @@ function mStyleX(elem, styles, unit = 'px') {
 		}
 	}
 }
-function mText(text, dParent, styles, classes) {
-	let d = mDiv(dParent);
-	if (!isEmpty(text)) d.innerHTML = text;
-	if (isdef(styles)) mStyleX(d, styles);
-	if (isdef(classes)) mClass(d, classes);
-	return d;
-}
-function mTitledDiv(title, dParent, outerStyles = {}, innerStyles = {}, id) {
-	let d = mDiv(dParent, outerStyles);
-	let dTitle = mDiv(d);
-	dTitle.innerHTML = title;
-	innerStyles.w = '100%';
-	innerStyles.h = outerStyles.h - getRect(dTitle).h;
-	let dContent = mDiv(d, innerStyles, id);
-	return dContent;
-}
-function mMoveChild(dParent, fromIndex, toIndex) {
-
-}
 function mSwap(obj1, obj2) {
 	// save the location of obj2
 	var parent2 = obj2.parentNode;
@@ -323,6 +333,41 @@ function mSwap(obj1, obj2) {
 			parent2.appendChild(obj1);
 		}
 	}
+}
+function mText(text, dParent, styles, classes) {
+	let d = mDiv(dParent);
+	if (!isEmpty(text)) d.innerHTML = text;
+	if (isdef(styles)) mStyleX(d, styles);
+	if (isdef(classes)) mClass(d, classes);
+	return d;
+}
+function mTextFit(text, { wmax, hmax }, dParent, styles, classes) {
+	//mTextFit(label,maxchars,maxlines, d, textStyles, ['truncate']);
+	let d = mDiv(dParent);
+	if (!isEmpty(text)) d.innerHTML = text;
+
+	//console.log('_______',wmax,hmax)
+	if (nundef(styles) && (isdef(wmax) || isdef(hmax))) {
+		styles = {};
+	}
+	if (isdef(wmax)) styles.width = wmax;
+	if (isdef(hmax)) styles.height = hmax;
+
+	//console.log('_',text,styles)
+
+	if (isdef(styles)) mStyleX(d, styles);
+
+	if (isdef(classes)) mClass(d, classes);
+	return d;
+}
+function mTitledDiv(title, dParent, outerStyles = {}, innerStyles = {}, id) {
+	let d = mDiv(dParent, outerStyles);
+	let dTitle = mDiv(d);
+	dTitle.innerHTML = title;
+	innerStyles.w = '100%';
+	innerStyles.h = outerStyles.h - getRect(dTitle).h;
+	let dContent = mDiv(d, innerStyles, id);
+	return dContent;
 }
 function mTitledMessageDiv(title, dParent, id, outerStyles = {}, contentStyles = {}, titleStyles = {}, messageStyles = {}, titleOnTop = true) {
 	let d = mDiv(dParent, outerStyles, id);
@@ -512,10 +557,6 @@ var ZMax = 0;
 function iZMax(n) { if (isdef(n)) ZMax = n; ZMax += 1; return ZMax; }
 //#endregion
 
-//#region opt
-
-//#endregion
-
 //#region ani
 var MyEasing = 'cubic-bezier(1,-0.03,.86,.68)';
 function aMove(d, dSource, dTarget, callback, offset, ms, easing, fade) {
@@ -529,8 +570,8 @@ function aMove(d, dSource, dTarget, callback, offset, ms, easing, fade) {
 	// let a = aTranslateFadeBy(d.div, dist.x, dist.y, 500);
 	a.onfinish = () => { d.style.zIndex = iZMax(); if (isdef(callback)) callback(); };
 }
-function aTranslateFadeBy(d, x, y, ms) { return d.animate({opacity:.5, transform: `translate(${x}px,${y}px)` }, {easing:MyEasing,duration:ms}); }
-function aTranslateBy(d, x, y, ms) { return d.animate({ transform: `translate(${x}px,${y}px)` },ms);}// {easing:'cubic-bezier(1,-0.03,.27,1)',duration:ms}); }
+function aTranslateFadeBy(d, x, y, ms) { return d.animate({ opacity: .5, transform: `translate(${x}px,${y}px)` }, { easing: MyEasing, duration: ms }); }
+function aTranslateBy(d, x, y, ms) { return d.animate({ transform: `translate(${x}px,${y}px)` }, ms); }// {easing:'cubic-bezier(1,-0.03,.27,1)',duration:ms}); }
 function aRotate(d, ms) { return d.animate({ transform: `rotate(360deg)` }, ms); }
 function aRotateAccel(d, ms) { return d.animate({ transform: `rotate(1200deg)` }, { easing: 'cubic-bezier(.72, 0, 1, 1)', duration: ms }); }
 //#endregion
@@ -1717,7 +1758,7 @@ function dbSave(appName, callback) {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(DB)
-		}).then(() => { BlockServerSend = false; console.log('unblocked...'); if (callback) callback();}); //console.log('unblocked...'); });
+		}).then(() => { BlockServerSend = false; console.log('unblocked...'); if (callback) callback(); }); //console.log('unblocked...'); });
 	}
 }
 
@@ -2061,6 +2102,12 @@ function firstCond(arr, func) {
 	}
 	return null;
 }
+function firstCondDict(dict, func) {
+	//return first elem that fulfills condition
+	for (const k in dict) { if (func(dict[k])) return k; }
+	return null;
+}
+function firstCondDictKey() { return firstCondDictKeys(...arguments); }
 function firstCondDictKeys(dict, func) {
 	//return first elem that fulfills condition
 	for (const k in dict) { if (func(k)) return k; }
@@ -2382,6 +2429,20 @@ function randomHslaColor(s = 100, l = 70, a = 1) {
 	var hue = Math.round(Math.random() * 360);
 	return hslToHslaString(hue, s, l, a);
 }
+function randomDarkColor() {
+	let s = '#';
+	for (let i = 0; i < 3; i++) {
+		s += chooseRandom([0,1,2,3,4,5,6,7])+chooseRandom(['f', 'c', '9', '6', '3', '0']);
+	}
+	return s;
+}
+function randomLightColor() {
+	let s = '#';
+	for (let i = 0; i < 3; i++) {
+		s += chooseRandom(['A','B','C','D','E','F'])+chooseRandom(['f', 'c', '9', '6', '3', '0']);
+	}
+	return s;
+}
 function randomHexColor() {
 	let s = '#';
 	for (let i = 0; i < 6; i++) {
@@ -2600,7 +2661,7 @@ function toNoun(s) { return capitalize(s.toLowerCase()); }
 
 //#region time and date
 
-function formatDate(d) {
+function formatDate1(d) {
 	//usage: formatDate(new Date(2010, 7, 5);
 	if (nundef(d)) d = Date.now();
 	let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
@@ -2608,8 +2669,8 @@ function formatDate(d) {
 	let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
 	return `${da}-${mo}-${ye}`;
 }
-function formatDate1(d) {
-	const date = isdef(d)?d:new Date();
+function formatDate(d) {
+	const date = isdef(d) ? d : new Date();
 	const month = ('0' + date.getMonth()).slice(0, 2);
 	const day = date.getDate();
 	const year = date.getFullYear();
@@ -2846,7 +2907,7 @@ function isEmpty(arr) {
 function isLetter(s) { return /^[a-zA-Z]$/i.test(s); }
 function isList(arr) { return Array.isArray(arr); }
 function isLiteral(x) { return isString(x) || isNumber(x); }
-function isNumber(x) { return x==0 || x != ' ' && !isNaN(+x); }
+function isNumber(x) { return isdef(x) && (x == 0 || x != ' ' && !isNaN(+x)); }
 function isSingleDigit(s) { return /^[0-9]$/i.test(s); }
 function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
@@ -2902,7 +2963,8 @@ function purge(elem) {
 		}
 	}
 	elem.remove(); //elem.parentNode.removeChild(elem);
-} function show(elem, isInline = false) {
+} 
+function show(elem, isInline = false) {
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (isSvg(elem)) {
 		elem.setAttribute('style', 'visibility:visible');
@@ -2923,9 +2985,15 @@ function resetUIDs() { UIDCounter = 0; }
 //#endregion
 
 //#region functions to be used in node.js:
-if(this && typeof module == "object" && module.exports && this === module.exports) {
-	module.exports = { 
-		isdef 
+if (this && typeof module == "object" && module.exports && this === module.exports) {
+	module.exports = {
+		allNumbers, capitalize, choose, chooseRandom, copyKeys,
+		firstCond, firstCondDictKey, formatDate,
+		isdef, jsCopy,
+		nundef, 
+		range, randomNumber, removeInPlace,
+		stringBefore, stringAfter, stringAfterLast,
+
 	};
 }
 
