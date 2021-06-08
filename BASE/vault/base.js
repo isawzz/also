@@ -1,8 +1,8 @@
 //#region m
-function mAppend(d, child) { d.appendChild(child); return child; }
+function mAppend(d, child) { d.appendChild(child); }
 function mBackground(bg, fg) { mStyleX(document.body, { bg: bg, fg: fg }); }
 
-function mButton(caption, handler, dParent, styles, classes, id) {
+function mButton(caption, handler, dParent, styles, classes) {
 	let x = mCreate('button');
 	x.innerHTML = caption;
 	if (isdef(handler)) x.onclick = handler;
@@ -12,7 +12,6 @@ function mButton(caption, handler, dParent, styles, classes, id) {
 		//console.log('setting classes',classes,...classes)
 		mClass(x, ...classes);
 	}
-	if (isdef(id)) x.id = id;
 	return x;
 }
 function mBy(id) { return document.getElementById(id); }
@@ -25,113 +24,15 @@ function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	if (wrap) styles['flex-wrap'] = 'wrap';
 	mStyleX(d, styles);
 }
-function mCheckbox(label, val, dParent, styles = {}, id) {
-	let d = mDiv(dParent, { display: 'inline-block', align: 'left' });
-	// let val = lookup(this.o, skeys);
-	// if (nundef(val)) val = init;
-	let inp = createElementFromHTML(
-		`<input type="checkbox" class="checkbox" ${(val === true ? 'checked=true' : '')} >`
-	);
-	if (isdef(id)) inp.id = id;
-	let labelui = createElementFromHTML(`<label>${label}</label>`);
-	mAppend(d, labelui);
-	mAppend(labelui, inp);
-	mStyleX(inp, styles);
-	mClass(inp, 'input');
-	return inp;
-}
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
-function mContainer(d, styles = {}) {
+function mContainer(d,styles={}){
 	let defOuterStyles = {
 		display: 'inline-flex', 'flex-direction': 'column',
 		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
 		padding: 0, box: true
 	};
-	addKeys(d, defOuterStyles);
-	mStyleX(d, styles);
-}
-function mColorPicker0(dParent, palette, onColor) {
-	let dPalette = mDiv(dParent, { margin: 4 }); mFlex(dPalette);
-	let items = [];
-	for (const c of palette) {
-		dColor = mDiv(dPalette, { display: 'inline-block', w: 50, h: 50, bg: c, rounding: 4, margin: 4 });
-		//console.log('dColor', dColor)
-		let item = { color: c, isSelected: false };
-		iAdd(item, { div: dColor });
-		items.push(item);
-
-	}
-	let picker = { div: dPalette, selected: null, items: items };
-	for (const item of items) {
-		iDiv(item).onclick = (ev) => {
-			console.log('click!!!', ev.target);
-			picker.selectedItem = iToggleSingleSelection(item, items);
-			onColor(item.color);
-		}
-	}
-
-	return picker;
-}
-function mColorPicker3(elem, palette, onColor, initialColor) {
-	//let elem = mDiv(dParent,{w:50,h:50,display:'inline-block'});
-	let picker = new JSColor(elem, {
-		alpha:'ff', 
-		closeButton: true, 
-		value: initialColor,
-		palette: palette,
-	});
-	// picker.onChange = ()=>{let c = picker.toHEXAString(); onColor(c);console.log('picked',c);}
-	//picker.onInput = ()=>{let c = picker.toHEXAString(); onColor(c);console.log('picked',c);}
-	return picker;
-}
-function mColorPicker2(dParent, palette, onColor, initialColor) {
-	let elem = mDiv(dParent,{w:50,h:50,display:'inline-block'});
-	let picker = new JSColor(elem, {
-		alpha:'ff', 
-		closeButton: true, 
-		value: initialColor,
-		palette: palette,
-	});
-	// picker.onChange = ()=>{let c = picker.toHEXAString(); onColor(c);console.log('picked',c);}
-	picker.onInput = ()=>{let c = picker.toHEXAString(); onColor(c);console.log('picked',c);}
-	return picker;
-}
-function mColorPicker1(dParent, palette, onColor) {
-	let dPalette = mDiv(dParent, { margin: 4 }); mFlex(dPalette);
-	let items = [];
-	for (const c of palette) {
-		dColor = mDiv(dPalette, { display: 'inline-block', w: 50, h: 50, bg: c, rounding: 4, margin: 4 });
-		//console.log('dColor', dColor)
-		let item = { color: c, isSelected: false };
-		iAdd(item, { div: dColor });
-		items.push(item);
-
-	}
-
-
-
-
-	let picker = { div: dPalette, selected: null, items: items };
-	for (const item of items) {
-		iDiv(item).onclick = (ev) => {
-			console.log('click!!!', ev.target);
-			picker.selectedItem = iToggleSingleSelection(item, items);
-			onColor(item.color);
-		}
-	}
-
-	//add a real html colopicker item
-	//add a transparency item
-	let elem = mCreate('input'); mAppend(dPalette,elem);
-	let alphaPicker = new JSColor(elem, {});
-	let alphaItem = {isSelected: false};
-	alphaPicker.onChange = ()=>{alphaItem.color=elem.value; onColor(elem.value);}
-	alphaItem.picker = alphaPicker;
-	iAdd(alphaItem, { div: elem });
-	items.push(alphaItem);
-
-
-	return picker;
+	addKeys(d,defOuterStyles);
+	mStyleX(d,styles);
 }
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
@@ -205,10 +106,9 @@ function miAddLabel(item, styles) {
 }
 function mIfNotRelative(d) { if (nundef(d.style.position)) d.style.position = 'relative'; }
 function mImage() { return mImg(...arguments); }
-function mImg(path, dParent, styles, classes, callback) {
+function mImg(path, dParent, styles, classes) {
 	//console.log('_______________',path)
 	let d = mCreate('img');
-	if (isdef(callback)) d.onload = callback;
 	d.src = path;
 	mAppend(dParent, d);
 	if (isdef(styles)) mStyleX(d, styles);
@@ -217,14 +117,13 @@ function mImg(path, dParent, styles, classes, callback) {
 	//<img src="kiwi.svg" alt="Kiwi standing on oval"></img>
 }
 function mInner(html, dParent, styles) { dParent.innerHTML = html; if (isdef(styles)) mStyleX(dParent, styles); }
-function mInput(label, value, dParent, styles, classes, id) {
-	let inp = createElementFromHTML(`<input type="text" value="${value}" />`);
+function mInput(label, value, dParent, styles, id) {
+	let inp = createElementFromHTML(`<input type="text" class="input" value="${value}" />`);
 	let labelui = createElementFromHTML(`<label>${label}</label>`);
 	mAppend(dParent, labelui);
 	mAppend(labelui, inp);
 	if (isdef(styles)) mStyleX(labelui, styles);
-	if (isdef(classes)) mClass(inp,...classes);
-	if (isdef(id)) inp.id = id;
+	if (isdef(id)) inp.id=id;
 	return inp;
 }
 function mInsert(dParent, el, index = 0) { dParent.insertBefore(el, dParent.childNodes[index]); }
@@ -605,10 +504,6 @@ function iResize(i, w, h) { return isList(i) ? i.map(x => iSize(x, w, h)) : iSiz
 function iSize(i, w, h) { i.w = w; i.h = h; mSize(iDiv(i), w, h); }
 function isItem(i) { return isdef(i.live) || isdef(i.div); }
 function iRegister(item, id) { let uid = isdef(id) ? id : getUID(); Items[uid] = item; return uid; }
-function iRegisterX(item, keyProp, id) {
-	let uid = isdef(id) ? id : getUID(); Items[uid] = item;
-	if (isdef(item[keyProp])) ItemsByKey[item[keyProp]] = uid; return uid;
-}
 function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ovUnit = '%', createHand = true, rememberFunc = true) {
 
 	if (!isList(items)) items = [items];
@@ -658,42 +553,6 @@ function iSplay(items, iContainer, containerStyles, splay = 'right', ov = 20, ov
 
 }
 function iStyle(i, styles) { mStyleX(iDiv(i), styles); }
-function iToggleSingleSelection(item, items) {
-	let ui = iDiv(item);
-	let selItem = null;
-	item.isSelected = !item.isSelected;
-	if (item.isSelected) { mClass(ui, 'framedPicture'); selItem = item; }
-	else { mRemoveClass(ui, 'framedPicture'); selItem = null; }
-
-	//if piclist is given, add or remove pic according to selection state
-	if (isdef(items) && selItem) {
-		for (const i1 of items) {
-			if (i1.isSelected && i1 != item) {
-				i1.isSelected = false;
-				mRemoveClass(iDiv(i1), 'framedPicture');
-				break;
-			}
-		}
-	}
-	return selItem;
-}
-function iToggleMultipleSelection(item, items) {
-	let ui = iDiv(item);
-	item.isSelected = !item.isSelected;
-	if (item.isSelected) mClass(ui, 'framedPicture'); else mRemoveClass(ui, 'framedPicture');
-	if (isdef(items)) {
-		for (const i1 of items) {
-			if (i1.isSelected) {
-				console.assert(!items.includes(i1), 'UNSELECTED PIC IN PICLIST!!!!!!!!!!!!')
-				items.push(i1);
-			} else {
-				console.assert(items.includes(i1), 'PIC NOT IN PICLIST BUT HAS BEEN SELECTED!!!!!!!!!!!!')
-				removeInPlace(items, i1);
-			}
-		}
-	}
-}
-
 var ZMax = 0;
 function iZMax(n) { if (isdef(n)) ZMax = n; ZMax += 1; return ZMax; }
 //#endregion
@@ -716,138 +575,6 @@ function aTranslateBy(d, x, y, ms) { return d.animate({ transform: `translate(${
 function aRotate(d, ms) { return d.animate({ transform: `rotate(360deg)` }, ms); }
 function aRotateAccel(d, ms) { return d.animate({ transform: `rotate(1200deg)` }, { easing: 'cubic-bezier(.72, 0, 1, 1)', duration: ms }); }
 //#endregion
-
-//#region _SVG/g shapes
-const SHAPEFUNCS = {
-	'circle': agCircle,
-	'hex': agHex,
-	'rect': agRect,
-}
-function agColoredShape(g, shape, w, h, color) {
-	//console.log(shape)
-	SHAPEFUNCS[shape](g, w, h);
-	gBg(g, color);
-}
-function agShape(g, shape, w, h, color, rounding) {
-	let sh = gShape(shape, w, h, color, rounding);
-	g.appendChild(sh);
-	return sh;
-}
-function gShape(shape, w = 20, h = 20, color = 'green', rounding) {
-	//console.log(shape)
-	let el = gG();
-	if (nundef(shape)) shape = 'rect';
-	if (shape != 'line') agColoredShape(el, shape, w, h, color);
-	else gStroke(el, color, w); //agColoredLine(el, w, color);
-
-	if (isdef(rounding) && shape == 'rect') {
-		let r = el.children[0];
-		gRounding(r, rounding);
-		//console.log(rounding,r);
-		// r.setAttribute('rx', rounding); // rounding kann ruhig in % sein!
-		// r.setAttribute('ry', rounding);
-	}
-
-	return el;
-}
-
-function gCreate(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
-function gPos(g, x, y) { g.style.transform = `translate(${x}px, ${y}px)`; }
-function gSize(g, w, h, shape = null, iChild = 0) {
-	//console.log(getTypeOf(g))
-	let el = (getTypeOf(g) != 'g') ? g : g.children[iChild];
-	let t = getTypeOf(el);
-	//console.log('g', g, '\ntype of g child', el, 'is', t);
-	switch (t) {
-		case 'rect': el.setAttribute('width', w); el.setAttribute('height', h); el.setAttribute('x', -w / 2); el.setAttribute('y', -h / 2); break;
-		case 'ellipse': el.setAttribute('rx', w / 2); el.setAttribute('ry', h / 2); break;
-		default:
-			if (shape) {
-				switch (shape) {
-					case 'hex': let pts = size2hex(w, h); el.setAttribute('points', pts); break;
-				}
-			}
-	}
-	return el;
-}
-function gBg(g, color) { g.setAttribute('fill', color); }
-function gFg(g, color, thickness) { g.setAttribute('stroke', color); if (thickness) g.setAttribute('stroke-width', thickness); }
-function gRounding(r, rounding) {
-	//let r = el.children[0];
-	//console.log(rounding,r);
-	r.setAttribute('rx', rounding); // rounding kann ruhig in % sein!
-	r.setAttribute('ry', rounding);
-
-}
-function gStroke(g, color, thickness) { g.setAttribute('stroke', color); if (thickness) g.setAttribute('stroke-width', thickness); }
-function gSvg() { return gCreate('svg'); } //document.createElementNS('http://www.w3.org/2000/svg', 'svg'); }
-function gG() { return gCreate('g'); }// document.createElementNS('http://www.w3.org/2000/svg', 'g'); }
-function gHex(w, h) { let pts = size2hex(w, h); return gPoly(pts); }
-function gPoly(pts) { let r = gCreate('polygon'); if (pts) r.setAttribute('points', pts); return r; }
-function gRect(w, h) { let r = gCreate('rect'); r.setAttribute('width', w); r.setAttribute('height', h); r.setAttribute('x', -w / 2); r.setAttribute('y', -h / 2); return r; }
-function gEllipse(w, h) { let r = gCreate('ellipse'); r.setAttribute('rx', w / 2); r.setAttribute('ry', h / 2); return r; }
-function gLine(x1, y1, x2, y2) { let r = gCreate('line'); r.setAttribute('x1', x1); r.setAttribute('y1', y1); r.setAttribute('x2', x2); r.setAttribute('y2', y2); return r; }
-
-function gCanvas(area, w, h, color, originInCenter = true) {
-	let dParent = mBy(area);
-	let div = stage3_prepContainer(dParent);
-	div.style.width = w + 'px';
-	div.style.height = h + 'px';
-
-	let svg = gSvg();
-	let style = `margin:0;padding:0;position:absolute;top:0px;left:0px;width:100%;height:100%;`
-	svg.setAttribute('style', style);
-	mColor(svg, color);
-	div.appendChild(svg);
-
-	let g = gG();
-	if (originInCenter) g.style.transform = "translate(50%, 50%)";
-	svg.appendChild(g);
-
-	return g;
-
-}
-
-function agCircle(g, sz) { let r = gEllipse(sz, sz); g.appendChild(r); return r; }
-function agEllipse(g, w, h) { let r = gEllipse(w, h); g.appendChild(r); return r; }
-function agHex(g, w, h) { let pts = size2hex(w, h); return agPoly(g, pts); }
-function agPoly(g, pts) { let r = gPoly(pts); g.appendChild(r); return r; }
-function agRect(g, w, h) { let r = gRect(w, h); g.appendChild(r); return r; }
-function agLine(g, x1, y1, x2, y2) { let r = gLine(x1, y1, x2, y2); g.appendChild(r); return r; }
-function agG(g) { let g1 = gG(); g.appendChild(g1); return g1; }
-//function agSvgg(d) { let svg = gSvg(); agG(svg); d.appendChild(svg); return g; }
-function aSvg(dParent) {
-	if (!dParent.style.position) dParent.style.position = 'relative';
-
-	let svg1 = gSvg();
-	//console.log(svg1)
-	svg1.setAttribute('width', '100%');
-	svg1.setAttribute('height', '100%');
-	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;';
-	svg1.setAttribute('style', style);
-	dParent.appendChild(svg1);
-
-	return svg1;
-}
-function aSvgg(dParent, originInCenter = true) {
-	if (!dParent.style.position) dParent.style.position = 'relative';
-
-	let svg1 = gSvg();
-	//console.log(svg1)
-	svg1.setAttribute('width', '100%');
-	svg1.setAttribute('height', '100%');
-	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;';
-	svg1.setAttribute('style', style);
-	dParent.appendChild(svg1);
-
-	let g1 = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-	svg1.appendChild(g1);
-	if (originInCenter) { g1.style.transform = "translate(50%, 50%)"; } //works!
-
-	return g1;
-
-}
-//endregion
 
 //#region color
 var colorDict = null; //for color names, initialized when calling anyColorToStandardStyle first time
@@ -1000,17 +727,6 @@ function getHueWheel(contrastTo, minDiff = 25, mod = 30, start = 0) {
 function getPalette(color, type = 'shade') {
 	color = anyColorToStandardString(color);
 	return colorPalShade(color);
-}
-function getPaletteFromImage(img) {
-	let palette0 = ColorThiefObject.getPalette(img);
-	let palette = [];
-	for (const pal of palette0) {
-		let color = anyColorToStandardString(pal);
-		palette.push(color);
-	}
-	//console.log(palette)
-	//console.log('palette', palette)
-	return palette;
 }
 function getTransPalette(color = '#000000') {
 	let res = [];
@@ -1810,16 +1526,8 @@ function addDDSource(source, isCopy = true, clearTarget = false) {
 	let d = iDiv(source);
 	d.onmousedown = (ev) => ddStart(ev, source, isCopy, clearTarget);
 }
-function addDDTarget(target, isCopy = true, clearTarget = false) {
-	DDInfo.targets.push(target);
-	target.isCopy = isCopy;
-	target.clearTarget = clearTarget;
-	// let d = iDiv(target);
-	// d.onmousedown = (ev) => ddStart(ev, source, isCopy, clearTarget);
-}
-function enableDD(sources, targets, dropHandler, isCopy, clearTarget, dragStartHandler) {
-	//console.log('isCopy',isCopy,'startH',dragStartHandler)
-	DDInfo = { sources: sources, targets: targets, dropHandler: dropHandler, dragStartHandler };
+function enableDD(sources, targets, dropHandler, isCopy, clearTarget) {
+	DDInfo = { sources: sources, targets: targets, dropHandler: dropHandler };
 	let sourceDivs = sources.map(x => iDiv(x));
 	for (let i = 0; i < sources.length; i++) {
 		let source = sources[i];
@@ -1828,12 +1536,11 @@ function enableDD(sources, targets, dropHandler, isCopy, clearTarget, dragStartH
 	}
 }
 function ddStart(ev, source, isCopy = true, clearTarget = false) {
-	if (!canAct() || isdef(DDInfo.dragStartHandler) && !DDInfo.dragStartHandler(source)) return;
+	if (!canAct()) return;
 	ev.preventDefault();
-	ev.stopPropagation();
+
 	//console.log('ev',ev,'source',source);
 
-	//if (isdef(DDInfo.dragStartHandler)) DDInfo.dragStartHandler(source);
 	DDInfo.source = source;
 	let d = iDiv(source);
 	var clone = DragElem = DDInfo.clone = d.cloneNode(true);
@@ -1858,26 +1565,20 @@ function onMovingCloneAround(ev) {
 	mStyleX(DragElem, { left: dx, top: dy });
 }
 function onReleaseClone(ev) {
-	//console.log('RELEASE!!!')
 	let els = allElementsFromPoint(ev.clientX, ev.clientY);
 	//console.log('_________',els);
 	let source = DDInfo.source;
 	let dSource = iDiv(source);
 	let dropHandler = DDInfo.dropHandler;
-	//let success
-	//console.log(DDInfo.targets);
 	for (const target of DDInfo.targets) {
-		//console.log('_target',target);
 		let dTarget = iDiv(target);
-		//console.log('_dTarget',dTarget);
 		if (els.includes(dTarget)) {
-			//console.log('YES!',firstCond(els,x=>x==dTarget))
 			//if (DragElem.clearTarget) clearElement(dTarget);
 			if (isdef(dropHandler)) {
 				dropHandler(source, target, DragElem.isCopy, DragElem.clearTarget);
-			}
-			//console.log('dropped', source.name, 'on target', target);
-			break; //as soon as found a target, stop looking for more targets!
+			} else console.log('dropped', source, 'on', target);
+			//console.log('yes, we are over',dTarget);
+			// dTarget.innerHTML = DragElem.innerHTML;
 
 		}
 	}
@@ -2001,190 +1702,6 @@ function getFunctionsNameThatCalledThisFunction() {
 	if (nundef(c2)) return 'no caller!';
 	return c2.name;
 }
-//#endregion
-
-//#region geo helpers
-function toRadian(deg) { return deg * 2 * Math.PI / 360; }
-function correctPolys(polys, approx = 10) {
-	//console.log('citySize', citySize, 'approx', approx);
-	let clusters = [];
-	for (const p of polys) {
-		//console.log(p.map(pt => '(' + pt.x + ',' + pt.y + ') ').toString());
-		for (const pt of p) {
-			let found = false;
-			for (const cl of clusters) {
-				for (const v of cl) {
-					let dx = Math.abs(v.x - pt.x);
-					let dy = Math.abs(v.y - pt.y);
-					//console.log('diff', dx, dy);
-					if (dx < approx && dy < approx) {
-						//console.log('FOUND X!!!', dx,dy);
-						cl.push(pt);
-						found = true;
-						break;
-					}
-				}
-				if (found) break;
-			}
-			if (!found) {
-				//make new cluster with this point
-				clusters.push([pt]);
-			}
-		}
-	}
-
-	//now all points of all polys are in clusters
-	//go through clusters, computer mean for all points in a clusters
-	let vertices = [];
-	for (const cl of clusters) {
-		let sumx = 0;
-		let sumy = 0;
-		let len = cl.length;
-		for (const pt of cl) {
-			sumx += pt.x;
-			sumy += pt.y;
-		}
-		vertices.push({ x: Math.round(sumx / len), y: Math.round(sumy / len) });
-	}
-
-	for (const p of polys) {
-		for (const pt of p) {
-			let found = false;
-			for (const v of vertices) {
-				let dx = Math.abs(v.x - pt.x);
-				let dy = Math.abs(v.y - pt.y);
-				if (dx < approx && dy < approx) {
-					if (dx != 0 || dy != 0) {
-						pt.x = v.x;
-						pt.y = v.y;
-					}
-					found = true;
-				}
-				if (found) break;
-			}
-			if (!found) {
-				//make new cluster with this point
-				error('point not found in vertices!!! ' + pt.x + ' ' + pt.y);
-			}
-		}
-	}
-	return vertices;
-}
-function dSquare(pos1, pos2) {
-	let dx = pos1.x - pos2.x;
-	dx *= dx;
-	let dy = pos1.y - pos2.y;
-	dy *= dy;
-	return dx + dy;
-}
-function distance(x1, y1, x2, y2) { return Math.sqrt(dSquare({ x: x1, y: y1 }, { x: x2, y: y2 })); }
-function size2hex(w = 100, h = 0, x = 0, y = 0) {
-	//returns sPoints for polygon svg
-	//from center of poly and w (possibly h), calculate hex poly points and return as string!
-	//TODO: add options to return as point list!
-	//if h is omitted, a regular hex of width w is produced
-	//starting from N:
-	let hexPoints = [{ X: 0.5, Y: 0 }, { X: 1, Y: 0.25 }, { X: 1, Y: 0.75 }, { X: 0.5, Y: 1 }, { X: 0, Y: 0.75 }, { X: 0, Y: 0.25 }];
-
-	if (h == 0) {
-		h = (2 * w) / 1.73;
-	}
-	return polyPointsFrom(w, h, x, y, hexPoints);
-}
-function size2triup(w = 100, h = 0, x = 0, y = 0) {
-	//returns sPoints for polygon svg starting from N:
-	let triPoints = [{ X: 0.5, Y: 0 }, { X: 1, Y: 1 }, { X: 0, Y: 1 }];
-	if (h == 0) { h = w; }
-	return polyPointsFrom(w, h, x, y, triPoints);
-
-}
-function size2tridown(w = 100, h = 0, x = 0, y = 0) {
-	//returns sPoints for polygon svg starting from N:
-	let triPoints = [{ X: 1, Y: 0 }, { X: 0.5, Y: 1 }, { X: 0, Y: 0 }];
-	if (h == 0) { h = w; }
-	return polyPointsFrom(w, h, x, y, triPoints);
-
-}
-function getCirclePoints(rad, n, disp = 0) {
-	let pts = [];
-	let i = 0;
-	let da = 360 / n;
-	let angle = disp;
-	while (i < n) {
-		let px = rad * Math.cos(toRadian(angle));
-		let py = rad * Math.sin(toRadian(angle));
-		pts.push({ X: px, Y: py });
-		angle += da;
-		i++;
-	}
-	return pts;
-}
-function getEllipsePoints(radx, rady, n, disp = 0) {
-	let pts = [];
-	let i = 0;
-	let da = 360 / n;
-	let angle = disp;
-	while (i < n) {
-		let px = radx * Math.cos(toRadian(angle));
-		let py = rady * Math.sin(toRadian(angle));
-		pts.push({ X: px, Y: py });
-		angle += da;
-		i++;
-	}
-	return pts;
-}
-
-function polyPointsFrom(w, h, x, y, pointArr) {
-
-	x -= w / 2;
-	y -= h / 2;
-
-	let pts = pointArr.map(p => [p.X * w + x, p.Y * h + y]);
-	let newpts = [];
-	for (const p of pts) {
-		newp = { X: p[0], Y: Math.round(p[1]) };
-		newpts.push(newp);
-	}
-	pts = newpts;
-	let sPoints = pts.map(p => '' + p.X + ',' + p.Y).join(' '); //'0,0 100,0 50,80',
-	//testHexgrid(x, y, pts, sPoints);
-	return sPoints;
-}
-function getPoly(offsets, x, y, w, h) {
-	//, modulo) {
-	let poly = [];
-	for (let p of offsets) {
-		let px = Math.round(x + p[0] * w); //  %modulo;
-		//px -= px%modulo;
-		//if (px % modulo != 0) px =px % modulo; //-= 1;
-		let py = Math.round(y + p[1] * h); //%modulo;
-		//py -= py%modulo;
-		//if (py % modulo != 0) py -= 1;
-		poly.push({ x: px, y: py });
-	}
-	return poly;
-}
-function getHexPoly(x, y, w, h) {
-	// returns hex poly points around center x,y
-	let hex = [[0, -0.5], [0.5, -0.25], [0.5, 0.25], [0, 0.5], [-0.5, 0.25], [-0.5, -0.25]];
-	return getPoly(hex, x, y, w, h);
-}
-function getQuadPoly(x, y, w, h) {
-	// returns hex poly points around center x,y
-	q = [[0.5, -0.5], [0.5, 0.5], [-0.5, 0.5], [-0.5, -0.5]];
-	return getPoly(q, x, y, w, h);
-}
-function getTriangleUpPoly(x, y, w, h) {
-	// returns hex poly points around center x,y
-	let triup = [[0, -0.5], [0.5, 0.5], [-0.5, 0.5]];
-	return getPoly(triup, x, y, w, h);
-}
-function getTriangleDownPoly(x, y, w, h) {
-	// returns hex poly points around center x,y
-	let tridown = [[-0.5, 0.5], [0.5, 0.5], [-0.5, 0.5]];
-	return getPoly(tridown, x, y, w, h);
-}
-
 //#endregion
 
 //#region loading DB, yaml, json, text
@@ -2454,7 +1971,7 @@ function addSimpleProps(ofrom, oto = {}) { for (const k in ofrom) { if (nundef(o
 function addIfDict(key, val, dict) { if (!(key in dict)) { dict[key] = [val]; } }
 function any(arr, cond) { return !isEmpty(arr.filter(cond)); }
 function anyStartsWith(arr, prefix) { return any(arr, el => startsWith(el, prefix)); }
-function arrAdd(arr, elist) { for (const el of elist) arr.push(el); return arr; }
+
 function arrCount(arr, func) { let filt = arr.filter(func); return filt.length; }
 function arrChildren(elem) { return [...elem.children]; }
 function arrCreate(n, func) { let res = []; for (let i = 0; i < n; i++) { res.push(func(i)); } return res; }
@@ -2473,8 +1990,6 @@ function arrFromIndex(arr, i) { return arr.slice(i); }
 function arrFromTo(arr, iFrom, iTo) { return takeFromTo(arr, iFrom, iTo); }
 function arrLastOfLast(arr) { if (arr.length > 0) { let l = arrLast(arr); return isList(l) ? arrLast(l) : null; } else return null; }
 function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
-function arrMax(arr) { return arr.reduce((m, n) => Math.max(m, n)); }
-function arrMin(arr) { return arr.reduce((m, n) => Math.min(m, n)); }
 function arrMinMax(arr, func) {
 	//console.log('====arr',arr)
 	if (nundef(func)) func = x => x;
@@ -2533,7 +2048,6 @@ function arrString(arr, func) {
 function arrSum(arr, props) { if (!isList(props)) props = [props]; return arr.reduce((a, b) => a + (lookup(b, props) || 0), 0); }
 function arrTail(arr) { return arr.slice(1); }
 function arrTake(arr, n) { return takeFromStart(arr, n); }
-function arrTakeFromTo(arr, a, b) { return takeFromTo(arr, a, b); }
 function arrTakeFromEnd(arr, n) {
 	if (arr.length <= n) return arr.map(x => x); else return arr.slice(arr.length - n);
 }
@@ -2577,19 +2091,6 @@ function fisherYates(array) {
 		array[rnd] = temp;
 	}
 	return array;
-}
-function filterByKey(o, keyString, exceptString) {
-	let keys;
-	if (isdef(keyString)) keys = keyString.split(',');
-	console.log('keys', keys);
-	//else if (isdef(exceptString)) keys=Object.keys(o).filter(x=>exceptString.includes(x));
-
-	let result = {};
-	for (const k of keys) {
-		if (isdef(o[k])) result[k] = o[k];
-	}
-	//copyKeys(o,result,null,keys);
-	return result;
 }
 function findLongestWord(arr) { return arr[arrMinMax(arr, x => x.length).imax]; }
 function firstCond(arr, func) {
@@ -2931,14 +2432,14 @@ function randomHslaColor(s = 100, l = 70, a = 1) {
 function randomDarkColor() {
 	let s = '#';
 	for (let i = 0; i < 3; i++) {
-		s += chooseRandom([0, 1, 2, 3, 4, 5, 6, 7]) + chooseRandom(['f', 'c', '9', '6', '3', '0']);
+		s += chooseRandom([0,1,2,3,4,5,6,7])+chooseRandom(['f', 'c', '9', '6', '3', '0']);
 	}
 	return s;
 }
 function randomLightColor() {
 	let s = '#';
 	for (let i = 0; i < 3; i++) {
-		s += chooseRandom(['A', 'B', 'C', 'D', 'E', 'F']) + chooseRandom(['f', 'c', '9', '6', '3', '0']);
+		s += chooseRandom(['A','B','C','D','E','F'])+chooseRandom(['f', 'c', '9', '6', '3', '0']);
 	}
 	return s;
 }
@@ -3041,7 +2542,12 @@ function fromUmlaut(w) {
 	let whites = res1.whites;
 
 	let common = findCommonPrefix(req1, answer1);
+	//now find common prefix
+	//console.log(req1, answer1, 'common prefix is',common);
 
+	//the real address is label
+	//let aReal = label;
+	//whites
 	let nletters = common.length;
 	let ireal = 0;
 	let icompact = 0;
@@ -3308,7 +2814,6 @@ function convertUmlaute(w) {
 	w = replaceAll(w, 'ß', 'ss');
 	return w;
 }
-function createElementFromHtml(s) { return createElementFromHTML(s); }
 function createElementFromHTML(htmlString) {
 	//console.log('---------------',htmlString)
 	var div = document.createElement('div');
@@ -3325,68 +2830,7 @@ function evToClosestId(ev) {
 	return elem.id;
 }
 function findParentWithId(elem) { while (elem && !elem.id) { elem = elem.parentNode; } return elem; }
-function findAncestorElemWithParentOfType(el, type) {
-	while (el && el.parentNode) {
-		let t = getTypeOf(el);
-		let tParent = getTypeOf(el.parentNode);
-		//console.log('el', t, tParent, 'el.id', el.id, 'parentNode.id', el.parentNode.id);
-		if (tParent == type) break;
-		el = el.parentNode;
-	}
-	return el;
 
-}
-function findAncestorElemOfType(el, type) {
-	while (el) {
-		let t = getTypeOf(el);
-		if (t == type) break;
-		el = el.parentNode;
-	}
-	return el;
-
-}
-function findDescendantWithId(id, parent) {
-	if (parent.id == id) return parent;
-	let children = arrChildren(parent);
-	if (isEmpty(children)) return null;
-	for (const ch of children) {
-		let res = findDescendantWithId(id, ch);
-		if (res) return res;
-	}
-	return null;
-}
-function findChildWithId(id, parentElem) {
-	testHelpers(parentElem);
-	let children = arrChildren(parentElem);
-	for (const ch of children) {
-		if (ch.id == id) return ch;
-	}
-	return null;
-}
-function findChildWithClass(className, parentElem) {
-	testHelpers(parentElem);
-	let children = arrChildren(parentElem);
-	for (const ch of children) {
-		//console.log('....findChildWithClass', ch, ch.classList, className)
-		if (ch.classList.includes(className)) return ch;
-	}
-	return null;
-}
-function findChildOfType(type, parentElem) {
-	let children = arrChildren(parentElem);
-	for (const ch of children) {
-		if (getTypeOf(ch) == type) return ch;
-	}
-	return null;
-}
-function findChildrenOfType(type, parentElem) {
-	let children = arrChildren(parentElem);
-	let res = [];
-	for (const ch of children) {
-		if (getTypeOf(ch) == type) res.push(ch);
-	}
-	return res;
-}
 function hasWhiteSpace(s) { return /\s/g.test(s); }
 function hide(elem) {
 	if (isString(elem)) elem = document.getElementById(elem);
@@ -3448,7 +2892,6 @@ function isAlphaNumeric(str) {
 }
 function isCapitalLetter(s) { return /^[A-Z]$/i.test(s); }
 function isCapitalLetterOrDigit(s) { return /^[A-Z0-9ÖÄÜ]$/i.test(s); }
-function isGermanColorName(s) { return isColorName(s) || isdef(GermanToEnglish[s]) && isColorName(GermanToEnglish[s]); }
 function isColorName(s) { ensureColorNames(); return (isdef(ColorNames[s.toLowerCase()])); }
 function isdef(x) { return x !== null && x !== undefined; }
 function isDOM(x) { let c = lookup(x, ['constructor', 'name']); return c ? startsWith(c, 'HTML') || startsWith(c, 'SVG') : false; }
@@ -3520,7 +2963,7 @@ function purge(elem) {
 		}
 	}
 	elem.remove(); //elem.parentNode.removeChild(elem);
-}
+} 
 function show(elem, isInline = false) {
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (isSvg(elem)) {
@@ -3528,7 +2971,6 @@ function show(elem, isInline = false) {
 	} else {
 		elem.style.display = isInline ? 'inline-block' : null;
 	}
-	return elem;
 }
 function valf(val, def) { return isdef(val) ? val : def; }
 //#endregion
@@ -3542,102 +2984,16 @@ function getUID(pref = '') {
 function resetUIDs() { UIDCounter = 0; }
 //#endregion
 
-//#region PerlenGame common code!
-
-function createServerBoard(layout, filename, rows, cols) {
-	let sz = 100;
-	return { filename: 'brett10', layout: 'hex', cells: { w: 100, h: 120, wgap: 10, hgap: 10 } };
-}
-function createServerPoolKeys(perlenDict, settings = {}) { return getRandomPerlenKeys(perlenDict, valf(settings.numPool, 20)); }
-function getRandomPerlenKeys(di, n) { return choose(Object.keys(di), n); }
-function ensureKeys(o, def) {
-	addKeys(def, o);
-}
-function initServerPool(settings, state, perlenDict) {
-	let pool = {};
-	let poolArr = [];
-	let maxPoolIndex = 0;
-	addKeys(settings, { poolSelection: 'random', numPool: 20 });
-	let n = settings.poolSelection != 'player' ? settings.numPool : 0;
-
-	let keys = getRandomPerlenKeys(perlenDict, n);
-
-	//keys[0]='gelb';
-
-	for (const k of keys) {
-		addToPool(pool, poolArr, perlenDict[k], maxPoolIndex);
-		maxPoolIndex += 1;
-	}
-	state.pool = pool;
-	state.poolArr = poolArr;
-	return maxPoolIndex;
-}
-function addToPool(pool, poolArr, perle, index) {
-	let p = pool[index] = { key: perle.path, index: index };
-	poolArr.push(index);
-	return p;
-}
-function getFilename(path, withExt = true) {
-	let fname = stringAfterLast(path, '/');
-	let name = stringBefore(fname, '.');
-	let ext = stringAfter(fname, '.');
-	if (isEmpty(ext)) ext = 'png';
-	let result = withExt ? (name + '.' + ext) : name;
-	console.log(`filename (ext:${withExt}): ${result}`);
-	return result;
-}
-function getPublicPath(filename) {
-	let result = './public/' + getFilename(filename);
-	console.log('pubPath', result);
-	return result;
-}
-function uploadImgData(imgFile) {
-	let pack = {};
-	let data = imgFile.data;
-	let filename = imgFile.name; console.log('filename', filename);
-	let key = stringBefore(filename, '.');
-	pack[key] = { data: data, name: key, filename: filename, type: 'imageData' };
-	Socket.emit('generalImages', { pack: pack });
-	console.log('uploading pack', pack);
-}
-
-function previewBrowsedFile(dParent, imgFile) {
-
-	// container
-	var imgView = document.createElement("div");
-	imgView.className = "image-view";
-	mAppend(dParent, imgView);
-
-	// previewing image
-	var img = document.createElement("img");
-	imgView.appendChild(img);
-
-	var reader = new FileReader();
-	reader.onload = function (e) {
-		img.src = e.target.result;
-		imgFile.data = e.target.result; //img.toDataURL("image/png");
-	}
-	reader.readAsDataURL(imgFile);
-}
-
-
 //#region functions to be used in node.js:
 if (this && typeof module == "object" && module.exports && this === module.exports) {
 	module.exports = {
-		//perlenGame common code:
-		initServerPool, addToPool,//initServerBoard,
-
-		//helpers:
-		allNumbers, arrTake,
-		capitalize, choose, chooseRandom, copyKeys,
-		dict2list,
-		firstCond, firstCondDict, firstCondDictKey, formatDate,
-		getFilename, getPublicPath,
-		isdef, isEmpty, jsCopy,
-		nundef,
+		allNumbers, capitalize, choose, chooseRandom, copyKeys,
+		firstCond, firstCondDictKey, formatDate,
+		isdef, jsCopy,
+		nundef, 
 		range, randomNumber, removeInPlace,
 		stringBefore, stringAfter, stringAfterLast,
-		valf,
+
 	};
 }
 

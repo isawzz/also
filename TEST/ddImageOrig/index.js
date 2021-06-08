@@ -1,18 +1,17 @@
 
+
+
 var dropRegion = document.getElementById("drop-region");// where files are dropped + file selector is opened
 var imagePreviewRegion = document.getElementById("image-preview");	// where images are previewed
 
-var CountHandleFiles=0;
-
 // open file selector when clicked on the drop region
-// var fakeInput = document.createElement("input");
-// fakeInput.type = "file";
-// fakeInput.accept = "image/*";
-// fakeInput.multiple = true;
-// dropRegion.addEventListener('click', function () { fakeInput.click(); });
+var fakeInput = document.createElement("input");
+fakeInput.type = "file";
+fakeInput.accept = "image/*";
+fakeInput.multiple = true;
+dropRegion.addEventListener('click', function () { fakeInput.click(); });
 
-
-// fakeInput.addEventListener("change", function () { var files = fakeInput.files; handleFiles(files,'i'); });
+fakeInput.addEventListener("change", function () { var files = fakeInput.files; handleFiles(files); });
 
 
 function preventDefault(e) { e.preventDefault(); e.stopPropagation(); }
@@ -27,7 +26,7 @@ function handleDrop(e) {
 	var dt = e.dataTransfer;
 	var files = dt.files;
 
-	if (files.length) { handleFiles(files,'d'); }
+	if (files.length) { handleFiles(files); }
 	else {
 		var html = dt.getData('text/html');
 		let match = html && /\bsrc="?([^"\s]+)"?\s*/.exec(html);
@@ -59,13 +58,9 @@ function handleDrop(e) {
 
 dropRegion.addEventListener('drop', handleDrop, false);
 
-function handleFiles(files,letter) {
-	console.log('Count',letter,CountHandleFiles); CountHandleFiles+=1;
-	console.log('files',files);
+function handleFiles(files) {
 	for (var i = 0, len = files.length; i < len; i++) {
-		if (validateImage(files[i]))	{
-			previewAnduploadImage(files[i]);
-		}	
+		if (validateImage(files[i]))	previewAnduploadImage(files[i]);
 	}
 }
 
@@ -117,9 +112,8 @@ function previewAnduploadImage(image) {
 	formData.append('image', image);
 
 	// upload the image
-	var uploadLocation = 'http:/localhost:61881';// 'https://api.imgbb.com/1/upload';
+	var uploadLocation = SERVERURL; // 'https://api.imgbb.com/1/upload';
 	formData.append('key', 'bb63bee9d9846c8d5b7947bcdb4b3573');
-
 
 	var ajax = new XMLHttpRequest();
 	ajax.open("POST", uploadLocation, true);
@@ -145,7 +139,6 @@ function previewAnduploadImage(image) {
 		overlay.style.width = width;
 	}
 
-	console.log('sending formData',formData)
 	ajax.send(formData);
 
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<form id="form_el" class='new-project' action='/projects' method='POST' enctype="multipart/form-data">
+    <label for='file'>Select your image:</label>
+    <input type='file' multiple='multiple' accept='image/*' name='uploadedImages' id='file' />
+    <span class='hint'>Supported files: jpg, jpeg, png.</span>
+    <button type='submit'>upload</button>
+</form>
+</body>
+</html>
