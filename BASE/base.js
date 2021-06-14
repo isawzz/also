@@ -25,21 +25,21 @@ function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	if (wrap) styles['flex-wrap'] = 'wrap';
 	mStyleX(d, styles);
 }
-function mCheckbox(label, val, dParent, styles = {}, id) {
-	let d = mDiv(dParent, { display: 'inline-block', align: 'left' });
-	// let val = lookup(this.o, skeys);
-	// if (nundef(val)) val = init;
-	let inp = createElementFromHTML(
-		`<input type="checkbox" class="checkbox" ${(val === true ? 'checked=true' : '')} >`
-	);
-	if (isdef(id)) inp.id = id;
-	let labelui = createElementFromHTML(`<label>${label}</label>`);
-	mAppend(d, labelui);
-	mAppend(labelui, inp);
-	mStyleX(inp, styles);
-	mClass(inp, 'input');
-	return inp;
-}
+// function mCheckbox(label, val, dParent, styles = {}, id) {
+// 	let d = mDiv(dParent, { display: 'inline-block', align: 'left' });
+// 	// let val = lookup(this.o, skeys);
+// 	// if (nundef(val)) val = init;
+// 	let inp = createElementFromHTML(
+// 		`<input type="checkbox" class="checkbox" ${(val === true ? 'checked=true' : '')} >`
+// 	);
+// 	if (isdef(id)) inp.id = id;
+// 	let labelui = createElementFromHTML(`<label>${label}</label>`);
+// 	mAppend(d, labelui);
+// 	mAppend(labelui, inp);
+// 	mStyleX(inp, styles);
+// 	mClass(inp, 'input');
+// 	return inp;
+// }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mContainer(d, styles = {}) {
 	let defOuterStyles = {
@@ -81,7 +81,7 @@ function mColorPicker3(elem, palette, onColor, initialColor) {
 		palette: palette,
 	});
 	// picker.onChange = ()=>{let c = picker.toHEXAString(); onColor(c);console.log('picked',c);}
-	//picker.onInput = ()=>{let c = picker.toHEXAString(); onColor(c);console.log('picked',c);}
+	picker.onInput = () => { let c = picker.toHEXAString(); onColor(c); console.log('picked', c); }
 	return picker;
 }
 function mColorPicker2(dParent, palette, onColor, initialColor) {
@@ -135,32 +135,201 @@ function mColorPicker1(dParent, palette, onColor) {
 }
 function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
-function mDiv(dParent = null, styles, id, inner) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); if (isdef(styles)) mStyleX(d, styles); if (isdef(id)) d.id = id; if (isdef(inner)) d.innerHTML = inner; return d; }
+function mDiv(dParent, styles, id, inner, classes) {
+	let d = mCreate('div');
+	if (dParent) mAppend(dParent, d);
+	if (isdef(styles)) mStyleX(d, styles);
+	if (isdef(classes)) mClass(d, ...classes);
+	if (isdef(id)) d.id = id;
+	if (isdef(inner)) d.innerHTML = inner;
+	return d;
+}
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
 function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }
-function mEditableOnEdited(id, dParent, label, initialVal, onEdited, onOpening) {
-	let inp = mEditableInput(dParent, label, initialVal);
+function unfocusOnEnter(ev) {
+	if (ev.key === 'Enter') {
+		ev.preventDefault();
+		//console.log('ENTER!', G.settings.rows)
+		mBy('dummy').focus();
+	}
+}
+function selectText(el) {
+	var sel, range;
+	if (window.getSelection && document.createRange) { //Browser compatibility
+		sel = window.getSelection();
+		if (sel.toString() == '') { //no text selection
+			window.setTimeout(function () {
+				range = document.createRange(); //range object
+				range.selectNodeContents(el); //sets Range
+				sel.removeAllRanges(); //remove all ranges from selection
+				sel.addRange(range);//add Range to a Selection.
+			}, 1);
+		}
+	} else if (document.selection) { //older ie
+		sel = document.selection.createRange();
+		if (sel.text == '') { //no text selection
+			range = document.body.createTextRange();//Creates TextRange object
+			range.moveToElementText(el);//sets Range
+			range.select(); //make selection.
+		}
+	}
+}
+function incInput(inp, n = 1) {
+	let val = Number(inp.innerHTML);
+	val += n;
+	inp.innerHTML = val;
+}
+function mCheckbox(label, val, dParent, handler, styles) {
+	styles.align = 'left';
+	let d = mDiv(dParent, styles);
+	let hpad = valf(styles.hpadding, 4);
+	let dLabel = mDiv(d, { w: '40%', align: 'right', hpadding: hpad, display: 'inline-block' }, null, label); //createElementFromHTML(`<label>${label}</label>`);
+	let d2 = mDiv(d, { display: 'inline', w: '50%', hpadding: hpad });
+	let inp = createElementFromHTML(
+		`<input type="checkbox" class="checkbox" ` + (val === true ? 'checked=true' : '') + ` >`);
+	mAppend(d2, inp);
+
+	inp.onchange = (ev) => { handler(inp.checked, ev); };
+	// inp.onchange = handler;
+	return inp;
+}
+function mColorPickerControl(label, value, targetImage, dParent, handler, styles) {
+	let d = mDiv(dParent, styles);
+	let hpad = valf(styles.hpadding, 6);
+	let dLabel = mDiv(d, { 'vertical-align': 'top', w: '35%', align: 'right', hpadding: hpad, display: 'inline-block' }, null, label);
+	let palette = getPaletteFromImage(targetImage);
+	// let inp = mColorPicker3(d, palette, handler, value);
+	// //let elem = mDiv(dParent,{w:50,h:50,display:'inline-block'});
+	let elem = mDiv(d, { w: '55%', hpadding: hpad, h: 24, rounding: hpad, display: 'inline-block' });
+	let inp = new JSColor(elem, {
+		alpha: 'ff',
+		closeButton: true,
+		value: value,
+		palette: palette,
+	});
+	//inp.onChange = ()=>{let c = inp.toHEXAString(); onColor(c);}
+	inp.onInput = () => { let c = inp.toHEXAString(); handler(c); }
+	return inp;
+}
+function mEditRange(label, value, min, max, step, dParent, handler, styles, classes, id, triggerOnChange = true) {
+	let d = mDiv(dParent, styles);
+	let hpad = valf(styles.hpadding, 4);
+	let dLabel = mDiv(d, { w: '30%', align: 'right', hpadding: hpad, display: 'inline-block' }, null, label); //createElementFromHTML(`<label>${label}</label>`);
+	let inpText = createElementFromHTML(`<input type='number'  step=${step} min="${min}" max="${max}" value="${value}" ></input>`);
+	let inp = createElementFromHTML(`<input type="range" step=${step} min="${min}" max="${max}" value="${value}" ></input>`);
+	// let inp = createElementFromHTML(`<div contenteditable="true" spellcheck="false">${value}</div>	`)
+	mAppend(d, inpText);
+	mAppend(d, inp);
+	// let button = mButton('+', triggerOnChange ? ev => { incInput(inp); handler(inp.innerHTML, ev); } : ev => { incInput(inp); }, d);
+	mStyleX(inpText, { display: 'inline', w: '20%', align: 'left', hpadding: hpad });
+	mStyleX(inp, { display: 'inline', w: '40%', hpadding: hpad });
+
+	inpText.onchange = (ev) => { inp.value = inpText.value; handler(inpText.value, ev); };
+	// inpText.addEventListener('keydown', unfocusOnEnter);
+	// inpText.addEventListener('focusout', ev => { inp.value = inpText.value;handler(inp.innerHTML, ev); });
+	inpText.onclick = ev => selectText(ev.target);
+	inp.onchange = (ev) => { inpText.value = inp.value; handler(inpText.value, ev); };
+	if (isdef(classes)) mClass(inp, ...classes);
+	if (isdef(id)) inp.id = id;
+	return inpText;
+}
+
+function mEditNumber(label, value, dParent, handler, styles, classes, id, triggerOnChange = true) {
+	let d = mDiv(dParent, styles);
+	let hpad = valf(styles.hpadding, 4);
+	let dLabel = mDiv(d, { w: '50%', align: 'right', hpadding: hpad, display: 'inline-block' }, null, label); //createElementFromHTML(`<label>${label}</label>`);
+
+	let inp = createElementFromHTML(`<div contenteditable="true" spellcheck="false">${value}</div>	`)
+	mAppend(d, inp);
+	let button = mButton('+', triggerOnChange ? ev => { incInput(inp); handler(inp.innerHTML, ev); }
+		: ev => { incInput(inp); }, d);
+	mStyleX(inp, { display: 'inline-block', w: '40%', align: 'left', hpadding: hpad });
+	inp.addEventListener('keydown', unfocusOnEnter);
+	inp.addEventListener('focusout', ev => { handler(inp.innerHTML, ev); });
+	inp.onclick = ev => selectText(ev.target);
+
+	if (isdef(classes)) mClass(inp, ...classes);
+	if (isdef(id)) inp.id = id;
+	return inp;
+}
+
+function mEdit(label, value, dParent, handler, styles, classes, id) {
+
+	let d = mDiv(dParent, styles);
+	let hpad = valf(styles.hpadding, 4);
+	let dLabel = mDiv(d, { w: '50%', align: 'right', hpadding: hpad, display: 'inline-block' }, null, label); //createElementFromHTML(`<label>${label}</label>`);
+
+	let inp = createElementFromHTML(`<div contenteditable="true" spellcheck="false">${value}</div>	`)
+	mAppend(d, inp);
+	mStyleX(inp, { display: 'inline-block', w: '50%', align: 'left', hpadding: hpad });
+	inp.addEventListener('keydown', unfocusOnEnter);
+	inp.addEventListener('focusout', ev => { handler(inp.innerHTML, ev); });
+	inp.onclick = ev => selectText(ev.target);
+
+	if (isdef(classes)) mClass(inp, ...classes);
+	if (isdef(id)) inp.id = id;
+	return inp;
+}
+function mEditX(label, val, dParent, styles, classes, handler, id, opt = {}) {
+	let defOptions = {
+		alignLabel: 'right',
+		fgLabel: 'silver',
+		wminLabel: 120,
+		alignInput: 'left',
+		fgInput: 'white',
+		wminInput: 50,
+		wminRight: 120,
+		align: 'center',
+
+	}
+	addKeys(defOptions, opt);
+	let wminTotal = wminLabel + wminRight;
+	if (nundef(styles)) styles = {};
+	if (nundef(styles.wmin)) styles.wmin = 0;
+	styles.wmin = Math.max(styles.wmin, wminTotal);
+	styles.align = opt.align;
+	let dOuter = mDiv(dParent, styles, id, null, classes);
+	let dLabel = mDiv(dOuter, { fg: opt.fgLabel, wmin: opt.wminLabel, align: opt.alignLabel }, null, label);
+	let dInput = mDiv(dOuter, { contenteditable: true, spellcheck: false, fg: opt.fgInput, wmin: opt.wminInput, align: opt.alignInput }, null, val);
+	dInput.onfocusout = ev => handler(dInput.innerHTML, ev);
+	dInput.onkeydown = (ev) => {
+		if (ev.key === 'Enter') {
+			ev.preventDefault();
+			mBy('dummy').focus();
+		}
+	}
+	return dInput;
+}
+function mEditableOnEdited(id, dParent, label, initialVal, onEdited, onOpening, styles, classes) {
+	let inp = mEditableInput(dParent, label, initialVal, styles, classes);
 	inp.id = id;
 	if (isdef(onOpening)) { inp.addEventListener('focus', ev => onOpening(ev)); }
 	inp.addEventListener('focusout', ev => {
-		//unselect text in span
 		window.getSelection().removeAllRanges();
 		if (isdef(onEdited)) onEdited(inp.innerHTML, ev);
-	}); //(ev) => { onChange(ev,isCaseSensitive?inp.innerHTML:inp.innerHTML.toLowerCase()); });
+	});
 	return inp;
 }
-function mEditableInput(dParent, label, val) {
+function mEditableInput(dParent, label, val, styles, classes, id) {
 	let labelElem = createElementFromHTML(`<span>${label}</span>	`)
 	let elem = createElementFromHTML(`<span contenteditable="true" spellcheck="false">${val}</span>	`)
 	elem.addEventListener('keydown', (ev) => {
 		if (ev.key === 'Enter') {
 			ev.preventDefault();
 			mBy('dummy').focus();
+			//if (isdef(handler)) handler(elem.innerHTML, ev); //das ist schon bei mEditableInputOnEdited!!!
 		}
 	});
 	let dui = mDiv(dParent, { margin: 2 });
 	mAppend(dui, labelElem);
 	mAppend(dui, elem);
+	if (isdef(styles)) {
+		if (isdef(styles.wInput)) mStyleX(elem, { wmin: styles.wInput });
+		mStyleX(elem, styles);
+	}
+	if (isdef(classes)) mStyleX(elem, ...classes);
+	if (isdef(id)) elem.id = id;
+
 	return elem;
 }
 function mFlexWrap(d) { mFlex(d, 'w'); }
@@ -308,7 +477,7 @@ function mStyleX(elem, styles, unit = 'px') {
 	}
 	if (isdef(styles.vmargin) && isdef(styles.hmargin)) {
 		styles.margin = styles.vmargin + unit + ' ' + styles.hmargin + unit;
-		console.log('::::::::::::::', styles.margin)
+		//console.log('::::::::::::::', styles.margin)
 	}
 	if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
 
@@ -1828,6 +1997,9 @@ function enableDD(sources, targets, dropHandler, isCopy, clearTarget, dragStartH
 	}
 }
 function ddStart(ev, source, isCopy = true, clearTarget = false) {
+
+	//console.log('center',getCenter(iDiv(source)));
+
 	if (!canAct() || isdef(DDInfo.dragStartHandler) && !DDInfo.dragStartHandler(source)) return;
 	ev.preventDefault();
 	ev.stopPropagation();
@@ -1839,11 +2011,12 @@ function ddStart(ev, source, isCopy = true, clearTarget = false) {
 	var clone = DragElem = DDInfo.clone = d.cloneNode(true);
 	// clone.eliminateSource = !isCopy;
 	clone.isCopy = isCopy;
+	//console.log(d,ev.target,clone)
 	clone.clearTarget = clearTarget;
 	mAppend(document.body, clone);//mClass(clone, 'letter')
 	mClass(clone, 'dragelem');//der clone muss class 'dragelem' sein
 	mStyleX(clone, { left: ev.clientX - ev.offsetX, top: ev.clientY - ev.offsetY });//der clone wird richtig plaziert
-	clone.drag = { offsetX: ev.offsetX, offsetY: ev.offsetY };
+	DDInfo.dragOffset = clone.drag = { offsetX: ev.offsetX, offsetY: ev.offsetY };
 	// von jetzt an un solange DragElem != null ist muss der clone sich mit der maus mitbewegen
 	document.body.onmousemove = onMovingCloneAround;
 	document.body.onmouseup = onReleaseClone;// ev=>console.log('mouse up')
@@ -1874,7 +2047,19 @@ function onReleaseClone(ev) {
 			//console.log('YES!',firstCond(els,x=>x==dTarget))
 			//if (DragElem.clearTarget) clearElement(dTarget);
 			if (isdef(dropHandler)) {
-				dropHandler(source, target, DragElem.isCopy, DragElem.clearTarget);
+				let cDrop = { x: ev.clientX, y: ev.clientY };
+				let rTarget = getRect(dTarget);
+				let cTarget = { x: rTarget.x + rTarget.w / 2, y: rTarget.y + rTarget.h / 2 };
+				//let ct1=getCenter(dTarget);
+				//console.log('rTarget', rTarget, '\ncTarget', cTarget, '\ncDrop', cDrop);//, '\nct1',ct1)
+				//console.assert(cTarget.x==ct1.x && cTarget.y==ct1.y,'onReleaseClone: getCenter GEHT NICHT!!!');
+				let [dx, dy] = [cDrop.x - cTarget.x, cDrop.y - cTarget.y];
+				//console.log('dx,dx',dx,dy);
+				let [ddx, ddy] = [DragElem.drag.offsetX, DragElem.drag.offsetY];
+				//console.log('offx,offy',ddx,ddy);
+				//[dx,dy]=[dx-ddx,dy-ddy];
+				//console.log('nach -offs: dx,dx',dx,dy);
+				dropHandler(source, target, DragElem.isCopy, DragElem.clearTarget, dx, dy, ev, DragElem);
 			}
 			//console.log('dropped', source.name, 'on target', target);
 			break; //as soon as found a target, stop looking for more targets!
@@ -2495,6 +2680,21 @@ function arrMinMax(arr, func) {
 	return { min: min, imin: imin, max: max, imax: imax };
 }
 function arrMinus(a, b) { let res = a.filter(x => !b.includes(x)); return res; }
+function arrNoDuplicates(arr) {
+	//only keeps unique literals in result! non-literals are removed!
+	let di = {};
+	let arrNew = [];
+	for (const el of arr) {
+		// console.log('el',el,'isLiteral',isLiteral(el),!isLiteral(el));
+		if (!isLiteral(el)) continue;
+		// console.log('isdef(di[el])',isdef(di[el]));
+		if (isdef(di[el])) continue;
+		di[el] = true;
+		arrNew.push(el);
+	}
+	// console.log(arrNew)
+	return arrNew;
+}
 function arrPlus(a, b) { let res = a.concat(b); return res; }
 function arrRange(from = 1, to = 10, step = 1) { let res = []; for (let i = from; i <= to; i += step)res.push(i); return res; }
 
@@ -2541,6 +2741,7 @@ function arrWithout(a, b) { return arrMinus(a, b); }
 
 function classByName(name) { return eval(name); }
 function copyKeys(ofrom, oto, except = {}, only) {
+	//console.log(ofrom)
 	let keys = isdef(only) ? only : Object.keys(ofrom);
 	for (const k of keys) {
 		if (isdef(except[k])) continue;
@@ -2877,11 +3078,13 @@ function coin(percent = 50) {
 function choose(arr, n, exceptIndices) {
 	var result = [];
 	var len = arr.length;
+	if (n>=arr.length) return arr;
+
 	var taken = new Array(len);
 	if (isdef(exceptIndices) && exceptIndices.length < len - n) {
 		for (const i of exceptIndices) if (i >= 0 && i <= len) taken[i] = true;
 	}
-	if (n > len) n = len - 1;
+	if (n > len) n = len;
 	while (result.length < n) {
 		var iRandom = Math.floor(Math.random() * len);
 		while (taken[iRandom]) { iRandom += 1; if (iRandom >= len) iRandom = 0; }
@@ -3464,7 +3667,7 @@ function isEmpty(arr) {
 function isLetter(s) { return /^[a-zA-Z]$/i.test(s); }
 function isList(arr) { return Array.isArray(arr); }
 function isLiteral(x) { return isString(x) || isNumber(x); }
-function isNumber(x) { return isdef(x) && (x == 0 || x != ' ' && !isNaN(+x)); }
+function isNumber(x) { return x!==true && x!==false && isdef(x) && (x == 0 || x != ' ' && !isNaN(+x)); }
 function isSingleDigit(s) { return /^[0-9]$/i.test(s); }
 function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
@@ -3573,7 +3776,7 @@ function initServerPool(settings, state, perlenDict) {
 	return maxPoolIndex;
 }
 function addToPool(pool, poolArr, perle, index) {
-	let p = pool[index] = { key: perle.path, index: index };
+	let p = pool[index] = { key: perle.key, index: index };
 	poolArr.push(index);
 	return p;
 }
@@ -3628,12 +3831,12 @@ if (this && typeof module == "object" && module.exports && this === module.expor
 		initServerPool, addToPool,//initServerBoard,
 
 		//helpers:
-		allNumbers, arrTake,
+		allNumbers, arrTake, arrNoDuplicates, arrMin, arrMax, arrMinus,
 		capitalize, choose, chooseRandom, copyKeys,
 		dict2list,
 		firstCond, firstCondDict, firstCondDictKey, formatDate,
 		getFilename, getPublicPath,
-		isdef, isEmpty, jsCopy,
+		intersection, isdef, isEmpty, jsCopy, isLiteral, isList, isString,
 		nundef,
 		range, randomNumber, removeInPlace,
 		stringBefore, stringAfter, stringAfterLast,
