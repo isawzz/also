@@ -885,7 +885,7 @@ class GSentence extends Game {
 
 		//pick a random sentence
 		let sl = this.sentenceList = chooseRandom(this.sentences);
-		console.log('slist', sl);
+		//console.log('slist', sl);
 		let words = this.sentenceList[0];
 
 		let fz = 32;
@@ -927,20 +927,20 @@ class GSentence extends Game {
 		let words=[];
 		for(const cont of this.containers){
 			let d=iDiv(cont);
-			console.log('cont',cont);
+			//console.log('cont',cont);
 			let ch=d.firstChild;
-			console.log('ch',ch);
+			//console.log('ch',ch);
 			if (ch && isdef(ch.firstChild)){
 				words.push(ch.firstChild.innerHTML);
 			}else break;
 			//this.containers.map(x => iDiv(x).firstChild.firstChild.innerHTML).join(' ');
 		}
 		let answer=words.join(' ');
-		console.log('answer is', answer);
+		//console.log('answer is', answer);
 		let isCorrect = false;
 		for (const sent of this.sentenceList) {
 			let variant = sent.join(' ');
-			console.log('variant', variant);
+			//console.log('variant', variant);
 			if (answer == variant) isCorrect = true;
 		}
 
