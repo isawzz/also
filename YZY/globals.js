@@ -1,7 +1,7 @@
 const BROADCAST_SETTINGS = true;
 const STANDALONE = BROADCAST_SETTINGS; //arbeitet komplett ohne json db!
 var START_IN_MENU = !BROADCAST_SETTINGS;
-const DEFAULTUSERNAME =BROADCAST_SETTINGS?'nil':'gul'; // nil | gul | felix
+const DEFAULTUSERNAME ='gul'; //BROADCAST_SETTINGS?'nil':'gul'; // nil | gul | felix
 
 //#region config
 var USE_ADDONS = false;
