@@ -395,13 +395,22 @@ gSentence:
   language: 'E'
   color: BLUEGREEN
   controllerType: solitaire
+  minWords: 1
   levels:
     0:
       maxWords: 4
     1:
+      minWords: 4
       maxWords: 6
     2:
-      maxWords: 20
+      minWords: 5
+      maxWords: 7
+    3:
+      minWords: 6
+      maxWords: 8
+    4:
+      minWords: 7
+      maxWords: 100
 gSwap:
   friendly: 'Swap!'
   logo: 'fleur-de-lis'
@@ -431,6 +440,7 @@ gSteps:
   controllerType: solitaire
   contrast: 0.22
   colors: [blue1, violet, lightgreen, pink, red, yellow]
+  showVisualInstruction: true
   levels:
     0: 
       numPics: 2
@@ -472,6 +482,24 @@ gSteps:
       numColors: 4
       numRepeat: 3
       numSteps: 3
+    8: #2 steps nur hoeren!
+      showVisualInstruction: false
+      numPics: 12
+      numColors: 1
+      numRepeat: 1
+      numSteps: 2
+    9: #2 steps nur hoeren!
+      showVisualInstruction: false
+      numPics: 12
+      numColors: 1
+      numRepeat: 1
+      numSteps: 3
+    10: #2 steps nur hoeren!
+      showVisualInstruction: false
+      numPics: 12
+      numColors: 1
+      numRepeat: 1
+      numSteps: 4
 gWritePic:
   friendly: 'Type it!'
   logo: 'keyboard'

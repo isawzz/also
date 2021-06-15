@@ -386,7 +386,7 @@ class GC4 extends GTTT {
 			let res = { reached: true, val: (!x ? 0 : (10 - depth) * (x == MAXIMIZER.sym ? 1 : -1)) };
 			//console.log(res)
 			// console.log('__________________',depth); printState(node)
-			if (x) console.log('_____winning move', x, 'd=' + depth, '\n', res);
+			//if (x) console.log('_____winning move', x, 'd=' + depth, '\n', res);
 
 			return res;
 			//return { reached: true, val: (!x ? 0 : x == MAXIMIZER.sym ? (10 - depth) : (depth - 10)) };

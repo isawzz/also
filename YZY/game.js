@@ -1169,6 +1169,10 @@ function mXit(elem, sz = 50) {
 	return d;
 }
 function mCheckit(elem, sz = 50) {
+	if (G.spokenFeedback) {
+		const comments = (G.language == 'E' ? ['YEAH!', 'Excellent!!!', 'CORRECT!', 'Great!!!'] : ['gut', 'Sehr Gut!!!', 'richtig!!', 'Bravo!!!']);
+		sayRandomVoice(chooseRandom(comments));
+	}
 	if (nundef(sz)) sz = getRect(elem).h;
 	let d = markerSuccess();
 	mpOver(d, elem, sz * (4 / 5), 'limegreen', 'segoeBlack');

@@ -26,7 +26,7 @@ function setGame(game, immediate = false) {
 		case 'multi': GC = new ControllerMulti(G, U); break;
 	}
 	G.controller = GC;
-	console.log('G',G,'GC',GC)
+	//console.log('G',G,'GC',GC)
 	showGameTitle();
 	if (immediate) GC.startGame();
 }

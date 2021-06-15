@@ -2413,6 +2413,7 @@ async function dbLoad(appName, callback) {
 
 var BlockServerSend = false;
 function dbSave(appName, callback) {
+	if (STANDALONE) {console.log('standalone mode: db not saved!'); return; }
 	if (BlockServerSend) { setTimeout(() => dbSave(appName, callback), 1000); }
 	else {
 		//console.log('saving DB:',appName,DB);

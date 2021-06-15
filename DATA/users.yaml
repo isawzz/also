@@ -1,7 +1,7 @@
 nil:
   id: nil
   avGames: [gKrieg, gSteps, gSentence, gTouchColors, gSayPic, gReversi, gMissingLetter, gNamit, gTouchPic, gWritePic, gChess, gPremem, gMem, gSwap, gTTT, gElim, gAnagram, gCats, gAbacus, gRiddle,gC4]
-  lastGame: gTTT
+  lastGame: gSentence
   settings:
     # settings common to all games
     userColor: green
@@ -14,10 +14,10 @@ nil:
     vocab: objectPlus
     showTime: false
     spokenFeedback: true
-    silentMode: true
+    silentMode: false
     switchGame: true
     #indiv game settings default
-    trials: 2
+    trials: 1
     showHint: true
   games:
     gAbacus:
@@ -48,7 +48,7 @@ nil:
     gSentence:
       startLevel: 0
     gSteps:
-      startLevel: 2
+      startLevel: 8
     gRiddle:
       startLevel: 0
     gSwap:

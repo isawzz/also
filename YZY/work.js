@@ -87,7 +87,7 @@ class GKriegBack {
 	_resolve() {
 		//this.unresolvedWar=false;
 		let pl = this.player(), opp = this.opponent();
-		console.log('...resolve',pl.trick,opp.trick)
+		console.log('...resolve', pl.trick, opp.trick)
 		if (opp.trick.length != pl.trick.length) return null; //this.in_trick()) return null;
 		let t1 = this.top(pl); let t2 = this.top(opp);
 		console.log('resolve: compare t1', t1, 't2', t2);

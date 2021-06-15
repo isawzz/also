@@ -179,7 +179,7 @@ class GAnagram extends Game {
 		this.letters = createDragLetters();
 
 		if (this.hidden) showFleetingMessage('category: ' + Pictures[0].info.subgroup, 5000);
-		else if (!this.showWord) { showLabelPercentHintAfter(50, 6000); }
+		else if (!this.showWord) { showLabelPercentHintAfter(50,6000);}
 
 		this.controller.activateUi.bind(this.controller)();
 
@@ -829,25 +829,13 @@ class GSentence extends Game {
 		this.language = 'E';
 	}
 	startGame() {
-		this.correctionFunc = () => {
-			let sent = this.sentenceList[0].join(' ');
-			this.dWordArea.innerHTML = `<h1>${sent}</h1>`;
-			if (this.spokenFeedback) sayRandomVoice(sent);
-
-			return 1000;
-		}
-
+		this.correctionFunc = showCorrectPictureLabels;
+		this.failFunc = failSomePictures;
 		this.successFunc = () => { mCheckit(this.dWordArea, 120); };
 	}
 	clear() { super.clear(); this.language = this.prevLanguage; }
 	start_Level() {
-		this.sentences = [];
-		for (const s of EnglishSentences) {
-			let slist = isList(s) ? s : [s];
-			slist = slist.map(x => x.split(' '));
-			if (slist[0].length <= this.maxWords && slist[0].length >= this.minWords) this.sentences.push(slist);
-		}
-		console.log('sentences', this.sentences);
+		this.sentences = EnglishSentences.map(x => x.split(' ')).filter(x => x.length <= this.maxWords);
 	}
 	dropHandler(source, target, isCopy = false, clearTarget = false) {
 		let prevTarget = source.target;
@@ -879,23 +867,18 @@ class GSentence extends Game {
 		}
 	}
 	prompt() {
-
-		showInstruction('', 'form a correct sentence', dTitle, true);
+		let words = this.sentence = chooseRandom(this.sentences);
+		showInstruction('', 'drag words into blanks', dTitle, true);
 		mLinebreak(dTable);
-
-		//pick a random sentence
-		let sl = this.sentenceList = chooseRandom(this.sentences);
-		console.log('slist', sl);
-		let words = this.sentenceList[0];
 
 		let fz = 32;
 		let h = fz * 1.25, wmin = fz * 1.25;
 		let items = Pictures = [];
-		let containers = this.containers = [];
+		let containers = [];
 		let options = _simpleOptions({ fz: fz, bg: 'transparent', fg: 'white', showPic: false, showLabels: true }, { wmin: wmin });
+
 		let dArea = mDiv(dTable, { h: 150, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
 		mLinebreak(dTable);
-
 		let dWordArea = this.dWordArea = mDiv(dTable, { h: 70, wmin: 20, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
 
 		let i = 0;
@@ -924,13 +907,13 @@ class GSentence extends Game {
 		return 1500;
 	}
 	eval() {
-		let answer = this.containers.map(x => iDiv(x).firstChild.firstChild.innerHTML).join(' ');
-		console.log('answer is', answer);
-		let isCorrect = false;
-		for (const sent of this.sentenceList) {
-			let variant = sent.join(' ');
-			console.log('variant', variant);
-			if (answer == variant) isCorrect = true;
+		let i = 0;
+		let isCorrect = true;
+		for (const p of Pictures) {
+			let cont = p.target;
+			if (nundef(cont)) p.isCorrect = isCorrect = false;
+			else if (p.index != cont.index) p.isCorrect = isCorrect = false;
+			else p.isCorrect = true;
 		}
 
 		Selected = { piclist: Pictures, feedbackUI: Pictures.map(x => iDiv(x)), sz: getRect(iDiv(Pictures[0])).h + 10 };
@@ -965,8 +948,7 @@ class GSteps extends Game {
 			goal.correctionPhrase = corr[i];
 			cmd = 'then';
 		}
-		let sWritten = this.showVisualInstruction ? written.join('; ') : 'listen to instruction!';
-		showInstructionX(sWritten, dTitle, spoken.join('. '), { fz: 20 });
+		showInstructionX(written.join('; '), dTitle, spoken.join('. '), { fz: 20 });
 		this.controller.activateUi.bind(this.controller)();
 	}
 	trialPrompt() {
@@ -1414,107 +1396,3 @@ class GPasscode extends Game {
 		return isCorrect;
 	}
 }
-
-
-
-//#region deprecated
-class GSentence1 extends Game {
-	constructor(name, o) {
-		super(name, o);
-		this.prevLanguage = this.language;
-		this.language = 'E';
-	}
-	startGame() {
-		this.correctionFunc = showCorrectPictureLabels;
-		this.failFunc = failSomePictures;
-		this.successFunc = () => { mCheckit(this.dWordArea, 120); };
-	}
-	clear() { super.clear(); this.language = this.prevLanguage; }
-	start_Level() {
-		this.sentences = EnglishSentences.map(x => x.split(' ')).filter(x => x.length <= this.maxWords);
-	}
-	dropHandler(source, target, isCopy = false, clearTarget = false) {
-		let prevTarget = source.target;
-		source.target = target;
-		let dSource = iDiv(source);
-		let dTarget = iDiv(target);
-		if (clearTarget) {
-			//if this target is empty, remove _
-			let ch = dTarget.children[0];
-			let chSource = firstCond(Pictures, x => iDiv(x) == ch);
-			if (chSource) {
-				if (isdef(prevTarget)) {
-					mAppend(iDiv(prevTarget), ch);
-					chSource.target = prevTarget;
-				} else {
-					mAppend(this.dWordArea, ch);
-					delete chSource.target;
-				}
-			}
-			clearElement(dTarget);
-
-			//find out previous target! (parentNode of dSource in a drop target?)
-		}
-		if (isCopy) {
-			let dNew = mText(dSource.innerHTML, dTarget, { wmin: 100, fz: 20, padding: 4, margin: 4, display: 'inline-block' });
-			addDDSource(dNew, isCopy, clearTarget);
-		} else {
-			mAppend(dTarget, dSource);
-		}
-	}
-	prompt() {
-		let words = this.sentence = chooseRandom(this.sentences);
-		showInstruction('', 'drag words into blanks', dTitle, true);
-		mLinebreak(dTable);
-
-		let fz = 32;
-		let h = fz * 1.25, wmin = fz * 1.25;
-		let items = Pictures = [];
-		let containers = [];
-		let options = _simpleOptions({ fz: fz, bg: 'transparent', fg: 'white', showPic: false, showLabels: true }, { wmin: wmin });
-
-		let dArea = mDiv(dTable, { h: 150, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
-		mLinebreak(dTable);
-		let dWordArea = this.dWordArea = mDiv(dTable, { h: 70, wmin: 20, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });//,{layout:'fhcc'})
-
-		let i = 0;
-		for (const word of words) {
-			let item = { label: word, index: i };
-			let container = { label: word, index: i };
-			i += 1;
-			let d = makeItemDiv(item, options);
-			let dCont = mDiv(dArea, { wmin: wmin + 12, hmin: h + 10, bg: colorTrans('beige', .25), fg: 'black', margin: 12 });
-			container.div = dCont;
-			items.push(item);
-			containers.push(container);
-		}
-
-		shuffle(items);
-		items.map(x => { mAppend(dWordArea, iDiv(x)); mStyleX(iDiv(x), { h: h, w: 'auto' }); });
-		enableDD(items, containers, this.dropHandler.bind(this), false, true);
-		mLinebreak(dTable, 50);
-		mButton('Done!', this.controller.evaluate.bind(this.controller), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
-		this.controller.activateUi.bind(this.controller)();
-	}
-	trialPrompt() {
-		sayTryAgain();
-		showFleetingMessage('Try again!', 0, { fg: 'white' });
-		TOMain = setTimeout(() => { Pictures.map(x => mAppend(this.dWordArea, iDiv(x))); }, 1200);
-		return 1500;
-	}
-	eval() {
-		let i = 0;
-		let isCorrect = true;
-		for (const p of Pictures) {
-			let cont = p.target;
-			if (nundef(cont)) p.isCorrect = isCorrect = false;
-			else if (p.index != cont.index) p.isCorrect = isCorrect = false;
-			else p.isCorrect = true;
-		}
-
-		Selected = { piclist: Pictures, feedbackUI: Pictures.map(x => iDiv(x)), sz: getRect(iDiv(Pictures[0])).h + 10 };
-		return isCorrect;
-	}
-
-}
-//#endregion
