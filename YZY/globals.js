@@ -1,7 +1,7 @@
 const BROADCAST_SETTINGS = true;
 const STANDALONE = BROADCAST_SETTINGS; //arbeitet komplett ohne json db!
 var START_IN_MENU = !BROADCAST_SETTINGS;
-const DEFAULTUSERNAME ='gul'; //BROADCAST_SETTINGS?'nil':'gul'; // nil | gul | felix
+const DEFAULTUSERNAME =BROADCAST_SETTINGS?'nil':'gul'; // nil | gul | felix
 
 //#region config
 var USE_ADDONS = false;
@@ -218,7 +218,7 @@ EnglishSentences = [
 	'my parent brought me up to always strive for excellence',
 	'yesterday I started studying for my upcoming exams',
 	'I am not afraid of the dark',
-	'Nick still remembered the first time ho drove a bike',
+	'Nick still remembered the first time he drove a bike',
 	'some people believe that the earth is flat',
 	'I am starting to realize that not everybody thinks the same',
 	'we are going to have fun today',

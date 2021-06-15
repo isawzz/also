@@ -834,7 +834,7 @@ class GSentence extends Game {
 			this.dWordArea.innerHTML = `<h1>${sent}</h1>`;
 			if (this.spokenFeedback) sayRandomVoice(sent);
 
-			return 1000;
+			return 3000;
 		}
 
 		this.successFunc = () => { mCheckit(this.dWordArea, 120); };
@@ -924,7 +924,18 @@ class GSentence extends Game {
 		return 1500;
 	}
 	eval() {
-		let answer = this.containers.map(x => iDiv(x).firstChild.firstChild.innerHTML).join(' ');
+		let words=[];
+		for(const cont of this.containers){
+			let d=iDiv(cont);
+			console.log('cont',cont);
+			let ch=d.firstChild;
+			console.log('ch',ch);
+			if (ch && isdef(ch.firstChild)){
+				words.push(ch.firstChild.innerHTML);
+			}else break;
+			//this.containers.map(x => iDiv(x).firstChild.firstChild.innerHTML).join(' ');
+		}
+		let answer=words.join(' ');
 		console.log('answer is', answer);
 		let isCorrect = false;
 		for (const sent of this.sentenceList) {
