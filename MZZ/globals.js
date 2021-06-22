@@ -19,14 +19,6 @@ var Settings, SettingsList, SettingsChanged, SelectedMenuKey; //var G, T, P, U, 
 var Daat = {}, DA = {}, Items;
 var Players, PlayerOnTurn, GC, GameCounter;
 
-//TO BE DELETED!!! ChessBoard configuration
-// var ChessBoardConfig = {
-// 	pieceTheme: '/alibs/chessBoard/img/chesspieces/wikipedia/{piece}.png',
-//   draggable: true,
-//   // dropOffBoard: 'snapback', // this is the default
-//   position: 'start'
-// };
-
 var BestMinusScore = Infinity, BestMinusState, BestPlusScore = -Infinity, BestPlusState;
 var F_END, F_MOVES, F_APPLYMOVE, F_UNDOMOVE, F_EVAL, DMAX, MAXIMIZER, MINIMIZER, SelectedMove, CANCEL_AI;
 var DMM={}, timit;
