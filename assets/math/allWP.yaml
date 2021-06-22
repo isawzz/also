@@ -145,7 +145,7 @@
     @PG1 earns @N1 an hour by delivering newspapers. She delivers newspapers
     @N2 days each week, for @N3 hours at a time. After delivering newspapers
     for @N4 weeks, how much money will @PG1 earn?
-  sol: N1*N2*N3*N4
+  sol: N2+D1=7 => N1*N2*N3*N4
 - index: 23
   title: Dividing 1-Digit Integers
   text: >-

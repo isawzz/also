@@ -630,8 +630,8 @@ class GRiddle extends Game {
 		this.trials = 1;
 		showInstruction('', 'Solve the Riddle:', dTitle, true);
 
-		//let wp = this.wp = jsCopy(WordP[51]); //getRandomWP(1, this.maxIndex);
-		let wp = this.wp = getRandomWP(this.minIndex, this.maxIndex);
+		let wp = this.wp = jsCopy(WordP[22]); //getRandomWP(1, this.maxIndex);
+		//let wp = this.wp = getRandomWP(this.minIndex, this.maxIndex);
 		let haveResult = wp.isTextResult = instantiateNames(wp);
 		//console.log('haveResult',haveResult)
 		if (!haveResult) instantiateNumbers(wp);
