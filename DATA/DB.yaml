@@ -310,7 +310,7 @@ users:
       - gAbacus
       - gRiddle
       - gC4
-    lastGame: gRiddle
+    lastGame: gSwap
     settings:
       userColor: blue
       samplesPerGame: 10
@@ -372,6 +372,10 @@ users:
         startLevel: 3
       gRiddle:
         startLevel: 1
+        nTotal: 1
+        nCorrect: 1
+        nCorrect1: 1
+        percentage: 100
       gSwap:
         startLevel: 0
       gTouchColors:
@@ -392,11 +396,11 @@ users:
       aPassword:
         open: false
     session:
-      gMissingLetter:
+      gRiddle:
         startLevel: 0
-        nTotal: 2
-        nCorrect: 2
-        nCorrect1: 2
+        nTotal: 1
+        nCorrect: 1
+        nCorrect1: 1
         nWins: 0
         nLoses: 0
         nTied: 0

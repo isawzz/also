@@ -1,4 +1,4 @@
-const BROADCAST_SETTINGS = true;
+const BROADCAST_SETTINGS = false;
 var START_IN_MENU = false; //!BROADCAST_SETTINGS;
 const DEFAULTUSERNAME = 'gul';// BROADCAST_SETTINGS?'nil':'gul'; // nil | gul | felix
 const USELIVESERVER = false; //brauch ich DOCH!!!nicht! solange node nicht rennt kein problem!!!
