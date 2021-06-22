@@ -2878,7 +2878,47 @@ function dbSave(appName, callback) {
 		}).then(() => { BlockServerSend = false; console.log('unblocked...'); if (callback) callback(); }); //console.log('unblocked...'); });
 	}
 }
-
+function dbSaveLocal(callback) {
+	if (BlockServerSend) { setTimeout(() => dbSaveLocal(callback), 1000); }
+	else {
+		//console.log('saving DB:',appName,DB);
+		let url = 'https://localhost:3000/dbsave';
+		BlockServerSend = true;
+		//console.log('blocked...');
+		fetch(url, {
+			method: 'PUT',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(DB)
+		}).then(() => { BlockServerSend = false; console.log('unblocked...'); if (callback) callback(); }); //console.log('unblocked...'); });
+	}
+}
+// Example POST method implementation:
+async function postData(url = '', data = {}) {
+  // Default options are marked with *
+	//usage:
+	// postData('https://example.com/answer', { answer: 42 })
+  // .then(data => {
+  //   console.log(data); // JSON data parsed by `data.json()` call
+  // });	
+	console.log('url',url,JSON.stringify(data));
+	const response = await fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'omit', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data) // body data type must match "Content-Type" header
+  });
+  return 'hallo';// response.json(); // parses JSON response into native JavaScript objects
+}
 async function fetch_wrapper(url) { return await fetch(url); }
 async function route_path_yaml_dict(url) {
 	let data = await fetch_wrapper(url);

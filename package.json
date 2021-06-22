@@ -1,0 +1,9 @@
+{
+  "name": "also",
+  "version": "0.0.1",
+  "description": "guggi's games",
+  "dependencies": {
+    "express": "^4.17.1",
+    "yaml": "^1.10.2"
+  }
+}
