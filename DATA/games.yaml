@@ -218,6 +218,7 @@ gMissingLetter:
   color: gold
   controllerType: solitaire
   pictureLabels: never
+  instruction: all
   levels:
     0:
       numMissing: 1
@@ -237,6 +238,18 @@ gMissingLetter:
     5:
       numMissing: 5
       posMissing: random
+    6:
+      numMissing: 3
+      posMissing: random
+      instruction: spokenGoal
+    7:
+      numMissing: 4
+      posMissing: random
+      instruction: noGoal
+    8:
+      numMissing: 5
+      posMissing: random
+      instruction: noGoal
 gNamit:
   friendly: 'Name it!'
   logo: 'bee'

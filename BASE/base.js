@@ -2859,30 +2859,12 @@ async function dbLoad(appName, callback) {
 		if (isdef(callback)) callback();
 	});
 }
-
 var BlockServerSend = false;
 function dbSave(appName, callback) {
 	if (BlockServerSend) { setTimeout(() => dbSave(appName, callback), 1000); }
 	else {
 		//console.log('saving DB:',appName,DB);
 		let url = SERVERURL + appName;
-		BlockServerSend = true;
-		//console.log('blocked...');
-		fetch(url, {
-			method: 'PUT',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(DB)
-		}).then(() => { BlockServerSend = false; console.log('unblocked...'); if (callback) callback(); }); //console.log('unblocked...'); });
-	}
-}
-function dbSaveLocal(callback) {
-	if (BlockServerSend) { setTimeout(() => dbSaveLocal(callback), 1000); }
-	else {
-		//console.log('saving DB:',appName,DB);
-		let url = 'https://localhost:3000/dbsave';
 		BlockServerSend = true;
 		//console.log('blocked...');
 		fetch(url, {
@@ -2903,7 +2885,7 @@ async function postData(url = '', data = {}) {
   // .then(data => {
   //   console.log(data); // JSON data parsed by `data.json()` call
   // });	
-	console.log('url',url,JSON.stringify(data));
+	//console.log('url',url,JSON.stringify(data));
 	const response = await fetch(url, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin

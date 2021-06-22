@@ -410,7 +410,18 @@ class GMissingLetter extends Game {
 		myShowPics(() => fleetingMessage('just enter the missing letter!'));
 		setGoal();
 
-		showInstruction(Goal.label, this.language == 'E' ? 'complete' : "ergänze", dTitle, true);
+		if (this.instruction == 'all') {
+			showInstruction(Goal.label, this.language == 'E' ? 'complete' : "ergänze", dTitle, true);
+			// showInstruction(Goal.label, this.language == 'E' ? 'type' : "schreib'", dTitle, true);
+		} else if (this.instruction == 'spokenGoal') {
+			let wr = this.language == 'E' ? 'complete the word' : "ergänze das wort";
+			let sp = (this.language == 'E' ? 'complete' : "ergänze") + ' ' + Goal.label;
+			showInstruction('', wr, dTitle, true, sp);
+		} else {
+			let wr = this.language == 'E' ? 'complete the word' : "ergänze das wort";
+			showInstruction('', wr, dTitle, true, wr);
+		}
+
 
 		mLinebreak(dTable);
 
@@ -434,8 +445,10 @@ class GMissingLetter extends Game {
 
 		mLinebreak(dTable);
 
-		let msg = this.composeFleetingMessage();
-		showFleetingMessage(msg, 3000);
+		if (this.instruction == 'all') {
+			let msg = this.composeFleetingMessage();
+			showFleetingMessage(msg, 3000);
+		}
 		this.controller.activateUi.bind(this.controller)();
 
 	}
@@ -630,8 +643,8 @@ class GRiddle extends Game {
 		this.trials = 1;
 		showInstruction('', 'Solve the Riddle:', dTitle, true);
 
-		let wp = this.wp = jsCopy(WordP[22]); //getRandomWP(1, this.maxIndex);
-		//let wp = this.wp = getRandomWP(this.minIndex, this.maxIndex);
+		//let wp = this.wp = jsCopy(WordP[22]); //getRandomWP(1, this.maxIndex);
+		let wp = this.wp = getRandomWP(this.minIndex, this.maxIndex);
 		let haveResult = wp.isTextResult = instantiateNames(wp);
 		//console.log('haveResult',haveResult)
 		if (!haveResult) instantiateNumbers(wp);
@@ -847,7 +860,7 @@ class GSentence extends Game {
 			slist = slist.map(x => x.split(' '));
 			if (slist[0].length <= this.maxWords && slist[0].length >= this.minWords) this.sentences.push(slist);
 		}
-		console.log('sentences', this.sentences);
+		//console.log('sentences', this.sentences);
 	}
 	dropHandler(source, target, isCopy = false, clearTarget = false) {
 		let prevTarget = source.target;
@@ -924,18 +937,18 @@ class GSentence extends Game {
 		return 1500;
 	}
 	eval() {
-		let words=[];
-		for(const cont of this.containers){
-			let d=iDiv(cont);
+		let words = [];
+		for (const cont of this.containers) {
+			let d = iDiv(cont);
 			//console.log('cont',cont);
-			let ch=d.firstChild;
+			let ch = d.firstChild;
 			//console.log('ch',ch);
-			if (ch && isdef(ch.firstChild)){
+			if (ch && isdef(ch.firstChild)) {
 				words.push(ch.firstChild.innerHTML);
-			}else break;
+			} else break;
 			//this.containers.map(x => iDiv(x).firstChild.firstChild.innerHTML).join(' ');
 		}
-		let answer=words.join(' ');
+		let answer = words.join(' ');
 		//console.log('answer is', answer);
 		let isCorrect = false;
 		for (const sent of this.sentenceList) {

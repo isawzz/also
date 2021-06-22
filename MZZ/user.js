@@ -63,7 +63,7 @@ function saveUser() {
 	U.lastGame = G.id;
 	if (!startsWith(Username, 'test')) localStorage.setItem('user', Username);
 	DB.users[Username] = U;
-	dbSave('boardGames');
+	dbSaveX();
 }
 function setNextGame() {
 	let game = G.id;

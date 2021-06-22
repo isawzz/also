@@ -142,10 +142,9 @@
 - index: 22
   title: Multiplying 4 Integers
   text: >-
-    @PG1 earns @N1 an hour by delivering newspapers. She delivers newspapers
-    @N2 days each week, for @N3 hours at a time. After delivering newspapers
-    for @N4 weeks, how much money will @PG1 earn?
-  sol: N2+D1=7 => N1*N2*N3*N4
+    @PG1 earns @N1 dollars an hour by delivering newspapers. She delivers newspapers
+    @D2 days each week, for @D3 hours at a time. How much does she earn per week?
+  sol: D2{2,3,4,5,6} => D3{2,3,4,5} => N1*D2*D3
 - index: 23
   title: Dividing 1-Digit Integers
   text: >-
@@ -838,3 +837,10 @@
     pair of pants. The manufacturer used @F2 of a bottle yesterday. How many
     pairs of pants did the manufacturer make?
   sol: F1(D1,D2) =>F2(D3,D4) => math.divide(F2,F1) 
+- index: 48
+  title: Multiplying 4 Integers
+  text: >-
+    @PG1 earns @N1 an hour by delivering newspapers. She delivers newspapers
+    @D2 days each week, for @D3 hours at a time. After delivering newspapers
+    for @D4 weeks, how much money will @PG1 earn?
+  sol: D2{2,3,4,5,6} => D3{2,3,4,5} => D4{2,4,5,6,8} => N1*D2*D3*D4

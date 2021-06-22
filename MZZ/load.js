@@ -1,12 +1,12 @@
 //window.onclick = () => { clearElement(dTable); t82_Live(); }
-window.onload = _ENTRY_POINT; // _loader | _ENTRY_POINT
+window.onload = _loader; // _loader | _ENTRY_POINT
 
 async function _ENTRY_POINT() {
 
 	//ENTRY POINT!
 	console.log('hallo'); //return;
-	let o={liste:[1,2,3],hut:'hutX'};
-	let path='./DATA/file.yaml';
+	let o = { liste: [1, 2, 3], hut: 'hutX' };
+	let path = './DATA/file.yaml';
 	let resp = await postData('http://localhost:3000/db', { obj: o, path: path });
 	//return;
 	console.log('response', resp); return;
@@ -14,7 +14,72 @@ async function _ENTRY_POINT() {
 
 	//_loader();
 }
+async function _loader() {
+	Daat = {};
+	if (CLEAR_LOCAL_STORAGE) localStorage.clear();
 
+	C52 = await localOrRoute('C52', '../assets/c52.yaml');
+	symbolDict = Syms = await localOrRoute('syms', '../assets/allSyms.yaml');
+	SymKeys = Object.keys(Syms);
+	ByGroupSubgroup = await localOrRoute('gsg', '../assets/symGSG.yaml');
+	WordP = await route_path_yaml_dict('../assets/math/allWP.yaml');
+
+	if (BROADCAST_SETTINGS) {
+		//console.log('...broadcasting ...')
+		await dbInitX();
+		_start0();
+	} else { dbLoadX(_start0); }
+
+}
+async function _start0() {
+	console.assert(isdef(DB));
+
+	DA = {}; Items = {};
+	Speech = new SpeechAPI('E');
+	KeySets = getKeySets();
+	TOMan = new TimeoutManager();
+
+	_start();
+
+}
+
+//#region new db helpers and other helpers
+async function dbInitX(dir = '../DATA/') {
+	let users = await route_path_yaml_dict(dir + 'users.yaml');
+	let settings = await route_path_yaml_dict(dir + 'settings.yaml');
+	let addons = await route_path_yaml_dict(dir + 'addons.yaml');
+	let games = await route_path_yaml_dict(dir + 'games.yaml');
+	//let speechGames = await route_path_yaml_dict(dir + '_speechGames.yaml');
+	let tables = await route_path_yaml_dict(dir + 'tables.yaml');
+
+	DB = {
+		id: 'boardGames',
+		users: users,
+		settings: settings,
+		games: games,
+		tables: tables,
+		//speechGames: speechGames,
+		addons: addons,
+	};
+	dbSaveX();
+}
+var BlockServerSend1 = false;
+async function dbSaveX(callback) {
+	if (USELIVESERVER) {console.log('no saving!'); return;}
+	if (BlockServerSend1) { setTimeout(() => dbSaveX(callback), 1000); }
+	else {
+		let path = './DATA/DB.yaml';
+		let resp = await postData('http://localhost:3000/db', { obj: DB, path: path });
+		BlockServerSend1 = false;
+		//console.log('DB saved...');
+		if (callback) callback();
+	}
+}
+async function dbLoadX(callback) {
+	let path = '../DATA/DB.yaml';
+	DB = await route_path_yaml_dict(path);
+	if (isdef(callback)) callback();
+}
 async function addGroupInfo() {
 	let symbolDict = SymbolDict = await localOrRoute('symbolDict', '../assets/symbolDict.yaml');
 	let sInfo = SInfo = await localOrRoute('sInfo', '../assets/s_info.yaml');
@@ -42,35 +107,4 @@ async function addGroupInfo() {
 	// for(const k in symsNo){ delete Syms[k.toLowerCase()]; }
 	// SymKeys = Object.keys(Syms);
 	// symbolDict = await localOrRoute('symbolDict', '../assets/symbolDict.yaml');
-}
-async function _loader() {
-	Daat = {};
-	if (CLEAR_LOCAL_STORAGE) localStorage.clear();
-
-	C52 = await localOrRoute('C52', '../assets/c52.yaml');
-	symbolDict = Syms = await localOrRoute('syms', '../assets/allSyms.yaml');
-	SymKeys = Object.keys(Syms);
-	ByGroupSubgroup = await localOrRoute('gsg', '../assets/symGSG.yaml');
-	WordP = await route_path_yaml_dict('../assets/math/allWP.yaml');
-
-	//await addGroupInfo();
-
-	//dbInit:
-	if (BROADCAST_SETTINGS) {
-		//console.log('...broadcasting ...')
-		await dbInit('boardGames');
-		_start0();
-	} else { dbLoad('boardGames', _start0); }
-
-}
-async function _start0() {
-	console.assert(isdef(DB));
-
-	DA = {}; Items = {};
-	Speech = new SpeechAPI('E');
-	KeySets = getKeySets();
-	TOMan = new TimeoutManager();
-
-	_start();
-
 }

@@ -49,7 +49,7 @@ function closeAux() {
 	hide('dGo');
 	show('dGear');
 	show('dTemple');
-	if (Settings.hasChanged) { Settings.updateSettings(); dbSave('boardGames'); }
+	if (Settings.hasChanged) { Settings.updateSettings(); dbSaveX(); }
 	Settings.hasChanged = false;
 	auxOpen = false;
 }

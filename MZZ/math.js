@@ -60,6 +60,7 @@ function instantiateNumbers(wp) {
 	for (const sol of solist) {
 		//console.log(sol);
 		[res, eq] = replaceSol(sol, diop);
+		//console.log('res',res)
 		result.push(res);
 	}
 	result = arrLast(result).res;

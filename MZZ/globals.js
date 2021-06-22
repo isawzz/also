@@ -1,13 +1,12 @@
 const BROADCAST_SETTINGS = true;
-const STANDALONE = BROADCAST_SETTINGS; //arbeitet komplett ohne json db!
-var START_IN_MENU = !BROADCAST_SETTINGS;
-const DEFAULTUSERNAME = 'gul'; //BROADCAST_SETTINGS?'nil':'gul'; // nil | gul | felix
+var START_IN_MENU = false; //!BROADCAST_SETTINGS;
+const DEFAULTUSERNAME = 'gul';// BROADCAST_SETTINGS?'nil':'gul'; // nil | gul | felix
+const USELIVESERVER = false; //brauch ich DOCH!!!nicht! solange node nicht rennt kein problem!!!
 
 //#region config
 var USE_ADDONS = false;
-const OFFLINE = BROADCAST_SETTINGS;
-
-const SERVERURL = OFFLINE ? 'http://localhost:3000/app/' : 'https://speech-games.herokuapp.com/app/';
+// const OFFLINE = BROADCAST_SETTINGS;
+// const SERVERURL = OFFLINE ? 'http://localhost:3000/app/' : 'https://speech-games.herokuapp.com/app/';
 var USE_LOCAL_STORAGE = !BROADCAST_SETTINGS; // true | false //localStorage is cleared when false!!!!!
 const CLEAR_LOCAL_STORAGE = BROADCAST_SETTINGS;
 //#endregion
