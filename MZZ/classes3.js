@@ -604,45 +604,45 @@ class GChess extends G2Player {
 		// return;
 		let positions = [
 			'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', //default start pos
-			'8/8/8/8/8/8/8/8 w KQkq - 0 1', //empty board
-			'8/8/8/8/8/8/8/8 b KQkq - 0 1', //black starts
-			'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e3 0 2',
-			{
-				arr: [
-					['em', 'em', 'bk', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'wq', 'em', 'em'],
-					['em', 'em', 'wk', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'wp', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-				], plStart: 'w'
-			},
-			{
-				arr: [
-					['em', 'em', 'bk', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'wq', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'wk', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'wp', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-				], plStart: 'w'
-			},
-			{
-				arr: [
-					['em', 'em', 'bk', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'wq', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'wk', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'bp', 'em'],
-					['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
-				], plStart: 'b'
-			},
+			// '8/8/8/8/8/8/8/8 w KQkq - 0 1', //empty board
+			// //'8/8/8/8/8/8/8/8 b KQkq - 0 1', //black starts
+			// 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e3 0 2',
+			// {
+			// 	arr: [
+			// 		['em', 'em', 'bk', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'wq', 'em', 'em'],
+			// 		['em', 'em', 'wk', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'wp', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 	], plStart: 'w'
+			// },
+			// {
+			// 	arr: [
+			// 		['em', 'em', 'bk', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'wq', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'wk', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'wp', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 	], plStart: 'w'
+			// },
+			// {
+			// 	arr: [
+			// 		['em', 'em', 'bk', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'wq', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'wk', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'bp', 'em'],
+			// 		['em', 'em', 'em', 'em', 'em', 'em', 'em', 'em'],
+			// 	], plStart: 'b'
+			// },
 
 		];
 		if (nundef(this.iPosition)) this.iPosition = 0;

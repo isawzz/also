@@ -1561,7 +1561,7 @@ function getStandardFz(wi, hi, showPic, showLabels, wLongest) {
 	let hText = showPic ? hi / 3 : hi;
 	return showLabels ? idealFontSize(wLongest, wi, hText) : 0;
 }
-function getStandardFzPic(wi, hi, showLabels) { return Math.min(wi * .8, showLabels ? hi * .6 : hi * .75); }
+function getStandardFzPic(wi, hi, showLabels) { return Math.min(wi * .8, showLabels ? hi * .6 : hi * .85); }
 function myPresent(dArea, items, options) {
 	let showLabels = options.showLabels;
 	let w = options.w * valf(options.fw, .9);
@@ -1571,6 +1571,8 @@ function myPresent(dArea, items, options) {
 	if (isdef(options.rows) || isdef(options.cols)) {
 		[wi, hi, rows, cols] = calcSizeAbWo(items.length, options.rows, options.cols, w, h, options.wimax, options.himax);
 	} else[wi, hi, rows, cols] = calcRowsColsSizeAbWo(items.length, w, h, showLabels, options.wimax, options.himax);
+
+	console.log('rows,cols',rows,cols);
 
 	let gap = wi * .1; if (cols > 1) wi -= gap; if (rows > 1) hi -= gap;
 	let fzPic = options.fzPic = getStandardFzPic(wi, hi, showLabels);

@@ -212,7 +212,7 @@ gunter:
 gul:
   id: gul
   avGames: [gSteps, gSentence, gTouchColors, gSayPic, gReversi, gMissingLetter, gNamit, gTouchPic, gWritePic, gChess, gPremem, gMem, gSwap, gTTT, gElim, gAnagram, gCats, gAbacus, gRiddle,gC4]
-  lastGame: gMissingLetter
+  lastGame: gPremem
   settings:
     userColor: blue
     samplesPerGame: 10

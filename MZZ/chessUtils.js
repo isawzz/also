@@ -1,6 +1,6 @@
 // inspired from: https://zeyu2001.github.io/chess-ai/
 //#region chessAI
-var globalSum = 0                     // always from black's perspective. Negative for white's perspective.
+var globalSum = 0 // always from black's perspective. Negative for white's perspective.
 var positionCount;
 
 var weights = { 'p': 100, 'n': 280, 'b': 320, 'r': 479, 'q': 929, 'k': 60000, 'k_e': 60000 };
@@ -232,8 +232,7 @@ function makeBestMove(color) {
 	if (color === 'b') {
 		var move = getBestMove(G.game, color, globalSum)[0];
 		return move;
-	}
-	else {
+	}	else {
 		var move = getBestMove(G.game, color, -globalSum)[0];
 	}
 

@@ -276,31 +276,39 @@ gPremem:
   pictureLabels: toggle
   levels:
     0: 
+      cols: 2
       numPics: 2
       numRepeat: 2
     1: 
+      cols: 3
       numPics: 3
       numRepeat: 3
     2: 
+      cols: 4
       numPics: 6
       numRepeat: 2
     3: 
+      cols: 5
       numPics: 5
       numRepeat: 3
     4: 
+      cols: 8
       numPics: 12
       numRepeat: 2
     5: 
-      numPics: 24
+      cols: 10
+      numPics: 20
       numRepeat: 2
       pictureLabels: never
     6: 
-      numPics: 14
+      numPics: 12
+      cols: 8
       numRepeat: 2
       pictureLabels: never
       sameBackground: false
     7: 
-      numPics: 12
+      cols: 10
+      numPics: 10
       numRepeat: 4
       pictureLabels: never
       sameBackground: false
