@@ -1,4 +1,18 @@
-//test areas
+//#region test postData
+async function serverTest00_postData() {
+	console.log('hallo'); //return;
+	let o = { liste: [1, 2, 3], hut: 'hutX' };
+	let path = './DATA/file.yaml';
+	let resp = await postData('http://localhost:3000/db', { obj: o, path: path });
+	//return;
+	console.log('response', resp); return;
+
+}
+
+//#endregion
+
+
+//#region test areas
 function cardGameTest09() {
 	let state = {
 		pl1: { hand: [1, 2, 3, 4, 5], trick: [[6], [7, 8, 9]] },
@@ -34,8 +48,8 @@ function presentState1(state, areas) {
 	for (let i = 0; i < 2; i++) {
 		let cards = hands[i].iHand.items;
 		if (isEmpty(hands[i].arr)) continue;
-		console.log('cards',cards,'hands[i]',hands[i])
-		for (let j = 0; j < cards.length-1; j++) {
+		console.log('cards', cards, 'hands[i]', hands[i])
+		for (let j = 0; j < cards.length - 1; j++) {
 			Card52.turnFaceDown(cards[j]);
 		}
 	}
@@ -246,7 +260,9 @@ function cardGameTest01() {
 
 	rAreas();
 }
-//testing cards
+//#endregion
+
+//#region testing cards
 function cTest03_2HandsRandom() {
 	let h1 = iMakeHand_test(dTable, [33, 7, 1, 2, 3, 4], 'h1');
 	let h2 = iMakeHand_test(dTable, [13, 14, 15, 16, 17], 'h2');
@@ -374,9 +390,9 @@ function cTest04_2HandsRandom() {
 
 }
 
+//#endregion
 
-
-//testing board
+//#region testing board
 function bTest01() {
 	let arr = [1, 1, 1, 1, 2, 1, 0, 1, 0], rows = 3, cols = 3, irow = 0;// =>1
 	console.log(bFullRow(arr, irow, rows, cols));
@@ -617,8 +633,9 @@ function btest11_fractions() {
 	let e = math.multiply(2, a);
 	console.log(e)
 }
+//#endregion
 
-//test krieg game!
+//#region test krieg game!
 function kriegTest00(game) {
 	game.load({ pl1: { hand: ['TH', 'KH'] }, pl2: { hand: ['9C', 'QC'] } }); game.deck.sort(); game.print_state();
 	// game.load({ pl1: { hand: ['TH', 'QH'], trick: [['QD']] }, pl2: { hand: ['TC', 'QC'], trick: [['KC']] }, deck:['AH','AC'] },);	game.deck.sort();game.print_state();
@@ -727,7 +744,7 @@ function kriegTest06(game) {
 	game.load();//{ pl1: { name:'felix',hand: ['TH'], trick: [['2H']] }, pl2: { name:'max',hand: ['9C'], trick: [['2C']] } }); game.deck.sort(); //game.print_state();
 	// game.load({ pl1: { hand: ['TH', 'QH'], trick: [['QD']] }, pl2: { hand: ['TC', 'QC'], trick: [['KC']] }, deck:['AH','AC'] },);	game.deck.sort();game.print_state();
 	game.print_state('start:');
-	let front = new GKriegFront(130,dTable);
+	let front = new GKriegFront(130, dTable);
 	front.presentState(game.get_state(), dTable);
 	return;
 
@@ -753,7 +770,7 @@ function kriegTest00UI() {
 	clearElement(dTable)
 	let back = new GKriegBack();
 	back.load({ pl1: { name: 'felix', hand: ['TH', 'KH'] }, pl2: { name: 'tom', hand: ['9C', 'QC'] } }); back.deck.sort(); back.print_state();
-	let front = new GKriegFront(130,dTable);
+	let front = new GKriegFront(130, dTable);
 	front.presentState(back.get_state(), dTable);
 
 	mLinebreak(dTable, 50);
@@ -774,6 +791,7 @@ function kriegTest00UI_engine(back, front) {
 	mButton('Move!', () => kriegTest00UI_engine(back, front), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
 }
 
+//#endregion
 
 
 
