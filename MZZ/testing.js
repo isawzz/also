@@ -18,7 +18,7 @@ function cardGameTest09() {
 		pl1: { hand: [1, 2, 3, 4, 5], trick: [[6], [7, 8, 9]] },
 		pl2: { hand: [11, 12, 13, 14, 15], trick: [[16], [17, 18, 19]] },
 	};
-	let areaItems = makeAreas(dTable);
+	let areaItems = makeAreasKrieg(dTable);
 	presentState1(state, areaItems);
 }
 function presentState1(state, areas) {
@@ -64,7 +64,7 @@ function cardGameTest08() {
 	let pl1Hand = state.pl1.hand;
 	let pl2Hand = state.pl2.hand;
 	let arrs = [trick, pl1Hand, pl2Hand];
-	let items = makeAreas(dTable); //cardGameTest07_helper();
+	let items = makeAreasKrieg(dTable); //cardGameTest07_helper();
 	for (let i = 0; i < 3; i++) {
 		let arr = arrs[i];
 		let item = items[i];

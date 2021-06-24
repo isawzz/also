@@ -224,20 +224,8 @@ function dropAndEval(ev) {
 	let droppedItem = DragSourceItem;
 	addLabel1(targetItem, droppedItem.label);
 	//console.log('__________DragSource', DragSource); return7//;
-
 	cancelDD();
-	return;
 
-	//trial#2 WORKS!
-	// let [items,rows] = getPictureItems(null, undefined, { rows: 2, showLabels: true }, [key]);
-	// presentItems(items, dTable, 3);
-	// return;
-
-
-	//trial#1 WORKS!
-	// clearElement(dTable);
-	// showPicturesSpeechTherapyGames(null,{},{},[key]);
-	// return;
 }
 function createDragWords(items, handler) {
 	let keys = items.map(x => x.key);

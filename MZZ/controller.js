@@ -21,7 +21,7 @@ class ControllerSolitaire {
 		this.startRound();
 	}
 	startRound() {
-		resetRound();
+		resetRound(); //hier passiert clear table!
 		uiActivated = false;
 		this.g.startRound();
 		TOMain = setTimeout(() => this.prompt(), 300);
