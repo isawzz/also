@@ -1,12 +1,14 @@
 async function _start() {
 
-	initTable(); initSidebar(); initAux(); initScore(); loadUser(); //timit = new TimeIt('*timer', true);
+	initTable(); initSidebar(); initAux(); initScore(); 
+	loadUser(DEFAULTUSERNAME); //timit = new TimeIt('*timer', true);
 
 	startUnit();
+
+	//#region tests
 	// let x=Card52._fromKey('AH'); console.log(x)
 	// cardGameTest09(); //cardGameTest08(); //cardGameTest07(); //let x=cardGameTest06_clean_OK(); console.log('result',x);//cardGameTest04(); //cardGameTest03_OK(); //cardGameTest02(); //cTest10(); //cardGameTest01();
 	
-	//#region tests
 	//cTest05();//cTest10(); //cTest05(); //cTest04_2HandsRandom();
 
 	//let game = new GKriegBack(); //game.load(); game.print_state();

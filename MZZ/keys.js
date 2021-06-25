@@ -2,7 +2,7 @@
 function getKeySets() {
 	let ks = localStorage.getItem('KeySets');
 
-	makeCategories();	//console.log('Categories',Categories)
+	makeCategories();	console.log('Categories',Categories)
 
 	if (isdef(ks)) { return JSON.parse(ks); }
 

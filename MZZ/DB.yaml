@@ -37,7 +37,7 @@ users:
       vocab: objectPlus
       showTime: false
       spokenFeedback: true
-      silentMode: false
+      silentMode: true
       switchGame: true
       trials: 1
       showHint: true
