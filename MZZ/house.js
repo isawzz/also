@@ -126,8 +126,26 @@ function getRoomSE(house) {
 	return firstCond(house.rooms, x => isSouthRoom(house, Items[x]) && isEastRoom(house, Items[x]));
 }
 function getRoomSW(house) { return firstCond(house.rooms, x => isSouthRoom(house, Items[x]) && isWestRoom(house, Items[x])); }
-function getdiagonallyOpposedCornerRooms(house) {
+function getDiagonallyOpposedCornerRooms(house) {
 	if (coin()) return [getRoomNW(house), getRoomSE(house)]; else return [getRoomSW(house), getRoomNE(house)];
+}
+function getDiagRoomPairs(house) {
+	return [[getRoomNW(house), getRoomSE(house)],[getRoomSW(house), getRoomNE(house)]];
+}
+function getCornerRoomsDict(house){
+	let rooms = house.rooms.map(x => Items[x]);
+	let result = {};
+	for (const r of rooms) {
+		let isN=isNorthRoom(house,r);
+		let isS=isSouthRoom(house,r);
+		let isW=isWestRoom(house,r);
+		let isE=isEastRoom(house,r);
+		if (isN && isW) result.NW=r.id;
+		else if (isN && isE) result.NE=r.id;
+		else if (isS && isE) result.SE=r.id;
+		else if (isS && isW) result.SW=r.id;
+	}
+	return result;
 }
 function getCornerRooms(house) {
 	let rooms = house.rooms.map(x => Items[x]);
@@ -217,7 +235,7 @@ function getLayoutSample(n) {
 		s = samples[n];
 	}
 	s = isList(s) ? chooseRandom(s) : s;
-	//s = getLetterSwapEncoding(s);
+	s = getLetterSwapEncoding(s);
 	//console.log('s', s);
 	return s;
 }
@@ -322,9 +340,10 @@ function makeDoorBetweenRooms(r1, r2, house, styles) {
 	}
 	return null;
 }
-function makeRandomDoor(r1, house, styles) {
+function makeRandomDoor(r1, house, directions, styles) {
+	console.log('directions',directions);
 	r1 = findRoom(r1, house);
-	let dir = coin() ? 'n' : 'w';
+	let dir = chooseRandom(directions);
 
 	let walls = r1.walls.filter(x => x.dir == dir);
 	//console.log('r1',r1,'walls',walls)

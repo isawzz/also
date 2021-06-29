@@ -10,20 +10,20 @@ class GHouse extends Game {
 	}
 	prompt() {
 		this.trials = 1;
-		let n = randomNumber(this.nrooms/2, this.nrooms);
+		let qFuncs = [this.howMany.bind(this), this.areRoomsConnected.bind(this), this.isThereAPath.bind(this)];
+		let q = this.isThereAPath.bind(this);//chooseRandom(qFuncs); // 
+
+		let n = randomNumber(this.nrooms / 2, this.nrooms);
 		let wTotal = n < 4 || n > 12 ? 700 : n > 10 ? 600 : 500;
 		let house = this.house = iHouse(dTable, n, { w: wTotal, h: 400 });
 		this.rooms = house.rooms.map(x => Items[x]);
 		this.walls = house.walls.map(x => Items[x]);
 		this.doors = [];
-		this.addOneDoorPerRoom();
+		console.log('q',q.name,q.name.includes('Path'))
+		this.addOneDoorPerRoom([q.name.includes('Path')?'s':'n','e']);
 		this.addLabelsToRooms();
 
 		//console.log('num rooms:',this.rooms.length)
-
-		//console.log('G', this); let r1 = getRoomSE(house); console.log('SE', r1); return;
-		let r = getdiagonallyOpposedCornerRooms(house);
-		//console.log('diagOpposed', r);
 
 		mLinebreak(dTable, 20);
 		this.dChoices = mDiv(dTable);
@@ -33,13 +33,43 @@ class GHouse extends Game {
 		this.graph = makePlanarGraph(dGraph, this.rooms, this.doors);
 		hide(dGraph);
 
-		let qFuncs = [this.howMany.bind(this), this.areRoomsConnected.bind(this)];
-		let q = chooseRandom(qFuncs);
 		q();
 
 		this.controller.activateUi.bind(this.controller)();
 	}
 	//#region qFuncs
+	isThereAPath() {
+		let house = this.house;
+		//console.log('G', this); let r1 = getRoomSE(house); console.log('SE', r1); return;
+		//let [r1,r2] = getDiagRoomPairs(house);
+		//console.log('diagOpposed', r);
+
+		let corners = getCornerRoomsDict(house);
+		// console.log('corners', corners);
+		let nw = corners.NW;
+		// console.log('nw', nw)
+		let funcs = getShortestPathsFrom(nw);
+		// console.log('funcs', funcs);
+		let n2 = null;
+		for (const k in corners) {
+			if (k != 'NW') {
+				let dist = funcs.distanceTo('#' + corners[k]);
+				if (dist != Infinity && dist >= 3) {
+					//take that node!
+					n2 = corners[k];
+					break;
+				} else console.log('distance to', k, dist);
+			}
+		}
+		if (!n2) { n2 = corners.SE; }
+		showInstruction('', this.language == 'E' ? `is there a path from "${Items[nw].id}" to "${Items[corners.SE].id}"`
+			: `gibt es einen weg von ${Items[nw].id} zu ${Items[n2].id}`, dTitle, true);
+		let answer = funcs.distanceTo('#' + n2) != Infinity;
+		let correct, incorrect;
+		if (answer) { correct = { num: 1, text: 'yes' }; incorrect = [{ num: 0, text: 'no' }]; }
+		else { correct = { num: 0, text: 'no' }; incorrect = [{ num: 1, text: 'yes' }]; }
+		createMultipleChoiceElements(correct, incorrect, this.dChoices, iDiv(this.house), {});
+	}
 	howMany() {
 		showInstruction('', this.language == 'E' ? 'how many units are there in this house?' : "wieviele wohneinheiten hat dieses haus?", dTitle, true);
 		let numUnits = howManyComponents();
@@ -76,12 +106,12 @@ class GHouse extends Game {
 		this.rooms.map(x => addLabel(x, x.ch, {}));
 
 	}
-	addOneDoorPerRoom() {
+	addOneDoorPerRoom(directions) {
 		//console.log('______________________')
 		//console.log('rooms', this.rooms);
 		//console.log('house', this.house);
 		for (const r of this.rooms) {
-			let door = makeRandomDoor(r, this.house); this.doors.push(door);
+			let door = makeRandomDoor(r, this.house, directions); this.doors.push(door);
 		}
 		//console.log('dooes', this.doors);
 	}

@@ -28,8 +28,8 @@ users:
     lastGame: gHouse
     settings:
       userColor: green
-      samplesPerGame: 20
-      minutesPerUnit: 0
+      samplesPerGame: 10
+      minutesPerUnit: 1
       incrementLevelOnPositiveStreak: 10
       decrementLevelOnNegativeStreak: 6
       pictureLabels: toggle
@@ -37,7 +37,7 @@ users:
       vocab: objectPlus
       showTime: false
       spokenFeedback: true
-      silentMode: true
+      silentMode: false
       switchGame: true
       trials: 1
       showHint: true
@@ -52,7 +52,7 @@ users:
       gElim:
         startLevel: 2
       gHouse:
-        startLevel: 4
+        startLevel: 5
       gMem:
         startLevel: 4
         showHint: false

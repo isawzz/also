@@ -1,5 +1,13 @@
 var cy = null;
 
+function getShortestPathsFrom(id){
+	//let node = cy.$('#'+id);
+	let res = cy.elements().dijkstra('#'+id); //, function(edge){return edge.data('weight');});	
+	//let res = cy.dijkstra(node);
+	console.log('shortests paths',res);
+	return res;
+}
+
 function _convertToCy(dParent,vertices,edges){
 	mStyleX(dParent, { position: 'relative', align: 'left' });
 	let d = mDiv(dParent);
