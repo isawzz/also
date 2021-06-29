@@ -13,16 +13,33 @@ class GHouse extends Game {
 		let qFuncs = [this.howMany.bind(this), this.areRoomsConnected.bind(this), this.isThereAPath.bind(this)];
 		let q = this.isThereAPath.bind(this);//chooseRandom(qFuncs); // 
 
-		let n = randomNumber(this.nrooms / 2, this.nrooms);
+		let n = randomNumber(this.nrooms / 2, this.nrooms); console.log('n',n)
 		let wTotal = n < 4 || n > 12 ? 700 : n > 10 ? 600 : 500;
 		let house = this.house = iHouse(dTable, n, { w: wTotal, h: 400 });
-		this.rooms = house.rooms.map(x => Items[x]);
+		let rooms = this.rooms = house.rooms.map(x => Items[x]);
 		this.walls = house.walls.map(x => Items[x]);
 		this.doors = [];
-		console.log('q',q.name,q.name.includes('Path'))
-		this.addOneDoorPerRoom([q.name.includes('Path')?'s':'n','e']);
+		console.log('q', q.name, q.name.includes('Path'))
 		this.addLabelsToRooms();
 
+		//assert that each room has a wall on each side!
+		for (const r of this.rooms) {
+			for (const dir of ['n', 'e', 's', 'w']) {
+				let wn = firstCond(r.walls, x => x.dir == dir);
+				if (!wn) {console.log('room', r.ch, 'has NO',dir,'wall'); return;}
+			}
+		}
+		//rooms.map(x=>console.log('',x.ch,x.walls));
+
+		let dirs = ['e'];// [q.name.includes('Path') ? 's' : 'n', 'e'];
+		let dir = 'e';
+		let room = chooseRandom(rooms);
+		console.log('dir',dir,'room',room.ch);
+		makeRandomDirDoor(room, dir);
+		//this.addOneDoorPerRoom(dirs);
+
+
+		return;
 		//console.log('num rooms:',this.rooms.length)
 
 		mLinebreak(dTable, 20);

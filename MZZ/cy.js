@@ -1,3 +1,184 @@
+function showRect(s,o){
+	let r=o.rect;
+	console.log('\n',s,r.l,r.t,r.r,r.b);
+}
+function makeRandomDirDoor(room,dir,styles={}){
+	if (isString(room)) room=Items[room];
+	let house = Items[room.house];
+	console.log('walls',room.walls,dir); //RICHTIG!!!
+	let walls = room.walls.filter(x=>x.dir==dir).map(x=>Items[x.id]);
+	if (isEmpty(walls)) {errlog('room',room.ch,'has no wall in',dir);return;}
+	console.log('walls',walls)
+	let wall = walls.length == 1? walls[0]:chooseRandom(walls);
+	console.log('wall',wall)
+	return makeWallDoor(room,wall,styles);
+}
+function makeWallDoor(room,wall,styles){
+	let house = Items[room.house];
+	showRect('house',house);showRect('room',room);
+	//console.log('wall',wall); 
+	console.log('wall',wall,wall.rect)
+	showRect('wall',wall);
+
+
+}
+function iDoor(room, wallRect, styles = {}) {
+
+	console.assert(isdef(roomWall),'SCHON WIEDER KEIN ROOMWALL!!!');
+
+	let wItem = Items[roomWall.id];
+	let dirOfWallRelativeToRoom = roomWall.dir;
+	let dirOfRoomRelativeToWall = firstCond(wItem.rooms, x => x.id == room.id).dir;
+	let house = Items[room.house];
+	let dParent = iDiv(house); // iDiv(room);
+	mStyleX(dParent,{position:'relative'});
+
+	console.log('dParent',dParent);
+	let rTest={x:0,y:0,w:4,h:40};
+	let dTest = mDiv(dParent, { bg: 'red', position: 'absolute', left: rTest.x, top: rTest.y, w: rTest.w, h: rTest.h });
+	rTest.x=903-199; //
+	let dTest1 = mDiv(dParent, { bg: 'black', position: 'absolute', left: rTest.x, top: rTest.y, w: rTest.w, h: rTest.h });
+
+
+	let r = wItem.rect;
+	let x, y, w, h;
+
+	let sz = valf(styles.sz, 50);
+	let bg = valf(styles.bg, room.bg);
+	if (dirOfWallRelativeToRoom == 'n') {
+		x = (r.x - room.rect.x) + (r.w - sz) / 2;
+		y = -r.h;
+		w = sz + 1;
+		h = r.h;
+	} else if (dirOfWallRelativeToRoom == 'e') {
+
+
+		console.log('_______________',house.wallWidth); showRect('house',house); showRect('room',room);
+		x=room.rect.r;
+		w=house.wallWidth+1;
+		if (x+w>house.rect.r) w=house.rect.r-x;
+		y = (r.y - room.rect.y) + (r.h - sz) / 2;
+		h = sz;
+
+		// x = room.rect.w - 1;
+		// w = r.w;
+	} else if (dirOfWallRelativeToRoom == 's') {
+		// console.log('room', room.ch, 'wall rect', r);
+		// let house = Items[room.house];
+		// console.log('house', house)
+		// console.log('room rect', room.rect)
+
+		x = (r.x - room.rect.x) + (r.w - sz) / 2;
+		y = room.rect.h - 1;
+		w = sz + 1;
+		h = r.h;
+	} else if (dirOfWallRelativeToRoom == 'w') {
+		y = (r.y - room.rect.y) + (r.h - sz) / 2;
+		x = -r.w;
+		w = r.w;
+		h = sz + 1;
+	}
+
+	console.log('making div!!!')	
+	let d = mDiv(dParent, { bg: 'red', position: 'absolute', left: x, top: y, w: w, h: h });
+	let door = { room: room.id, wall: roomWall.id, rooms: wItem.rooms };
+	iAdd(door, { div: d });
+	//console.log('door', door);
+
+	//add this doorId to each of the rooms doors
+	for (const wallRoom of wItem.rooms) {
+		let room = Items[wallRoom.id];
+		//console.log('room',room,wallRoom);
+		room.doors.push(door.id);
+
+	}
+	//add this doorId to wall Item
+	wItem.door = door.id;
+
+	return door;
+
+
+}
+
+function iDoor_dep(room, roomWall, styles = {}) {
+	console.assert(isdef(roomWall),'SCHON WIEDER KEIN ROOMWALL!!!');
+
+	let wItem = Items[roomWall.id];
+	let dirOfWallRelativeToRoom = roomWall.dir;
+	let dirOfRoomRelativeToWall = firstCond(wItem.rooms, x => x.id == room.id).dir;
+	let house = Items[room.house];
+	let dParent = iDiv(house); // iDiv(room);
+	mStyleX(dParent,{position:'relative'});
+
+	console.log('dParent',dParent);
+	let rTest={x:0,y:0,w:4,h:40};
+	let dTest = mDiv(dParent, { bg: 'red', position: 'absolute', left: rTest.x, top: rTest.y, w: rTest.w, h: rTest.h });
+	rTest.x=903-199; //
+	let dTest1 = mDiv(dParent, { bg: 'black', position: 'absolute', left: rTest.x, top: rTest.y, w: rTest.w, h: rTest.h });
+
+
+	let r = wItem.rect;
+	let x, y, w, h;
+
+	let sz = valf(styles.sz, 50);
+	let bg = valf(styles.bg, room.bg);
+	if (dirOfWallRelativeToRoom == 'n') {
+		x = (r.x - room.rect.x) + (r.w - sz) / 2;
+		y = -r.h;
+		w = sz + 1;
+		h = r.h;
+	} else if (dirOfWallRelativeToRoom == 'e') {
+
+
+		console.log('_______________',house.wallWidth); showRect('house',house); showRect('room',room);
+		x=room.rect.r;
+		w=house.wallWidth+1;
+		if (x+w>house.rect.r) w=house.rect.r-x;
+		y = (r.y - room.rect.y) + (r.h - sz) / 2;
+		h = sz;
+
+		// x = room.rect.w - 1;
+		// w = r.w;
+	} else if (dirOfWallRelativeToRoom == 's') {
+		// console.log('room', room.ch, 'wall rect', r);
+		// let house = Items[room.house];
+		// console.log('house', house)
+		// console.log('room rect', room.rect)
+
+		x = (r.x - room.rect.x) + (r.w - sz) / 2;
+		y = room.rect.h - 1;
+		w = sz + 1;
+		h = r.h;
+	} else if (dirOfWallRelativeToRoom == 'w') {
+		y = (r.y - room.rect.y) + (r.h - sz) / 2;
+		x = -r.w;
+		w = r.w;
+		h = sz + 1;
+	}
+
+	console.log('making div!!!')	
+	let d = mDiv(dParent, { bg: 'red', position: 'absolute', left: x, top: y, w: w, h: h });
+	let door = { room: room.id, wall: roomWall.id, rooms: wItem.rooms };
+	iAdd(door, { div: d });
+	//console.log('door', door);
+
+	//add this doorId to each of the rooms doors
+	for (const wallRoom of wItem.rooms) {
+		let room = Items[wallRoom.id];
+		//console.log('room',room,wallRoom);
+		room.doors.push(door.id);
+
+	}
+	//add this doorId to wall Item
+	wItem.door = door.id;
+
+	return door;
+
+
+}
+
+
+
 var cy = null;
 
 function getShortestPathsFrom(id){
