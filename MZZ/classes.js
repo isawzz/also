@@ -713,7 +713,6 @@ class GRiddle extends Game {
 			for (let i = 0; i < texts.length; i++) { choices.push({ number: nums[i], text: texts[i] }); }
 			Goal.correctChoice = choices[0];
 		}
-
 		//console.log('choices', choices, 'correct', Goal.correctChoice);
 		//return;
 		shuffle(choices);

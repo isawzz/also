@@ -1,3 +1,5 @@
+
+
 //#region test postData
 async function serverTest00_postData() {
 	console.log('hallo'); //return;
@@ -10,7 +12,6 @@ async function serverTest00_postData() {
 }
 
 //#endregion
-
 
 //#region test areas
 function cardGameTest09() {

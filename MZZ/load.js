@@ -2,7 +2,8 @@
 window.onload = _loader; // _loader | _testing
 
 async function _testing() {
-	serverTest00_postData();
+	let s='"a a b c" "d d e c" "f g e h"';	console.log(getRandomLetterMapping(s));	console.log('_____\n',s,'\n',getLetterSwapEncoding(s));
+	//serverTest00_postData();
 }
 
 async function _loader() {
@@ -30,7 +31,10 @@ async function _loader() {
 
 var BlockServerSend1 = false;
 async function dbSaveX(callback) {
-	if (USELIVESERVER) {console.log('no saving!'); return;}
+	if (USELIVESERVER) {
+		//console.log('no saving!'); 
+		return;
+	}
 	if (BlockServerSend1) { setTimeout(() => dbSaveX(callback), 1000); }
 	else {
 		let path = './MZZ/DB.yaml';

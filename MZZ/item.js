@@ -69,7 +69,7 @@ function registeredItemCopy(orig) { let item = jsCopy(orig); item.id = iRegister
 function registerAsNewItem(item) { item.id = iRegister(item); return item; }
 
 function genItems(n, options) { let keys = genKeys(n, options); let items = genItemsFromKeys(keys, options); return items; }
-function genItemsFromKeys(keys, options) {
+function genItemsFromKeys(keys, options={}) {
 	//console.log('keys',keys)
 	let items = [];
 	for (const k of keys) {
@@ -108,7 +108,7 @@ function genItemsFromObjects(list, keyProp, labelProp, options) {
 	return items;
 }
 function genKeys(n, options) {
-	let [maxlen, lang, keySet] = [options.maxlen, options.language, options.keySet];
+	let [maxlen, lang, keySet] = [options.maxlen, valf(options.language,'E'), valf(options.keySet,'all')];
 	let cond = isdef(maxlen) ? ((x) => x[lang].length <= maxlen) : null;
 	let keys = _getKeysCond(n, cond, keySet);
 	return keys;

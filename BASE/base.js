@@ -10,7 +10,7 @@ function mButton(caption, handler, dParent, styles, classes, id) {
 	if (isdef(styles)) mStyleX(x, styles);
 	if (isdef(classes)) {
 		//console.log('setting classes',classes,...classes)
-		if (!isList(classes)) classes=[classes];
+		if (!isList(classes)) classes = [classes];
 		mClass(x, ...classes);
 	}
 	if (isdef(id)) x.id = id;
@@ -198,12 +198,12 @@ function mColorPickerControl(label, value, targetImage, dParent, handler, styles
 	let d = mDiv(dParent, styles);
 	let hpad = valf(styles.hpadding, 6);
 	let dLabel = mDiv(d, { 'vertical-align': 'top', w: '35%', align: 'right', hpadding: hpad, display: 'inline-block' }, null, label);
-	
-	let hues = arrTake(getHueWheel(value),10);
-	let colorPalette = hues.map(x=>anyColorToStandardString(colorHSLBuild(x)));
+
+	let hues = arrTake(getHueWheel(value), 10);
+	let colorPalette = hues.map(x => anyColorToStandardString(colorHSLBuild(x)));
 	// console.log('targetImage',targetImage, 'value',value, getHueWheel(value),colorPalette);
 	// let palette = isdef(targetImage)? getPaletteFromImage(targetImage):getHueWheel(value);
-	let palette = isdef(targetImage)? getPaletteFromImage(targetImage):colorPalette;
+	let palette = isdef(targetImage) ? getPaletteFromImage(targetImage) : colorPalette;
 	// console.log('palette',palette);
 
 	// let inp = mColorPicker3(d, palette, handler, value);
@@ -683,7 +683,10 @@ function iAdd(item, props) {
 	else if (nundef(item.id)) {
 		id = item.id = iRegister(item);
 		//console.log('id of item is',id, item)
-	} else id = item.id;
+	} else {
+		id = item.id;
+		if (nundef(Items[id])) Items[id] = item;
+	}
 	if (nundef(item.live)) item.live = {}; l = item.live;
 	for (const k in props) {
 		let val = props[k];
@@ -1231,7 +1234,7 @@ function colorHSL(cAny, asObject = false) {
 		return shsl;
 	}
 } //ok
-function colorHSLBuild(hue, sat=100, lum=50) { let result = "hsl(" + hue + ',' + sat + '%,' + lum + '%)'; return result; }
+function colorHSLBuild(hue, sat = 100, lum = 50) { let result = "hsl(" + hue + ',' + sat + '%,' + lum + '%)'; return result; }
 function colorBlend(zero1, c0, c1, log = true) {
 	c0 = anyColorToStandardString(c0);
 	c1 = anyColorToStandardString(c1);
@@ -2638,7 +2641,6 @@ function getFunctionsNameThatCalledThisFunction() {
 //#endregion
 
 //#region geo helpers
-function toRadian(deg) { return deg * 2 * Math.PI / 360; }
 function correctPolys(polys, approx = 10) {
 	//console.log('citySize', citySize, 'approx', approx);
 	let clusters = [];
@@ -2712,33 +2714,7 @@ function dSquare(pos1, pos2) {
 	return dx + dy;
 }
 function distance(x1, y1, x2, y2) { return Math.sqrt(dSquare({ x: x1, y: y1 }, { x: x2, y: y2 })); }
-function size2hex(w = 100, h = 0, x = 0, y = 0) {
-	//returns sPoints for polygon svg
-	//from center of poly and w (possibly h), calculate hex poly points and return as string!
-	//TODO: add options to return as point list!
-	//if h is omitted, a regular hex of width w is produced
-	//starting from N:
-	let hexPoints = [{ X: 0.5, Y: 0 }, { X: 1, Y: 0.25 }, { X: 1, Y: 0.75 }, { X: 0.5, Y: 1 }, { X: 0, Y: 0.75 }, { X: 0, Y: 0.25 }];
-
-	if (h == 0) {
-		h = (2 * w) / 1.73;
-	}
-	return polyPointsFrom(w, h, x, y, hexPoints);
-}
-function size2triup(w = 100, h = 0, x = 0, y = 0) {
-	//returns sPoints for polygon svg starting from N:
-	let triPoints = [{ X: 0.5, Y: 0 }, { X: 1, Y: 1 }, { X: 0, Y: 1 }];
-	if (h == 0) { h = w; }
-	return polyPointsFrom(w, h, x, y, triPoints);
-
-}
-function size2tridown(w = 100, h = 0, x = 0, y = 0) {
-	//returns sPoints for polygon svg starting from N:
-	let triPoints = [{ X: 1, Y: 0 }, { X: 0.5, Y: 1 }, { X: 0, Y: 0 }];
-	if (h == 0) { h = w; }
-	return polyPointsFrom(w, h, x, y, triPoints);
-
-}
+function isCloseTo(n, m, acc = 10) { return Math.abs(n - m) <= acc + 1; }
 function getCirclePoints(rad, n, disp = 0) {
 	let pts = [];
 	let i = 0;
@@ -2766,23 +2742,6 @@ function getEllipsePoints(radx, rady, n, disp = 0) {
 		i++;
 	}
 	return pts;
-}
-
-function polyPointsFrom(w, h, x, y, pointArr) {
-
-	x -= w / 2;
-	y -= h / 2;
-
-	let pts = pointArr.map(p => [p.X * w + x, p.Y * h + y]);
-	let newpts = [];
-	for (const p of pts) {
-		newp = { X: p[0], Y: Math.round(p[1]) };
-		newpts.push(newp);
-	}
-	pts = newpts;
-	let sPoints = pts.map(p => '' + p.X + ',' + p.Y).join(' '); //'0,0 100,0 50,80',
-	//testHexgrid(x, y, pts, sPoints);
-	return sPoints;
 }
 function getPoly(offsets, x, y, w, h) {
 	//, modulo) {
@@ -2818,6 +2777,50 @@ function getTriangleDownPoly(x, y, w, h) {
 	let tridown = [[-0.5, 0.5], [0.5, 0.5], [-0.5, 0.5]];
 	return getPoly(tridown, x, y, w, h);
 }
+function polyPointsFrom(w, h, x, y, pointArr) {
+
+	x -= w / 2;
+	y -= h / 2;
+
+	let pts = pointArr.map(p => [p.X * w + x, p.Y * h + y]);
+	let newpts = [];
+	for (const p of pts) {
+		newp = { X: p[0], Y: Math.round(p[1]) };
+		newpts.push(newp);
+	}
+	pts = newpts;
+	let sPoints = pts.map(p => '' + p.X + ',' + p.Y).join(' '); //'0,0 100,0 50,80',
+	//testHexgrid(x, y, pts, sPoints);
+	return sPoints;
+}
+function size2hex(w = 100, h = 0, x = 0, y = 0) {
+	//returns sPoints for polygon svg
+	//from center of poly and w (possibly h), calculate hex poly points and return as string!
+	//TODO: add options to return as point list!
+	//if h is omitted, a regular hex of width w is produced
+	//starting from N:
+	let hexPoints = [{ X: 0.5, Y: 0 }, { X: 1, Y: 0.25 }, { X: 1, Y: 0.75 }, { X: 0.5, Y: 1 }, { X: 0, Y: 0.75 }, { X: 0, Y: 0.25 }];
+
+	if (h == 0) {
+		h = (2 * w) / 1.73;
+	}
+	return polyPointsFrom(w, h, x, y, hexPoints);
+}
+function size2triup(w = 100, h = 0, x = 0, y = 0) {
+	//returns sPoints for polygon svg starting from N:
+	let triPoints = [{ X: 0.5, Y: 0 }, { X: 1, Y: 1 }, { X: 0, Y: 1 }];
+	if (h == 0) { h = w; }
+	return polyPointsFrom(w, h, x, y, triPoints);
+
+}
+function size2tridown(w = 100, h = 0, x = 0, y = 0) {
+	//returns sPoints for polygon svg starting from N:
+	let triPoints = [{ X: 1, Y: 0 }, { X: 0.5, Y: 1 }, { X: 0, Y: 0 }];
+	if (h == 0) { h = w; }
+	return polyPointsFrom(w, h, x, y, triPoints);
+
+}
+function toRadian(deg) { return deg * 2 * Math.PI / 360; }
 
 //#endregion
 
@@ -2879,27 +2882,27 @@ function dbSave(appName, callback) {
 }
 // Example POST method implementation:
 async function postData(url = '', data = {}) {
-  // Default options are marked with *
+	// Default options are marked with *
 	//usage:
 	// postData('https://example.com/answer', { answer: 42 })
-  // .then(data => {
-  //   console.log(data); // JSON data parsed by `data.json()` call
-  // });	
+	// .then(data => {
+	//   console.log(data); // JSON data parsed by `data.json()` call
+	// });	
 	//console.log('url',url,JSON.stringify(data));
 	const response = await fetch(url, {
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'omit', // include, *same-origin, omit
-    headers: {
-      'Content-Type': 'application/json'
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: JSON.stringify(data) // body data type must match "Content-Type" header
-  });
-  return 'hallo';// response.json(); // parses JSON response into native JavaScript objects
+		method: 'POST', // *GET, POST, PUT, DELETE, etc.
+		mode: 'cors', // no-cors, *cors, same-origin
+		cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+		credentials: 'omit', // include, *same-origin, omit
+		headers: {
+			'Content-Type': 'application/json'
+			// 'Content-Type': 'application/x-www-form-urlencoded',
+		},
+		redirect: 'follow', // manual, *follow, error
+		referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+		body: JSON.stringify(data) // body data type must match "Content-Type" header
+	});
+	return 'hallo';// response.json(); // parses JSON response into native JavaScript objects
 }
 async function fetch_wrapper(url) { return await fetch(url); }
 async function route_path_yaml_dict(url) {
@@ -2955,7 +2958,9 @@ function getRect(elem, relto) {
 			height: b1.height
 		};
 	}
-	return { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
+	let r4 = { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
+	r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;
+	return r4;
 }
 function getSizeWithStyles(text, styles) {
 	var d = document.createElement("div");
@@ -3322,6 +3327,26 @@ function getObjectsWithSame(olist, props, o, up = true, breakWhenDifferent = tru
 	//console.log('res', res)
 	return res;
 }
+function getRandomLetterMapping(s) {
+	//returns a dictionary mapping each letter of s to a different letter in s
+	//replace each letter by a different letter
+	if (nundef(s)) s = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	let alphabet = filterDistinctLetters(s);
+	let alphabet2 = shuffle(jsCopy(alphabet));
+	let di = {};
+	for (let i = 0; i < alphabet.length; i++) {
+		di[alphabet[i]] = alphabet2[i];
+	}
+	return di;
+}
+function getLetterSwapEncoding(s) {
+	let di = getRandomLetterMapping(s);
+	let result = '';
+	for (let i = 0; i < s.length; i++) {
+		result += s[i] in di ? di[s[i]] : s[i];
+	}
+	return result;
+}
 function intersection(arr1, arr2) {
 	//each el in result will be unique
 	let res = [];
@@ -3549,7 +3574,7 @@ function coin(percent = 50) {
 function choose(arr, n, exceptIndices) {
 	var result = [];
 	var len = arr.length;
-	if (n>=arr.length) return arr;
+	if (n >= arr.length) return arr;
 
 	var taken = new Array(len);
 	if (isdef(exceptIndices) && exceptIndices.length < len - n) {
@@ -3649,6 +3674,14 @@ function capitalize(s) {
 function endsWith(s, sSub) { let i = s.indexOf(sSub); return i >= 0 && i == s.length - sSub.length; }
 function extendWidth(w) { return replaceEvery(w, 'w', 2); }
 function filterByLength(w, min, max, allowSpaces = false) { return w.length <= max && w.length >= min && (allowSpaces || !w.includes(' ')); }
+function filterDistinctLetters(s) {
+	let arr = [];
+	for (let i = 0; i < s.length; i++) {
+		let ch = s[i];
+		if (isLetter(ch) && !arr.includes(ch)) arr.push(ch);
+	}
+	return arr;
+}
 function findCommonPrefix(s1, s2) {
 	let i = 0;
 	let res = '';
@@ -3700,7 +3733,8 @@ function fromUmlaut(w) {
 		w = replaceAll(w, 'Ö', 'OE');
 		return w;
 	}
-} function getCorrectPrefix(label, text) {
+}
+function getCorrectPrefix(label, text) {
 
 	// let txt = this.input.value;
 	// console.log('input value',txt);
@@ -3917,9 +3951,6 @@ class TimeIt {
 }
 //#endregion
 
-//#region type checking / checking
-//#endregion
-
 //#region asset helpers
 function buildNewSyms() {
 	let newSyms = {};
@@ -3993,6 +4024,7 @@ function createElementFromHTML(htmlString) {
 	return div.firstChild;
 }
 function divInt(a, b) { return Math.trunc(a / b); }
+function errlog() { console.log('ERROR!', ...arguments); }
 function evToClosestId(ev) {
 	//returns first ancestor that has an id
 	let elem = findParentWithId(ev.target);
@@ -4135,10 +4167,11 @@ function isEmpty(arr) {
 		|| (Array.isArray(arr) && arr.length == 0)
 		|| Object.entries(arr).length === 0;
 }
+function isEmptyOrWhiteSpace(s) { return isEmpty(s.trim()); }
 function isLetter(s) { return /^[a-zA-Z]$/i.test(s); }
 function isList(arr) { return Array.isArray(arr); }
 function isLiteral(x) { return isString(x) || isNumber(x); }
-function isNumber(x) { return x!==true && x!==false && isdef(x) && (x == 0 || x != ' ' && !isNaN(+x)); }
+function isNumber(x) { return x !== true && x !== false && isdef(x) && (x == 0 || x != ' ' && !isNaN(+x)); }
 function isSingleDigit(s) { return /^[0-9]$/i.test(s); }
 function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }

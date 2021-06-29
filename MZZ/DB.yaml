@@ -3,7 +3,7 @@ users:
   nil:
     id: nil
     avGames:
-      - gHome
+      - gHouse
       - gKrieg
       - gSteps
       - gSentence
@@ -25,7 +25,7 @@ users:
       - gAbacus
       - gRiddle
       - gC4
-    lastGame: gHome
+    lastGame: gHouse
     settings:
       userColor: green
       samplesPerGame: 20
@@ -51,6 +51,8 @@ users:
         trials: 2
       gElim:
         startLevel: 2
+      gHouse:
+        startLevel: 4
       gMem:
         startLevel: 4
         showHint: false
@@ -506,39 +508,25 @@ settings:
   startPosition: empty
   searchDepth: 5
 games:
-  gHome:
-    friendly: HCT
+  gHouse:
+    friendly: House
     logo: home
     color: GREEN
     controllerType: solitaire
-    minIndex: 0
-    maxIndex: 10
-    minPlus: 0
-    maxPlus: 10
-    minMinus: 0
-    maxMinus: 10
-    minMult: 2
-    maxMult: 10
-    minDiv: 2
-    maxDiv: 10
-    exactDivisor: true
-    roundDecimalsTo: 0.25
-    singleDigitFractions: true
+    nrooms: 4
     levels:
       "0":
-        maxIndex: 8
+        nrooms: 4
       "1":
-        minIndex: 8
-        maxIndex: 20
+        nrooms: 8
       "2":
-        minIndex: 15
-        maxIndex: 30
+        nrooms: 12
       "3":
-        minIndex: 20
-        maxIndex: 40
+        nrooms: 16
       "4":
-        minIndex: 25
-        maxIndex: 51
+        nrooms: 20
+      "5":
+        nrooms: 24
   gAbacus:
     friendly: Abacus
     logo: abacus
