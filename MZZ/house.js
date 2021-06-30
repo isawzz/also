@@ -1,92 +1,32 @@
-function addAdjacency(adj, r1, r2, wallId) {
-	if (nundef(adj[r1.ch])) adj[r1.ch] = {}; //adjacency matrix by room name, not id!
-	if (nundef(adj[r2.ch])) adj[r2.ch] = {};
-	if (nundef(adj[r1.id])) adj[r1.id] = {};
-	if (nundef(adj[r2.id])) adj[r2.id] = {};
-	// console.log(adj[r2.id])
 
-	adj[r1.id][r2.id] = adj[r2.id][r1.id] = adj[r1.ch][r2.ch] = adj[r2.ch][r1.ch] = wallId;
-	// if (r1.ch == 'a' && r2.ch == 'd'){
-	// 	console.log('jetzt',jsCopy(adj));
-	// 	console.log(r1.id,r2.id,adj[r1.id][r2.id],adj[r2.id][r1.id]);
-	// }
+function getDoorId(r1, r2) { return r1 + '_' + r2 + '_' + r1; }
+function iHouse(dParent, ns = 1, styles = { w: 500, h: 400 }) {
+	//achtung styles: fg is wall color, bg is room color!
+	let d = mDiv(dParent, { display: 'inline-grid', position: 'relative' });
 
-}
-function findWall(x, y, walls, accuracy = 10) {
-	for (const w of walls) {
-		let [wx, wy, ww, wh] = [w.rect.x, w.rect.y, w.rect.w, w.rect.h];
-		if (isCloseTo(x, wx)) {
-			//clicked close to a vertical wall!
-			//check if y is within wall height:
-			if (y >= wy && y <= wy + wh) {
-				//this is the correct wall!
-				return w;
-			}
-		}
-		if (isCloseTo(y, wy) && x >= wx && x <= wx + ww) return w;
+	ns = isNumber(ns) ? d.style.gridTemplateAreas = getLayoutSample(ns) : ns; //'"z z d" "a a c" "a a c"';// getLayoutSample(3);
+	let s = d.style.gridTemplateAreas = ns;
+	//setGranularityFactor(s, 9);
+	let letterList = filterDistinctLetters(s);
+	let wallWidth = valf(styles.gap, 4);
+	let szDoor = valf(styles.szDoor, 40);
+	
+
+	mStyleX(d, { bg: valf(styles.fg, 'white'), w: styles.w, h: styles.h, gap: wallWidth, padding: wallWidth });
+	let rooms = [];
+	for (const ch of letterList) { //['a', 'c', 'd', 'f', 'z']) {
+		let r = iRoom(d, ch, { bg: valf(styles.bg, BLUE) });
+		rooms.push(r);
 	}
-}
-function findRoom(r1, house) {
-	if (isDict(r1)) return r1;
-	else if (isLetter(r1)) { let rid = firstCond(house.rooms, x => Items[x].ch == r1); return Items[rid] }
-	else return Items[r1];
-}
-function isCornerRoom(house, room) {
-	let rr = room.rect;
-	let rh = house.rect;
-	let w = house.wallWidth;
-	let isHorSide = isCloseTo(rr.x, rh.x, w) || isCloseTo(rr.r, rh.r, w);
-	let isVertSide = isCloseTo(rr.y, rh.y, w) || isCloseTo(rr.b, rh.b, w);
-	return isHorSide && isVertSide;
-}
-function isNorthRoom(house, room) { return isCloseTo(room.rect.t, house.rect.t, house.wallWidth); }
-function isSouthRoom(house, room) { return isCloseTo(room.rect.b, house.rect.b, house.wallWidth); }
-function isEastRoom(house, room) { return isCloseTo(room.rect.r, house.rect.r, house.wallWidth); }
-function isWestRoom(house, room) { return isCloseTo(room.rect.l, house.rect.l, house.wallWidth); }
-function getRoomNE(house) { return firstCond(house.rooms, x => isNorthRoom(house, Items[x]) && isEastRoom(house, Items[x])); }
-function getRoomNW(house) { return firstCond(house.rooms, x => isNorthRoom(house, Items[x]) && isWestRoom(house, Items[x])); }
-function getRoomSE(house) {
-	let rooms = house.rooms.map(x => Items[x]);
-	//console.log('rooms',rooms);
-	for (const r of rooms) {
-		let isSouth = isSouthRoom(house, r);
-		//console.log('south:',isSouth,r.rect.b,house.rect.b);
-		let isEast = isEastRoom(house, r);
-		//console.log('east:',isEast,r.rect.r,house.rect.r);
-	}
-	return firstCond(house.rooms, x => isSouthRoom(house, Items[x]) && isEastRoom(house, Items[x]));
-}
-function getRoomSW(house) { return firstCond(house.rooms, x => isSouthRoom(house, Items[x]) && isWestRoom(house, Items[x])); }
-function getDiagonallyOpposedCornerRooms(house) {
-	if (coin()) return [getRoomNW(house), getRoomSE(house)]; else return [getRoomSW(house), getRoomNE(house)];
-}
-function getDiagRoomPairs(house) {
-	return [[getRoomNW(house), getRoomSE(house)], [getRoomSW(house), getRoomNE(house)]];
-}
-function getCornerRoomsDict(house) {
-	let rooms = house.rooms.map(x => Items[x]);
-	let result = {};
-	for (const r of rooms) {
-		let isN = isNorthRoom(house, r);
-		let isS = isSouthRoom(house, r);
-		let isW = isWestRoom(house, r);
-		let isE = isEastRoom(house, r);
-		if (isN && isW) result.NW = r.id;
-		else if (isN && isE) result.NE = r.id;
-		else if (isS && isE) result.SE = r.id;
-		else if (isS && isW) result.SW = r.id;
-	}
-	return result;
-}
-function getCornerRooms(house) {
-	let rooms = house.rooms.map(x => Items[x]);
-	let result = [];
-	for (const r of rooms) {
-		if (isCornerRoom(house, r)) {
-			result.push(r.id);
-		}
-	}
-	return result;
+
+	let house = { knownWalls:{}, doors: [], rooms: rooms.map(x => x.id), roomLetters: letterList, szDoor: szDoor, wallWidth: wallWidth };
+	house.roomsByLetter = {};
+	rooms.map(x => house.roomsByLetter[x.ch] = x.id);
+	iAdd(house, { div: d });
+	rooms.map(x => x.house = house.id);
+
+	house.rect = getRect(d);
+	return house;
 }
 function getLayoutSample(n) {
 	//console.log('n', n)
@@ -170,37 +110,144 @@ function getLayoutSample(n) {
 	//console.log('s', s);
 	return s;
 }
-function iHouse(dParent, nrooms = 1, styles = { w: 500, h: 400 }) {
-	let d = mDiv(dParent, { display: 'inline-grid' });
 
-	let s = d.style.gridTemplateAreas = getLayoutSample(nrooms); //'"z z d" "a a c" "a a c"';// getLayoutSample(3);
+function makeDoorBetween(r1, r2, szDoor) {
 
-	//setGranularityFactor(s, 9);
-	let letterList = filterDistinctLetters(s);
-	let wallWidth = valf(styles.gap, 4);
+	r1 = isString(r1) ? Items[r1] : r1;
+	r2 = isString(r2) ? Items[r2] : r2;
+	let house = Items[r1.house];
 
-	//console.log(letterList)
-	mStyleX(d, { bg: 'white', w: styles.w, h: styles.h, gap: wallWidth, padding: wallWidth });
-	let rooms = [];
-	for (const ch of letterList) { //['a', 'c', 'd', 'f', 'z']) {
-		let r = iRoom(d, ch, { bg: BLUE });
-		rooms.push(r);
+	if (firstCond(house.doors, x => isSameList(Items[x], [r1.id, r2.id]))) {
+		console.log('there is already a door between these rooms!');
+		return;
 	}
 
-	let house = { rooms: rooms.map(x => x.id), roomLetters: letterList, wallWidth: wallWidth };
-	house.roomsByLetter = {};
-	rooms.map(x => house.roomsByLetter[x.ch] = x.id);
-	iAdd(house, { div: d });
-	rooms.map(x => x.house = house.id);
+	if (nundef(szDoor)) szDoor = house.szDoor;
 
-	let adjInfo = roomAdjacency(rooms, 40, wallWidth);
-	//house.walls = walls.map(x => x.id);
-	house.adjMatrix = adjInfo.adjacencyMatrix;
-	house.walls = adjInfo.walls.map(x => x.id);
+	let [e1, e2] = [r1.rect, r2.rect];
+	let rhoeher = e1.t < e2.t ? r1 : r2;
+	let rleft = e1.x < e2.x ? r1 : r2;
+	let rniedriger = (rhoeher == r1 ? r2 : r1);
+	let rright = (rleft == r1 ? r2 : r1);
+	let diff = house.wallWidth * 2;
+	let door = null;
+	let doorId = getDoorId(r1.id, r2.id);
 
-	house.rect = getRect(d);
+	//check for vertical wall
+	let y1 = Math.max(e1.t, e2.t);
+	let y2 = Math.min(e1.b, e2.b);
+	let dCommony = y2 - y1;
+	if (dCommony > diff && isCloseTo(rright.rect.l, rleft.rect.r)) {
 
-	return house;
+		
+		console.log(r1.ch, 'and', r2.ch, 'share vertical wall of size', dCommony);
+		// let re1=getRect(iDiv(r1),iDiv(house)); //relative to house
+		// let re2=getRect(iDiv(r2),iDiv(house));
+		showRect('r1', r1); showRect('r2', r2); showRect('house', house);
+		if (szDoor > dCommony) szDoor = dCommony;
+		let dr = {
+			x: rleft.rect.r - house.rect.l,
+			y: rniedriger.rect.t - house.rect.t + (dCommony - szDoor) / 2,
+			w: house.wallWidth, h: szDoor
+		};
+		extendRect(dr);
+		let dParent = iDiv(house);
+		let d = mDiv(dParent, { bg: 'red', position: 'absolute', left: dr.x, top: dr.y, w: dr.w, h: dr.h });
+		door = { id: doorId, rect: dr, dir: 'v', rooms: [r1.id, r2.id] };
+		iAdd(door, { div: d });
+
+	} else { console.log('room', r1.ch, 'does not share a wall with', r2.ch); }
+
+	//check for horizontal wall
+	let x1 = Math.max(e1.l, e2.l);
+	let x2 = Math.min(e1.r, e2.r);
+	let dCommonx = x2 - x1;
+	if (dCommonx > diff && isCloseTo(rniedriger.rect.t, rhoeher.rect.b)) {
+		console.log(r1.ch, 'and', r2.ch, 'share vertical wall of size', dCommonx);
+		// let re1=getRect(iDiv(r1),iDiv(house)); //relative to house
+		// let re2=getRect(iDiv(r2),iDiv(house));
+		showRect('r1', r1); showRect('r2', r2); showRect('house', house);
+		if (szDoor > dCommonx) szDoor = dCommonx;
+		let dr = {
+			x: rright.rect.l - house.rect.l + (dCommonx - szDoor) / 2,
+			y: rhoeher.rect.b - house.rect.t,
+			w: szDoor, h: house.wallWidth
+		};
+		extendRect(dr);
+		let dParent = iDiv(house);
+		let d = mDiv(dParent, { bg: 'red', position: 'absolute', left: dr.x, top: dr.y, w: dr.w, h: dr.h });
+		door = { id: doorId, rect: dr, dir: 'v', rooms: [r1.id, r2.id] };
+		iAdd(door, { div: d });
+
+	} else { console.log('room', r1.ch, 'does not share a wall with', r2.ch); }
+
+	if (door) { house.doors.push(door.id); }
+	return door;
+}
+
+
+
+
+
+
+//#region old code
+
+function isCornerRoom(house, room) {
+	let rr = room.rect;
+	let rh = house.rect;
+	let w = house.wallWidth;
+	let isHorSide = isCloseTo(rr.x, rh.x, w) || isCloseTo(rr.r, rh.r, w);
+	let isVertSide = isCloseTo(rr.y, rh.y, w) || isCloseTo(rr.b, rh.b, w);
+	return isHorSide && isVertSide;
+}
+function isNorthRoom(house, room) { return isCloseTo(room.rect.t, house.rect.t, house.wallWidth); }
+function isSouthRoom(house, room) { return isCloseTo(room.rect.b, house.rect.b, house.wallWidth); }
+function isEastRoom(house, room) { return isCloseTo(room.rect.r, house.rect.r, house.wallWidth); }
+function isWestRoom(house, room) { return isCloseTo(room.rect.l, house.rect.l, house.wallWidth); }
+function getRoomNE(house) { return firstCond(house.rooms, x => isNorthRoom(house, Items[x]) && isEastRoom(house, Items[x])); }
+function getRoomNW(house) { return firstCond(house.rooms, x => isNorthRoom(house, Items[x]) && isWestRoom(house, Items[x])); }
+function getRoomSE(house) {
+	let rooms = house.rooms.map(x => Items[x]);
+	//console.log('rooms',rooms);
+	for (const r of rooms) {
+		let isSouth = isSouthRoom(house, r);
+		//console.log('south:',isSouth,r.rect.b,house.rect.b);
+		let isEast = isEastRoom(house, r);
+		//console.log('east:',isEast,r.rect.r,house.rect.r);
+	}
+	return firstCond(house.rooms, x => isSouthRoom(house, Items[x]) && isEastRoom(house, Items[x]));
+}
+function getRoomSW(house) { return firstCond(house.rooms, x => isSouthRoom(house, Items[x]) && isWestRoom(house, Items[x])); }
+function getDiagonallyOpposedCornerRooms(house) {
+	if (coin()) return [getRoomNW(house), getRoomSE(house)]; else return [getRoomSW(house), getRoomNE(house)];
+}
+function getDiagRoomPairs(house) {
+	return [[getRoomNW(house), getRoomSE(house)], [getRoomSW(house), getRoomNE(house)]];
+}
+function getCornerRoomsDict(house) {
+	let rooms = house.rooms.map(x => Items[x]);
+	let result = {};
+	for (const r of rooms) {
+		let isN = isNorthRoom(house, r);
+		let isS = isSouthRoom(house, r);
+		let isW = isWestRoom(house, r);
+		let isE = isEastRoom(house, r);
+		if (isN && isW) result.NW = r.id;
+		else if (isN && isE) result.NE = r.id;
+		else if (isS && isE) result.SE = r.id;
+		else if (isS && isW) result.SW = r.id;
+	}
+	return result;
+}
+function getCornerRooms(house) {
+	let rooms = house.rooms.map(x => Items[x]);
+	let result = [];
+	for (const r of rooms) {
+		if (isCornerRoom(house, r)) {
+			result.push(r.id);
+		}
+	}
+	return result;
 }
 function iRoom(dParent, ch, styles) {
 	let def = { 'grid-area': ch, position: 'relative' };
@@ -292,7 +339,7 @@ function makeDoorHouseRoomDir(house, room, dir) {
 }
 function roomAdjacency(house) {
 	//assumes rectangular rooms! to make other shapes of rooms, need to compose them!
-	let rooms = house.rooms.map(x=>Items[x]);
+	let rooms = house.rooms.map(x => Items[x]);
 
 	for (let i = 0; i < rooms.length; i++) {
 		for (let j = i + 1; j < rooms.length; j++) {
@@ -302,7 +349,7 @@ function roomAdjacency(house) {
 			let rleft = e1.x < e2.x ? r1 : r2; if (rleft.rect.l < minx) minx = rleft.rect.l;
 			let rniedriger = (rhoeher == r1 ? r2 : r1); if (rniedriger.rect.b > maxy) maxy = rniedriger.rect.b;
 			let rright = (rleft == r1 ? r2 : r1); if (rright.rect.r > maxx) maxx = rright.rect.r;
-			let diff = doorsize;
+			let diff = szDoor;
 
 			//check for vertical wall
 			let y1 = Math.max(e1.t, e2.t);
@@ -320,7 +367,7 @@ function roomAdjacency(house) {
 					let wallId = wall.id = iRegister(wall);
 					walls.push(wall);
 					addAdjacency(adj, r1, r2, wallId);
-				}else{
+				} else {
 					//console.log('room',r1.ch,'is NOT close to', r2.ch)
 				}
 			}
@@ -340,7 +387,7 @@ function roomAdjacency(house) {
 					walls.push(wall);
 					addAdjacency(adj, r1, r2, wallId);
 					//console.log(adj)
-				}else{
+				} else {
 					//console.log('room',r1.ch,'is NOT close to', r2.ch)
 				}
 			}
@@ -352,7 +399,7 @@ function roomAdjacency(house) {
 	for (let i = 0; i < rooms.length; i++) {
 		let r = rooms[i];
 		//console.log(r.ch);
-		if (isCloseTo(r.rect.l,minx)) {
+		if (isCloseTo(r.rect.l, minx)) {
 			//this room has western outer wall
 			let wallRect = { x: r.rect.x - wWall, y: r.rect.t, w: wWall, h: r.rect.h };
 			let wall = { rect: wallRect, dir: 'v', rooms: [{ dir: 'e', id: r.id }], rRight: r.id };
@@ -360,21 +407,21 @@ function roomAdjacency(house) {
 			walls.push(wall);
 		}
 		//console.log(r.rect.r,maxx)
-		if (isCloseTo(r.rect.r,maxx)) {
+		if (isCloseTo(r.rect.r, maxx)) {
 			//this room has eastern outer wall
 			let wallRect = { x: r.rect.r, y: r.rect.t, w: wWall, h: r.rect.h };
 			let wall = { rect: wallRect, dir: 'v', rooms: [{ dir: 'w', id: r.id }], rLeft: r.id };
 			let wallId = wall.id = iRegister(wall);
 			walls.push(wall);
 		}
-		if (isCloseTo(r.rect.t,miny)) {
+		if (isCloseTo(r.rect.t, miny)) {
 			//this room has northern outer wall
 			let wallRect = { x: r.rect.x, y: r.rect.t - wWall, w: r.rect.w, h: wWall };
 			let wall = { rect: wallRect, dir: 'h', rooms: [{ dir: 's', id: r.id }], rLower: r.id };
 			let wallId = wall.id = iRegister(wall);
 			walls.push(wall);
 		}
-		if (isCloseTo(r.rect.b,maxy)) {
+		if (isCloseTo(r.rect.b, maxy)) {
 			//this room has southern outer wall
 			let wallRect = { x: r.rect.x, y: r.rect.b, w: r.rect.w, h: wWall };
 			let wall = { rect: wallRect, dir: 'h', rooms: [{ dir: 'n', id: r.id }], rUpper: r.id };
@@ -395,7 +442,7 @@ function roomAdjacency(house) {
 	return { adjacencyMatrix: adj, walls: walls };
 }
 
-function roomAdjacency(rooms, doorsize = 40, wWall = 4) {
+function roomAdjacency(rooms, szDoor = 40, wWall = 4) {
 	let adj = {};
 	let walls = [];
 	let minx = rooms[0].rect.l, maxx = rooms[0].rect.r, miny = rooms[0].rect.t, maxy = rooms[0].rect.b;
@@ -409,7 +456,7 @@ function roomAdjacency(rooms, doorsize = 40, wWall = 4) {
 			let rleft = e1.x < e2.x ? r1 : r2; if (rleft.rect.l < minx) minx = rleft.rect.l;
 			let rniedriger = (rhoeher == r1 ? r2 : r1); if (rniedriger.rect.b > maxy) maxy = rniedriger.rect.b;
 			let rright = (rleft == r1 ? r2 : r1); if (rright.rect.r > maxx) maxx = rright.rect.r;
-			let diff = doorsize;
+			let diff = szDoor;
 
 			//check for vertical wall
 			let y1 = Math.max(e1.t, e2.t);
@@ -427,7 +474,7 @@ function roomAdjacency(rooms, doorsize = 40, wWall = 4) {
 					let wallId = wall.id = iRegister(wall);
 					walls.push(wall);
 					addAdjacency(adj, r1, r2, wallId);
-				}else{
+				} else {
 					//console.log('room',r1.ch,'is NOT close to', r2.ch)
 				}
 			}
@@ -447,7 +494,7 @@ function roomAdjacency(rooms, doorsize = 40, wWall = 4) {
 					walls.push(wall);
 					addAdjacency(adj, r1, r2, wallId);
 					//console.log(adj)
-				}else{
+				} else {
 					//console.log('room',r1.ch,'is NOT close to', r2.ch)
 				}
 			}
@@ -459,7 +506,7 @@ function roomAdjacency(rooms, doorsize = 40, wWall = 4) {
 	for (let i = 0; i < rooms.length; i++) {
 		let r = rooms[i];
 		//console.log(r.ch);
-		if (isCloseTo(r.rect.l,minx)) {
+		if (isCloseTo(r.rect.l, minx)) {
 			//this room has western outer wall
 			let wallRect = { x: r.rect.x - wWall, y: r.rect.t, w: wWall, h: r.rect.h };
 			let wall = { rect: wallRect, dir: 'v', rooms: [{ dir: 'e', id: r.id }], rRight: r.id };
@@ -467,21 +514,21 @@ function roomAdjacency(rooms, doorsize = 40, wWall = 4) {
 			walls.push(wall);
 		}
 		//console.log(r.rect.r,maxx)
-		if (isCloseTo(r.rect.r,maxx)) {
+		if (isCloseTo(r.rect.r, maxx)) {
 			//this room has eastern outer wall
 			let wallRect = { x: r.rect.r, y: r.rect.t, w: wWall, h: r.rect.h };
 			let wall = { rect: wallRect, dir: 'v', rooms: [{ dir: 'w', id: r.id }], rLeft: r.id };
 			let wallId = wall.id = iRegister(wall);
 			walls.push(wall);
 		}
-		if (isCloseTo(r.rect.t,miny)) {
+		if (isCloseTo(r.rect.t, miny)) {
 			//this room has northern outer wall
 			let wallRect = { x: r.rect.x, y: r.rect.t - wWall, w: r.rect.w, h: wWall };
 			let wall = { rect: wallRect, dir: 'h', rooms: [{ dir: 's', id: r.id }], rLower: r.id };
 			let wallId = wall.id = iRegister(wall);
 			walls.push(wall);
 		}
-		if (isCloseTo(r.rect.b,maxy)) {
+		if (isCloseTo(r.rect.b, maxy)) {
 			//this room has southern outer wall
 			let wallRect = { x: r.rect.x, y: r.rect.b, w: r.rect.w, h: wWall };
 			let wall = { rect: wallRect, dir: 'h', rooms: [{ dir: 'n', id: r.id }], rUpper: r.id };
@@ -526,5 +573,5 @@ function setGranularityFactor(s, f = 2) {
 
 }
 
-
+//#endregion
 
