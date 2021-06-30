@@ -1,7 +1,6 @@
-function showRect(s,o){
-	let r=o.rect;
-	console.log('\n',s,r.l,r.t,r.r,r.b);
-}
+
+
+
 function makeRandomDirDoor(room,dir,styles={}){
 	if (isString(room)) room=Items[room];
 	let house = Items[room.house];

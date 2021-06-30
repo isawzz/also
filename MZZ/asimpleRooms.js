@@ -23,15 +23,10 @@ class GHouse extends Game {
 		let rooms = this.rooms = house.rooms.map(x => Items[x]);
 		this.addLabelsToRooms();
 
-		//let [r1,r2]=choose(this.rooms,2);
-		makeDoorBetween(r1,r2,house.szDoor);
-
-		let dirs = ['e'];// [q.name.includes('Path') ? 's' : 'n', 'e'];
 		let dir = 'e';
 		let room = chooseRandom(rooms);
 		console.log('dir',dir,'room',room.ch);
-		makeRandomDirDoor(room, dir);
-
+		iDoor(room, dir);
 		return;
 		//console.log('num rooms:',this.rooms.length)
 
