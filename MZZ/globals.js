@@ -1,5 +1,5 @@
 //#region config
-const USELIVESERVER = true; //brauch ich DOCH!!!nicht! solange node nicht rennt kein problem!!!
+const USELIVESERVER = false; //brauch ich DOCH!!!nicht! solange node nicht rennt kein problem!!!
 
 var USE_LOCAL_STORAGE = true; // !BROADCAST_SETTINGS; // true | false //localStorage is cleared when false!!!!!
 const CLEAR_LOCAL_STORAGE = false; //BROADCAST_SETTINGS;
