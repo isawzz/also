@@ -1150,6 +1150,8 @@ function successPictureGoal(withComment = true) {
 	}
 }
 function mXit(elem, sz = 50) {
+	//console.log('hallo mXit!!!')
+
 	if (nundef(sz)) sz = getRect(elem).h;
 	let d = markerFail();
 	mpOver(d, elem, sz / 2, 'red', 'openMojiTextBlack');
@@ -1175,9 +1177,13 @@ function failPictureGoal(withComment = false) {
 	}
 	if (isdef(Selected) && isdef(Selected.feedbackUI)) {
 		let uilist = isList(Selected.feedbackUI) ? Selected.feedbackUI : [Selected.feedbackUI];
+		//console.log('fail',uilist)
 		let sz = getRect(uilist[0]).h;
 		//console.log('failFunc:',uilist,sz)
-		for (const ui of uilist) mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
+		for (const ui of uilist) {
+			console.log('hallo!!!')
+			mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
+		}
 	}
 }
 function failSomePictures(withComment = false) {
@@ -1271,7 +1277,7 @@ function showFleetingMessage(msg, msDelay, styles = {}, fade = false) {
 }
 function showActiveMessage(msg, handler, styles = {}, fade = false) {
 
-	let defStyles = { fz: 22, rounding: 10, vpadding: 12, hpadding: 25, matop: 50 };
+	let defStyles = { fz: 22, rounding: 10, vpadding: 12, hpadding: 0, matop: 50 };
 	styles = mergeOverride(defStyles, styles);
 	if (nundef(styles.fg)) styles.fg = colorIdealText(G.color);
 

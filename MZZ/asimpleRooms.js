@@ -4,10 +4,21 @@ class GHouse extends Game {
 		this.correctionFunc = () => {
 			mStyleX(Goal.buttonCorrect, { bg: 'green' });
 			animate(Goal.buttonCorrect, 'komisch', 1000);
-
-			if (this.q.name.includes('isThereAPath')) this.showPath();
+			mStyleX(this.dGraph, { opacity: 1 });
+			//if (this.q.name.includes('isThereAPath')) 
+			// this.showPath();
 			return 20000;
 		};
+		this.failFunc = () => {
+			if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+			else { mXit(Goal.buttonClicked, 100); }
+		
+		}
+		this.successFunc = () => {
+			if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+			else { mXit(Goal.buttonClicked, 100); }
+		
+		}
 	}
 	prompt() {
 
@@ -19,7 +30,7 @@ class GHouse extends Game {
 		let qFuncs = [this.howMany.bind(this), this.areRoomsConnected.bind(this)];
 		if (n > 5) qFuncs.push(this.isThereAPath.bind(this));
 		let q = this.q = this.level > 1 ? arrLast(qFuncs) : chooseRandom(qFuncs); // this.isThereAPath.bind(this);//
-		let s = n; 
+		let s = n;
 		let wTotal = n < 4 || n > 12 ? 700 : n > 10 ? 600 : 500;
 		let house = this.house = iHouse(dTable, s, { w: wTotal, h: 400 });
 		let rooms = this.rooms = house.rooms.map(x => Items[x]);
@@ -40,13 +51,15 @@ class GHouse extends Game {
 		this.dChoices = mDiv(dTable);
 
 		mLinebreak(dTable);
-		let dGraph = mDiv(dTable, { align: 'left', position: 'relative', w: wTotal, h: 300, rounding: 10, matop: 10, bg: 'skyblue' });
-		let els = convertToGraphElements(house); 
-		let g1 = this.graph = new MGraph(dGraph, {}, els);
+		let dGraph = this.dGraph = mDiv(dTable, { align: 'left', position: 'relative', w: wTotal, h: 300, rounding: 10, matop: 10, bg: 'skyblue' });
+		let els = convertToGraphElements(house);
+		let g1 = this.graph = new MGraph(dGraph, {}, els, Username!='gul');
 		storeRoomPositions(g1);
 		g1.presetLayout();
 		g1.reset();
-		if (Username == 'gul') hide(dGraph);
+		//if (Username == 'gul') hide(dGraph);
+		//hide(dGraph);
+		mStyleX(dGraph, { opacity: 0 });
 
 		q();
 
@@ -57,21 +70,21 @@ class GHouse extends Game {
 		let house = this.house;
 		let corners = getCornerRoomsDict(house); //console.log('corners', corners); 
 		let clist = Object.values(corners);	//console.log('cornerlist',clist);
-		let g=this.graph;
+		let g = this.graph;
 
 		let id = g.getNodeWithMaxDegree(clist); //console.log('max degree node:',id);
-		let cornerRoomIds = g.sortNodesByDegree(clist).map(x=>x.id());
+		let cornerRoomIds = g.sortNodesByDegree(clist).map(x => x.id());
 		//console.log('nodes',cornerRoomIds);
-		
+
 		let [r1, r2] = [Items[cornerRoomIds[0]], Items[cornerRoomIds[1]]]; //take first 2 nodes, and order by dir: n,e,
-		if (r1 == r2 || areNeighbors(r1,r2) && cornerRoomIds.length>2) r2 = Items[cornerRoomIds[2]];
+		if (r1 == r2 || areNeighbors(r1, r2) && cornerRoomIds.length > 2) r2 = Items[cornerRoomIds[2]];
 		if (!r1.isW && (r2.isW || !r1.N)) [r1, r2] = [r2, r1];
 
 		//console.log('from room',r1.id,r1,'to room',r2.id,r2);
 
-		let roomFrom = this.roomFrom = r1.id; // corners.NW; 	// console.log('nw', nw)
+		let roomFrom = r1.id; // corners.NW; 	// console.log('nw', nw)
 		let funcs = this.dijkstra = g.getShortestPathsFrom(roomFrom);	// console.log('funcs', funcs);
-		let roomTo = this.roomTo = r2.id; //null;
+		let roomTo = r2.id; //null;
 		for (const k in corners) {
 			if (k != 'NW') {
 				let dist = funcs.distanceTo('#' + corners[k]);
@@ -85,6 +98,11 @@ class GHouse extends Game {
 
 		//#region spoken and written instruction
 		//setLanguageHALLO('F');
+
+
+		this.roomFrom = roomFrom;
+		this.roomTo = roomTo;
+
 		let sp1 = {
 			D: ['gibt es einen weeg von', 'gibt es einen weg von'],
 			E: ['is there a path from', 'is there a path from'],
@@ -123,7 +141,7 @@ class GHouse extends Game {
 	}
 	howMany() {
 		showInstruction('', this.language == 'E' ? 'how many units are there in this house?' : "wieviele wohneinheiten hat dieses haus?", dTitle, true);
-		let numUnits = howManyComponents();
+		let numUnits = this.graph.getNumComponents(); //howManyComponents();
 		// console.log(numUnits)
 		let otherChoices = [
 			numUnits * 2,
@@ -143,7 +161,7 @@ class GHouse extends Game {
 	}
 	areRoomsConnected() {
 		showInstruction('', this.language == 'E' ? 'are all rooms connected?' : "sind alle zimmer verbunden?", dTitle, true);
-		let numUnits = howManyComponents();
+		let numUnits = this.graph.getNumComponents(); //howManyComponents();
 		let correct, incorrect;
 		if (numUnits == 1) { correct = { num: 1, text: 'yes' }; incorrect = [{ num: 0, text: 'no' }]; }
 		else { correct = { num: 0, text: 'no' }; incorrect = [{ num: 1, text: 'yes' }]; }
@@ -153,7 +171,10 @@ class GHouse extends Game {
 	//#region helpers
 	showPath() {
 		//how to get path from this.roomFrom to this.roomTo?
-		let path = this.path = getPathNodes(this.dijkstra);
+		//console.log('from',this.roomFrom,'to',this.roomTo);
+		mStyleX(this.dGraph, { opacity: 1 });
+		// show(this.dGraph);
+		//let path = this.path = getPathNodes(this.dijkstra);
 
 
 		//console.log('path',path);
@@ -197,7 +218,7 @@ class GHouse extends Game {
 
 	eval() {
 		clearFleetingMessage();
-		Selected = { delay: 5000, reqAnswer: G.correctAnswer, answer: Goal.choice.text, feedbackUI: Goal.buttonClicked };
+		Selected = { reqAnswer: G.correctAnswer, answer: Goal.choice.text, feedbackUI: Goal.buttonClicked };
 
 		//console.log('Selected', Selected);
 		return (Goal.buttonClicked == Goal.buttonCorrect);
@@ -235,8 +256,8 @@ function onClickChoice(ev) {
 	Goal.choice = Goal.choices[index];
 	Goal.buttonClicked = b;
 	//console.log('clicked:',Goal.choice,Goal.correctChoice)
-	if (Goal.choice == Goal.correctChoice) { mStyleX(b, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
-	else { mXit(b, 100); }
+	// if (Goal.choice == Goal.correctChoice) { mStyleX(b, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+	// else { mXit(b, 100); }
 	G.controller.evaluate.bind(G.controller)();
 }
 

@@ -388,7 +388,7 @@ html,
 body,
 #md,
 #rightSide {
-	height: 100%;
+	/* height: 100%; */
 	padding: 0;
 	margin: 0;
 	font: 20px Arial;
@@ -424,12 +424,13 @@ div {
 }
 #md,
 #rightSide {
+	min-height:100vh;
 	display: flex;
 	/* overflow:hidden; */
 }
 #sidebar {
-	height: 100%;
-	flex: 0 0 auto;
+	/* height: 100%;
+	flex: 1 0 auto; */
 	background-color: #ffffff80;
 	box-sizing: border-box;
 	padding: 12px;

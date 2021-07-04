@@ -2,17 +2,7 @@
 const MarkerText = ['✔️', '❌'];
 const MarkerId = { SUCCESS: 0, FAIL: 1 };
 var Markers = [];
-function markerSuccessNew(ui, sz) {
-	let d = createMarker(MarkerId.SUCCESS);
-	if (nundef(ui)) return d;
 
-	if (nundef(sz)) sz = getRect(ui).h;
-	let top = (cy - sz * 2 / 3);
-	let left = (cx - sz / 3);
-	sz *= 4 / 5;
-	mpOver(d, ui, sz, 'limegreen', 'segoeBlack');
-	return d;
-}
 function mpOver(d, dParent, fz, color, picStyle) {
 	let b = getRect(dParent);
 	let cx = b.w / 2 + b.x;
@@ -41,16 +31,25 @@ function getParamsForMaPicStyle(desc = 'segoeBlack') {
 
 }
 
-
 function markerSuccess() { return createMarker(MarkerId.SUCCESS); }
 function markerFail() { return createMarker(MarkerId.FAIL); }
 function createMarker(markerId) {
 	//<div class='feedbackMarker'>✔️</div>
-	let d = mCreate('div');
-	d.innerHTML = MarkerText[markerId]; //>0? '✔️':'❌';
-	mClass(d, 'feedbackMarker');
-	document.body.appendChild(d);
-	Markers.push(d);
+	//console.log('markers', Markers, markerId);
+	let divs = document.getElementsByClassName('feedbackMarker');
+	//console.log('divs', divs);
+	let d;
+	if (isdef(divs[0])) {
+		console.log('there is already a feedbackMarker!!!!!!');
+		d = divs[0];
+		console.log('Markers',Markers)
+	} else {
+		d = mCreate('div');
+		d.innerHTML = MarkerText[markerId]; //>0? '✔️':'❌';
+		mClass(d, 'feedbackMarker');
+		document.body.appendChild(d);
+		Markers.push(d);
+	}
 	return d;
 }
 function mRemoveGracefully(elem) {

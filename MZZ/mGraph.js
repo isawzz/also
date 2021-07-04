@@ -18,7 +18,7 @@ class MGraph {
 	//#endregion
 
 	//#region init / constructor
-	constructor(dParent, styleDict, els) {
+	constructor(dParent, styleDict, els, addLayoutButtons=true) {
 		//console.log('elements',els)
 
 		let id = this.id = isdef(dParent.id) ? dParent.id : 'graph' + MGraph.All.length;
@@ -28,7 +28,11 @@ class MGraph {
 		mStyleX(dParent, { display: 'flex', pabottom: 20 });
 
 		let wside = 40;
-		this.dSidebar = this.initSidebar(dParent, wside);
+		if (addLayoutButtons){
+			this.dSidebar = this.initSidebar(dParent, wside, addLayoutButtons);
+		}else{
+			dParent.ondblclick=()=>onClickReset(id);
+		}
 		this.dOuter = dParent;
 		this.dParent = dParent = mDiv(dParent, { w: `calc( 100% - ${wside}px)`, margin: 10, h: '100%', 'border-radius': '0 10px 10px 0' });
 		//let dLeiste = mSidebar('',dParent,{bg:'red',w:80,h:'100%'},'gSidebar');
@@ -79,7 +83,7 @@ class MGraph {
 		let id = this.id;
 		dl.id = id + '_sidebar';
 		mCenterCenterFlex(dl);
-		let html = `
+		let html =`
 		<div style='display:flex;flex-wrap:wrap;'>
 			<button class='tbb' onclick='onClickReset(${id})'>reset</button>
 			<button class='tbb' onclick='onClickBreadthfirst(${id})'>BFS</button>
@@ -93,7 +97,6 @@ class MGraph {
 			<button class='tbb' onclick='onClickPreset(${id})'>prest</button>
 			<button class='tbb' onclick='onClickRandom(${id})'>rand</button>
 		</div>
-
 		`;
 		let d = createElementFromHtml(html);
 		mAppend(dl, d);
@@ -122,7 +125,8 @@ class MGraph {
 		else if (isOn) { this.cy.minZoom(minZoom); this.cy.maxZoom(maxZoom); }
 	}
 	//#endregion
-
+	getComponents(){return this.cy.elements().components();}
+	getNumComponents(){return this.cy.elements().components().length;}
 	getNode(id) { return this.cy.getElementById(id); }
 	getNodes() { return this.cy.nodes(); }
 	getNodeIds() { return this.cy.nodes().map(x => x.id()); }
