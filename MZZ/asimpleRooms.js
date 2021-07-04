@@ -12,14 +12,15 @@ class GHouse extends Game {
 		this.failFunc = () => {
 			if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
 			else { mXit(Goal.buttonClicked, 100); }
-		
+			mStyleX(this.dGraph, { opacity: 1 });
 		}
 		this.successFunc = () => {
 			if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
 			else { mXit(Goal.buttonClicked, 100); }
-		
+			mStyleX(this.dGraph, { opacity: 1 });
 		}
 	}
+
 	prompt() {
 
 		MGraph.destroy();
@@ -27,15 +28,22 @@ class GHouse extends Game {
 		this.trials = 1;
 		let n = randomNumber(this.nrooms / 2, this.nrooms); //console.log('n',n)
 
+		//#region selectQuestion
 		let qFuncs = [this.howMany.bind(this), this.areRoomsConnected.bind(this)];
 		if (n > 5) qFuncs.push(this.isThereAPath.bind(this));
 		let q = this.q = this.level > 1 ? arrLast(qFuncs) : chooseRandom(qFuncs); // this.isThereAPath.bind(this);//
+		//#endregion
+
+		//#region make house
 		let s = n;
 		let wTotal = n < 4 || n > 12 ? 700 : n > 10 ? 600 : 500;
-		let house = this.house = iHouse(dTable, s, { w: wTotal, h: 400 });
+		let dGridOuter = mDiv(dTable, { wmin: wTotal, hmin: 400 });
+		let house = this.house = iHouse(dGridOuter, s, { w: wTotal, h: 400 });
 		let rooms = this.rooms = house.rooms.map(x => Items[x]);
 		this.addLabelsToRooms();
+		//#endregion
 
+		//#region add doors
 		// let door = iDoor('g', 'e'); doors.push(door);
 		let dirs = coin() ? ['n', 'w'] : ['s', 'e'];
 		let doors = this.doors = [];
@@ -46,23 +54,32 @@ class GHouse extends Game {
 		}
 
 		if (q.name.includes('Path')) hideOuterDoors(house);
+		//#endregion
 
+		//#region prep container for multiple choices
 		mLinebreak(dTable, 20);
 		this.dChoices = mDiv(dTable);
 
 		mLinebreak(dTable);
-		let dGraph = this.dGraph = mDiv(dTable, { align: 'left', position: 'relative', w: wTotal, h: 300, rounding: 10, matop: 10, bg: 'skyblue' });
+		//#endregion
+
+		//#region make graph container
+		// let dGraph = this.dGraph = mDiv(dTable, { align: 'left', position: 'relative', w: wTotal, h: 300, rounding: 10, matop: 10, bg: 'skyblue' });
+
+		let r = getRect(dGridOuter); //console.log('r',r);
+		mStyleX(dGridOuter, { position: 'relative' });
+		let dGraph = this.dGraph = mDiv(dGridOuter, { align: 'left', position: 'absolute', bg: '#ffffff80', top: 0, left: 0, w: r.w, h: r.h });
+		//#endregion
+
 		let els = convertToGraphElements(house);
-		let g1 = this.graph = new MGraph(dGraph, {}, els, Username!='gul');
+		let g1 = this.graph = new MGraph(dGraph, {}, els, false); //Username != 'gul');
 		storeRoomPositions(g1);
 		g1.presetLayout();
 		g1.reset();
-		//if (Username == 'gul') hide(dGraph);
-		//hide(dGraph);
+
 		mStyleX(dGraph, { opacity: 0 });
 
 		q();
-
 		this.controller.activateUi.bind(this.controller)();
 	}
 	//#region qFuncs
@@ -226,38 +243,4 @@ class GHouse extends Game {
 
 }
 
-function createMultipleChoiceElements(correctAnswer, wrongAnswers, dParent, dFeedbackUI, styles) {
-
-	//console.log(correctAnswer)
-	if (nundef(Goal)) Goal = {};
-	let choices = wrongAnswers; choices.push(correctAnswer);
-	Goal.correctChoice = correctAnswer;
-	shuffle(choices);
-	if (coin()) shuffle(choices);
-	Goal.choices = choices;
-	Goal.feedbackUI = dFeedbackUI;
-
-	let idx = 0;
-	for (const ch of choices) {
-		////'&frac57;', //'&frac12;', 
-		let dButton = mButton(ch.text, onClickChoice, dParent, { wmin: 100, fz: 36, margin: 20, rounding: 4, vpadding: 4, hpadding: 10 }, ['toggleButtonClass']);
-		dButton.id = 'bChoice_' + idx; idx += 1;
-		//	console.log('==============',ch,wp.result)
-		if (ch.text == correctAnswer.text) {
-			Goal.choice = ch.toString();
-			Goal.buttonCorrect = dButton; //else console.log('ch', ch.toString(), 'res', wp.result.text)
-		}
-	}
-}
-function onClickChoice(ev) {
-	let id = evToClosestId(ev);
-	let b = mBy(id);
-	let index = Number(stringAfter(id, '_'));
-	Goal.choice = Goal.choices[index];
-	Goal.buttonClicked = b;
-	//console.log('clicked:',Goal.choice,Goal.correctChoice)
-	// if (Goal.choice == Goal.correctChoice) { mStyleX(b, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
-	// else { mXit(b, 100); }
-	G.controller.evaluate.bind(G.controller)();
-}
 

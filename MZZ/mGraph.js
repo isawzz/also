@@ -43,7 +43,7 @@ class MGraph {
 		//#region extend styleDict based on defStyleDict
 		let defStyleDict = {
 			node: { 'background-color': 'red', "color": "#fff", 'label': 'data(id)', "text-valign": "center", "text-halign": "center", },
-			edge: { 'width': 2, 'line-color': 'blue', 'curve-style': 'bezier', },
+			edge: { 'width': 2, 'line-color': 'blue', 'curve-style': 'haystack', },
 			'node.highlight': { 'background-color': 'yellow' },
 			'node.semitransp': { 'opacity': '0.5' },
 		}

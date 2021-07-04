@@ -1615,6 +1615,44 @@ function tileCondBelongsTo(t, pl, prop) { return t[prop] == pl.id; }
 
 //#endregion
 
+//#region multiple choice
+
+function createMultipleChoiceElements(correctAnswer, wrongAnswers, dParent, dFeedbackUI, styles) {
+
+	//console.log(correctAnswer)
+	if (nundef(Goal)) Goal = {};
+	let choices = wrongAnswers; choices.push(correctAnswer);
+	Goal.correctChoice = correctAnswer;
+	shuffle(choices);
+	if (coin()) shuffle(choices);
+	Goal.choices = choices;
+	Goal.feedbackUI = dFeedbackUI;
+
+	let idx = 0;
+	for (const ch of choices) {
+		////'&frac57;', //'&frac12;', 
+		let dButton = mButton(ch.text, onClickChoice, dParent, { wmin: 100, fz: 36, margin: 20, rounding: 4, vpadding: 4, hpadding: 10 }, ['toggleButtonClass']);
+		dButton.id = 'bChoice_' + idx; idx += 1;
+		//	console.log('==============',ch,wp.result)
+		if (ch.text == correctAnswer.text) {
+			Goal.choice = ch.toString();
+			Goal.buttonCorrect = dButton; //else console.log('ch', ch.toString(), 'res', wp.result.text)
+		}
+	}
+}
+function onClickChoice(ev) {
+	let id = evToClosestId(ev);
+	let b = mBy(id);
+	let index = Number(stringAfter(id, '_'));
+	Goal.choice = Goal.choices[index];
+	Goal.buttonClicked = b;
+	//console.log('clicked:',Goal.choice,Goal.correctChoice)
+	// if (Goal.choice == Goal.correctChoice) { mStyleX(b, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+	// else { mXit(b, 100); }
+	G.controller.evaluate.bind(G.controller)();
+}
+//#endregion
+
 function addNthInputElement(dParent, n) {
 	mLinebreak(dParent, 10);
 	let d = mDiv(dParent);
