@@ -1250,3 +1250,26 @@ div {
 	outline-offset: -2px;
 	/* border: solid 2px #FFFF00; */
 }
+
+.highlighted {
+	background-color: #61bffc;
+	outline-color: #61bffc;
+	transition-property: background-color, outline-color;
+	transition-duration: 0.5s;
+}
+
+.tbb{
+	font-size:10px;
+	border-radius:50%;
+	outline:none;
+	border:none;
+	background:dimgray;
+	color:white;
+	font-family:arial;
+	padding:none;
+	width:35px;
+	height:25px;
+	margin:auto;
+	margin-top:4px;
+
+}

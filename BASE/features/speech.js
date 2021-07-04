@@ -135,12 +135,21 @@ class Recorder {
 class Speaker {
 	static get VOICES() {
 		return {
-			david: 'Microsoft David Desktop - English',
+			david: 'Microsoft David - English (United States)', //'Microsoft David Desktop - English',
+			mark: 'Microsoft Mark - English (United States)',
+			austria: 'Microsoft Michael - German (Austria)',
 			zira: 'Microsoft Zira Desktop - English',
 			us: 'Google US English',
 			ukFemale: 'Google UK English Female',
 			ukMale: 'Google UK English Male',
 			deutsch: 'Google Deutsch',
+			spanish: 'Google español',
+			D: 'Google Deutsch',
+			S:'Google español',
+			F: 'Google français',
+			french: 'Google français',
+			C: 'Google 日本語',
+			E: 'Google US English',
 		};
 	}
 	constructor(lang) {
@@ -180,8 +189,6 @@ class Speaker {
 	}
 
 	utter(text, r = .5, p = .8, v = MASTERVOLUME, voicekey, callback = null) {
-
-
 		speechSynthesis.cancel();
 		var u = new SpeechSynthesisUtterance();
 		//u.text = text;
@@ -208,7 +215,7 @@ class Speaker {
 		// voicekey ... random | key in voiceNames | starting phrase of voices.name
 		//console.log(typeof voices, voices)
 		let voicenames = Speaker.VOICES;
-		let vkey = 'david';
+		let vkey = 'zira';
 		if (this.lang == 'D') {
 			vkey = 'deutsch';
 		} else if (text.includes('bad')) {
@@ -221,6 +228,7 @@ class Speaker {
 			let tryVoiceKey = firstCondDict(voicenames, x => startsWith(x, voicekey));
 			if (tryVoiceKey) vkey = tryVoiceKey;
 		}
+		//vkey=this.lang;//'david';//'mark'
 		let voiceName = voicenames[vkey];
 		let voice = firstCond(this.voices, x => startsWith(x.name, voiceName));
 		return [vkey, voice];
@@ -381,7 +389,6 @@ function sepWords(text, voiceKey, s = '') { //<silence msec="200" />') {
 	//console.log(voice,'\nlang=',voice.lang.trim(),'\ntrue or false=',voice.lang.trim()=='en-US');
 	//console.log('voiceKey',voiceKey)
 	if (voiceKey == 'zira') {
-
 		return text; // + ' hello <audio src="/assets/sounds/down.mp3">didnt get your MP3 audio file</audio> no way!';
 	} else if (startsWith(voiceKey, 'u')) { return text; }
 	let words = text.split(' ');

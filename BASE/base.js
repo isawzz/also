@@ -26,22 +26,23 @@ function mCenterFlex(d, hCenter = true, vCenter = false, wrap = true) {
 	if (wrap) styles['flex-wrap'] = 'wrap';
 	mStyleX(d, styles);
 }
-// function mCheckbox(label, val, dParent, styles = {}, id) {
-// 	let d = mDiv(dParent, { display: 'inline-block', align: 'left' });
-// 	// let val = lookup(this.o, skeys);
-// 	// if (nundef(val)) val = init;
-// 	let inp = createElementFromHTML(
-// 		`<input type="checkbox" class="checkbox" ${(val === true ? 'checked=true' : '')} >`
-// 	);
-// 	if (isdef(id)) inp.id = id;
-// 	let labelui = createElementFromHTML(`<label>${label}</label>`);
-// 	mAppend(d, labelui);
-// 	mAppend(labelui, inp);
-// 	mStyleX(inp, styles);
-// 	mClass(inp, 'input');
-// 	return inp;
-// }
 function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
+//#region dep muell
+function mCheckbox_dep(label, val, dParent, styles = {}, id) {
+	let d = mDiv(dParent, { display: 'inline-block', align: 'left' });
+	// let val = lookup(this.o, skeys);
+	// if (nundef(val)) val = init;
+	let inp = createElementFromHTML(
+		`<input type="checkbox" class="checkbox" ${(val === true ? 'checked=true' : '')} >`
+	);
+	if (isdef(id)) inp.id = id;
+	let labelui = createElementFromHTML(`<label>${label}</label>`);
+	mAppend(d, labelui);
+	mAppend(labelui, inp);
+	mStyleX(inp, styles);
+	mClass(inp, 'input');
+	return inp;
+}
 function mContainer(d, styles = {}) {
 	let defOuterStyles = {
 		display: 'inline-flex', 'flex-direction': 'column',
@@ -134,52 +135,7 @@ function mColorPicker1(dParent, palette, onColor) {
 
 	return picker;
 }
-function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
-function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
-function mDiv(dParent, styles, id, inner, classes) {
-	let d = mCreate('div');
-	if (dParent) mAppend(dParent, d);
-	if (isdef(styles)) mStyleX(d, styles);
-	if (isdef(classes)) mClass(d, ...classes);
-	if (isdef(id)) d.id = id;
-	if (isdef(inner)) d.innerHTML = inner;
-	return d;
-}
-function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
-function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }
-function unfocusOnEnter(ev) {
-	if (ev.key === 'Enter') {
-		ev.preventDefault();
-		//console.log('ENTER!', G.settings.rows)
-		mBy('dummy').focus();
-	}
-}
-function selectText(el) {
-	var sel, range;
-	if (window.getSelection && document.createRange) { //Browser compatibility
-		sel = window.getSelection();
-		if (sel.toString() == '') { //no text selection
-			window.setTimeout(function () {
-				range = document.createRange(); //range object
-				range.selectNodeContents(el); //sets Range
-				sel.removeAllRanges(); //remove all ranges from selection
-				sel.addRange(range);//add Range to a Selection.
-			}, 1);
-		}
-	} else if (document.selection) { //older ie
-		sel = document.selection.createRange();
-		if (sel.text == '') { //no text selection
-			range = document.body.createTextRange();//Creates TextRange object
-			range.moveToElementText(el);//sets Range
-			range.select(); //make selection.
-		}
-	}
-}
-function incInput(inp, n = 1) {
-	let val = Number(inp.innerHTML);
-	val += n;
-	inp.innerHTML = val;
-}
+//#endregion
 function mCheckbox(label, val, dParent, handler, styles) {
 	styles.align = 'left';
 	let d = mDiv(dParent, styles);
@@ -219,6 +175,53 @@ function mColorPickerControl(label, value, targetImage, dParent, handler, styles
 	inp.onInput = () => { let c = inp.toHEXAString(); handler(c); }
 	return inp;
 }
+function mCreate(tag, styles, id) { let d = document.createElement(tag); if (isdef(id)) d.id = id; if (isdef(styles)) mStyleX(d, styles); return d; }
+function mDestroy(elem) { if (isString(elem)) elem = mById(elem); purge(elem); } // elem.parentNode.removeChild(elem); }
+function mDiv(dParent, styles, id, inner, classes) {
+	let d = mCreate('div');
+	if (dParent) mAppend(dParent, d);
+	if (isdef(styles)) mStyleX(d, styles);
+	if (isdef(classes)) mClass(d, ...classes);
+	if (isdef(id)) d.id = id;
+	if (isdef(inner)) d.innerHTML = inner;
+	return d;
+}
+function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
+function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }
+//#region CLEANUP! edit inputs
+function unfocusOnEnter(ev) {
+	if (ev.key === 'Enter') {
+		ev.preventDefault();
+		//console.log('ENTER!', G.settings.rows)
+		mBy('dummy').focus();
+	}
+}
+function selectText(el) {
+	var sel, range;
+	if (window.getSelection && document.createRange) { //Browser compatibility
+		sel = window.getSelection();
+		if (sel.toString() == '') { //no text selection
+			window.setTimeout(function () {
+				range = document.createRange(); //range object
+				range.selectNodeContents(el); //sets Range
+				sel.removeAllRanges(); //remove all ranges from selection
+				sel.addRange(range);//add Range to a Selection.
+			}, 1);
+		}
+	} else if (document.selection) { //older ie
+		sel = document.selection.createRange();
+		if (sel.text == '') { //no text selection
+			range = document.body.createTextRange();//Creates TextRange object
+			range.moveToElementText(el);//sets Range
+			range.select(); //make selection.
+		}
+	}
+}
+function incInput(inp, n = 1) {
+	let val = Number(inp.innerHTML);
+	val += n;
+	inp.innerHTML = val;
+}
 function mEditRange(label, value, min, max, step, dParent, handler, styles, classes, id, triggerOnChange = true) {
 	let d = mDiv(dParent, styles);
 	let hpad = valf(styles.hpadding, 4);
@@ -241,7 +244,6 @@ function mEditRange(label, value, min, max, step, dParent, handler, styles, clas
 	if (isdef(id)) inp.id = id;
 	return inpText;
 }
-
 function mEditNumber(label, value, dParent, handler, styles, classes, id, triggerOnChange = true) {
 	let d = mDiv(dParent, styles);
 	let hpad = valf(styles.hpadding, 4);
@@ -260,7 +262,6 @@ function mEditNumber(label, value, dParent, handler, styles, classes, id, trigge
 	if (isdef(id)) inp.id = id;
 	return inp;
 }
-
 function mEdit(label, value, dParent, handler, styles, classes, id) {
 
 	let d = mDiv(dParent, styles);
@@ -340,6 +341,7 @@ function mEditableInput(dParent, label, val, styles, classes, id) {
 
 	return elem;
 }
+//#endregion
 function mFlexWrap(d) { mFlex(d, 'w'); }
 function mFlex(d, or = 'h') {
 	d.style.display = 'flex';
@@ -449,6 +451,30 @@ function mRemoveClass(d) { for (let i = 1; i < arguments.length; i++) d.classLis
 function mRemoveStyle(d, styles) { for (const k of styles) d.style[k] = null; }
 function mReveal(d) { d.style.opacity = 1; }
 function mScreen(dParent, styles) { let d = mDover(dParent); if (isdef(styles)) mStyleX(d, styles); return d; }
+function mSidebar(title, dParent, styles, id, inner) {
+
+	let elem = createElementFromHtml(`
+	<div id="${id}" class="w3sidebar">
+		<h1>${title}</h1>
+	  <a href="javascript:void(0)" class="closebtn">×</a>
+	</div>	
+	`);
+	function openNav() {
+		elem.style.width = "250px";
+		dParent.style.marginLeft = "250px";
+	}
+
+	function closeNav() {
+		elem.style.width = "0";
+		dParent.style.marginLeft = "0";
+	}
+
+	elem.children[1].onclick = closeNav;
+	mClass(dParent, 'w3sidebarParent');
+	let dContent = mDiv(elem);
+	mInsert(dParent.parentNode, elem);
+	return { div: elem, dContent: dContent, fOpen: openNav, fClose: closeNav };
+}
 function mSize(d, w, h, unit = 'px') { mStyleX(d, { width: w, height: h }, unit); }
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
@@ -2936,8 +2962,8 @@ async function localOrRoute(key, url) {
 //#endregion
 
 //#region measure size and pos ARITHMETIC
-function getCenter(elem) { let r = getRect(elem); return { x: (r.w) / 2, y: (r.h) / 2 }; }
-function getRect(elem, relto) {
+function getCenter(elem) { let r = isdef(elem.x)?elem: getRect(elem); return { x: (r.w) / 2, y: (r.h) / 2 }; }
+function getRectInt(elem, relto) {
 
 	if (isString(elem)) elem = document.getElementById(elem);
 
@@ -2959,6 +2985,31 @@ function getRect(elem, relto) {
 		};
 	}
 	let r4 = { x: Math.round(res.left), y: Math.round(res.top), w: Math.round(res.width), h: Math.round(res.height) };
+	extendRect(r4); //r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;
+	return r4;
+}
+function getRect(elem, relto) {
+
+	if (isString(elem)) elem = document.getElementById(elem);
+
+	let res = elem.getBoundingClientRect();
+	//console.log(res)
+	if (isdef(relto)) {
+		//console.log(relto)
+		let b2 = relto.getBoundingClientRect();
+		let b1 = res;
+		res = {
+			x: b1.x - b2.x,
+			y: b1.y - b2.y,
+			left: b1.left - b2.left,
+			top: b1.top - b2.top,
+			right: b1.right - b2.right,
+			bottom: b1.bottom - b2.bottom,
+			width: b1.width,
+			height: b1.height
+		};
+	}
+	let r4 = { x: res.left, y: res.top, w: res.width, h: res.height };
 	extendRect(r4); //r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;
 	return r4;
 }
@@ -3563,6 +3614,9 @@ function takeFromTo(ad, from, to) {
 		return keys.slice(from, to).map(x => (ad[x]));
 	} else return ad.slice(from, to);
 }
+function union(lst1, lst2) {
+	return [...new Set([...lst1, ...lst2])];
+}
 //#endregion
 
 //#region random
@@ -3856,6 +3910,8 @@ function substringOfMinLength(s, minStartIndex, minLength) {
 	while (res1.trim().length < minLength && i < res.length) { res1 += res[i]; i += 1; }
 	return res1.trim();
 }
+function lettersToArray(s){return toLetterList(s);}
+function toLetterArray(s){return toLetterList(s);}
 function toLetterList(s) {
 	return [...s];
 }
@@ -4186,6 +4242,7 @@ function isWhiteSpace2(ch) {
 	const alphanum = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
 	return !alphanum.includes(ch);
 }
+function isWhiteSpaceString(s){return isEmptyOrWhiteSpace(s);}
 function isOverflown(element) {
 	return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }

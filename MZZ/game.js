@@ -804,7 +804,7 @@ function logicMulti(n) {
 	}
 	//console.log('fehler!')
 
-	let lst1 = ['eliminate', 'all'];
+	let lst1 = ['click', 'all'];
 	if (G.language == 'D') lst1 = lst1.map(x => DD[x]);
 	let prefix = lst1.join(' ');
 	s = prefix + ' ' + s;
@@ -1793,6 +1793,7 @@ function sayRandomVoice(e, g, voice = 'random') {
 }
 function sayTryAgain() { sayRandomVoice('try again!', 'nochmal'); }
 function setBackgroundColor(c) { mStyleX(document.body,{bg:getColorDictColor(isdef(c) ? c : G.color)}); }
+function setLanguageHALLO(l){Settings.language=G.language=l;Speech.setLanguage(l);console.log('SET LANGUAGE TO',l,G.language,G.lang);}
 function setGoal(index) {
 	if (nundef(index)) {
 		let rnd = G.numPics < 2 ? 0 : randomNumber(0, G.numPics - 2);
@@ -1836,7 +1837,7 @@ function showHiddenThumbsUpDown(sz = 100) {
 		mStyleX(d1, { opacity: 0 });
 	}
 }
-function showInstruction(text, cmd, dParent, isSpoken, spoken, fz) {
+function showInstruction(text, cmd, dParent, isSpoken, spoken, fz, voice) {
 	//console.log('isSpoken',isSpoken,'G',G)
 	//console.assert(title.children.length == 0,'TITLE NON_EMPTY IN SHOWINSTRUCTION!!!!!!!!!!!!!!!!!')
 	//console.log('G.id is', G.id)
@@ -1863,7 +1864,7 @@ function showInstruction(text, cmd, dParent, isSpoken, spoken, fz) {
 
 	if (!isSpoken) return;
 
-	sayRandomVoice(isdef(spoken) ? spoken : (cmd + " " + text));
+	sayRandomVoice(isdef(spoken) ? spoken : (cmd + " " + text), null, "david");
 
 }
 function showInstructionX(written, dParent, spoken, { fz, voice } = {}) {

@@ -1,194 +1,29 @@
-
-
-
-function makeRandomDirDoor(room,dir,styles={}){
-	if (isString(room)) room=Items[room];
-	let house = Items[room.house];
-	console.log('walls',room.walls,dir); //RICHTIG!!!
-	let walls = room.walls.filter(x=>x.dir==dir).map(x=>Items[x.id]);
-	if (isEmpty(walls)) {errlog('room',room.ch,'has no wall in',dir);return;}
-	console.log('walls',walls)
-	let wall = walls.length == 1? walls[0]:chooseRandom(walls);
-	console.log('wall',wall)
-	return makeWallDoor(room,wall,styles);
-}
-function makeWallDoor(room,wall,styles){
-	let house = Items[room.house];
-	showRect('house',house);showRect('room',room);
-	//console.log('wall',wall); 
-	console.log('wall',wall,wall.rect)
-	showRect('wall',wall);
-
-
-}
-function iDoor(room, wallRect, styles = {}) {
-
-	console.assert(isdef(roomWall),'SCHON WIEDER KEIN ROOMWALL!!!');
-
-	let wItem = Items[roomWall.id];
-	let dirOfWallRelativeToRoom = roomWall.dir;
-	let dirOfRoomRelativeToWall = firstCond(wItem.rooms, x => x.id == room.id).dir;
-	let house = Items[room.house];
-	let dParent = iDiv(house); // iDiv(room);
-	mStyleX(dParent,{position:'relative'});
-
-	console.log('dParent',dParent);
-	let rTest={x:0,y:0,w:4,h:40};
-	let dTest = mDiv(dParent, { bg: 'red', position: 'absolute', left: rTest.x, top: rTest.y, w: rTest.w, h: rTest.h });
-	rTest.x=903-199; //
-	let dTest1 = mDiv(dParent, { bg: 'black', position: 'absolute', left: rTest.x, top: rTest.y, w: rTest.w, h: rTest.h });
-
-
-	let r = wItem.rect;
-	let x, y, w, h;
-
-	let sz = valf(styles.sz, 50);
-	let bg = valf(styles.bg, room.bg);
-	if (dirOfWallRelativeToRoom == 'n') {
-		x = (r.x - room.rect.x) + (r.w - sz) / 2;
-		y = -r.h;
-		w = sz + 1;
-		h = r.h;
-	} else if (dirOfWallRelativeToRoom == 'e') {
-
-
-		console.log('_______________',house.wallWidth); showRect('house',house); showRect('room',room);
-		x=room.rect.r;
-		w=house.wallWidth+1;
-		if (x+w>house.rect.r) w=house.rect.r-x;
-		y = (r.y - room.rect.y) + (r.h - sz) / 2;
-		h = sz;
-
-		// x = room.rect.w - 1;
-		// w = r.w;
-	} else if (dirOfWallRelativeToRoom == 's') {
-		// console.log('room', room.ch, 'wall rect', r);
-		// let house = Items[room.house];
-		// console.log('house', house)
-		// console.log('room rect', room.rect)
-
-		x = (r.x - room.rect.x) + (r.w - sz) / 2;
-		y = room.rect.h - 1;
-		w = sz + 1;
-		h = r.h;
-	} else if (dirOfWallRelativeToRoom == 'w') {
-		y = (r.y - room.rect.y) + (r.h - sz) / 2;
-		x = -r.w;
-		w = r.w;
-		h = sz + 1;
-	}
-
-	console.log('making div!!!')	
-	let d = mDiv(dParent, { bg: 'red', position: 'absolute', left: x, top: y, w: w, h: h });
-	let door = { room: room.id, wall: roomWall.id, rooms: wItem.rooms };
-	iAdd(door, { div: d });
-	//console.log('door', door);
-
-	//add this doorId to each of the rooms doors
-	for (const wallRoom of wItem.rooms) {
-		let room = Items[wallRoom.id];
-		//console.log('room',room,wallRoom);
-		room.doors.push(door.id);
-
-	}
-	//add this doorId to wall Item
-	wItem.door = door.id;
-
-	return door;
-
-
-}
-
-function iDoor_dep(room, roomWall, styles = {}) {
-	console.assert(isdef(roomWall),'SCHON WIEDER KEIN ROOMWALL!!!');
-
-	let wItem = Items[roomWall.id];
-	let dirOfWallRelativeToRoom = roomWall.dir;
-	let dirOfRoomRelativeToWall = firstCond(wItem.rooms, x => x.id == room.id).dir;
-	let house = Items[room.house];
-	let dParent = iDiv(house); // iDiv(room);
-	mStyleX(dParent,{position:'relative'});
-
-	console.log('dParent',dParent);
-	let rTest={x:0,y:0,w:4,h:40};
-	let dTest = mDiv(dParent, { bg: 'red', position: 'absolute', left: rTest.x, top: rTest.y, w: rTest.w, h: rTest.h });
-	rTest.x=903-199; //
-	let dTest1 = mDiv(dParent, { bg: 'black', position: 'absolute', left: rTest.x, top: rTest.y, w: rTest.w, h: rTest.h });
-
-
-	let r = wItem.rect;
-	let x, y, w, h;
-
-	let sz = valf(styles.sz, 50);
-	let bg = valf(styles.bg, room.bg);
-	if (dirOfWallRelativeToRoom == 'n') {
-		x = (r.x - room.rect.x) + (r.w - sz) / 2;
-		y = -r.h;
-		w = sz + 1;
-		h = r.h;
-	} else if (dirOfWallRelativeToRoom == 'e') {
-
-
-		console.log('_______________',house.wallWidth); showRect('house',house); showRect('room',room);
-		x=room.rect.r;
-		w=house.wallWidth+1;
-		if (x+w>house.rect.r) w=house.rect.r-x;
-		y = (r.y - room.rect.y) + (r.h - sz) / 2;
-		h = sz;
-
-		// x = room.rect.w - 1;
-		// w = r.w;
-	} else if (dirOfWallRelativeToRoom == 's') {
-		// console.log('room', room.ch, 'wall rect', r);
-		// let house = Items[room.house];
-		// console.log('house', house)
-		// console.log('room rect', room.rect)
-
-		x = (r.x - room.rect.x) + (r.w - sz) / 2;
-		y = room.rect.h - 1;
-		w = sz + 1;
-		h = r.h;
-	} else if (dirOfWallRelativeToRoom == 'w') {
-		y = (r.y - room.rect.y) + (r.h - sz) / 2;
-		x = -r.w;
-		w = r.w;
-		h = sz + 1;
-	}
-
-	console.log('making div!!!')	
-	let d = mDiv(dParent, { bg: 'red', position: 'absolute', left: x, top: y, w: w, h: h });
-	let door = { room: room.id, wall: roomWall.id, rooms: wItem.rooms };
-	iAdd(door, { div: d });
-	//console.log('door', door);
-
-	//add this doorId to each of the rooms doors
-	for (const wallRoom of wItem.rooms) {
-		let room = Items[wallRoom.id];
-		//console.log('room',room,wallRoom);
-		room.doors.push(door.id);
-
-	}
-	//add this doorId to wall Item
-	wItem.door = door.id;
-
-	return door;
-
-
-}
-
-
-
 var cy = null;
 
-function getShortestPathsFrom(id){
+function getShortestPathsFrom(id) {
 	//let node = cy.$('#'+id);
-	let res = cy.elements().dijkstra('#'+id); //, function(edge){return edge.data('weight');});	
+	let res = cy.elements().dijkstra('#' + id); //, function(edge){return edge.data('weight');});	
 	//let res = cy.dijkstra(node);
-	console.log('shortests paths',res);
+	//console.log('shortests paths', res);
 	return res;
 }
-
-function _convertToCy(dParent,vertices,edges){
+function testdij(from, to) {
+	var dijkstra = cy.elements().dijkstra('#' + from, x => {
+		return x.data();
+	}, false);
+	var bfs = dijkstra.pathTo(cy.$('#' + to));
+	var x = 0;
+	var highlightNextEle = function () {
+		var el = bfs[x];
+		el.addClass('highlighted');
+		if (x < bfs.length) {
+			x++;
+			setTimeout(highlightNextEle, 500);
+		}
+	};
+	highlightNextEle();
+}
+function _convertToCy(dParent, vertices, edges) {
 	mStyleX(dParent, { position: 'relative', align: 'left' });
 	let d = mDiv(dParent);
 	let styleParent = { bg: 'white', position: 'absolute', wmin: '100%', hmin: '100%', top: 0, bottom: 0, left: 0, right: 0 };
@@ -197,11 +32,13 @@ function _convertToCy(dParent,vertices,edges){
 	let elements = { nodes: [], edges: [] };
 	for (const v of vertices) { elements.nodes.push({ data: v }); }
 	for (const e of edges) {
-		let nodes = e.rooms.map(x => x.id);
-		if (nodes.length < 2) continue;
-		e.source = nodes[0];
-		e.target = nodes[1];
+		//let nodes = e.rooms.map(x => x.id);
+
+		if (e.rooms.length < 2) continue;
+		e.source = e.rooms[0]; //nodes[0];
+		e.target = e.rooms[1]; //nodes[1];
 		elements.edges.push({ data: e });
+		//console.log('e',e)
 	}
 
 	//console.log(elements.edges); // each element must have id!
@@ -286,35 +123,155 @@ function makePlanarGraph(dParent, vertices, edges) {
 
 }
 function makeGraph(dParent, vertices, edges) {
-	_convertToCy(dParent,vertices,edges);
+	_convertToCy(dParent, vertices, edges);
 	cy.fit();
 	cy.center();
 }
-function howManyComponents(){
+function howManyComponents() {
 	let comp = cy.elements().components();
 	//console.log('components',comp);
 	return comp.length;
 }
-function getComponentsNodeIds(){
+function getComponentsNodeIds() {
 	//returns list of list of ids that belong to same component
 	let comp = cy.elements().components();
 	//let node = comp[0][0].id(); //_private.data.id; //.map(x=>x.map(y=>y));
 
 	//console.log('====>',node)
-	let ids = comp.map(x=>x.map(y=>y.id()).filter(z=>z[0]!='_'));
+	let ids = comp.map(x => x.map(y => y.id()).filter(z => z[0] != '_'));
 	//console.log('...ids',ids)
 
 	return ids;
 
 }
+function getPathNodeIds(dij) {
 
+	let path = cy.elements.dijstra();// dij.pathTo('#' + this.roomTo).eles(); //ments();
+	console.log('________\n', path);
+}
+function getNodeWithMaxDegree(idlist) {
+	if (nundef(idlist)) idlist = cy.elements().filter('node').map(x => x.data().id);
+	let imax = arrMinMax(idlist, x => getDegree(x)).imax;
+	let id = idlist[imax];
+	//console.log(id,getDegree(id));
+	return id;
 
+}
+function sortNodesByDegree(idlist, descending = true) {
+	if (nundef(idlist)) idlist = cy.elements().filter('node').map(x => x.data().id);
+	let nodes = idlist.map(x => getNode(x));
+	for (const n of nodes) { n.degree = getDegree(n.id); }
+	if (descending) sortByDescending(nodes, 'degree'); else sortBy(nodes, 'degree');
+	return nodes;
+}
+
+function getNodes() { return cy.elements().filter('node'); }
+function getNodes() { return cy.elements().filter('edge'); }
+function getNode(id) { return cy.$('#' + id).data(); }
+function getEdge(id) { return cy.$('#' + id).data(); }
+function getDegree(id) { return cy.nodes('#' + id).degree(); }//cy.elements().node(id).degree();}
+
+function cyTest00(d, items) {
+	cy = cytoscape({
+	//cy.cytoscape({
+		style: cytoscape.stylesheet()
+			.selector('node')
+			.css({
+				'content': 'data(id)'
+			})
+			.selector('edge')
+			.css({
+				'target-arrow-shape': 'triangle',
+				'width': 4,
+				'line-color': '#ddd',
+				'target-arrow-color': '#ddd'
+			})
+			.selector('.highlighted')
+			.css({
+				'background-color': '#61bffc',
+				'line-color': '#61bffc',
+				'target-arrow-color': '#61bffc',
+				'transition-property': 'background-color, line-color, target-arrow-color',
+				'transition-duration': '0.5s'
+			}),
+
+		elements: {
+			nodes: [
+				{ data: { id: 'a' } },
+				{ data: { id: 'b' } },
+				{ data: { id: 'c' } },
+				{ data: { id: 'd' } },
+				{ data: { id: 'e' } },
+				{ data: { id: 'f' } },
+				{ data: { id: 'g' } },
+				{ data: { id: 'h' } },
+				{ data: { id: 'i' } }
+			],
+
+			edges: [
+				{ data: { id: 'ab', weight: 1, source: 'a', target: 'b' } },
+				{ data: { id: 'ac', weight: 2, source: 'a', target: 'c' } },
+				{ data: { id: 'bd', weight: 3, source: 'b', target: 'd' } },
+				{ data: { id: 'be', weight: 4, source: 'b', target: 'e' } },
+				{ data: { id: 'cf', weight: 5, source: 'c', target: 'f' } },
+				{ data: { id: 'cg', weight: 6, source: 'c', target: 'g' } },
+				{ data: { id: 'ah', weight: 7, source: 'a', target: 'h' } },
+				{ data: { id: 'hi', weight: 8, source: 'h', target: 'i' } }
+			]
+		},
+
+		layout: {
+			name: 'breadthfirst',
+			directed: true,
+			roots: '#a',
+			padding: 5
+		},
+
+		ready: function () {
+			window.cy = this;
+
+			var dijkstra = cy.elements().dijkstra('#e', function () {
+				return this.data('weight');
+			}, false);
+			var bfs = dijkstra.pathTo(cy.$('#i'));
+			var x = 0;
+			var highlightNextEle = function () {
+				var el = bfs[x];
+				el.addClass('highlighted');
+				if (x < bfs.length) {
+					x++;
+					setTimeout(highlightNextEle, 500);
+				}
+			};
+			highlightNextEle();
+		}
+	});
+}
 function cyInit(d, items) {
 	cy = cytoscape({
 		// very commonly used options
 		container: d,
 		elements: [ /* ... */],
-		style: [ /* ... */],
+		style: cytoscape.stylesheet()
+			.selector('node')
+			.css({
+				'content': 'data(id)'
+			})
+			.selector('edge')
+			.css({
+				'target-arrow-shape': 'triangle',
+				'width': 4,
+				'line-color': '#ddd',
+				'target-arrow-color': '#ddd'
+			})
+			.selector('.highlighted')
+			.css({
+				'background-color': '#61bffc',
+				'line-color': '#61bffc',
+				'target-arrow-color': '#61bffc',
+				'transition-property': 'background-color, line-color, target-arrow-color',
+				'transition-duration': '0.5s'
+			}),
 		layout: { name: 'grid' /* , ... */ },
 		data: { /* ... */ },
 

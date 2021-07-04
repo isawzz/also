@@ -52,7 +52,7 @@ users:
       gElim:
         startLevel: 2
       gHouse:
-        startLevel: 5
+        startLevel: 2
       gMem:
         startLevel: 4
         showHint: false
@@ -294,6 +294,8 @@ users:
   gul:
     id: gul
     avGames:
+      - gHouse
+      - gKrieg
       - gSteps
       - gSentence
       - gTouchColors
@@ -314,7 +316,7 @@ users:
       - gAbacus
       - gRiddle
       - gC4
-    lastGame: gRiddle
+    lastGame: gHouse
     settings:
       userColor: blue
       samplesPerGame: 10
@@ -392,6 +394,19 @@ users:
         startLevel: 4
       gWritePic:
         startLevel: 5
+      gHouse:
+        nTotal: 10
+        nCorrect: 10
+        nCorrect1: 10
+        startLevel: 1
+        percentage: 100
+      gKrieg:
+        nTotal: 1
+        nCorrect: 0
+        nCorrect1: 0
+        nWins: 0
+        nLoses: 1
+        percentage: 0
     avAddons:
       - aPasscode
       - aAddress

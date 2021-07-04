@@ -4,39 +4,49 @@ class GHouse extends Game {
 		this.correctionFunc = () => {
 			mStyleX(Goal.buttonCorrect, { bg: 'green' });
 			animate(Goal.buttonCorrect, 'komisch', 1000);
+
+			if (this.q.name.includes('isThereAPath')) this.showPath();
 			return 20000;
 		};
-
 	}
 	prompt() {
+
+		MGraph.destroy();
+
 		this.trials = 1;
-		let qFuncs = [this.howMany.bind(this), this.areRoomsConnected.bind(this), this.isThereAPath.bind(this)];
-		let q = this.isThereAPath.bind(this);//chooseRandom(qFuncs); // 
-		console.log('q', q.name, q.name.includes('Path'))
+		let n = randomNumber(this.nrooms / 2, this.nrooms); //console.log('n',n)
 
-		let n = 2;// randomNumber(this.nrooms / 2, this.nrooms); console.log('n',n)
-		let s='"a a" "c d"';
-		let [r1,r2]=['a','c'];
-
+		let qFuncs = [this.howMany.bind(this), this.areRoomsConnected.bind(this)];
+		if (n > 5) qFuncs.push(this.isThereAPath.bind(this));
+		let q = this.q = this.level > 1 ? arrLast(qFuncs) : chooseRandom(qFuncs); // this.isThereAPath.bind(this);//
+		let s = n; 
 		let wTotal = n < 4 || n > 12 ? 700 : n > 10 ? 600 : 500;
 		let house = this.house = iHouse(dTable, s, { w: wTotal, h: 400 });
 		let rooms = this.rooms = house.rooms.map(x => Items[x]);
 		this.addLabelsToRooms();
 
-		let dir = 'e';
-		let room = chooseRandom(rooms);
-		console.log('dir',dir,'room',room.ch);
-		iDoor(room, dir);
-		return;
-		//console.log('num rooms:',this.rooms.length)
+		// let door = iDoor('g', 'e'); doors.push(door);
+		let dirs = coin() ? ['n', 'w'] : ['s', 'e'];
+		let doors = this.doors = [];
+		for (const r of rooms) {
+			let dir = coin() ? dirs[0] : dirs[1];
+			let door = iDoor(r.id, dir);
+			doors.push(door);
+		}
+
+		if (q.name.includes('Path')) hideOuterDoors(house);
 
 		mLinebreak(dTable, 20);
 		this.dChoices = mDiv(dTable);
 
 		mLinebreak(dTable);
-		let dGraph = mDiv(dTable, { w: wTotal, h: 100, bg: BLUE });
-		this.graph = makePlanarGraph(dGraph, this.rooms, this.doors);
-		hide(dGraph);
+		let dGraph = mDiv(dTable, { align: 'left', position: 'relative', w: wTotal, h: 300, rounding: 10, matop: 10, bg: 'skyblue' });
+		let els = convertToGraphElements(house); 
+		let g1 = this.graph = new MGraph(dGraph, {}, els);
+		storeRoomPositions(g1);
+		g1.presetLayout();
+		g1.reset();
+		if (Username == 'gul') hide(dGraph);
 
 		q();
 
@@ -45,31 +55,67 @@ class GHouse extends Game {
 	//#region qFuncs
 	isThereAPath() {
 		let house = this.house;
-		//console.log('G', this); let r1 = getRoomSE(house); console.log('SE', r1); return;
-		//let [r1,r2] = getDiagRoomPairs(house);
-		//console.log('diagOpposed', r);
+		let corners = getCornerRoomsDict(house); //console.log('corners', corners); 
+		let clist = Object.values(corners);	//console.log('cornerlist',clist);
+		let g=this.graph;
 
-		let corners = getCornerRoomsDict(house);
-		// console.log('corners', corners);
-		let nw = corners.NW;
-		// console.log('nw', nw)
-		let funcs = getShortestPathsFrom(nw);
-		// console.log('funcs', funcs);
-		let n2 = null;
+		let id = g.getNodeWithMaxDegree(clist); //console.log('max degree node:',id);
+		let cornerRoomIds = g.sortNodesByDegree(clist).map(x=>x.id());
+		//console.log('nodes',cornerRoomIds);
+		
+		let [r1, r2] = [Items[cornerRoomIds[0]], Items[cornerRoomIds[1]]]; //take first 2 nodes, and order by dir: n,e,
+		if (r1 == r2 || areNeighbors(r1,r2) && cornerRoomIds.length>2) r2 = Items[cornerRoomIds[2]];
+		if (!r1.isW && (r2.isW || !r1.N)) [r1, r2] = [r2, r1];
+
+		//console.log('from room',r1.id,r1,'to room',r2.id,r2);
+
+		let roomFrom = this.roomFrom = r1.id; // corners.NW; 	// console.log('nw', nw)
+		let funcs = this.dijkstra = g.getShortestPathsFrom(roomFrom);	// console.log('funcs', funcs);
+		let roomTo = this.roomTo = r2.id; //null;
 		for (const k in corners) {
 			if (k != 'NW') {
 				let dist = funcs.distanceTo('#' + corners[k]);
 				if (dist != Infinity && dist >= 3) {
-					//take that node!
-					n2 = corners[k];
+					roomTo = corners[k];
 					break;
-				} else console.log('distance to', k, dist);
+				} //else console.log('distance to', k, dist);
 			}
 		}
-		if (!n2) { n2 = corners.SE; }
-		showInstruction('', this.language == 'E' ? `is there a path from "${Items[nw].id}" to "${Items[corners.SE].id}"`
-			: `gibt es einen weg von ${Items[nw].id} zu ${Items[n2].id}`, dTitle, true);
-		let answer = funcs.distanceTo('#' + n2) != Infinity;
+		if (!roomTo) { roomTo = corners.SE; }
+
+		//#region spoken and written instruction
+		//setLanguageHALLO('F');
+		let sp1 = {
+			D: ['gibt es einen weeg von', 'gibt es einen weg von'],
+			E: ['is there a path from', 'is there a path from'],
+			S: ['hay un camino de', 'hay un camino de'],
+			F: ["y a 'til un chemin de", "y a 'til un chemin de"],
+		};
+		let sp2 = {
+			D: ['zu', 'zu'],
+			E: ['to', 'to'],
+			S: ['a', 'a'],
+			F: ['!. a! ', 'à'],
+		};
+		let fill1 = [`. "${Items[roomFrom].id.toUpperCase()}"! `, ` ${Items[roomFrom].id} `];
+		let fill2 = [`. "${Items[roomTo].id.toUpperCase()}"`, ` ${Items[roomTo].id}`];
+		let l = this.language;
+		let sp = sp1[l][0] + fill1[0] + sp2[l][0] + fill2[0] + '?';
+		let wr = sp1[l][1] + fill1[1] + sp2[l][1] + fill2[1] + '?';
+
+		// let wr = this.language == 'E' ? `is there a path from ${Items[nw].id} to ${Items[n2].id}` : `gibt es einen weg von ${Items[nw].id} zu ${Items[n2].id}`;
+		// // let sp = this.language == 'E' ? `is there a path from: "${Items[nw].id.toUpperCase()}", to: "${Items[corners.SE].id.toUpperCase()}"`: `gibt es einen weg von ${Items[nw].id} zu ${Items[n2].id}`;
+		// let sp = this.language == 'E' ? `is there a path from: "${Items.a.id.toUpperCase()}", to: "${Items.a.id.toUpperCase()}"` : `gibt es einen weeg von ${Items[nw].id} zu ${Items[n2].id}`;
+		//sp = `is there a path from. "A"! to. "A"`;
+
+		let voice = this.language == 'E' ? coin() ? 'ukMale' : 'zira' : this.language;
+
+		//showInstruction('', wr, dTitle, true, sp, 20, 'david');		
+		//#endregion
+
+		showInstructionX(wr, dTitle, sp, { voice: voice });
+
+		let answer = funcs.distanceTo('#' + roomTo) != Infinity;
 		let correct, incorrect;
 		if (answer) { correct = { num: 1, text: 'yes' }; incorrect = [{ num: 0, text: 'no' }]; }
 		else { correct = { num: 0, text: 'no' }; incorrect = [{ num: 1, text: 'yes' }]; }
@@ -104,6 +150,14 @@ class GHouse extends Game {
 		createMultipleChoiceElements(correct, incorrect, this.dChoices, iDiv(this.house), {});
 	}
 
+	//#region helpers
+	showPath() {
+		//how to get path from this.roomFrom to this.roomTo?
+		let path = this.path = getPathNodes(this.dijkstra);
+
+
+		//console.log('path',path);
+	}
 	//#region add stuff to house
 	addLabelsToRooms() {
 		let roomlist = ['bedroom', 'livingroom', 'bathroom', 'kitchen'];
