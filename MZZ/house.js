@@ -105,6 +105,53 @@ function iDoor(r1, dir, r2, styles = {}) {
 	return door;
 
 }
+function iLabyrint(dParent, cols,rows, styles = { w: 800, h: 400 }) {
+	//achtung styles: fg is wall color, bg is room color!
+	let d = mDiv(dParent, { display: 'inline-grid', position: 'relative', box: true });
+
+	//each room name is a..z + 1..9
+
+
+	ns = isNumber(ns) ? d.style.gridTemplateAreas = getLayoutSample(ns) : ns; //'"z z d" "a a c" "a a c"';// getLayoutSample(3);
+	let s = d.style.gridTemplateAreas = ns;
+	//setGranularityFactor(s, 9);
+	let letterList = filterDistinctLetters(s);
+	let wallWidth = valf(styles.gap, 4);
+
+	//hier berechne ich house size etwas genauer: 
+	//let [wHouse,hHouse]=keepGridAtFixedIntegerSize(d);
+	let lines = s.split('"').filter(x => !isWhiteSpaceString(x));
+	//console.log('lines',lines);
+	//console.log('this thins has',cols,'cols','and',rows,'rows');
+	//each unit should be divisible by 4
+	let wHouse = Math.round(styles.w / cols) * cols + wallWidth * cols + 1;
+	let hHouse = Math.round(styles.h / rows) * rows + wallWidth * rows + 1;
+	d.style.gridTemplateRows = `repeat(${rows}, 1fr)`;// / repeat(${cols}, 1fr)`;
+	d.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;// / repeat(${cols}, 1fr)`;
+
+	let szDoor = valf(styles.szDoor, 40);
+
+	let [wallColor, floorColor] = [valf(styles.fg, 'white'), valf(styles.bg, BLUE)];
+	mStyleX(d, { bg: wallColor, w: wHouse, h: hHouse, gap: wallWidth, padding: wallWidth });
+
+	let rooms = [];
+	for (const ch of letterList) { //['a', 'c', 'd', 'f', 'z']) {
+		let r = iRoom(d, ch, { bg: floorColor });
+		rooms.push(r);
+	}
+
+	let house = { rect: getRect(d), fg: wallColor, bg: floorColor, doors: [], rooms: rooms.map(x => x.id), roomLetters: letterList, szDoor: szDoor, wallWidth: wallWidth };
+	house.roomsByLetter = {};
+	//console.log('..........',house.rect)
+	rooms.map(x => house.roomsByLetter[x.ch] = x.id);
+	iAdd(house, { div: d });
+	rooms.map(x => x.house = house.id);
+
+	roomAdjacency(house);
+
+	return house;
+}
+
 function iHouse(dParent, ns = 1, styles = { w: 500, h: 400 }) {
 	//achtung styles: fg is wall color, bg is room color!
 	let d = mDiv(dParent, { display: 'inline-grid', position: 'relative', box: true });
@@ -317,6 +364,16 @@ function areNeighbors(r1, r2) {
 function getDoorId(r1, r2) { return r1 + '_' + r2 + '_' + r1; }
 function getLayoutSample(n) {
 	//console.log('n', n)
+
+	if (G.level > 4){
+		//room size: min 40x40 (40x14=560)
+		// max ist 20x8=80 rooms a 50x50, versuch das mal!
+		// wenn platz habe 1000, kann ich 50x20 rooms in einer reihe machen und hohe kann machen 5
+		//3x4, 3x5, 3x6, 3x7, 3x8, 3x9, 3x10, 
+		//4x5, 4x6, 4x7, 4x8, 4x9, 4x10, 4x11, 4x12, 4x13, 4x14
+		
+	}
+
 	let samples = {
 		1: '"a"',
 		2: '"a b"', //'"a" "b"',
@@ -384,6 +441,14 @@ function getLayoutSample(n) {
 			'"a v b c d e" "f g h x i j" "k u l m n o" "p q r w s t"',
 			'"a v v b c d e" "f g h x x i j" "k u l l n o m" "p q r w s t m"',
 		],
+		25: ['"a b c d e f g" "a h i k l m g" "o p n r s m u" "v w x y q t j"'],
+		26: ['"a a c d e f g" "h i b k l j n" "o p q r s m u" "v w x y z t u"'],
+		27: ['"a b c d e f g" "h i j k l m n" "o p q r s t u" "v w x y z A u"'],
+		28: ['"a b c d e f g" "h i j k l m n" "o p q r s t u" "v w x y z A B"'],
+		29: ['"a b c d e f g h" "i j k d m n o p" "q r r t u v w x" "y z A B C s l l"'],
+		30: ['"a b c d e f g h" "i j k d m n o p" "q r s t u v w x" "y z A B C D l l"'],
+		31: ['"a b c d e f g h" "i j k l m n o p" "q r s t u v w x" "y z A B C D E E"'],
+		32: ['"a b c d e f g h" "i j k l m n o p" "q r s t u v w x" "y z A B C D E F"'],
 	};
 	let s;
 	if (nundef(n)) {

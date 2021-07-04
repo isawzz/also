@@ -37,7 +37,7 @@ users:
       vocab: objectPlus
       showTime: false
       spokenFeedback: true
-      silentMode: false
+      silentMode: true
       switchGame: true
       trials: 1
       showHint: true
@@ -295,7 +295,6 @@ users:
     id: gul
     avGames:
       - gHouse
-      - gKrieg
       - gSteps
       - gSentence
       - gTouchColors
@@ -528,20 +527,33 @@ games:
     logo: home
     color: GREEN
     controllerType: solitaire
-    nrooms: 4
+    minRooms: 8
+    maxRooms: 12
     levels:
       "0":
-        nrooms: 4
+        minRooms: 4
+        maxRooms: 6
       "1":
-        nrooms: 8
+        minRooms: 8
+        maxRooms: 12
       "2":
-        nrooms: 12
+        minRooms: 10
+        maxRooms: 16
       "3":
-        nrooms: 16
+        minRooms: 14
+        maxRooms: 20
       "4":
-        nrooms: 20
+        minRooms: 16
+        maxRooms: 24
       "5":
-        nrooms: 24
+        minRooms: 20
+        maxRooms: 28
+      "6":
+        minRooms: 24
+        maxRooms: 30
+      "7":
+        minRooms: 30
+        maxRooms: 32
   gAbacus:
     friendly: Abacus
     logo: abacus
