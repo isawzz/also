@@ -1,3 +1,8 @@
+:root {
+	--mazeSize: 20px;
+	--wCell: 20px;
+	--hCell: 20px;
+}
 /* #region helpers.css */
 .draggable {
 	cursor: pointer;
@@ -1273,4 +1278,12 @@ div {
 	margin:auto;
 	margin-top:4px;
 
+}
+#tMaze {
+	border-collapse: collapse;
+	background: #ffffff80;
+}
+#tMaze td{
+	width: var(--wCell);
+	height: var(--hCell);
 }

@@ -292,9 +292,7 @@ function scrambleInputs(d) {
 //#endregion createLetterInputs
 
 //#region createWordInputs_
-function getColorWheel(n, bgContrast, isUp = true) {
 
-}
 function getStyledItems(words, bgFunc, fgFunc = 'contrast', fzFunc) {
 	let items = [];
 	if (isString(bgFunc)) { bgFunc = () => bgFunc; }
@@ -1566,7 +1564,7 @@ function myPresent(dArea, items, options) {
 		[wi, hi, rows, cols] = calcSizeAbWo(items.length, options.rows, options.cols, w, h, options.wimax, options.himax);
 	} else[wi, hi, rows, cols] = calcRowsColsSizeAbWo(items.length, w, h, showLabels, options.wimax, options.himax);
 
-	console.log('rows,cols',rows,cols);
+	console.log('rows,cols', rows, cols);
 
 	let gap = wi * .1; if (cols > 1) wi -= gap; if (rows > 1) hi -= gap;
 	let fzPic = options.fzPic = getStandardFzPic(wi, hi, showLabels);
@@ -1617,14 +1615,20 @@ function tileCondBelongsTo(t, pl, prop) { return t[prop] == pl.id; }
 
 //#region multiple choice
 
+function isYesNo(choices) { return !firstCond(choices,x => !(['yes', 'no'].includes(x.text))); }
 function createMultipleChoiceElements(correctAnswer, wrongAnswers, dParent, dFeedbackUI, styles) {
 
 	//console.log(correctAnswer)
 	if (nundef(Goal)) Goal = {};
 	let choices = wrongAnswers; choices.push(correctAnswer);
 	Goal.correctChoice = correctAnswer;
-	shuffle(choices);
-	if (coin()) shuffle(choices);
+	if (isYesNo(choices)) {
+		//console.log('JA')
+		sortByDescending(choices,'text');// = [{ num: 1, text: 'yes' }, { num: 0, text: 'no' }];
+	} else {
+		shuffle(choices);
+		if (coin()) shuffle(choices);
+	}
 	Goal.choices = choices;
 	Goal.feedbackUI = dFeedbackUI;
 
@@ -1836,8 +1840,8 @@ function sayRandomVoice(e, g, voice = 'random') {
 	if (!G.silentMode) Speech.say(G.language == 'E' || nundef(g) ? e : g, r, p, v, voice);
 }
 function sayTryAgain() { sayRandomVoice('try again!', 'nochmal'); }
-function setBackgroundColor(c) { mStyleX(document.body,{bg:getColorDictColor(isdef(c) ? c : G.color)}); }
-function setLanguageHALLO(l){Settings.language=G.language=l;Speech.setLanguage(l);console.log('SET LANGUAGE TO',l,G.language,G.lang);}
+function setBackgroundColor(c) { mStyleX(document.body, { bg: getColorDictColor(isdef(c) ? c : G.color) }); }
+function setLanguageHALLO(l) { Settings.language = G.language = l; Speech.setLanguage(l); console.log('SET LANGUAGE TO', l, G.language, G.lang); }
 function setGoal(index) {
 	if (nundef(index)) {
 		let rnd = G.numPics < 2 ? 0 : randomNumber(0, G.numPics - 2);
@@ -1955,7 +1959,7 @@ function showLabelPercentHintAfter(percent, msecs) {
 	showFleetingMessage(hintWord, msecs, { fz: 32 });
 
 }
-function showListOfLists(arr) { let s='';arr.map(x => {s+='['+x.toString()+'] '});return s; }
+function showListOfLists(arr) { let s = ''; arr.map(x => { s += '[' + x.toString() + '] ' }); return s; }
 function showTextHints(items, dParentProp, textProp, removeFirst = true) {
 	for (const item of items) {
 		let d1 = item[dParentProp];

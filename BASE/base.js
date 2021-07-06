@@ -1,4 +1,12 @@
 //#region m
+function mCellContent(dCell, styles, html) {
+	clearElement(dCell);
+	let d = mDiv(dCell, { w: '100%', h: '100%' });
+	mCenterCenterFlex(d);
+	let d1 = mDiv(d, styles, null, html);
+	mCenterCenterFlex(d1);
+	return d1;
+}
 function mAppend(d, child) { d.appendChild(child); return child; }
 function mBackground(bg, fg) { mStyleX(document.body, { bg: bg, fg: fg }); }
 
@@ -1189,6 +1197,18 @@ function helleFarbe(contrastTo, minDiff = 25, mod = 30, start = 0) {
 	let hue = chooseRandom(wheel);
 	let hsl = colorHSLBuild(hue, 100, 50);
 	return hsl;
+}
+function getColorWheel(contrastTo, n) {
+	let hc = colorHue(contrastTo);
+	let wheel = [];
+	let start = hc;
+	let inc = Math.round(360/(n+1));
+	start+=inc;
+	for(let i=0;i<n;i++){
+		wheel.push(start%360);
+		start+=inc;
+	}
+	return wheel.map(x=>colorHSLBuild(x));
 }
 function getHueWheel(contrastTo, minDiff = 25, mod = 30, start = 0) {
 	let hc = colorHue(contrastTo);
@@ -2962,7 +2982,7 @@ async function localOrRoute(key, url) {
 //#endregion
 
 //#region measure size and pos ARITHMETIC
-function getCenter(elem) { let r = isdef(elem.x)?elem: getRect(elem); return { x: (r.w) / 2, y: (r.h) / 2 }; }
+function getCenter(elem) { let r = isdef(elem.x) ? elem : getRect(elem); return { x: (r.w) / 2, y: (r.h) / 2 }; }
 function getRectInt(elem, relto) {
 
 	if (isString(elem)) elem = document.getElementById(elem);
@@ -3013,7 +3033,8 @@ function getRect(elem, relto) {
 	extendRect(r4); //r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;
 	return r4;
 }
-function extendRect(r4){r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;}
+function getSize(elem){let r=getRectInt(elem);return {w:r.w,h:r.h,sz:Math.min(r.w,r.h)};}
+function extendRect(r4) { r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h; }
 function getSizeWithStyles(text, styles) {
 	var d = document.createElement("div");
 	document.body.appendChild(d);
@@ -3165,6 +3186,7 @@ function addByKey(oNew, oOld, except) {
 function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; }
 function addSimpleProps(ofrom, oto = {}) { for (const k in ofrom) { if (nundef(oto[k]) && isLiteral(k)) oto[k] = ofrom[k]; } return oto; }
 function addIfDict(key, val, dict) { if (!(key in dict)) { dict[key] = [val]; } }
+function allCond(arr, cond) { return forAll(arr, cond); }
 function any(arr, cond) { return !isEmpty(arr.filter(cond)); }
 function anyStartsWith(arr, prefix) { return any(arr, el => startsWith(el, prefix)); }
 function arrAdd(arr, elist) { for (const el of elist) arr.push(el); return arr; }
@@ -3247,6 +3269,7 @@ function arrRotate(arr, count) {
 	unshift.apply(arr1, splice.call(arr1, count % len, len));
 	return arr1;
 }
+function arrReverse(arr) { return arr.reverse(); }
 function arrString(arr, func) {
 	if (isEmpty(arr)) return '[]';
 	let s = '[';
@@ -3353,6 +3376,7 @@ function firstNCond(n, arr, func) {
 	}
 	return result;
 }
+function forAll(arr, func) { for (const a of arr) if (!func(a)) return false; return true; }
 function getIndicesCondi(arr, func) {
 	let res = [];
 	for (let i = 0; i < arr.length; i++) {
@@ -3910,8 +3934,8 @@ function substringOfMinLength(s, minStartIndex, minLength) {
 	while (res1.trim().length < minLength && i < res.length) { res1 += res[i]; i += 1; }
 	return res1.trim();
 }
-function lettersToArray(s){return toLetterList(s);}
-function toLetterArray(s){return toLetterList(s);}
+function lettersToArray(s) { return toLetterList(s); }
+function toLetterArray(s) { return toLetterList(s); }
 function toLetterList(s) {
 	return [...s];
 }
@@ -4242,7 +4266,7 @@ function isWhiteSpace2(ch) {
 	const alphanum = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
 	return !alphanum.includes(ch);
 }
-function isWhiteSpaceString(s){return isEmptyOrWhiteSpace(s);}
+function isWhiteSpaceString(s) { return isEmptyOrWhiteSpace(s); }
 function isOverflown(element) {
 	return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
@@ -4286,6 +4310,11 @@ function purge(elem) {
 	}
 	elem.remove(); //elem.parentNode.removeChild(elem);
 }
+function setCSSVariable(varName, val) {
+	let root = document.documentElement;
+	root.style.setProperty(varName, val);
+}
+
 function show(elem, isInline = false) {
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (isSvg(elem)) {
