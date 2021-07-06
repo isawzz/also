@@ -1,5 +1,6 @@
 async function _start() {
 
+	console.assert(isdef(DB),'NO DB!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 	initTable(); initSidebar(); initAux(); initScore(); 
 	loadUser(DEFAULTUSERNAME); //timit = new TimeIt('*timer', true);
 

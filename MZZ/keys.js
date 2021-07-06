@@ -1,10 +1,10 @@
 //prep key sets at start of prog
 function getKeySets() {
-	let ks = localStorage.getItem('KeySets');
+	//let ks = localStorage.getItem('KeySets');
 
 	makeCategories();	//console.log('Categories',Categories)
 
-	if (isdef(ks)) { return JSON.parse(ks); }
+	//if (isdef(ks)) { return JSON.parse(ks); }
 
 	//console.log('hallo'); return [];
 	let res = {};
@@ -134,6 +134,7 @@ function setKeys({ allowDuplicates, nMin = 25, lang, key, keySets, filterFunc, p
 	for (const k of keys) {
 		let info = Syms[k];
 
+		//console.log('info',info);
 		info.best = info[lang];
 		//console.log(info.best)
 
