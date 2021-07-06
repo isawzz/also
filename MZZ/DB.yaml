@@ -527,6 +527,7 @@ settings:
   incrementLevelOnPositiveStreak: 5
   decrementLevelOnNegativeStreak: 3
   language: E
+  lang: E
   vocab: best25
   spokenFeedback: true
   silentMode: true
