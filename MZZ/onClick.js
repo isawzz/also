@@ -60,5 +60,7 @@ function interrupt() {
 	clearTimeouts(); //legacy
 	if (isdef(G.clear)) G.clear();
 	TOMan.clear();
+	clearMarkers();
+	
 }
 function openAux() { interrupt(); show(dAux); show('dGo'); }

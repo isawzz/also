@@ -56,6 +56,13 @@ function mRemoveGracefully(elem) {
 	mClass(elem, 'aniFastDisappear');
 	setTimeout(() => mRemove(elem), 500);
 }
+function clearMarkers() {
+	console.log('hallo!!!!!!!')
+	for (const m of Markers) {
+		mRemove(m);
+	}
+	Markers = [];
+}
 function removeMarkers() {
 	for (const m of Markers) {
 		mRemoveGracefully(m);

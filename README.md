@@ -5,7 +5,7 @@ This project provides simple games for speech therapy:
 - Abacus: arithmetic operations
 - Anagram: reorder letters to form a word
 - Category: sort pictures into categories
-- Chess: simple chess game (AI primitive)
+- Chess: simple chess game (flawed AI!)
 - Colors: identify 2 attributes: content + color 
 - Connect4: well-known strategy game
 - Elim: eliminate pictures / set comprehension
