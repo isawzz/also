@@ -39,17 +39,17 @@ function createMarker(markerId) {
 	let divs = document.getElementsByClassName('feedbackMarker');
 	//console.log('divs', divs);
 	let d;
-	if (isdef(divs[0])) {
-		console.log('there is already a feedbackMarker!!!!!!');
-		d = divs[0];
-		console.log('Markers',Markers)
-	} else {
-		d = mCreate('div');
-		d.innerHTML = MarkerText[markerId]; //>0? '✔️':'❌';
-		mClass(d, 'feedbackMarker');
-		document.body.appendChild(d);
-		Markers.push(d);
-	}
+	// if (isdef(divs[0])) {
+	// 	console.log('there is already a feedbackMarker!!!!!!');
+	// 	d = divs[0];
+	// 	console.log('Markers',Markers)
+	// } else {
+	d = mCreate('div');
+	d.innerHTML = MarkerText[markerId]; //>0? '✔️':'❌';
+	mClass(d, 'feedbackMarker');
+	document.body.appendChild(d);
+	Markers.push(d);
+	// }
 	return d;
 }
 function mRemoveGracefully(elem) {
