@@ -378,9 +378,9 @@ users:
       gSayPic:
         startLevel: 0
       gSentence:
-        startLevel: 0
+        startLevel: 1
       gSteps:
-        startLevel: 3
+        startLevel: 4
       gRiddle:
         startLevel: 2
         nTotal: 1
