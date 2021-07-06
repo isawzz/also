@@ -1,10 +1,10 @@
 //#region config
-const USELIVESERVER = false; //brauch ich DOCH!!!nicht! solange node nicht rennt kein problem!!!
+const USELIVESERVER = true; //brauch ich DOCH!!!nicht! solange node nicht rennt kein problem!!!
 
 var USE_LOCAL_STORAGE = true; // !BROADCAST_SETTINGS; // true | false //localStorage is cleared when false!!!!!
 const CLEAR_LOCAL_STORAGE = false; //BROADCAST_SETTINGS;
 var START_IN_MENU = false; //!BROADCAST_SETTINGS;
-const DEFAULTUSERNAME = USELIVESERVER?'nil':'gul';// BROADCAST_SETTINGS?'nil':'gul'; // nil | gul | felix
+const DEFAULTUSERNAME = 'gul'; //USELIVESERVER?'nil':'gul';// BROADCAST_SETTINGS?'nil':'gul'; // nil | gul | felix
 var USE_ADDONS = false;
 
 // const OFFLINE = BROADCAST_SETTINGS;

@@ -4,6 +4,7 @@ users:
     id: nil
     avGames:
       - gMaze
+      - gKrieg
       - gSteps
       - gSentence
       - gTouchColors
@@ -295,7 +296,6 @@ users:
     id: gul
     avGames:
       - gMaze
-      - gKrieg
       - gSteps
       - gSentence
       - gTouchColors
@@ -317,7 +317,7 @@ users:
       - gAbacus
       - gRiddle
       - gC4
-    lastGame: gKrieg
+    lastGame: gMaze
     settings:
       userColor: blue
       samplesPerGame: 10
