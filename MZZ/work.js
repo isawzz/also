@@ -78,7 +78,7 @@ class GMaze extends Game {
 		let path = this.path = this.maze.getShortestPathFromTo(this.roomFrom, this.roomTo);
 
 		console.assert(path.length < Infinity,'WAAAAAAAAAAAAAAS?');
-		if (coin(30)) this.maze.cutPath(this.path,.5,.75);
+		if (coin(this.level>2?50:40)) this.maze.cutPath(this.path,.5,.75);
 		// this.maze.cutPath(this.path,.5,.75);
 		let len = this.maze.getLengthOfShortestPath(this.roomFrom, this.roomTo); //verify that no longer a path!!!!!
 
