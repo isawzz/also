@@ -619,8 +619,9 @@ class GHouse extends Game {
 	}
 
 }
-class GMaze extends Game {
+class GMaze1 extends Game {
 	constructor(name, o) { super(name, o); }
+	clear(){super.clear();MNaGraph.destroy();}
 	startGame() {
 		this.correctionFunc = () => {
 			mStyleX(Goal.buttonCorrect, { bg: 'green' });
@@ -640,9 +641,8 @@ class GMaze extends Game {
 			mStyleX(this.dGraph, { opacity: 1 });
 		}
 	}
+	startRound(){MNaGraph.destroy();}
 	prompt() {
-
-		MNaGraph.destroy();
 
 		this.trials = 1;
 		[this.rows, this.cols] = [6 + this.level * 2, 6 + this.level * 2];

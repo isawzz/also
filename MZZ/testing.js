@@ -1,4 +1,106 @@
+//#region graph tests
 
+//house
+
+//simple graph
+function gTest04(){
+	initTable();
+	let d = mDiv(dTable, { w: 500, h: 360, bg: 'blue', align: 'left' });
+	let g = new AbstractGraph(d);
+	g.addVisual(d);
+	let nids = g.addNodes(10);
+	let eids = g.addEdges(15);
+	console.log('g', g.getNodeIds(), g.getEdgeIds());
+	g.cose();
+	g.addLayoutControls();
+}
+function gTest03(){
+	initTable();
+	let d = mDiv(dTable, { w: 500, h: 360, bg: 'blue', align: 'left' });
+	let g = new AbstractGraph(d);
+	upgradeToSimpleGraph(g,d); //g.addVisual(d);
+	let nids = g.addNodes(10);
+	let eids = g.addEdges(15);
+	console.log('g', g.getNodeIds(), g.getEdgeIds());
+	g.cose();
+	g.addLayoutControls();
+}
+//#region nur fuer gTest02 gebraucht!
+function upgradeToSimpleGraph(g, dParent, styles={}) {
+	g.id = nundef(dParent.id) ? getUID() : dParent.id;
+	// mIfNotRelative(dParent);
+
+	let styleDict = {
+		node: { 'width': 25, 'height': 25, 'background-color': 'red', "color": "#fff", 'label': 'data(id)', "text-valign": "center", "text-halign": "center", },
+		edge: { 'width': 2, 'line-color': 'silver', 'curve-style': 'haystack', },
+		'node.highlight': { 'background-color': 'yellow' },
+		'node.trans': { 'opacity': '0.5' },
+	}
+	for (const ks of ['node', 'edge', 'node.highlight', 'node.trans']) {
+		if (isdef(styles[ks])) {
+			for (const k in styles[ks]) {
+				let [prop, val] = translateToCssStyle(k, styles[ks][k], false);
+				styleDict[ks][prop] = val;
+			}
+		}
+	}
+	let cyStyle = [];
+	for (const k in styleDict) { cyStyle.push({ selector: k, style: styleDict[k] }); }
+
+	//let d1=
+	let size=getSize(dParent);
+	let d1=mDiv(dParent,{position:'relative',bg:'green',w:size.w-80,left:40,top:0,h:size.h,align:'left'});
+	// console.log('size',size)
+	// let dCy = mDiv(dParent, { position: 'absolute', left: 40, top: 0, w: 'calc( 100% - 80px )', h: '100%' });
+	// let dCy = mDiv(dParent, {display:'inline-block', position: 'absolute', left: 40, top: 0, w: size.w-80, h: size.h });
+	g.cy.mount(d1);
+	g.cy.style(cyStyle);
+	// console.log('extent',g.cy.extent());
+	g.enablePanZoom();
+	iAdd(g, { div: dParent , dCy: d1 });
+}
+class SimpleGraph extends AbstractGraph { //das wird jetzt schon ein Item!
+	constructor(dParent, styles = {}) {
+		super();
+		upgradeToSimpleGraph(this, dParent, styles);
+	}
+}
+//#endregion
+function gTest02() {
+	initTable();
+	let d = mDiv(dTable, { w: 500, h: 300, bg: 'blue', align: 'left' });
+	let g = new SimpleGraph(d);
+	//g.addVisual(d);
+	let nids = g.addNodes(10);
+	let eids = g.addEdges(15);
+	console.log('g', g.getNodeIds(), g.getEdgeIds());
+	g.cose();
+	g.addLayoutControls();
+}
+//abstract graph
+function gTest01() {
+	let g = new AbstractGraph();
+	let nids = g.addNodes(10);
+	let eids = g.addEdges(15);
+	console.log('g', g.getNodeIds(), g.getEdgeIds());
+}
+function gTest00() {
+	let g = new AbstractGraph();
+	let nid1 = g.addNode();
+	let nid2 = g.addNode();
+	let eid1 = g.addEdge(nid1, nid2);
+	console.log('g', g.getNodeIds(), g.getEdgeIds());
+}
+
+
+//#endregion
+
+//#region house room tests
+function houseTest00() {
+	let s = '"a a b c" "d d e c" "f g e h"'; console.log(getRandomLetterMapping(s)); console.log('_____\n', s, '\n', getLetterSwapEncoding(s));
+
+}
+//#endregion
 
 //#region test postData
 async function serverTest00_postData() {

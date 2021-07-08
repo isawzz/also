@@ -13,7 +13,7 @@ users:
       - gMissingLetter
       - gNamit
       - gTouchPic
-      - gHouse
+      # - gHouse
       - gWritePic
       - gChess
       - gPremem
@@ -43,6 +43,8 @@ users:
       trials: 1
       showHint: true
     games:
+      gMaze:
+        startLevel: 6
       gAbacus:
         startLevel: 0
       gAnagram:
@@ -304,7 +306,7 @@ users:
       - gMissingLetter
       - gNamit
       - gTouchPic
-      - gHouse
+      # - gHouse
       - gWritePic
       - gChess
       - gPremem
@@ -540,6 +542,41 @@ settings:
   startPosition: empty
   searchDepth: 5
 games:
+  gMaze1:
+    friendly: Maze
+    logo: maze
+    color: BLUEGREEN
+    controllerType: solitaire
+    rows: 12
+    cols: 12
+    sz: 40
+    szDoor: 40
+    gap: 2
+    levels:
+      "0":
+        rows: 4
+        cols: 4
+      "1":
+        rows: 6
+        cols: 6
+      "2":
+        rows: 8
+        cols: 8
+      "3":
+        rows: 10
+        cols: 10
+      "4":
+        sz: 34
+        rows: 12
+        cols: 12
+      "5":
+        sz: 30
+        rows: 14
+        cols: 14
+      "6":
+        sz: 26
+        rows: 16
+        cols: 16
   gMaze:
     friendly: Maze
     logo: maze

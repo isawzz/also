@@ -57,7 +57,7 @@ function mRemoveGracefully(elem) {
 	setTimeout(() => mRemove(elem), 500);
 }
 function clearMarkers() {
-	console.log('hallo!!!!!!!')
+	//console.log('hallo!!!!!!!')
 	for (const m of Markers) {
 		mRemove(m);
 	}

@@ -1,3 +1,117 @@
+class GMaze extends Game {
+	constructor(name, o) { super(name, o); }
+	clear(){super.clear(); if (isdef(this.maze)) this.maze.clear();}
+	startGame() {
+		this.correctionFunc = () => {
+			mStyleX(Goal.buttonCorrect, { bg: 'green' });
+			animate(Goal.buttonCorrect, 'komisch', 1000);
+			if (Goal.correctChoice.text == 'yes') this.maze.breadCrumbs(this.path); else this.maze.colorComponents();
+
+			return 20000;
+		};
+		this.failFunc = () => {
+			if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+			else { mXit(Goal.buttonClicked, 100); }
+			//mStyleX(this.dGraph, { opacity: 1 });
+		}
+		this.successFunc = () => {
+			if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+			else { mXit(Goal.buttonClicked, 100); }
+		}
+	}
+	startRound(){if (isdef(this.maze)) this.maze.clear();}
+	prompt() {
+
+		this.trials = 1;
+		[this.rows, this.cols] = [6 + this.level * 2, 6 + this.level * 2];
+
+		let maze = this.maze = new MazeGraph(dTable,this.rows,this.cols,this.sz,this.gap);
+
+		mLinebreak(dTable, 20);
+		this.dChoices = mDiv(dTable);
+		mLinebreak(dTable);
+
+		let q = chooseRandom([this.isThereAPath.bind(this)]);
+		q();
+
+		this.controller.activateUi.bind(this.controller)();
+	}
+
+	isThereAPath() {
+
+		//this.maze.showGraph(); //for testing!
+
+		//set content of start and goal cells
+		let cellStart = this.maze.getTopLeftCell();
+		//console.log('cellStart',cellStart)
+		mCellContent(iDiv(cellStart), { w: '50%', h: '50%', fz: '60%', bg: 'green', fg: 'white', rounding: '50%' }, 'A');
+
+		let cellGoal = this.maze.getBottomRightCell();
+		mCellContent(iDiv(cellGoal), { w: '50%', h: '50%', fz: '60%', bg: 'red', fg: 'white', rounding: '50%' }, 'B');
+
+		[this.roomFrom, this.roomTo] = [cellStart.nodeId, cellGoal.nodeId];
+
+		//#region spoken and written instruction
+		let sp1 = {
+			D: ['gibt es einen weeg von', 'gibt es einen weg von'],
+			E: ['is there a path from', 'is there a path from'],
+			S: ['hay un camino de', 'hay un camino de'],
+			F: ["y a 'til un chemin de", "y a 'til un chemin de"],
+		};
+		let sp2 = {
+			D: ['zu', 'zu'],
+			E: ['to', 'to'],
+			S: ['a', 'a'],
+			F: ['!. a! ', 'à'],
+		};
+		let fill1 = [`. "A"! `, ` A `];
+		let fill2 = [`. "B"`, ` B`];
+		let l = this.language;
+		let sp = sp1[l][0] + fill1[0] + sp2[l][0] + fill2[0] + '?';
+		let wr = sp1[l][1] + fill1[1] + sp2[l][1] + fill2[1] + '?';
+
+		let voice = this.language == 'E' ? coin() ? 'ukMale' : 'zira' : this.language;
+
+		showInstructionX(wr, dTitle, sp, { voice: voice });
+		//#endregion
+
+		let path = this.path = this.maze.getShortestPathFromTo(this.roomFrom, this.roomTo);
+
+		console.assert(path.length < Infinity,'WAAAAAAAAAAAAAAS?');
+		if (coin(30)) this.maze.cutPath(this.path,.5,.75);
+		// this.maze.cutPath(this.path,.5,.75);
+		let len = this.maze.getLengthOfShortestPath(this.roomFrom, this.roomTo); //verify that no longer a path!!!!!
+
+		let answer = len != Infinity;
+		console.log('answer', answer, len)
+		let correct, incorrect;
+		if (answer) { correct = { num: 1, text: 'yes' }; incorrect = [{ num: 0, text: 'no' }]; }
+		else { correct = { num: 0, text: 'no' }; incorrect = [{ num: 1, text: 'yes' }]; }
+		createMultipleChoiceElements(correct, incorrect, this.dChoices, this.maze.dMaze, {});
+	}
+
+	hideGraph() {
+		this.graph.cy.unmount();
+		hide(this.dGraph);
+	}
+	showGraph() {
+		//show(this.dGraph);
+		//this.graph.cy.mount(this.dGraph);
+		// g.presetLayout();
+		// g.reset();
+	}
+
+	eval() {
+		clearFleetingMessage();
+		//console.log(Goal.buttonClicked)
+		Selected = { reqAnswer: G.correctAnswer, answer: Goal.choice.text, feedbackUI: Goal.buttonClicked };
+
+		//console.log('Selected', Selected);
+		return (Goal.buttonClicked == Goal.buttonCorrect);
+	}
+
+}
+
 class AbstractGraph {
 	constructor() {
 		let defOptions = {
@@ -49,7 +163,7 @@ class AbstractGraph {
 	}
 	getShortestPathsFrom(id) { let res = this.cy.elements().dijkstra('#' + id); return res; }
 	getShortestPathFromTo(nid1, nid2) {
-		//console.log(nid1, nid2)
+		console.log(nid1, nid2)
 		let funcs = this.dijkstra = this.getShortestPathsFrom(nid1);
 		// let len = funcs.distanceTo('#' + nid2);
 		let path = funcs.pathTo('#' + nid2);
@@ -449,7 +563,60 @@ class AbstractGraph {
 	}
 
 	closeLayoutControls() { if (isdef(this.sb)) hide(this.sb); }
+	addLayoutControls_dep() {
+		let [dParent, wside] = [iDiv(this), 40];
+		mStyleX(dParent, { rounding: 6, hmin: 355 });
+
+		let sb = this.sb = mDiv(dParent, { position: 'absolute', w: wside, h: '100%', bg: '#ffffff80', top: 0, 'border-radius': '6px 0 0 6px' });
+		mCenterCenterFlex(sb);
+		let id = this.id;
+		mButton('BFS', () => this.breadthfirst(), sb, {}, ['tbb']);
+		mButton('circle', () => this.circle(), sb, {}, ['tbb']);
+		mButton('CC', () => this.concentric(), sb, {}, ['tbb']);
+		mButton('cose', () => this.cose(), sb, {}, ['tbb']);
+		mButton('euler', () => this.euler(), sb, {}, ['tbb']);
+		mButton('fcose', () => this.fcose(), sb, {}, ['tbb']);
+		mButton('grid', () => this.gridLayout(), sb, {}, ['tbb']);
+		mButton('klay', () => this.klay(), sb, {}, ['tbb']);
+		mButton('prest', () => this.presetLayout(), sb, {}, ['tbb']);
+		mButton('rand', () => this.randomLayout(), sb, {}, ['tbb']);
+		mButton('reset', () => this.reset(), sb, {}, ['tbb']);
+		mButton('store', () => this.storeCurrentPositions(), sb, {}, ['tbb']);
+		return sb;
+	}
+	addLayoutControls_dep2(buttonlist) {
+		let [dParent, wside] = [iDiv(this), 40];
+		mStyleX(dParent, { rounding: 6, hmin: 355 });
+
+		let sb = this.sb = mDiv(dParent, { position: 'absolute', w: wside, h: '100%', bg: '#ffffff80', top: 0, 'border-radius': '6px 0 0 6px' });
+		mCenterCenterFlex(sb);
+		let id = this.id;
+		let buttons = {
+			BFS: mButton('BFS', () => this.breadthfirst(), sb, {}, ['tbb']),
+			circle: mButton('circle', () => this.circle(), sb, {}, ['tbb']),
+			CC: mButton('CC', () => this.concentric(), sb, {}, ['tbb']),
+			cose: mButton('cose', () => this.cose(), sb, {}, ['tbb']),
+			euler: mButton('euler', () => this.euler(), sb, {}, ['tbb']),
+			fcose: mButton('fcose', () => this.fcose(), sb, {}, ['tbb']),
+			grid: mButton('grid', () => this.gridLayout(), sb, {}, ['tbb']),
+			klay: mButton('klay', () => this.klay(), sb, {}, ['tbb']),
+			prest: mButton('prest', () => this.presetLayout(), sb, {}, ['tbb']),
+			rand: mButton('rand', () => this.randomLayout(), sb, {}, ['tbb']),
+			reset: mButton('reset', () => this.reset(), sb, {}, ['tbb']),
+			store: mButton('store', () => this.storeCurrentPositions(), sb, {}, ['tbb']),
+		};
+		for (const b in buttons) {
+			if (!buttonlist.includes(b)) hide(buttons[b]);
+		}
+		return sb;
+	}
 	addLayoutControls(sb, buttonlist) {
+		//let [dParent, wside] = [iDiv(this), 40];
+		//mStyleX(dParent, { rounding: 6, hmin: 355 });
+
+		//let sb = this.sb = mDiv(dParent, { position: 'absolute', w: wside, h: '100%', bg: '#ffffff80', top: 0, 'border-radius': '6px 0 0 6px' });
+		//mCenterCenterFlex(sb);
+		// let id = this.id;
 		let buttons = {
 			BFS: mButton('BFS', () => this.breadthfirst(), sb, {}, ['tbb']),
 			circle: mButton('circle', () => this.circle(), sb, {}, ['tbb']),
@@ -465,14 +632,48 @@ class AbstractGraph {
 			rand: mButton('rand', () => this.randomLayout(), sb, {}, ['tbb']),
 			reset: mButton('reset', () => this.reset(), sb, {}, ['tbb']),
 			fit: mButton('fit', () => this.fit(), sb, {}, ['tbb']),
-			show: mButton('show', () => this.showGraph(), sb, {}, ['tbb']),
-			hide: mButton('hide', () => this.hideGraph(), sb, {}, ['tbb']),
 			store: mButton('store', () => this.storeCurrentPositions(), sb, {}, ['tbb']),
 		};
 		for (const b in buttons) {
 			if (!buttonlist.includes(b)) hide(buttons[b]);
 		}
 		return buttons;
+	}
+	addVisual_dep(dParent, styles = {}) {
+
+		if (this.hasVisual) return;
+		this.hasVisual = true;
+		this.id = nundef(dParent.id) ? getUID() : dParent.id;
+		// mIfNotRelative(dParent);
+
+		let styleDict = {
+			node: { 'width': 25, 'height': 25, 'background-color': 'red', "color": "#fff", 'label': 'data(id)', "text-valign": "center", "text-halign": "center", },
+			edge: { 'width': 2, 'line-color': 'silver', 'curve-style': 'haystack', },
+			'node.highlight': { 'background-color': 'yellow' },
+			'node.trans': { 'opacity': '0.5' },
+		}
+		for (const ks of ['node', 'edge', 'node.highlight', 'node.trans']) {
+			if (isdef(styles[ks])) {
+				for (const k in styles[ks]) {
+					let [prop, val] = translateToCssStyle(k, styles[ks][k], false);
+					styleDict[ks][prop] = val;
+				}
+			}
+		}
+		let cyStyle = [];
+		for (const k in styleDict) { cyStyle.push({ selector: k, style: styleDict[k] }); }
+
+		//let d1=
+		let size = getSize(dParent);
+		let d1 = mDiv(dParent, { position: 'relative', bg: 'green', w: size.w - 80, left: 40, top: 0, h: size.h, align: 'left' });
+		// console.log('size',size)
+		// let dCy = mDiv(dParent, { position: 'absolute', left: 40, top: 0, w: 'calc( 100% - 80px )', h: '100%' });
+		// let dCy = mDiv(dParent, {display:'inline-block', position: 'absolute', left: 40, top: 0, w: size.w-80, h: size.h });
+		this.cy.mount(d1);
+		this.cy.style(cyStyle);
+		// console.log('extent',g.cy.extent());
+		this.enablePanZoom();
+		iAdd(this, { div: dParent, dCy: d1 });
 	}
 	addVisual(dParent, styles = {}) {
 
@@ -526,11 +727,11 @@ class MazeGraph extends AbstractGraph {
 
 		let szMaze = getSize(dMaze);
 		let dGraph = this.dGraph = mDiv(dParent, { align:'left', w: szMaze.w, h: szMaze.h, bg: 'pink', maleft: 20});//, opacity: 0 });
-		let sb = this.sb = mDiv(dParent, { w: 40 }); mCenterCenterFlex(this.sb);
-		hide(dGraph);hide(sb);
+		this.sb = mDiv(dParent, { w: 40 }); mCenterCenterFlex(this.sb);
+
 
 		this.items = this.createCellItems();
-		//console.log('items', this.items)
+		console.log('items', this.items)
 	}
 	getTopLeftCell() { return this.getCell(0, 0); }
 	getTopRightCell() { return this.getCell(0, this.cols - 1); }
@@ -686,13 +887,13 @@ class MazeGraph extends AbstractGraph {
 	disconnectCells(nid1, nid2) {
 		this.removeEdge(this.getCommonEdgeId(nid1, nid2));
 		let [item1, item2] = [Items[nid1], Items[nid2]];
-		//console.log('item1', item1, item2);
+		console.log('item1', item1, item2);
 
 		let [dir1, dir2] = this.getRelativeDirections(item1, item2);
 		// this.setItemColor(item1,'green');
 		// this.setItemColor(item2,'lightgreen');
 		//this.setItemContent(item1,'1');this.removeItemContent(item1);
-		//console.log('directions:', dir1, dir2);
+		console.log('directions:', dir1, dir2);
 		this.setItemBorder(item1, dir1);
 		this.setItemBorder(item2, dir2);
 	}
@@ -736,17 +937,16 @@ class MazeGraph extends AbstractGraph {
 		if (this.hasVisual) {show(this.dGraph); return;}
 		this.addVisual(this.dGraph);
 		this.storeCurrentPositions();
-		this.addLayoutControls(this.sb, ['show','hide','prest', 'grid', 'klay', 'rand', 'euler', 'reset', 'store']);//,'grid','euler','prest');		
+		this.addLayoutControls(this.sb, ['prest', 'grid', 'klay', 'rand', 'euler', 'reset', 'store']);//,'grid','euler','prest');		
 		// setTimeout(() => {
 		// 	this.comcola();
 		// 	this.addLayoutControls(this.sb, ['cola', 'fit', 'prest', 'grid', 'klay', 'rand', 'euler', 'cose', 'reset', 'store']);//,'grid','euler','prest');
 		// }, 2000);
 	}
 	hideGraph() {
-		if (isdef(this.dGraph) && this.hasVisual) {
-			//this.dGraph.style.opacity = 0;
-			this.dGraph.style.display = 'none';
-			// hide(this.dGraph);
+		if (this.hasVisual) {
+			this.dGraph.style.opacity = 0;
+			hide(this.dGraph)
 		}
 	}
 

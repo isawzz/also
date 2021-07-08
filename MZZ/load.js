@@ -2,8 +2,8 @@
 window.onload = _loader; // _loader | _testing
 
 async function _testing() {
-	let s='"a a b c" "d d e c" "f g e h"';	console.log(getRandomLetterMapping(s));	console.log('_____\n',s,'\n',getLetterSwapEncoding(s));
-	//serverTest00_postData();
+	Items={};
+	gTest04();
 }
 
 async function _loader() {

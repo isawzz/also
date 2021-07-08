@@ -484,6 +484,46 @@ function mSidebar(title, dParent, styles, id, inner) {
 	return { div: elem, dContent: dContent, fOpen: openNav, fClose: closeNav };
 }
 function mSize(d, w, h, unit = 'px') { mStyleX(d, { width: w, height: h }, unit); }
+function mStyleTranslate(prop,val,convertNumbers=true){
+	const paramDict = {
+		align: 'text-align',
+		bg: 'background-color',
+		fg: 'color',
+		hgap: 'column-gap',
+		vgap: 'row-gap',
+		matop: 'margin-top',
+		maleft: 'margin-left',
+		mabottom: 'margin-bottom',
+		maright: 'margin-right',
+		patop: 'padding-top',
+		paleft: 'padding-left',
+		pabottom: 'padding-bottom',
+		paright: 'padding-right',
+		rounding: 'border-radius',
+		w: 'width',
+		h: 'height',
+		wmin: 'min-width',
+		hmin: 'min-height',
+		wmax: 'max-width',
+		hmax: 'max-height',
+		fontSize: 'font-size',
+		fz: 'font-size',
+		family: 'font-family',
+		weight: 'font-weight',
+		z: 'z-index'
+	};
+	let valDict = {
+		random: randomColor(),
+
+	};
+	let propName = isdef(paramDict[prop])?paramDict[prop]:prop;
+	let newVal = isdef(valDict[val])?valdict[val]:val;
+	if (convertNumbers && isNumber(newVal))  newVal=''+newVal+'px';
+	return [propName,newVal];
+
+}
+function getBorderPropertyForDirection(dir){	return {0:'border-top',1:'border-right',2:'border-bottom',3:'border-left'}[dir];}
+
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
 		align: 'text-align',
@@ -512,6 +552,7 @@ function mStyleX(elem, styles, unit = 'px') {
 		weight: 'font-weight',
 		z: 'z-index'
 	};
+
 	//console.log(':::::::::styles',styles)
 	let bg, fg;
 	if (isdef(styles.bg) || isdef(styles.fg)) {
@@ -767,7 +808,7 @@ function iGrid(rows, cols, dParent, styles) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			let d = mDiv(dParent, styles);
-			let item = { row: i, col: j, index: index }; //, id:getUID() };
+			let item = { row: i, col: j, index: index }; 
 			index += 1;
 			iAdd(item, { div: d });
 			items.push(item);
@@ -1202,13 +1243,13 @@ function getColorWheel(contrastTo, n) {
 	let hc = colorHue(contrastTo);
 	let wheel = [];
 	let start = hc;
-	let inc = Math.round(360/(n+1));
-	start+=inc;
-	for(let i=0;i<n;i++){
-		wheel.push(start%360);
-		start+=inc;
+	let inc = Math.round(360 / (n + 1));
+	start += inc;
+	for (let i = 0; i < n; i++) {
+		wheel.push(start % 360);
+		start += inc;
 	}
-	return wheel.map(x=>colorHSLBuild(x));
+	return wheel.map(x => colorHSLBuild(x));
 }
 function getHueWheel(contrastTo, minDiff = 25, mod = 30, start = 0) {
 	let hc = colorHue(contrastTo);
@@ -2977,7 +3018,7 @@ function getRect(elem, relto) {
 	extendRect(r4); //r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h;
 	return r4;
 }
-function getSize(elem){let r=getRectInt(elem);return {w:r.w,h:r.h,sz:Math.min(r.w,r.h)};}
+function getSize(elem) { let r = getRectInt(elem); return { w: r.w, h: r.h, sz: Math.min(r.w, r.h) }; }
 function extendRect(r4) { r4.l = r4.x; r4.t = r4.y; r4.r = r4.x + r4.w; r4.b = r4.t + r4.h; }
 function getSizeWithStyles(text, styles) {
 	var d = document.createElement("div");
@@ -3233,7 +3274,17 @@ function arrTakeFromEnd(arr, n) {
 	if (arr.length <= n) return arr.map(x => x); else return arr.slice(arr.length - n);
 }
 function arrWithout(a, b) { return arrMinus(a, b); }
+function cartesian(...a) { return a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat()))); }
+function arrPairs(a) {
+	let res = [];
+	for (let i = 0; i < a.length; i++) {
+		for (let j = i + 1; j < a.length; j++) {
+			res.push([a[i], a[j]]);
+		}
 
+	}
+	return res;
+}
 function classByName(name) { return eval(name); }
 function copyKeys(ofrom, oto, except = {}, only) {
 	//console.log(ofrom)
@@ -4277,7 +4328,15 @@ function getUID(pref = '') {
 	UIDCounter += 1;
 	return pref + '_' + UIDCounter;
 }
-function resetUIDs() { UIDCounter = 0; }
+var FRUIDCounter = -1;
+function getFruid(pref = '') {
+	const alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	FRUIDCounter += 1;
+	if (FRUIDCounter < alpha.length) return pref + alpha[FRUIDCounter];
+	return pref + FRUIDCounter - alpha.length;
+}
+function resetUIDs() { UIDCounter = 0; FRUIDCounter = -1; }
+
 //#endregion
 
 //#region PerlenGame common code!

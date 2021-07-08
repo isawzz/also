@@ -6,6 +6,6 @@
     "express": "^4.17.1",
     "yaml": "^1.10.2"
   },
-	"bin": "bin.js",
-	"main":"server.js"
+  "bin": "bin.js",
+  "main": "server.js"
 }

@@ -3,6 +3,7 @@ function canHumanAct() { return uiActivated && !auxOpen; }
 function canAIAct() { return aiActivated && !auxOpen; }
 function setGame(game, immediate = false) {
 	cleanupOldGame();
+	resetUIDs();
 	if (isdef(G) && G.id != game) Score.gameChange = true;
 
 	//console.log('game',game)

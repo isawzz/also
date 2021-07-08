@@ -1179,7 +1179,7 @@ function failPictureGoal(withComment = false) {
 		let sz = getRect(uilist[0]).h;
 		//console.log('failFunc:',uilist,sz)
 		for (const ui of uilist) {
-			console.log('hallo!!!')
+			//console.log('hallo!!!')
 			mpOver(markerFail(), ui, sz * (1 / 2), 'red', 'openMojiTextBlack');
 		}
 	}
