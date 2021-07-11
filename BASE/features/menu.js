@@ -15,7 +15,7 @@ function createMenuUi(dParent) {
 		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
 		wmin: 140, hmin: 110, margin: 8, rounding: 6
 	};
-	//shuffle(games);
+	//if (!DA.menuHasBeenShuffled) {shuffle(games); DA.menuHasBeenShuffled = true;}
 	for (const g of games) {
 		let item = { o: DB.games[g], id: g }; iRegister(item, g);
 		item.bg = getColorDictColor(item.o.color);

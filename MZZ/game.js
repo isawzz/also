@@ -1574,7 +1574,7 @@ function myPresent(dArea, items, options) {
 	options.szPic = { w: wi, h: hi };
 	if (nundef(options.ifs)) options.ifs = {};
 	let outerStyles = {
-		w: wi, h: hi, rounding: 6, margin: 0,//gap / 2,
+		w: showLabels?wi:'auto', h: hi, rounding: 6, //maleft:50,//maleft: 50,//gap / 2,
 		bg: valf(options.ifs.bg, 'random'), fg: 'contrast', display: 'inline-flex', 'flex-direction': 'column',
 		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
 	};

@@ -172,7 +172,7 @@ class GAnagram extends Game {
 		}
 		setGoal();
 		showInstruction(this.showWord ? Goal.label : '', this.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
-		mLinebreak(dTable);
+		mLinebreak(dTable,25);
 
 		this.inputs = createDropInputs();
 		let x = mLinebreak(dTable, 50);
@@ -999,7 +999,7 @@ class GMissingLetter extends Game {
 		}
 
 
-		mLinebreak(dTable);
+		mLinebreak(dTable,20);
 
 		// create sequence of letter ui
 		let style = { margin: 6, fg: 'white', display: 'inline', bg: 'transparent', align: 'center', border: 'transparent', outline: 'none', family: 'Consolas', fz: 80 };
@@ -1378,7 +1378,7 @@ class GSayPic extends Game {
 		setGoal();
 		showInstruction(Goal.label, this.language == 'E' ? 'say:' : "sage: ", dTitle);
 		animate(dInstruction, 'pulse800' + bestContrastingColor(this.color, ['yellow', 'red']), 900);
-		mLinebreak(dTable);
+		mLinebreak(dTable,25);
 		MicrophoneUi = mMicrophone(dTable, this.color);
 		MicrophoneHide();
 		TOMain = setTimeout(this.controller.activateUi.bind(this.controller), 200);
@@ -1838,7 +1838,7 @@ class GWritePic extends Game {
 			showInstruction('', wr, dTitle, true, wr);
 		}
 
-		mLinebreak(dTable);
+		mLinebreak(dTable,20);
 		this.inputBox = addNthInputElement(dTable, this.trialNumber);
 		this.defaultFocusElement = this.inputBox.id;
 
