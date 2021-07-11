@@ -13,7 +13,7 @@ users:
       - gMissingLetter
       - gNamit
       - gTouchPic
-      # - gHouse
+      - gHouse
       - gWritePic
       - gChess
       - gPremem
@@ -306,7 +306,7 @@ users:
       - gMissingLetter
       - gNamit
       - gTouchPic
-      # - gHouse
+      - gHouse
       - gWritePic
       - gChess
       - gPremem
@@ -331,7 +331,7 @@ users:
       vocab: nemo
       showTime: true
       spokenFeedback: true
-      silentMode: false
+      silentMode: true
       switchGame: true
       trials: 2
       showHint: no
@@ -356,7 +356,7 @@ users:
       gElim:
         startLevel: 3
       gMem:
-        startLevel: 4
+        startLevel: 5
         showHint: false
         trials: 1
         nTotal: 2
@@ -372,7 +372,7 @@ users:
       gPasscode:
         startLevel: 0
       gPremem:
-        startLevel: 4
+        startLevel: 5
         nTotal: 2
         nCorrect: 2
         nCorrect1: 2
@@ -382,7 +382,7 @@ users:
       gSentence:
         startLevel: 1
       gSteps:
-        startLevel: 4
+        startLevel: 5
       gRiddle:
         startLevel: 2
         nTotal: 1
@@ -394,7 +394,7 @@ users:
       gTouchColors:
         startLevel: 4
       gTouchPic:
-        startLevel: 4
+        startLevel: 5
       gWritePic:
         startLevel: 5
       gHouse:
@@ -414,7 +414,7 @@ users:
         nTotal: 10
         nCorrect: 3
         nCorrect1: 3
-        startLevel: 0
+        startLevel: 4
         percentage: 30
     avAddons:
       - aPasscode
@@ -1073,7 +1073,13 @@ games:
       "5":
         numPics: 35
       "6":
-        numPics: 35
+        numPics: 12
+        pictureLabels: never
+      "7":
+        numPics: 18
+        pictureLabels: never
+      "8":
+        numPics: 24
         pictureLabels: never
   gSayPic:
     friendly: Speak up!

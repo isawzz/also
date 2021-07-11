@@ -37,7 +37,6 @@ function storeRoomPositions(g1, house) {
 		di[id] = center;
 	}
 }
-
 function convertToGraphElements(house) {
 	let elements = { nodes: [], edges: [] };
 	let vertices = house.rooms.map(x => Items[x]);
@@ -57,8 +56,6 @@ function convertToGraphElements(house) {
 	}
 	return elements;
 }
-
-
 function iDoor(r1, dir, r2, styles = {}) {
 	r1 = isString(r1) ? Items[r1] : r1;
 	let house = Items[r1.house];
@@ -151,7 +148,6 @@ function iLabyrint(dParent, cols,rows, styles = { w: 800, h: 400 }) {
 
 	return house;
 }
-
 function iHouse(dParent, ns = 1, styles = { w: 500, h: 400 }) {
 	//achtung styles: fg is wall color, bg is room color!
 	let d = mDiv(dParent, { display: 'inline-grid', position: 'relative', box: true });

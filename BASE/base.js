@@ -522,6 +522,28 @@ function mStyleTranslate(prop,val,convertNumbers=true){
 	return [propName,newVal];
 
 }
+function mStyleToCy(di,group){return translateStylesToCy(di,group);}
+function translateToCssStyle(prop,val){return mStyleTranslate(prop,val);}
+function translateStylesToCy(styles, group) {
+	//group can be 'node','edge','outer','inner',...
+	//returns a dictionary
+	let di = {};
+	for (const k in styles) {
+		let v = styles[k];
+		let [prop, val] = translateToCssStyle(k, v, true);
+		//console.log('prop',prop)
+		if (group == 'edge' && k == 'bg') di['line-color'] = val;
+		else if (prop == 'shape' && val == 'hex') {
+			//console.log('hallo!!!')
+			di.shape = 'polygon';
+			di['shape-polygon-points'] = [0, -1, 1, -0.5, 1, 0.5, 0, 1, -1, 0.5, -1, -0.5];
+		}
+		else di[prop] = val;
+	}
+	return di;
+
+}
+
 function getBorderPropertyForDirection(dir){	return {0:'border-top',1:'border-right',2:'border-bottom',3:'border-left'}[dir];}
 
 function mStyleX(elem, styles, unit = 'px') {

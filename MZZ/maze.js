@@ -1,4 +1,4 @@
-class AbstractGraph {
+class AbsGraph1 {
 	constructor() {
 		let defOptions = {
 			maxZoom: 1,
@@ -470,7 +470,7 @@ class AbstractGraph {
 			store: mButton('store', () => this.storeCurrentPositions(), sb, {}, ['tbb']),
 		};
 		for (const b in buttons) {
-			if (!buttonlist.includes(b)) hide(buttons[b]);
+			if (isdef(buttonlist) && !buttonlist.includes(b)) hide(buttons[b]);
 		}
 		return buttons;
 	}
@@ -516,7 +516,7 @@ class AbstractGraph {
 	//#endregion
 
 }
-class MazeGraph extends AbstractGraph {
+class MazeGraph extends AbsGraph1 {
 	constructor(dParent, cols, rows, sz, gap = 4) {
 		super();
 

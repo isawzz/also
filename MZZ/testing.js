@@ -1,24 +1,264 @@
 //#region graph tests
 
-//house
-
 //simple graph
-function gTest04(){
+function gTest13() {
+	let g = createSampleHex1(3, 2, 100, 100); let ids = g.getNodeIds(); let id = ids[0]; g.showExtent();
+
+	//get the center of first node
+	let center=g.getProp(id,'center');//jetzt geht es weil ich bei hex1Board die center prop in jedem node abspeichere!!!
+	console.log('center prop',center);
+	center = g.posDict['preset'][id];//ja das geht
+	console.log('center',center);
+
+	//get size of first node
+	let size = g.getSize(id); // das returned eigentlich die bounding box! hab auch x1,y1,x2,y2
+	console.log('size',size);
+
+
+
+	//get pt in north:
+	let pN={x:center.x,y:size.y1}; //falsch!
+	let node = g.getNode(id);
+	let b=node.renderedBoundingBox();
+	pN={x:b.x1+b.w/2,y:b.y1};
+
+
+	//create a node there!
+	let nNew = g.addNode({width:25,height:25},pN);
+	console.log('new node',nNew);
+	let n1=g.getNode(nNew);
+	n1.css('background-color','blue');
+	let st={bg:'red',shape:'ellipse',w:25,h:25};
+	let st1=mStyleToCy(st);
+	n1.css(st1);
+
+
+
+}
+
+function gTest12() {
+	let g = createSampleHex1(21, 11); let ids = g.getNodeIds(); let id = ids[0];
+
+	g.showExtent();
+}
+function createSampleHex1(rows = 5, topcols = 3, w = 50, h = 50) {
+	initTable();
+	let styles = {
+		outer: { bg: 'pink', padding: 25 },
+		inner: { w: 500, h: 400 },
+		node: { bg: 'pink', shape: 'hex', w: w, h: h },
+		edge: { bg: 'white' }
+	};
+	let g = hex1Board(dTable, rows, topcols, styles);
+	g.addLayoutControls();
+	return g;
+}
+function gTest11() {
+	let g = createSampleHex1();
+	let ids = g.getNodeIds();
+	let id = ids[0];
+	console.log('size', g.getSize(id), g.cy.getElementById(id).bb());
+	let n = g.cy.getElementById(id);
+	n.css({ width: '40px', height: '40px' });
+	g.zoom(false);
+	let bb = g.cy.elements().bb();
+	console.log('gesamt graph braucht:', bb)
+}
+function gTest10() {
+	initTable();
+	let [rows, topcols, w, h] = [7, 10, 50, 50];
+	let styles = {
+		outer: { bg: 'pink', padding: 25 },
+		inner: { w: 500, h: 400 },
+		node: { bg: 'pink', shape: 'hex', w: w, h: h },
+		edge: { bg: 'green' }
+	};
+	let g = hex1Board(dTable, rows, topcols, styles);
+}
+function gTest09() {
+	initTable();
+	let [w, h] = [50, 50];
+	let styles = {
+		outer: { bg: 'pink', padding: 25 },
+		inner: { w: 500, h: 400 },
+		node: { bg: 'pink', shape: 'hex', w: w, h: h },
+		edge: { bg: 'green' }
+	};
+	let g = new UIGraph(dTable, styles);
+	let [rows, topcols] = [5, 3];
+	let total = hex1Count(rows, topcols);
+	console.log('for rows', rows, 'and cols', topcols, 'need', total, 'nodes')
+	let nids = g.addNodes(total);
+	g.hex1(rows, topcols, w + 4, h + 4);
+	let indices = hex1Indices(rows, topcols);
+	console.log('indices', indices);
+	//correct, jetzt soll jeder node die bekommen!
+	let ids = g.getNodeIds();
+	console.log('node ids:', ids);
+	//return;
+	let di = {};
+	for (let i = 0; i < ids.length; i++) {
+		let [row, col] = [indices[i].row, indices[i].col];
+		let id = ids[i];
+		lookupSet(di, [row, col], id);
+		g.setProp(id, 'row', row);
+		g.setProp(id, 'col', col);
+		g.setProp(id, 'label', `${row},${col}`);
+		//g.setStyle(id, 'label', 'data(label)');
+	}
+	let labels = g.getNodes().map(x => x.data().label);
+	console.log('labels', labels);
+	let label = g.cy.getElementById(ids[1]).data('label');
+
+	for (let i = 0; i < ids.length; i++) {
+		let [row, col] = [indices[i].row, indices[i].col];
+		let id = ids[i];
+		let nid2 = lookup(di, [row, col + 2]); if (nid2) g.addEdge(id, nid2);
+		nid2 = lookup(di, [row + 1, col - 1]); if (nid2) g.addEdge(id, nid2);
+		nid2 = lookup(di, [row + 1, col + 1]); if (nid2) g.addEdge(id, nid2);
+	}
+
+	let deg = g.getDegree(ids[1]); //cy.getElementById(ids[1]).data('label');
+	let deg1 = g.getDegree(ids[10]); //cy.getElementById(ids[1]).data('label');
+	let deg2 = g.getDegree(ids[18]); //cy.getElementById(ids[1]).data('label');
+	console.log('das geht: label', label, deg, deg1, deg2);
+
+}
+function gTest08() {
+	initTable();
+	let styles = {
+		outer: { bg: 'pink', padding: 25 },
+		inner: { w: 500, h: 400 },
+		node: { bg: 'pink', shape: 'hex' },
+		edge: { bg: 'green' }
+	};
+	let g = new UIGraph(dTable, styles);
+	let nids = g.addNodes(10);
+	let eids = g.addEdges(10);
+	g.cose();
+	g.addLayoutControls();
+	let nodes = g.getNodes();
+	console.log('nodes', nodes[0]);
+	g.mStyle(nodes[0], { shape: 'ellipse', bg: 'black' });
+}
+function gTest07() {
+	initTable();
+
+	//let hexPoints = [{ x: 0, y: -1 }, { x: 1, y: -0.5 }, { x: 1, y: 0.5 }, { x: 0, y: 1 }, { x: -1, y: 0.5 }, { x: -1, y: -0.5 }]
+	let hexPoints = [0, -1, 1, -0.5, 1, 0.5, 0, 1, -1, 0.5, -1, -0.5];
+
+	let styles = {
+		outer: { bg: 'pink', padding: 25 },
+		inner: { w: 500, h: 400 },
+		node: { bg: 'pink', shape: 'hex' },
+		edge: { bg: 'blue' }
+		// node: { shape: 'polygon', 'shape-polygon-points': hexPoints, w: 90, h: 100, bg: 'black', fg: 'red', fz: 40 },
+		//'node.field':  { shape: 'polygon', 'shape-polygon-points': hexPoints, w: 90, h: 100, bg: 'black', fg: 'red', fz: 40 },
+		// 'node.city':  { shape: 'circle', w: 25, h: 25, bg: 'violet', fg: 'white', fz: 40 },
+
+	};
+
+	let g = new UIGraph(dTable, styles);
+	let cy = g.cy;
+	//cy.style({ selector: 'h1', style: { 'background-color': 'grey' } });
+
+	//let nids = g.addNodes(7);nids.map(x=>x.class('field'))
+	let nids = g.addNodes(10);
+	let eids = g.addEdges(10);
+
+	let node = g.getNodes()[0];
+	node.addClass('high');
+
+	g.cose();
+	//g.nodeEvent('click', x => { x.addClass('high'); }); //let id = x.id(); console.log('clicked ' + id); g.mStyle(id, { bg: 'yellow', fg: 'blue' }); });
+
+	cy.style().selector('node.field').style('color', 'black');
+	cy.style().selector('node.city').style('shape', 'hexagon');
+
+
+
+	let node1 = g.getNodes()[1];
+	node.addClass('city');
+	node1.addClass('field');
+}
+function gTest06() {
+	initTable();
+
+	//let hexPoints = [{ x: 0, y: -1 }, { x: 1, y: -0.5 }, { x: 1, y: 0.5 }, { x: 0, y: 1 }, { x: -1, y: 0.5 }, { x: -1, y: -0.5 }]
+	let hexPoints = [0, -1, 1, -0.5, 1, 0.5, 0, 1, -1, 0.5, -1, -0.5];
+
+	let styles = {
+		outer: { bg: 'pink', padding: 25 },
+		inner: { w: 500, h: 400 },
+		node: { bg: 'pink' },
+		edge: { bg: 'blue' }
+		// node: { shape: 'polygon', 'shape-polygon-points': hexPoints, w: 90, h: 100, bg: 'black', fg: 'red', fz: 40 },
+		//'node.field':  { shape: 'polygon', 'shape-polygon-points': hexPoints, w: 90, h: 100, bg: 'black', fg: 'red', fz: 40 },
+		// 'node.city':  { shape: 'circle', w: 25, h: 25, bg: 'violet', fg: 'white', fz: 40 },
+
+	};
+
+	let g = new UIGraph(dTable, styles);
+	let cy = g.cy;
+	//cy.style({ selector: 'h1', style: { 'background-color': 'grey' } });
+
+	//let nids = g.addNodes(7);nids.map(x=>x.class('field'))
+	let nids = g.addNodes(10);
+	let eids = g.addEdges(10);
+
+	let node = g.getNodes()[0];
+	node.addClass('high');
+
+	g.cose();
+	//g.nodeEvent('click', x => { x.addClass('high'); }); //let id = x.id(); console.log('clicked ' + id); g.mStyle(id, { bg: 'yellow', fg: 'blue' }); });
+
+	cy.style().selector('node.field').style('color', 'black');
+	cy.style().selector('node.city').style('shape', 'hexagon');
+
+	let node1 = g.getNodes()[1];
+	node.addClass('city');
+	node1.addClass('field');
+}
+function gTest05() {
+	initTable();
+
+	//let hexPoints = [{ x: 0, y: -1 }, { x: 1, y: -0.5 }, { x: 1, y: 0.5 }, { x: 0, y: 1 }, { x: -1, y: 0.5 }, { x: -1, y: -0.5 }]
+	let hexPoints = [0, -1, 1, -0.5, 1, 0.5, 0, 1, -1, 0.5, -1, -0.5];
+
+	let styles = {
+		outer: { bg: 'pink', padding: 25 },
+		inner: { w: 500, h: 400 },
+		node: { shape: 'polygon', 'shape-polygon-points': hexPoints, w: 90, h: 100, bg: 'black', fg: 'red', fz: 40 }
+	};
+
+	let g = new UIGraph(dTable, styles);
+	let nids = g.addNodes(7);
+	//let eids = g.addEdges(15);
+	console.log('g', g.getNodeIds(), g.getEdgeIds());
+	//g should be of item form! dh hat id und iDiv!
+	g.hex1(3, 2, styles.node.w + 2, styles.node.h + 2);
+	g.addLayoutControls();
+	g.disableDD(); //cool!!!!
+	g.nodeEvent('click', x => { let id = x.id(); console.log('clicked ' + id); g.mStyle(id, { bg: 'yellow', fg: 'blue' }); });
+}
+
+//#region old code!
+function gTest04() {
 	initTable();
 	let d = mDiv(dTable, { w: 500, h: 360, bg: 'blue', align: 'left' });
-	let g = new AbstractGraph(d);
+	let g = new AbsGraph1(d);
 	g.addVisual(d);
 	let nids = g.addNodes(10);
 	let eids = g.addEdges(15);
 	console.log('g', g.getNodeIds(), g.getEdgeIds());
 	g.cose();
-	g.addLayoutControls();
+	g.addLayoutControls(d);
 }
-function gTest03(){
+function gTest03() {
 	initTable();
 	let d = mDiv(dTable, { w: 500, h: 360, bg: 'blue', align: 'left' });
-	let g = new AbstractGraph(d);
-	upgradeToSimpleGraph(g,d); //g.addVisual(d);
+	let g = new AbsGraph1(d);
+	upgradeToSimpleGraph(g, d); //g.addVisual(d);
 	let nids = g.addNodes(10);
 	let eids = g.addEdges(15);
 	console.log('g', g.getNodeIds(), g.getEdgeIds());
@@ -26,7 +266,7 @@ function gTest03(){
 	g.addLayoutControls();
 }
 //#region nur fuer gTest02 gebraucht!
-function upgradeToSimpleGraph(g, dParent, styles={}) {
+function upgradeToSimpleGraph(g, dParent, styles = {}) {
 	g.id = nundef(dParent.id) ? getUID() : dParent.id;
 	// mIfNotRelative(dParent);
 
@@ -48,8 +288,8 @@ function upgradeToSimpleGraph(g, dParent, styles={}) {
 	for (const k in styleDict) { cyStyle.push({ selector: k, style: styleDict[k] }); }
 
 	//let d1=
-	let size=getSize(dParent);
-	let d1=mDiv(dParent,{position:'relative',bg:'green',w:size.w-80,left:40,top:0,h:size.h,align:'left'});
+	let size = getSize(dParent);
+	let d1 = mDiv(dParent, { position: 'relative', bg: 'green', w: size.w - 80, left: 40, top: 0, h: size.h, align: 'left' });
 	// console.log('size',size)
 	// let dCy = mDiv(dParent, { position: 'absolute', left: 40, top: 0, w: 'calc( 100% - 80px )', h: '100%' });
 	// let dCy = mDiv(dParent, {display:'inline-block', position: 'absolute', left: 40, top: 0, w: size.w-80, h: size.h });
@@ -57,9 +297,9 @@ function upgradeToSimpleGraph(g, dParent, styles={}) {
 	g.cy.style(cyStyle);
 	// console.log('extent',g.cy.extent());
 	g.enablePanZoom();
-	iAdd(g, { div: dParent , dCy: d1 });
+	iAdd(g, { div: dParent, dCy: d1 });
 }
-class SimpleGraph extends AbstractGraph { //das wird jetzt schon ein Item!
+class SimpleGraph extends AbsGraph1 { //das wird jetzt schon ein Item!
 	constructor(dParent, styles = {}) {
 		super();
 		upgradeToSimpleGraph(this, dParent, styles);
@@ -79,13 +319,13 @@ function gTest02() {
 }
 //abstract graph
 function gTest01() {
-	let g = new AbstractGraph();
+	let g = new AbsGraph1();
 	let nids = g.addNodes(10);
 	let eids = g.addEdges(15);
 	console.log('g', g.getNodeIds(), g.getEdgeIds());
 }
 function gTest00() {
-	let g = new AbstractGraph();
+	let g = new AbsGraph1();
 	let nid1 = g.addNode();
 	let nid2 = g.addNode();
 	let eid1 = g.addEdge(nid1, nid2);

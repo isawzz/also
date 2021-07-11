@@ -1536,6 +1536,8 @@ function myShowLabels(onClickPictureHandler, ifs = {}, options = {}, keys, label
 function showPictures(dParent, handler, ifs = {}, options = {}, keys, labels) {
 	options = getOptionsMinimalistic(dParent, handler, options.w, options.h, ifs, options, G);
 
+	//console.log('options',options);options.margin=0;
+
 	if (nundef(keys)) keys = choose(G.keys, G.numPics);
 	//keys[0] = 'pin'; keys[1] = 'pushpin'; keys[2] = 'round pushpin';
 
@@ -1553,7 +1555,7 @@ function getStandardFz(wi, hi, showPic, showLabels, wLongest) {
 	let hText = showPic ? hi / 3 : hi;
 	return showLabels ? idealFontSize(wLongest, wi, hText) : 0;
 }
-function getStandardFzPic(wi, hi, showLabels) { return Math.min(wi * .8, showLabels ? hi * .6 : hi * .85); }
+function getStandardFzPic(wi, hi, showLabels) { return Math.min(wi * .8, showLabels ? hi * .6 : hi * .75); }
 function myPresent(dArea, items, options) {
 	let showLabels = options.showLabels;
 	let w = options.w * valf(options.fw, .9);
@@ -1564,7 +1566,7 @@ function myPresent(dArea, items, options) {
 		[wi, hi, rows, cols] = calcSizeAbWo(items.length, options.rows, options.cols, w, h, options.wimax, options.himax);
 	} else[wi, hi, rows, cols] = calcRowsColsSizeAbWo(items.length, w, h, showLabels, options.wimax, options.himax);
 
-	console.log('rows,cols', rows, cols);
+	//console.log('rows,cols', rows, cols);
 
 	let gap = wi * .1; if (cols > 1) wi -= gap; if (rows > 1) hi -= gap;
 	let fzPic = options.fzPic = getStandardFzPic(wi, hi, showLabels);
@@ -1572,7 +1574,7 @@ function myPresent(dArea, items, options) {
 	options.szPic = { w: wi, h: hi };
 	if (nundef(options.ifs)) options.ifs = {};
 	let outerStyles = {
-		w: wi, h: hi, margin: gap / 2, rounding: 6,
+		w: wi, h: hi, rounding: 6, margin: 0,//gap / 2,
 		bg: valf(options.ifs.bg, 'random'), fg: 'contrast', display: 'inline-flex', 'flex-direction': 'column',
 		'justify-content': 'center', 'align-items': 'center', 'vertical-align': 'top',
 	};

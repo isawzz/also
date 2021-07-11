@@ -1,3 +1,14 @@
+function mStyleToCy(k, v, di, cyGroup) {
+	let [prop, val] = translateToCssStyle(k, v, true);
+	//console.log('prop',prop)
+	if (cyGroup == 'edge' && k == 'bg') di['line-color'] = val;
+	else if (prop == 'shape' && val == 'hex') {
+		//console.log('hallo!!!')
+		di.shape = 'polygon';
+		di['shape-polygon-points'] = [0, -1, 1, -0.5, 1, 0.5, 0, 1, -1, 0.5, -1, -0.5];
+	}
+	else di[prop] = val;
+}
 class GMaze extends Game {
 	constructor(name, o) { super(name, o); }
 	clear(){super.clear(); if (isdef(this.maze)) this.maze.clear();}
