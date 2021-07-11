@@ -132,7 +132,7 @@ users:
       vocab: best25
       showTime: false
       spokenFeedback: true
-      silentMode: true
+      silentMode: false
       switchGame: true
       trials: 2
       showHint: true
@@ -331,7 +331,7 @@ users:
       vocab: nemo
       showTime: true
       spokenFeedback: true
-      silentMode: true
+      silentMode: false
       switchGame: true
       trials: 2
       showHint: no
