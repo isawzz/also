@@ -39,23 +39,6 @@ function getSudokuPatternFromDB(r,c,index=1){
 	let sample=DB.games.gColoku.samples[key][index];
 	let pattern=sudokuSampleToIndexMatrix(sample.sol,r,c);
 	let puzzle=sudokuSampleToIndexMatrix(sample.min,r,c);
-
-	// //alle 0 muessen durch ' ' ersetzt werden!
-	// //alle zahlen!=0 muessen minus 1 gemacht werden!
-
-	// //console.log('pattern found',pattern);
-
-	// //console.log(typeof pattern.min);
-	// let s=String(pattern.sol);
-	// let letters = toLetterArray(s);
-	// //console.log('letters',letters);
-	// let nums = letters.map(x=>Number(x));
-	// //console.log('numbers',nums);
-	// let matrix = arrToMatrix(nums,r,c);
-	// //printMatrix(matrix);
-	// //let matrix = 
-
-
 	return {pattern:pattern,puzzle:puzzle};
 }
 function getSudokuPattern(r, c) {
@@ -266,7 +249,7 @@ function printMatrix(arr2d, title = 'result') {
 	let cols = arr2d[0].length;
 	let arr = arrFlatten(arr2d);
 	let s = toBoardString(arr, rows, cols);
-	console.log(title, s)
+	//console.log(title, s)
 }
 
 

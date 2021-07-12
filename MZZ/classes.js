@@ -172,7 +172,7 @@ class GAnagram extends Game {
 		}
 		setGoal();
 		showInstruction(this.showWord ? Goal.label : '', this.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
-		mLinebreak(dTable,25);
+		mLinebreak(dTable, 25);
 
 		this.inputs = createDropInputs();
 		let x = mLinebreak(dTable, 50);
@@ -197,6 +197,230 @@ class GAnagram extends Game {
 		Selected = { answer: w, reqAnswer: word, feedbackUI: iDiv(Goal) }; //this.inputs.map(x => iDiv(x)) };
 		//console.log(Selected);
 		return w == word;
+	}
+
+}
+class GColoku extends Game {
+	startGame() {
+		this.correctionFunc = () => {
+			if (this.qName == 'isThisSudokuCorrect') {
+				mStyleX(Goal.buttonCorrect, { bg: 'green' });
+				animate(Goal.buttonCorrect, 'komisch', 1000);
+
+				console.log('correct', Goal.correct)
+				if (!Goal.correct) {
+					animateColorScale(Goal.correctionFeedbackUI, Goal.item.color, 1.5, 1500);
+					this.dComment.innerHTML = 'rule broken! duplicate in ' + Goal.err.type;
+				} else {
+					this.dComment.innerHTML = 'this coloku is correct!';
+				}
+			} else {
+				this.dWordArea.remove();
+				this.bDone.remove();
+				this.dComment.innerHTML = 'rule broken! duplicate in ' + Goal.err.type;
+				animateColorScale(Goal.correctionFeedbackUI, Goal.item.color, 1.5, 1500);
+			}
+
+			return 20000;
+		};
+		this.failFunc = () => {
+			if (this.qName == 'isThisSudokuCorrect') {
+				if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+				else { mXit(Goal.buttonClicked, 100); }
+				//mStyleX(this.dGraph, { opacity: 1 });
+			} else {
+				mXit(this.dGrid, 200);
+			}
+		}
+		this.successFunc = () => {
+			if (this.qName == 'isThisSudokuCorrect') {
+				if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+				else { mXit(Goal.buttonClicked, 100); }
+			} else {
+				mCheckit(this.dGrid, 200);
+			}
+		}
+	}
+	prompt() {
+
+		this.trials = 1;
+		let [rows, cols] = [this.rows, this.cols];// = [4, 4];
+		this.dGrid = mGrid(rows, cols, dTable, { position: 'relative', w: 300, h: 300, gap: 10, bg: 'white' });
+
+		let o = getSudokuPatternFromDB(4, 4, 1);
+		//console.log('pattern', o.pattern, 'puzzle', o.puzzle);
+		let [pattern, minPuzzle] = [this.pattern, this.minPuzzle] = [o.pattern, o.puzzle];
+		// let pattern = this.pattern = getSudokuPattern(rows, cols);
+		//printMatrix(pattern, 'pattern');
+		//printMatrix(minPuzzle, 'puzzle');
+
+		mLinebreak(dTable, 20);
+		this.dChoices = mDiv(dTable);
+		mLinebreak(dTable);
+		this.dComment = mDiv(dTable);
+		mLinebreak(dTable);
+
+		let qName = this.qName = this.level == 0 && coin() ? 'isThisSudokuCorrect' : 'solve';
+		//let qName = this.qName = 'solve'; // solve | isThisSudokuCorrect
+		this[qName]();
+
+		this.controller.activateUi.bind(this.controller)();
+	}
+	fillGrid(pattern) {
+		//fill grid w/ colored divs
+		let items = this.items = [];
+		let colors = this.colors = [RED, YELLOW, BLUE, GREEN];
+		let [rows, cols, dGrid] = [this.rows, this.cols, this.dGrid];
+		shuffle(colors);
+		for (let r = 0; r < rows; r++) {
+			let arr = [];
+			for (let c = 0; c < cols; c++) {
+				let nch = pattern[r][c];
+
+				let color = isNumber(nch) ? colors[pattern[r][c]] : null;
+				let d = mDiv(dGrid, { bg: color }, getUID());
+				let item = { row: r, col: c, id: d.id, color: color, val: nch };
+				iAdd(item, { div: d });
+				arr.push(item);
+			}
+			items.push(arr);
+		}
+		return items;
+	}
+	makeLines() {
+		let [wline, dGrid] = [2, this.dGrid];
+		let gSize = getSize(dGrid);
+		//console.log('size:', gSize);
+		let rh = makeRect((gSize.w - wline) / 2, 0, wline, gSize.h);
+		let rv = makeRect(0, (gSize.h - wline) / 2, gSize.w, wline);
+		let vLine = mDiv(dGrid, { bg: this.color, position: 'absolute', left: rh.l, top: rh.t, w: rh.w, h: rh.h });
+		let hLine = mDiv(dGrid, { bg: this.color, position: 'absolute', left: rv.l, top: rv.t, w: rv.w, h: rv.h });
+	}
+	setGoal(pattern) {
+		let err = checkSudokuRule(pattern);
+		let answer = (err == null); console.log('correct', answer);
+		//if (err) console.log('err', err.type, '[' + err.row + ',' + err.col + ']');
+		//find the tile where the error really is!
+		Goal = { correct: answer, err: err };
+	}
+	isThisSudokuCorrect() {
+
+		this.trials = 1;
+
+		let [pattern, rows, cols, dGrid] = [this.pattern, this.rows, this.cols, this.dGrid];
+		//if (coin()) destroySudokuRule(pattern, rows, cols);
+		destroySudokuRule(pattern, rows, cols);
+
+		this.setGoal(pattern);
+
+		let items = this.fillGrid(pattern);
+		this.makeLines();
+		let wsp = {
+			D: 'ist dieses coloku korrekt?',
+			E: 'is this coloku correct?',
+			S: 'es este coloku correcto?',
+			F: 'est ce que ce coloku est exacte?',
+		};
+		let sp = wsp[this.language];
+		showInstructionX(sp, dTitle, sp);
+
+		showFleetingMessage('rule: each color must be unique in every row, column and quadrant!', 15000);
+
+		//console.log('answer', Goal.correct, Goal.err);
+		let correct, incorrect;
+		if (Goal.correct) { correct = { num: 1, text: 'yes' }; incorrect = [{ num: 0, text: 'no' }]; }
+		else { correct = { num: 0, text: 'no' }; incorrect = [{ num: 1, text: 'yes' }]; }
+		let feedbackUI = Goal.correctionFeedbackUI = Goal.correct ? this.dGrid : iDiv(this.items[Goal.err.row][Goal.err.col]);
+		createMultipleChoiceElements(correct, incorrect, this.dChoices, feedbackUI, {});
+		Goal.item = Goal.correct ? this.items[0] : this.items[Goal.err.row][Goal.err.col];
+	}
+	solve() {
+		//take a few pieces out
+		//this.numMissing = 1; //das wird dann automatisiert!
+
+		//take a random number out of puzzle
+		let [rrand, crand] = [randomNumber(0, this.rows - 1), randomNumber(0, this.cols - 1)];
+		let puzzle = this.puzzle = jsCopy(this.pattern);
+
+		//find all possible r,c that can be removed (=are empty in min version of puzzle)
+		let [min, rows, cols] = [this.minPuzzle, this.rows, this.cols];
+		let combis = [];
+		for (let r = 0; r < rows; r++) {
+			for (let c = 0; c < cols; c++) {
+				if (min[r][c] === ' ') combis.push({ row: r, col: c });
+			}
+		}
+
+		//take numMissing of these randomly
+		let combisToRemove = choose(combis, this.numMissing);
+
+		//remove these entries from pattern to get real puzzle!
+		for (const o of combisToRemove) {
+			puzzle[o.row][o.col] = ' ';
+		}
+
+		//printMatrix(puzzle, 'puzzle');
+		this.fillGrid(puzzle);
+		this.makeLines();
+
+		let sp = 'solve this coloku!'
+		showInstructionX(sp, dTitle, sp);
+
+		showFleetingMessage('rule: each color must be unique in every row, column and quadrant!', 15000);
+
+		//containers should be divs of empty (unset) puzzle
+		let itemlist = this.itemlist = arrFlatten(this.items);
+		//console.log('items', itemlist);
+		let containers = this.containers = itemlist.filter(x => x.val === ' ');
+		//console.log('containers', containers)
+
+		let dWordArea = this.dWordArea = mDiv(dTable, { h: 70, display: 'flex', 'flex-wrap': 'wrap', layout: 'fhcc' });
+		let colorItems = this.colorItems = [];
+		for (const color of this.colors) {
+			let colorItem = { id: getUID(), color: color };
+			let d = mDiv(dWordArea, { w: 40, h: 40, bg: color, margin: 10, cursor: 'pointer' }, colorItem.id);
+			iAdd(colorItem, { div: d });
+			colorItems.push(colorItem);
+		}
+
+		enableDD(colorItems, containers, this.dropHandler.bind(this), true);
+		mLinebreak(dTable, 50);
+		this.bDone = mButton('Done!', this.controller.evaluate.bind(this.controller), dTable, { fz: 28, matop: 10, rounding: 10, padding: 16, border: 8 }, ['buttonClass']);
+
+	}
+	dropHandler(source, target, isCopy = true) {
+		let dSource = iDiv(source);
+		let dTarget = iDiv(target);
+		mStyleX(dTarget, { bg: source.color });
+		target.color = source.color;
+		target.val = this.colors.indexOf(source.color);
+
+	}
+
+	evalIsCorrect() {
+		Selected = { feedbackUI: Goal.buttonClicked };
+		return Goal.buttonClicked == Goal.buttonCorrect;
+	}
+	evalSolve() {
+		//compare pattern to item values
+		let [items, pattern, rows, cols] = [this.items, this.pattern, this.rows, this.cols];
+
+		//console.log('flat', arrFlatten(this.items));
+		let pat = items.map(x => x.map(y => y.val));
+		printMatrix(pat, 'trial!');
+
+		this.setGoal(pat);
+		if (Goal.err) {
+			Goal.correctionFeedbackUI = iDiv(this.items[Goal.err.row][Goal.err.col]);
+			Goal.item = this.items[Goal.err.row][Goal.err.col];
+		}
+
+		Selected = { feedbackUI: this.dGrid };
+		return Goal.correct;
+	}
+	eval() {
+		clearFleetingMessage();
+		return this.qName == 'solve' ? this.evalSolve() : this.evalIsCorrect();
 	}
 
 }
@@ -415,7 +639,7 @@ class GHouse extends Game {
 		let wTotal = n < 4 || n > 12 ? 700 : n > 10 ? 600 : 500;
 		let dGridOuter = mDiv(dTable, { wmin: wTotal, hmin: 400 });
 		let house = this.house = iHouse(dGridOuter, s, { w: wTotal, h: 400 });
-		console.log('house size',getRect(dGridOuter).w,getRect(dGridOuter).h);
+		console.log('house size', getRect(dGridOuter).w, getRect(dGridOuter).h);
 		let rooms = this.rooms = house.rooms.map(x => Items[x]);
 		this.addLabelsToRooms();
 		//#endregion
@@ -445,7 +669,7 @@ class GHouse extends Game {
 
 		let r = getRect(dGridOuter); //console.log('r',r);
 		mStyleX(dGridOuter, { position: 'relative' });
-		let dGraph = this.dGraph = mDiv(dGridOuter, { box:true, align: 'left', position: 'absolute', bg: '#ffffff80', top: 0, left: 0, w: r.w, h: r.h });
+		let dGraph = this.dGraph = mDiv(dGridOuter, { box: true, align: 'left', position: 'absolute', bg: '#ffffff80', top: 0, left: 0, w: r.w, h: r.h });
 		//#endregion
 
 		let els = convertToGraphElements(house);
@@ -621,7 +845,7 @@ class GHouse extends Game {
 }
 class GMaze extends Game {
 	constructor(name, o) { super(name, o); }
-	clear(){super.clear(); if (isdef(this.maze)) this.maze.clear();}
+	clear() { super.clear(); if (isdef(this.maze)) this.maze.clear(); }
 	startGame() {
 		this.correctionFunc = () => {
 			mStyleX(Goal.buttonCorrect, { bg: 'green' });
@@ -640,13 +864,13 @@ class GMaze extends Game {
 			else { mXit(Goal.buttonClicked, 100); }
 		}
 	}
-	startRound(){if (isdef(this.maze)) this.maze.clear();}
+	startRound() { if (isdef(this.maze)) this.maze.clear(); }
 	prompt() {
 
 		this.trials = 1;
 		[this.rows, this.cols] = [6 + this.level * 2, 6 + this.level * 2];
 
-		let maze = this.maze = new MazeGraph(dTable,this.rows,this.cols,this.sz,this.gap);
+		let maze = this.maze = new MazeGraph(dTable, this.rows, this.cols, this.sz, this.gap);
 
 		mLinebreak(dTable, 20);
 		this.dChoices = mDiv(dTable);
@@ -698,8 +922,8 @@ class GMaze extends Game {
 
 		let path = this.path = this.maze.getShortestPathFromTo(this.roomFrom, this.roomTo);
 
-		console.assert(path.length < Infinity,'WAAAAAAAAAAAAAAS?');
-		if (coin(this.level>2?50:40)) this.maze.cutPath(this.path,.5,.75);
+		console.assert(path.length < Infinity, 'WAAAAAAAAAAAAAAS?');
+		if (coin(this.level > 2 ? 50 : 40)) this.maze.cutPath(this.path, .5, .75);
 		// this.maze.cutPath(this.path,.5,.75);
 		let len = this.maze.getLengthOfShortestPath(this.roomFrom, this.roomTo); //verify that no longer a path!!!!!
 
@@ -771,7 +995,7 @@ class GMissingLetter extends Game {
 		}
 
 
-		mLinebreak(dTable,20);
+		mLinebreak(dTable, 20);
 
 		// create sequence of letter ui
 		let style = { margin: 6, fg: 'white', display: 'inline', bg: 'transparent', align: 'center', border: 'transparent', outline: 'none', family: 'Consolas', fz: 80 };
@@ -1150,7 +1374,7 @@ class GSayPic extends Game {
 		setGoal();
 		showInstruction(Goal.label, this.language == 'E' ? 'say:' : "sage: ", dTitle);
 		animate(dInstruction, 'pulse800' + bestContrastingColor(this.color, ['yellow', 'red']), 900);
-		mLinebreak(dTable,25);
+		mLinebreak(dTable, 25);
 		MicrophoneUi = mMicrophone(dTable, this.color);
 		MicrophoneHide();
 		TOMain = setTimeout(this.controller.activateUi.bind(this.controller), 200);
@@ -1575,7 +1799,7 @@ class GTouchColors extends Game {
 class GTouchPic extends Game {
 	constructor(name, o) { super(name, o); }
 	prompt() {
-		myShowPics(this.controller.evaluate.bind(this.controller),{},{});
+		myShowPics(this.controller.evaluate.bind(this.controller), {}, {});
 		setGoal();
 		showInstruction(Goal.label, 'click', dTitle, true);
 		this.controller.activateUi.bind(this.controller)();
@@ -1610,7 +1834,7 @@ class GWritePic extends Game {
 			showInstruction('', wr, dTitle, true, wr);
 		}
 
-		mLinebreak(dTable,20);
+		mLinebreak(dTable, 20);
 		this.inputBox = addNthInputElement(dTable, this.trialNumber);
 		this.defaultFocusElement = this.inputBox.id;
 
@@ -1644,7 +1868,7 @@ class GWritePic extends Game {
 		else { return false; }
 	}
 }
-
+//deactivated!
 class GMissingNumber extends Game {
 	constructor(name, o) { super(name, o); }
 	startGame() {
