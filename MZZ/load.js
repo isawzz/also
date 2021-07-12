@@ -3,7 +3,7 @@ window.onload = _loader; // _loader | _testing
 
 async function _testing() {
 	Items={};
-	gTest13();
+	iTest00();
 }
 
 async function _loader() {

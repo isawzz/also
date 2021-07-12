@@ -14,6 +14,13 @@ function animate(elem, aniclass, timeoutms) {
 	mClass(elem, aniclass);
 	setTimeout(() => mRemoveClass(elem, aniclass), timeoutms);
 }
+function animateColorScale(elem, color='green', scale=1.5, timeoutms=2000, aniClass='scaleInColor') {
+	setCSSVariable('--aniColor',color);
+	setCSSVariable('--aniScale',scale);
+	//setCSSVariable('--aniTime',timeoutms); geht scheinbar nicht!
+	mClass(elem, aniClass);
+	setTimeout(() => mRemoveClass(elem, aniClass), timeoutms);
+}
 function aniInstruction(spoken) {
 	if (isdef(spoken)) sayRandomVoice(spoken);
 	mClass(dInstruction, 'onPulse');

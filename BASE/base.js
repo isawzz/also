@@ -359,7 +359,16 @@ function mFlex(d, or = 'h') {
 	// d.style.justiifyItems = 'stretch';
 	// d.style.justifyContent = 'stretch';
 }
-function mGap(d, gap) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
+function mGap(d, gap = 4) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
+function mGrid(rows, cols, dParent, styles={}) {
+	//styles.gap=valf(styles.gap,4);
+	let d = mDiv(dParent, styles);
+	d.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
+	d.style.gridTemplateRows = 'repeat(' + rows + ',1fr)';
+	d.style.display = 'inline-grid';
+	d.style.padding = valf(styles.padding,styles.gap) + 'px';
+	return d;
+}
 function mHasClass(el, className) {
 	if (el.classList) return el.classList.contains(className);
 	else return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
@@ -442,6 +451,26 @@ function mLine3(dParent, index, ids, styles) {
 }
 function mMoveBy(elem, dx, dy) { let rect = getRect(elem); mPos(elem, rect.x + dx, rect.y + dy); }
 function mParent(elem) { return elem.parentNode; }
+function mPic(kItem, dParent, styles, classes) {
+	let item;
+	if (isString(kItem)) { item = { id: getUID(), key: kItem, info: Syms[kItem] }; }
+	else if (nundef(kItem.info)) { item = { id: getUID(), key: kItem.key, info: kItem }; }
+	else item = kItem;
+
+	let info = item.info;
+	let dOuter = mDiv(dParent);
+	mCenterCenterFlex(dOuter);
+	let d = mDiv(dOuter);
+	d.innerHTML = info.text;
+	if (nundef(styles)) styles = {};
+	let picStyles = { family: info.family, fz: valf(styles.fz, valf(styles.h / 2, 25)), display: 'inline-block' };
+	mStyleX(dOuter, styles);
+	mStyleX(d, picStyles);
+	if (isdef(classes)) mClass(dOuter, classes);
+
+	iAdd(item, { div: dOuter, dPic: d });
+	return item;
+}
 function miPic(item, dParent, styles, classes) {
 	let info = isString(item) ? Syms[item] : isdef(item.info) ? item.info : item;
 	let d = mDiv(dParent);
@@ -450,6 +479,7 @@ function miPic(item, dParent, styles, classes) {
 	addKeys({ family: info.family, fz: 50, display: 'inline-block' }, styles);
 	mStyleX(d, styles);
 	if (isdef(classes)) mClass(d, classes);
+	mCenterCenterFlex(d);
 	return d;
 }
 function mPos(d, x, y, unit = 'px') { mStyleX(d, { left: x, top: y, position: 'absolute' }, unit); }
@@ -484,7 +514,7 @@ function mSidebar(title, dParent, styles, id, inner) {
 	return { div: elem, dContent: dContent, fOpen: openNav, fClose: closeNav };
 }
 function mSize(d, w, h, unit = 'px') { mStyleX(d, { width: w, height: h }, unit); }
-function mStyleTranslate(prop,val,convertNumbers=true){
+function mStyleTranslate(prop, val, convertNumbers = true) {
 	const paramDict = {
 		align: 'text-align',
 		bg: 'background-color',
@@ -516,14 +546,14 @@ function mStyleTranslate(prop,val,convertNumbers=true){
 		random: randomColor(),
 
 	};
-	let propName = isdef(paramDict[prop])?paramDict[prop]:prop;
-	let newVal = isdef(valDict[val])?valdict[val]:val;
-	if (convertNumbers && isNumber(newVal))  newVal=''+newVal+'px';
-	return [propName,newVal];
+	let propName = isdef(paramDict[prop]) ? paramDict[prop] : prop;
+	let newVal = isdef(valDict[val]) ? valdict[val] : val;
+	if (convertNumbers && isNumber(newVal)) newVal = '' + newVal + 'px';
+	return [propName, newVal];
 
 }
-function mStyleToCy(di,group){return translateStylesToCy(di,group);}
-function translateToCssStyle(prop,val){return mStyleTranslate(prop,val);}
+function mStyleToCy(di, group) { return translateStylesToCy(di, group); }
+function translateToCssStyle(prop, val) { return mStyleTranslate(prop, val); }
 function translateStylesToCy(styles, group) {
 	//group can be 'node','edge','outer','inner',...
 	//returns a dictionary
@@ -544,7 +574,7 @@ function translateStylesToCy(styles, group) {
 
 }
 
-function getBorderPropertyForDirection(dir){	return {0:'border-top',1:'border-right',2:'border-bottom',3:'border-left'}[dir];}
+function getBorderPropertyForDirection(dir) { return { 0: 'border-top', 1: 'border-right', 2: 'border-bottom', 3: 'border-left' }[dir]; }
 
 function mStyleX(elem, styles, unit = 'px') {
 	const paramDict = {
@@ -830,7 +860,7 @@ function iGrid(rows, cols, dParent, styles) {
 	for (let i = 0; i < rows; i++) {
 		for (let j = 0; j < cols; j++) {
 			let d = mDiv(dParent, styles);
-			let item = { row: i, col: j, index: index }; 
+			let item = { row: i, col: j, index: index };
 			index += 1;
 			iAdd(item, { div: d });
 			items.push(item);
@@ -3277,6 +3307,8 @@ function arrRotate(arr, count) {
 	return arr1;
 }
 function arrReverse(arr) { return arr.reverse(); }
+function arrSwap(arr, i, j) { let h = arr[i]; arr[i] = arr[j]; arr[j] = h; }
+function arrSwap2d(arr, r1, c1, r2, c2) { let h = arr[r1][c1]; arr[r1][c1] = arr[r2][c2]; arr[r2][c2] = h; }
 function arrString(arr, func) {
 	if (isEmpty(arr)) return '[]';
 	let s = '[';

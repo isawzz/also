@@ -1,3 +1,35 @@
+//#region sudoku tests
+function suTest00(){
+	let [rows, cols] = [4, 4];
+	let pattern = getSudokuPattern(rows, cols);
+	printMatrix(pattern, 'pattern');
+	let colarrs = bGetCols(pattern); printMatrix(colarrs, 'transposed');
+	let rowarrs = bGetCols(colarrs); printMatrix(rowarrs, 'normal');
+	let cFlat = arrFlatten(rowarrs);
+	//console.log(cFlat);
+	let aRows = bGetRows(pattern);
+	let rFlat = arrFlatten(aRows);
+	console.assert(sameList(cFlat, rFlat), 'TRANSPOSE DOES NOT WORK!!!!!!!!!!!!!!!')
+
+	let correct = checkSudokuRule(pattern);
+
+}
+
+
+//#region iconViewer tests
+async function iPrepper(){
+	//wie macht man eine pic?
+	symbolDict = Syms = await localOrRoute('syms', '../assets/allSyms.yaml');
+	SymKeys = Object.keys(Syms);
+	initTable();
+}
+async function iTest00(){
+	await iPrepper();
+	let keys = SymKeys;
+	let k=chooseRandom(keys);
+	let item = miPic(k,dTable,{w:100,h:100,fz:80,bg:'blue'});
+}
+
 //#region graph tests
 
 //simple graph
@@ -241,6 +273,7 @@ function gTest05() {
 	g.disableDD(); //cool!!!!
 	g.nodeEvent('click', x => { let id = x.id(); console.log('clicked ' + id); g.mStyle(id, { bg: 'yellow', fg: 'blue' }); });
 }
+//#endregion
 
 //#region old code!
 function gTest04() {

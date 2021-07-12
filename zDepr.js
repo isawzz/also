@@ -1,3 +1,451 @@
+class GColoku extends Game {
+	prompt() {
+
+		console.log('WAS?????????',0=='    ',0===' '); // das ist true!!!!!!!!!!!!!!!!!!!!!!!
+		//iconViewer(SymKeys);
+		let [rows, cols] = [this.rows, this.cols] = [4, 4];
+		let dGrid = mGrid(rows, cols, dTable, { position: 'relative', w: 300, h: 300, gap: 10, bg: 'white' });
+		let pattern = getSudokuPattern(rows, cols);
+		printMatrix(pattern, 'pattern');
+
+		//let correct = checkSudokuRule(pattern); console.log('correct', correct);
+
+		//screw up some of the time		
+		//if (coin()) destroySudokuRule(pattern, rows, cols);
+		
+		destroySudokuRule(pattern, rows, cols);
+		
+		let err = checkSudokuRule(pattern);
+		let correct = err == null; console.log('correct', correct);
+		if (err) console.log('err',err.type,'['+err.row+','+err.col+']');
+		//find the tile where the error really is!
+		Goal = {correct:correct, err:err};
+
+
+		//fill grid w/ colored divs
+		let colors = this.colors = [RED, YELLOW, BLUE, GREEN];
+		shuffle(colors);
+		for (let r = 0; r < rows; r++) {
+			for (let c = 0; c < cols; c++) {
+				let d = mDiv(dGrid, { bg: colors[pattern[r][c]] }, getUID());
+			}
+		}
+
+		let wline = 2;
+		let gSize = getSize(dGrid);
+		console.log('size:', gSize);
+		let rh = makeRect((gSize.w - wline) / 2, 0, wline, gSize.h);
+		let rv = makeRect(0, (gSize.h - wline) / 2, gSize.w, wline);
+		let vLine = mDiv(dGrid, { bg: this.color, position: 'absolute', left: rh.l, top: rh.t, w: rh.w, h: rh.h });
+		let hLine = mDiv(dGrid, { bg: this.color, position: 'absolute', left: rv.l, top: rv.t, w: rv.w, h: rv.h });
+
+		//jetzt kommt aehnliche frage wie bei maze
+		mLinebreak(dTable, 20);
+		this.dChoices = mDiv(dTable);
+		mLinebreak(dTable);
+
+		let q = chooseRandom([this.isThisSudokuCorrect.bind(this)]);
+		q();
+
+		this.controller.activateUi.bind(this.controller)();
+	}
+	isThisSudokuCorrect(){
+		showInstruction(this.showWord ? Goal.label : '', this.language == 'E' ? 'drag letters to form' : "forme", dTitle, true);
+		mLinebreak(dTable);
+
+		this.inputs = createDropInputs();
+		let x = mLinebreak(dTable, 50);
+		this.letters = createDragLetters();
+
+		if (this.hidden) showFleetingMessage('category: ' + Pictures[0].info.subgroup, 5000);
+		else if (!this.showWord) { showLabelPercentHintAfter(50, 6000); }
+
+		this.controller.activateUi.bind(this.controller)();
+
+	}
+	trialPrompt() {
+		sayTryAgain();
+		setTimeout(() => {
+			this.inputs.map(x => iDiv(x).innerHTML = '_')
+			// mClass(d, 'blink');
+		}, 1500);
+
+		return 10;
+	}
+	eval(w, word) {
+		Selected = { answer: w, reqAnswer: word, feedbackUI: iDiv(Goal) }; //this.inputs.map(x => iDiv(x)) };
+		//console.log(Selected);
+		return w == word;
+	}
+
+}
+
+
+class GMaze1 extends Game {
+	constructor(name, o) { super(name, o); }
+	clear(){super.clear();MNaGraph.destroy();}
+	startGame() {
+		this.correctionFunc = () => {
+			mStyleX(Goal.buttonCorrect, { bg: 'green' });
+			animate(Goal.buttonCorrect, 'komisch', 1000);
+			if (Goal.correctChoice.text == 'yes') this.showPath(); else this.colorComponents();
+			//this.showPath();
+			return 20000;
+		};
+		this.failFunc = () => {
+			if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+			else { mXit(Goal.buttonClicked, 100); }
+			mStyleX(this.dGraph, { opacity: 1 });
+		}
+		this.successFunc = () => {
+			if (Goal.choice == Goal.correctChoice) { mStyleX(Goal.buttonClicked, { bg: 'green' }); mCheckit(Goal.feedbackUI, 100); }
+			else { mXit(Goal.buttonClicked, 100); }
+			mStyleX(this.dGraph, { opacity: 1 });
+		}
+	}
+	startRound(){MNaGraph.destroy();}
+	prompt() {
+
+		this.trials = 1;
+		[this.rows, this.cols] = [6 + this.level * 2, 6 + this.level * 2];
+
+		let [rows, cols, sz, gap, szDoor] = [this.rows, this.cols, this.sz, this.gap, this.szDoor];
+		let [wCell, hCell] = [sz, sz];
+		let wTotal = cols * (wCell + gap);
+		let hTotal = rows * (hCell + gap);
+		let dGridOuter = this.dMaze = mDiv(dTable, { bg: 'BLUE', wmin: wTotal, hmin: hTotal });
+
+		let g = this.graph = new MNaGraph(null, { noLabels: true, node: { bg: 'blue', w: 5, h: 5 }, edge: { w: 1 } }, [], false);
+		let m = this.maze = newMazePlusGraph(cols, rows, g);
+
+		let id = 'tMaze';
+		setCSSVariable('--wCell', `${wCell}px`);
+		setCSSVariable('--hCell', `${hCell}px`);
+		let tMaze = createElementFromHtml(`
+			<table id="${id}">
+			<tbody></tbody>
+			</table>
+		`);
+		mAppend(dGridOuter, tMaze);
+		//console.log('maze', m);
+		let sBorder = `${gap}px solid black`;
+		for (var i = 0; i < m.length; i++) {
+			$('#tMaze > tbody').append("<tr>");
+			for (var j = 0; j < m[i].length; j++) {
+				var selector = getCommonIdTable(i, j);;
+				$('#tMaze > tbody').append("<td id='" + selector + "'>&nbsp;</td>");
+				if (m[i][j][0] == 0) { $('#' + selector).css('border-top', sBorder); }
+				if (m[i][j][1] == 0) { $('#' + selector).css('border-right', sBorder); }
+				if (m[i][j][2] == 0) { $('#' + selector).css('border-bottom', sBorder); }
+				if (m[i][j][3] == 0) { $('#' + selector).css('border-left', sBorder); }
+				//mStyleX(mBy(selector), { bg: coin(30) ? 'random' : 'lightgreen' });
+			}
+			$('tMmaze > tbody').append("</tr>");
+		}
+
+		//hier drin kommt der graph!
+		let rect = getRect(tMaze);
+		let dGridOuter2 = this.dGraph = mDiv(dTable, { align: 'left', bg: 'aliceblue', maleft: 20, w: rect.w, h: rect.h });
+		hide(this.dGraph);
+
+		//#region prep container for multiple choices
+		mLinebreak(dTable, 20);
+		this.dChoices = mDiv(dTable);
+
+		mLinebreak(dTable);
+		//#endregion
+
+		let q = chooseRandom([this.isThereAPath.bind(this)]);
+		q();
+
+		this.controller.activateUi.bind(this.controller)();
+	}
+
+	//#region is there a path
+	isThereAPath() {
+
+		//this.showGraph(); //for testing!
+
+		let [g, m, sz] = [this.graph, this.maze, this.sz];
+		let cellFrom = getCommonIdTable(0, 0);
+		let roomFrom = getCommonId(0, 0);
+		let cell = mBy(cellFrom);
+
+		mCellContent(cell, { w: sz / 2, h: sz / 2, fz: sz / 3, bg: 'green', fg: 'white', rounding: '50%' }, 'A');
+
+		//get last cell!
+		//this.rows-1,this.cols-1
+		let [r2, c2] = [this.rows - 1, this.cols - 1];
+		let tl2 = m[r2][c2];
+		let cellTo = getCommonIdTable(r2, c2);
+		let roomTo = getCommonId(r2, c2);
+		let cell2 = mBy(cellTo);
+		//console.log(cell2);
+		// mStyleX(cell2, { bg: 'red' })
+		// cell2.innerHTML = 'B';
+		mCellContent(cell2, { w: sz / 2, h: sz / 2, fz: sz / 3, bg: 'red', fg: 'white', rounding: '50%' }, 'B');
+
+		[this.roomFrom, this.roomTo] = [roomFrom, roomTo];
+		//#region spoken and written instruction
+		let sp1 = {
+			D: ['gibt es einen weeg von', 'gibt es einen weg von'],
+			E: ['is there a path from', 'is there a path from'],
+			S: ['hay un camino de', 'hay un camino de'],
+			F: ["y a 'til un chemin de", "y a 'til un chemin de"],
+		};
+		let sp2 = {
+			D: ['zu', 'zu'],
+			E: ['to', 'to'],
+			S: ['a', 'a'],
+			F: ['!. a! ', 'à'],
+		};
+		let fill1 = [`. "A"! `, ` A `];
+		let fill2 = [`. "B"`, ` B`];
+		let l = this.language;
+		let sp = sp1[l][0] + fill1[0] + sp2[l][0] + fill2[0] + '?';
+		let wr = sp1[l][1] + fill1[1] + sp2[l][1] + fill2[1] + '?';
+
+		let voice = this.language == 'E' ? coin() ? 'ukMale' : 'zira' : this.language;
+
+		//#endregion
+
+		showInstructionX(wr, dTitle, sp, { voice: voice });
+
+		let path = this.path = g.getShortestPathFromTo(this.roomFrom, this.roomTo);
+		// let funcs = this.dijkstra = g.getShortestPathsFrom(idGraph);
+		// let len = funcs.distanceTo('#' + roomTo);
+		// let path = funcs.pathTo('#' + roomTo);
+
+		if (coin(30)) this.rausSchneiden();
+		//this.rausSchneiden();
+		let len = g.getLengthOfShortestPath(this.roomFrom, this.roomTo); //verify that no longer a path!!!!!
+
+		let answer = len != Infinity;
+		console.log('answer', answer, len)
+		let correct, incorrect;
+		if (answer) { correct = { num: 1, text: 'yes' }; incorrect = [{ num: 0, text: 'no' }]; }
+		else { correct = { num: 0, text: 'no' }; incorrect = [{ num: 1, text: 'yes' }]; }
+		createMultipleChoiceElements(correct, incorrect, this.dChoices, this.dMaze, {});
+	}
+
+	rausSchneiden() {
+		let [g, m, path] = [this.graph, this.maze, this.path];
+		let ids = path.map(x => x.id());
+
+		let edges = path.edges(); //get all edges of path
+
+		//find random edge along the path
+		let i = randomNumber(edges.length / 2, edges.length * 3 / 4);
+		let edge = edges[i];
+		let eid = edges[i].id();
+		//console.log('edge id', eid);
+
+		//remove this edge: right now, just color it!
+		edge.style({ 'line-color': 'red' });
+		g.removeEdge(edge);
+		setTimeout(() => { g.removeEdge(edge); }, 2000);
+		//verify that there is no longer a solution!
+
+		//get maze cells connected by this edge
+		let [r1, c1, i1, r2, c2, i2] = getRCI(edge.id());
+		//console.log('row,col,idx', r1, c1, i1, r2, c2, i2)
+		let [m1, cell1, m2, cell2] = [getMaze(m, r1, c1), getCell(r1, c1), getMaze(m, r2, c2), getCell(r2, c2)];
+
+		//maze cells should set component i1,i2 from 1 to 0
+		console.assert(m1[i1] && m2[i2], 'ERRRRRRRRRRRRRRRRRRRRR!!!!!!!!!!!!')
+		m1[i1] = m2[i1] = 0;
+
+		//table cells should set corresponding border
+		setBorder(cell1, i1);
+		setBorder(cell2, i2);
+
+
+
+	}
+	showPath() {
+		let cells = getPathCells(this.path);
+		leaveBreadCrumbs(cells);
+		//for (const cell of cells) { mStyleX(cell, { bg: '#ffffff80' }); }
+	}
+	colorComponents() {
+		//this.showGraph();
+		let g=this.graph;
+
+		let c1=g.getComponents();
+		//get hue wheel!!!
+		let wheel=getColorWheel('red',c1.length);
+		console.log('wheel',wheel)
+		let i=0;
+		for(const c11 of c1){
+			let nodes = c11.nodes();
+			let ids = nodes.map(x=>x.id());
+
+			console.log('nodes',ids);
+			let cells = ids.map(x=>nodeIdToCell(x));
+			leaveBreadCrumbs(cells,wheel[i]);i++;
+		}
+
+	}
+
+
+	//#region helpers
+	hideGraph() {
+		this.graph.cy.unmount();
+		hide(this.dGraph);
+	}
+	showGraph() {
+		show(this.dGraph);
+		this.graph.cy.mount(this.dGraph);
+		// g.presetLayout();
+		// g.reset();
+	}
+
+	eval() {
+		clearFleetingMessage();
+		Selected = { reqAnswer: G.correctAnswer, answer: Goal.choice.text, feedbackUI: Goal.buttonClicked };
+
+		//console.log('Selected', Selected);
+		return (Goal.buttonClicked == Goal.buttonCorrect);
+	}
+
+}
+
+function bGetCols_trial1(arr2d){
+	let res=[];
+	let numCols = arr2d[0].length;
+	for(let c=0;c<numCols;c++){res.push([]);}
+	for(const r of arr2d){
+		for(let c=0;c<r.length;c++){res[c].push(r[c]);}
+	}
+	return res;
+}
+
+function gridLabeled(list, picLabelStyles) {
+	//cont,pic,text
+	let dGrid = mDiv(mBy('table'));
+	let elems = [];
+	let isText = true;
+	let isOmoji = false;
+	let pictureSize = 200;
+	let stylesForLabelButton = { rounding: 10, margin: pictureSize / 8 };
+
+	for (const k of list) {
+		let info = symbolDict[k];
+		let label = info.type == 'emo' ? (isdef(info.bestE) ? info.bestE : lastOfLanguage(k, 'E')) + ' ' + lastIndex
+			: k;
+		let el = maPicLabelButtonFitText(info, label,
+			{ w: pictureSize, h: pictureSize, bgPic: 'random', shade: null, contrast: null },
+			onClickIVPicture, dGrid, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+		el.id = 'pic' + lastIndex;
+		elems.push(el);
+		Pictures.push({ div: el, info: info, label: label, isSelected: false });
+		lastIndex += 1;
+	}
+	let gridStyles = { 'place-content': 'center', gap: 4, margin: 4, padding: 4, bg: 'silver', rounding: 5 };
+	let size = layoutGrid(elems, dGrid, gridStyles, { rows: 10, isInline: true });
+	console.log('lastIndex', lastIndex)
+}
+
+function onClickIVPicture(ev) {
+	ev.cancelBubble = true;
+	//let id = evToClosestId(ev);	console.log(id, Pictures, Pictures[10]);//let i = firstNumber(id);	let pic = Pictures[i];
+	let pic = findItemFromEvent(Pictures, ev);
+
+	toggleSelectionOfPicture(pic);
+
+}
+function gridLabeledX(keyList, labelList, dParent, { rows, layout } = {}, clickHandler) {
+	//cont,pic,text
+	let dGrid = mDiv(dParent);
+	let elems = [];
+	let isText = true;
+	let isOmoji = false;
+	let pictureSize = 200;
+	let stylesForLabelButton = { rounding: 10, margin: pictureSize / 8 };
+	let pics = [];
+
+	for (let i = 0; i < keyList.length; i++) {
+		let k = keyList[i];
+		let info = symbolDict[k];
+		let label = labelList[i];
+		let el = maPicLabelButtonFitText(info, label,
+			{ w: pictureSize, h: pictureSize, bgPic: 'random', shade: null, contrast: null },
+			clickHandler, dGrid, stylesForLabelButton, 'frameOnHover', isText, isOmoji);
+		el.id = 'pic' + lastIndex;
+		elems.push(el);
+		pics.push({ div: el, info: info, label: label, isSelected: false });
+		lastIndex += 1;
+	}
+	let gridStyles = { 'place-content': 'center', gap: 4, margin: 4, padding: 4, bg: 'silver', rounding: 5 };
+	let func = (layout == 'flex' ? layoutFlex : layoutGrid);
+	let size = func(elems, dGrid, gridStyles, { rows: rows, isInline: true });
+	return pics;
+}
+
+function createGridLayout_dep(d, layout) {
+
+	//first need to make each line of grid layout equal sized! do I? what happens if I dont?
+
+	let s = '';
+	let m = [];
+	let maxNum = 0;
+	let areaNames = [];
+	//console.log('layout', layout)
+	for (const line of layout) {
+		let letters = line.split(' ');
+		let arr = [];
+		for (const l of letters) {
+			if (!isEmpty(l)) {
+				addIf(areaNames, l);
+				arr.push(l);
+			}
+		}
+		m.push(arr);
+		if (arr.length > maxNum) maxNum = arr.length;
+	}
+	//console.log('jagged matrix:', m)
+
+	//habe jagged array, muss into matrix verwandeln!
+	//last letter of each row will be repeated!
+	for (const line of m) {
+		let el = line[line.length - 1];
+		while (line.length < maxNum) line.push(el);
+		s += '"' + line.join(' ') + '" ';
+
+	}
+	//console.log('matrix:', m)
+
+	//console.log(m,s);
+	d.style.gridTemplateAreas = s;// eg. '"z z z" "a b c" "d e f"';
+
+	if (SPEC.collapseEmptySmallLetterAreas) { collapseSmallLetterAreas(m, d); }
+	else fixedSizeGrid(m, d);
+
+	return areaNames;
+}
+function createAreas_dep(d, areaNames, prefix, shadeAreaBackgrounds=false, showAreaNames=true) {
+	console.log('creating areas',areaNames)
+	let palette = getTransPalette9();
+	let ipal = 1;
+	for (const areaName of areaNames) {
+		//create this area
+		let d1 = document.createElement('div');
+		let id = (isdef(prefix)?prefix + '.':'') + areaName;
+		d1.id = id;
+		d1.style.gridArea = areaName;
+		mStyleX(d1,{bg:'random'});//,w:'100%',h:'100%'})
+		d1.innerHTML='hallo'
+		if (shadeAreaBackgrounds) { d1.style.backgroundColor = colorPalette[ipal]; ipal = (ipal + 1) % colorPalette.length; }
+		
+		if (showAreaNames) { d1.innerHTML = makeAreaNameDomel(areaName); }
+		//UIS[id] = { elem: d1, children: [] };
+		d.appendChild(d1);
+
+	}
+
+}
+
+
 function mStyleToCy(k, v, di, cyGroup) {
 	let [prop, val] = translateToCssStyle(k, v, true);
 	//console.log('prop',prop)

@@ -1,7 +1,222 @@
+//#region sudoku utilities
+
+function getSudokuPattern(r, c) {
+	//mach das pattern es sollte 16 geben!
+	// 0 1 2 3 
+	// 3 2 0 1
+	// 2 3 1 0
+	// 1 0 2 3
+
+	// 0 1 2 3 
+	// 2 3 0 1
+	// 3 0 1 2
+	// 1 2 3 0
+
+	// 0 1 2 3 
+	// 2 3 0 1
+	// 1 0 3 2
+	// 3 2 1 0
+	let patterns = {
+		44: [
+			[[0, 1, 2, 3], [2, 3, 0, 1], [3, 0, 1, 2], [1, 2, 3, 0]],
+			[[0, 1, 2, 3], [3, 2, 0, 1], [2, 3, 1, 0], [1, 0, 3, 2]],
+			[[0, 1, 2, 3], [2, 3, 0, 1], [1, 0, 3, 2], [3, 2, 1, 0]],
+		],
+	};
+	return chooseRandom(patterns['' + r + c]);
+}
+function destroySudokuRule(pattern, rows, cols) {
+	let sz = Math.min(rows, cols);
+	let [r1, r2] = choose(range(0, sz - 1), 2);
+	let c = chooseRandom(range(0, sz - 1));
+	// arrSwap2d(pattern, r1, c, r2, c);
+	
+	
+	//TEST arrSwap2d(pattern, 0, 3, 1, 3);return;
+
+	//generate row error
+	if (coin(50)) { arrSwap2d(pattern, r1, c, r2, c); }
+
+	//generate col error
+	else if (coin(50)) { arrSwap2d(pattern, c, r1, c, r2); }
+
+}
+function hasDuplicate(arr, efunc) {
+	let di = {};
+	if (nundef(efunc)) efunc = x => {return x === ' '};
+	let i = -1;
+	//console.log('check for dupl in',arr)
+	for (const a of arr) {
+		//console.log('i', i, 'a', a)
+		i += 1;
+		if (efunc(a)) continue; //!isNumber(a) && a==' ') {console.log('H!',a);continue;}
+		if (a in di) return { i: i, val: a };
+		di[a] = true;
+	}
+	return false;
+}
+
+function checkSudokuRule(matrix) {
+	//should return at least one example of offending tiles if incorrect! null otherwise!
+
+	//check rows is simple!
+	let i = 0;
+	for (const arr of matrix) {
+		let dd = hasDuplicate(arr);
+		if (dd) {
+			let err = { type: 'row', row: i, col: dd.i, val: dd.val, info: dd, i: i };
+			return err;
+		}
+		i += 1;
+	}
+
+	i = 0;
+	for (const arr of bGetCols(matrix)) {
+		let dd = hasDuplicate(arr);
+		if (dd) {
+			let err = { type: 'column', col: i, row: dd.i, val: dd.val, i: i, info: dd };
+			return err;
+		}
+		i += 1;
+	}
+
+	//console.log('still here!');
+
+	// let sub0=bGetSubMatrix(pattern,0,2,0,2);
+	// let sub1=bGetSubMatrix(pattern,0,2,2,2);
+	// let sub2=bGetSubMatrix(pattern,2,2,0,2);
+	// let sub3=bGetSubMatrix(pattern,2,2,2,2);
+	let chunks = bGetChunksWithIndices(matrix, 2, 2);
+	//printMatrix(chunks, 'quadrants');
+
+
+
+	i = 0;
+	for (const arr of chunks) {
+		let dd = hasDuplicate(arr);
+		if (dd) {
+			let val = dd.val;
+			let err = { type: 'quadrant', row: val.row, col: val.col, val: val.val, i: i, info: dd };
+		}
+		i += 1;
+	}
+
+	return null;
+}
+function checkSudokuRule_trial1(matrix) {
+	//should return at least one example of offending tiles if incorrect! null otherwise!
+
+	for (const arr of matrix) { let dd = hasDuplicate(arr); if (dd) return { type: 'row', info: dd }; }
+
+	for (const arr of bGetCols(matrix)) { let dd = hasDuplicate(arr); if (dd) return { type: 'column', info: dd }; }
+
+	//console.log('still here!');
+
+	// let sub0=bGetSubMatrix(pattern,0,2,0,2);
+	// let sub1=bGetSubMatrix(pattern,0,2,2,2);
+	// let sub2=bGetSubMatrix(pattern,2,2,0,2);
+	// let sub3=bGetSubMatrix(pattern,2,2,2,2);
+	let chunks = bGetChunks(matrix, 2, 2);
+	//printMatrix(chunks, 'quadrants');
+	for (const arr of chunks) { let dd = hasDuplicate(arr); if (dd) return { type: 'quadrant', info: dd }; }
+
+	return null;
+}
+//#endregion
+
+//#region board 2d arr utilities
+function bGetSubMatrix(arr2d, rFrom, rows, cFrom, cols) {
+	let res = []; for (let i = 0; i < rows; i++) res.push([]);
+	//console.log('rows',rows,res);return;
+	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
+	let rIndex = 0;
+	for (let r = rFrom; r < rFrom + rows; r++) {
+		for (let c = cFrom; c < cFrom + cols; c++) {
+			res[rIndex].push(arr2d[r][c]);
+		}
+		rIndex += 1;
+	}
+	//console.log('res',res)
+	//printMatrix(res,'res')
+	return res;
+}
+function bGetSubMatrixWithIndices(arr2d, rFrom, rows, cFrom, cols) {
+	let res = []; for (let i = 0; i < rows; i++) res.push([]);
+	//console.log('rows',rows,res);return;
+	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
+	let rIndex = 0;
+	for (let r = rFrom; r < rFrom + rows; r++) {
+		for (let c = cFrom; c < cFrom + cols; c++) {
+			res[rIndex].push({ row: r, col: c, val: arr2d[r][c] });
+		}
+		rIndex += 1;
+	}
+	//console.log('res',res)
+	//printMatrix(res,'res')
+	return res;
+}
+function bGetChunksWithIndices(arr2d, rowsEach, colsEach) {
+	//das returned nicht flattened arrays of just entries, but flattened arrays of {row:r,col:c,val:entry}
+	let res = [];
+	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
+	for (let r = 0; r < rTotal; r += rowsEach) {
+		let m1 = [];
+		for (let c = 0; c < cTotal; c += colsEach) {
+			//console.log('rFrom',r,'cFrom',c)
+			m1 = bGetSubMatrixWithIndices(arr2d, r, rowsEach, c, colsEach);
+			res.push(arrFlatten(m1));
+		}
+		//printMatrix(m1,'quad'+res.length);
+	}
+	return res;
+}
+function bGetChunks(arr2d, rowsEach, colsEach) {
+	let res = [];
+	let [rTotal, cTotal] = [arr2d.length, arr2d[0].length];
+	for (let r = 0; r < rTotal; r += rowsEach) {
+		let m1 = [];
+		for (let c = 0; c < cTotal; c += colsEach) {
+			//console.log('rFrom',r,'cFrom',c)
+			m1 = bGetSubMatrix(arr2d, r, rowsEach, c, colsEach);
+			res.push(arrFlatten(m1));
+		}
+		//printMatrix(m1,'quad'+res.length);
+	}
+	return res;
+}
+function bGetRows(arr2d) {
+	return arr2d;
+}
+function bGetCols(arr2d) {
+	let rows = arr2d.length;
+	let cols = arr2d[0].length;
+
+	let res = [];
+	for (let c = 0; c < cols; c++) { res.push([]); }
+	//console.log('res',res);
+
+	for (let r = 0; r < rows; r++) {
+		for (let c = 0; c < cols; c++) {
+			res[c].push(arr2d[r][c]);
+		}
+	}
+
+	return res;
+}
+function printMatrix(arr2d, title = 'result') {
+	let rows = arr2d.length;
+	let cols = arr2d[0].length;
+	let arr = arrFlatten(arr2d);
+	let s = toBoardString(arr, rows, cols);
+	console.log(title, s)
+}
+
+
 
 //#region board utilities
 var StateDict = {};
 var EmptyFunc = x => nundef(x) || x == ' ';
+
 
 function bGetCol(arr, icol, rows, cols) {
 	let iStart = icol;
@@ -241,11 +456,11 @@ function boardToNode(state) {
 	return res;
 }
 function printBoard(arr, rows, cols, reduced = true) {
-	let arrR = boardArrReduced(arr, rows, cols);
-	let s = toBoardString(arrR);
+	let arrR = boardArrOmitFirstRowCol(arr, rows, cols);
+	let s = toBoardString(arrR, rows, cols);
 	console.log('board', s);
 }
-function boardArrReduced(boardArr, rows, cols) {
+function boardArrOmitFirstRowCol(boardArr, rows, cols) {
 	let res = [];
 	for (let r = 1; r < rows; r++) {
 		for (let c = 1; c < cols; c++) {

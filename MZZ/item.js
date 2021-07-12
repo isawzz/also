@@ -338,6 +338,60 @@ function zRepeatInColorEachItem(items, colorKeys) {
 	return itColors;
 }
 
+//#region iconviewer
+var IconSet, lastIndex;
+
+function iconViewerTestKeysets() {
+	let allKeys = symKeysBySet.nosymbols;
+	let keys = allKeys.filter(x => isdef(symbolDict[x].best100));
+	let keys1 = allKeys.filter(x => isdef(symbolDict[x].best100) && isdef(symbolDict[x].bestE));
+	let keys2 = allKeys.filter(x => isdef(symbolDict[x].best50));
+	let keys3 = allKeys.filter(x => isdef(symbolDict[x].best25));
+	console.log(keys3);
+	iconViewer(keys3);
+
+}
+
+function iconViewer(keys) {
+	console.log('hallo!!!')
+	onclick = show100;
+	IconSet = isdef(keys) ? keys : symKeysBySet['nosymbols'];
+	lastIndex = 0;
+	Pictures = [];
+
+	show100();
+
+}
+function downloadKeySet() {
+	let keys = Pictures.filter(x => x.isSelected).map(x => x.info.key);
+	downloadAsYaml(keys, 'keyset');
+}
+function show100() {
+	//assumes a div id='table'
+	console.log('hallo!!!')
+	let table = mBy('table');
+	clearElement(table);
+
+	mButton('download key set', downloadKeySet, table, { fz: 30 });
+	mButton('next 100', () => show100(), table, { fz: 30 });
+	mLinebreak(table);
+
+	let N=150; //100
+	let keys = takeFromTo(IconSet, lastIndex, lastIndex + N);//chooseRandom() ['keycap: 0', 'keycap: 1', 'keycap: #', 'keycap: *'];
+	lastIndex += N;
+
+	//gridLabeled(keys);
+	//let d = mGrid(10, 10, table);
+	for (const k of keys) {
+		let item = mPic(k, table,{margin:8,w:50,h:70,bg:'dimgray',fz:30});
+		addLabel(item,k,{fz:12})
+		item.onclick = toggleSelectionOfPicture;
+	}
+
+}
+
+
+//#endregion
 
 
 

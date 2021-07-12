@@ -22,69 +22,6 @@ function createLayout(dParent, l) {
 
 	createAreas(d, areaNames, dParent);
 }
-function createGridLayout_dep(d, layout) {
-
-	//first need to make each line of grid layout equal sized! do I? what happens if I dont?
-
-	let s = '';
-	let m = [];
-	let maxNum = 0;
-	let areaNames = [];
-	//console.log('layout', layout)
-	for (const line of layout) {
-		let letters = line.split(' ');
-		let arr = [];
-		for (const l of letters) {
-			if (!isEmpty(l)) {
-				addIf(areaNames, l);
-				arr.push(l);
-			}
-		}
-		m.push(arr);
-		if (arr.length > maxNum) maxNum = arr.length;
-	}
-	//console.log('jagged matrix:', m)
-
-	//habe jagged array, muss into matrix verwandeln!
-	//last letter of each row will be repeated!
-	for (const line of m) {
-		let el = line[line.length - 1];
-		while (line.length < maxNum) line.push(el);
-		s += '"' + line.join(' ') + '" ';
-
-	}
-	//console.log('matrix:', m)
-
-	//console.log(m,s);
-	d.style.gridTemplateAreas = s;// eg. '"z z z" "a b c" "d e f"';
-
-	if (SPEC.collapseEmptySmallLetterAreas) { collapseSmallLetterAreas(m, d); }
-	else fixedSizeGrid(m, d);
-
-	return areaNames;
-}
-function createAreas_dep(d, areaNames, prefix, shadeAreaBackgrounds=false, showAreaNames=true) {
-	console.log('creating areas',areaNames)
-	let palette = getTransPalette9();
-	let ipal = 1;
-	for (const areaName of areaNames) {
-		//create this area
-		let d1 = document.createElement('div');
-		let id = (isdef(prefix)?prefix + '.':'') + areaName;
-		d1.id = id;
-		d1.style.gridArea = areaName;
-		mStyleX(d1,{bg:'random'});//,w:'100%',h:'100%'})
-		d1.innerHTML='hallo'
-		if (shadeAreaBackgrounds) { d1.style.backgroundColor = colorPalette[ipal]; ipal = (ipal + 1) % colorPalette.length; }
-		
-		if (showAreaNames) { d1.innerHTML = makeAreaNameDomel(areaName); }
-		//UIS[id] = { elem: d1, children: [] };
-		d.appendChild(d1);
-
-	}
-
-}
-
 //working previous version: works with uspec1.yaml
 function rAreas_0() {
 	let color = SPEC.color.theme;
