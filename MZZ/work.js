@@ -89,7 +89,8 @@ class GColoku extends Game {
 			S: 'es este coloku correcto?',
 			F: 'est ce que ce coloku est exacte?',
 		};
-		showInstructionX(wsp[this.language], dTitle, wsp);
+		let sp=wsp[this.language];
+		showInstructionX(sp, dTitle, sp);
 
 		showFleetingMessage('rule: each color must be unique in every row, column and quadrant!', 15000);
 
