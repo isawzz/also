@@ -1,5 +1,63 @@
 //#region sudoku utilities
+function arrToMatrix(arr,rows,cols){
+	let i=0,res=[];
+	for (let r = 0; r < rows; r++) {
+		let rarr = [];
+		for (let c = 0; c < cols; c++) {
+			let a = arr[i];i++;
+			rarr.push(a);
+		}
+		res.push(rarr);
+	}
+	return res;
+}
+function sudokuSampleToIndexMatrix(s,rows,cols){
+	//all 0 entries => ' ', and all numbers>0 => 
+	if (isNumber(s)) s=String(s);
+	let letters = toLetterArray(s);
+	//console.log('letters',letters);
+	let nums = letters.map(x=>Number(x));
+	let res=[];
+	for(const n of nums){
+		if (n === 0) res.push(' ');
+		else res.push(n-1);
+	}
+	//console.log('numbers',nums);
+	let matrix = arrToMatrix(res,rows,cols);
+	return matrix;
+}
+function stringToMatrix(s,rows,cols){
+	if (isNumber(s)) s=String(s);
+	let letters = toLetterArray(s);
+	//console.log('letters',letters);
+	let nums = letters.map(x=>Number(x));
+	//console.log('numbers',nums);
+	let matrix = arrToMatrix(nums,rows,cols);
+}
+function getSudokuPatternFromDB(r,c,index=1){
+	let key=''+r+'x'+c;
+	let sample=DB.games.gColoku.samples[key][index];
+	let pattern=sudokuSampleToIndexMatrix(sample.sol,r,c);
+	let puzzle=sudokuSampleToIndexMatrix(sample.min,r,c);
 
+	// //alle 0 muessen durch ' ' ersetzt werden!
+	// //alle zahlen!=0 muessen minus 1 gemacht werden!
+
+	// //console.log('pattern found',pattern);
+
+	// //console.log(typeof pattern.min);
+	// let s=String(pattern.sol);
+	// let letters = toLetterArray(s);
+	// //console.log('letters',letters);
+	// let nums = letters.map(x=>Number(x));
+	// //console.log('numbers',nums);
+	// let matrix = arrToMatrix(nums,r,c);
+	// //printMatrix(matrix);
+	// //let matrix = 
+
+
+	return {pattern:pattern,puzzle:puzzle};
+}
 function getSudokuPattern(r, c) {
 	//mach das pattern es sollte 16 geben!
 	// 0 1 2 3 
