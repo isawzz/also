@@ -27,7 +27,7 @@ users:
       - gAbacus
       - gRiddle
       - gC4
-    lastGame: gColoku
+    lastGame: gMaze
     settings:
       userColor: green
       samplesPerGame: 10
@@ -653,30 +653,38 @@ games:
     gap: 2
     levels:
       "0":
-        rows: 4
-        cols: 4
-      "1":
         rows: 6
         cols: 6
-      "2":
+      "1":
         rows: 8
         cols: 8
-      "3":
-        sz: 36
+      "2":
         rows: 10
         cols: 10
-      "4":
-        sz: 30
+      "3":
+        sz: 36
         rows: 12
         cols: 12
-      "5":
-        sz: 24
+      "4":
+        sz: 30
         rows: 14
         cols: 14
+      "5":
+        sz: 24
+        rows: 16
+        cols: 16
       "6":
         sz: 20
         rows: 16
-        cols: 16
+        cols: 24
+      "7":
+        sz: 20
+        rows: 18
+        cols: 26
+      "8":
+        sz: 20
+        rows: 18
+        cols: 30
   gHouse:
     friendly: House
     logo: home

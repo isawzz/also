@@ -1,4 +1,3 @@
-
 class Game {
 	constructor(name, o) {
 		this.name = name;
@@ -622,7 +621,7 @@ class GHouse extends Game {
 
 	prompt() {
 
-		MGraph.destroy();
+		if (isdef(this.graph)) this.graph.clear();
 
 		this.trials = 1;
 		let n = randomNumber(this.minRooms, this.maxRooms); //console.log('n',n)
@@ -672,9 +671,16 @@ class GHouse extends Game {
 		let dGraph = this.dGraph = mDiv(dGridOuter, { box: true, align: 'left', position: 'absolute', bg: '#ffffff80', top: 0, left: 0, w: r.w, h: r.h });
 		//#endregion
 
-		let els = convertToGraphElements(house);
-		let g1 = this.graph = new MGraph(dGraph, {}, els, false); //Username != 'gul');
-		storeRoomPositions(g1);
+		let innerStyles = { box: true, align: 'left', position: 'absolute', bg: '#ffffff80', top: 0, left: 0, w: r.w, h: r.h };
+		let g1 = this.graph = new UIGraph(dGraph, {edge: {bg:'blue'},outer:{ align:'left', w: wTotal, h: 400 },inner:innerStyles});//{ box: true, align: 'left', position: 'absolute', bg: '#ffffff80', top: 0, left: 0, w: r.w, h: r.h });
+		// let els = convertToGraphElements(g1,house);
+		convertToGraphElements(g1,house);
+		console.log('nodes',g1.getNodeIds());
+		console.log('edges',g1.getEdgeIds());
+
+		// g1.cy.elements=els; //, els, false); //Username != 'gul');
+		//console.log(g1.getNodeIds())
+		//storeRoomPositions(g1);
 		g1.presetLayout();
 		g1.reset();
 
@@ -868,7 +874,7 @@ class GMaze extends Game {
 	prompt() {
 
 		this.trials = 1;
-		[this.rows, this.cols] = [6 + this.level * 2, 6 + this.level * 2];
+		//[this.rows, this.cols] = [6 + this.level * 2, 6 + this.level * 2];
 
 		let maze = this.maze = new MazeGraph(dTable, this.rows, this.cols, this.sz, this.gap);
 

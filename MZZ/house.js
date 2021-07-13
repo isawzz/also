@@ -1,3 +1,34 @@
+//new API
+function convertToGraphElements(g1,house) {
+	// let elements = { nodes: [], edges: [] };
+	let vertices = house.rooms.map(x => Items[x]);
+	let doors = [];
+	for (const v of vertices) {
+
+		v.center = getCenter(v.rect);
+		v.center.x+=v.rect.l-house.rect.l;
+		v.center.y+=v.rect.t-house.rect.t;
+
+		g1.addNode(v,v.center);
+		// elements.nodes.push({ data: v, position: v.center });
+		doors = union(doors, v.doors);
+	}
+
+	let centers = g1.getNodes().map(x=>x.data('center'));
+	g1.storePositions('prest',centers);
+	let edges = doors.map(x => Items[x]).filter(x => x.rooms.length == 2);
+	//console.log('edges in converter:',edges)
+	for (const e of edges) {
+		if (e.rooms.length < 2) continue;
+		e.source = e.rooms[0];
+		e.target = e.rooms[1];
+		g1.addEdge(e.source,e.target,e);
+		// elements.edges.push({ data: e });
+	}
+	//return elements;
+}
+
+
 //testing
 function makeNewLayout(g1) {
 	let nodes = g1.getNodes();
@@ -37,7 +68,7 @@ function storeRoomPositions(g1, house) {
 		di[id] = center;
 	}
 }
-function convertToGraphElements(house) {
+function convertToGraphElements_dep(g1,house) {
 	let elements = { nodes: [], edges: [] };
 	let vertices = house.rooms.map(x => Items[x]);
 	let doors = [];
