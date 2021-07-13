@@ -340,25 +340,40 @@ users:
       trials: 2
       showHint: no
     games:
-      gReversi:
-        searchDepth: 4
-      gTTT:
-        startPosition: empty
-        startPlayer: random
-        searchDepth: 5
-      gC4:
-        startPosition: empty
-        startPlayer: random
-        searchDepth: 4
       gAbacus:
         startLevel: 3
       gAnagram:
         startLevel: 5
+      gC4:
+        startPosition: empty
+        startPlayer: random
+        searchDepth: 4
       gCats:
         startLevel: 3
         trials: 2
+      gColoku:
+        startLevel: 2
       gElim:
         startLevel: 3
+      gHouse:
+        nTotal: 10
+        nCorrect: 10
+        nCorrect1: 10
+        startLevel: 7
+        percentage: 100
+      gKrieg:
+        nTotal: 1
+        nCorrect: 0
+        nCorrect1: 0
+        nWins: 0
+        nLoses: 1
+        percentage: 0
+      gMaze:
+        nTotal: 10
+        nCorrect: 3
+        nCorrect1: 3
+        startLevel: 4
+        percentage: 30
       gMem:
         startLevel: 5
         showHint: false
@@ -387,6 +402,8 @@ users:
         startLevel: 1
       gSteps:
         startLevel: 5
+      gReversi:
+        searchDepth: 4
       gRiddle:
         startLevel: 2
         nTotal: 1
@@ -399,27 +416,12 @@ users:
         startLevel: 4
       gTouchPic:
         startLevel: 5
+      gTTT:
+        startPosition: empty
+        startPlayer: random
+        searchDepth: 5
       gWritePic:
         startLevel: 5
-      gHouse:
-        nTotal: 10
-        nCorrect: 10
-        nCorrect1: 10
-        startLevel: 7
-        percentage: 100
-      gKrieg:
-        nTotal: 1
-        nCorrect: 0
-        nCorrect1: 0
-        nWins: 0
-        nLoses: 1
-        percentage: 0
-      gMaze:
-        nTotal: 10
-        nCorrect: 3
-        nCorrect1: 3
-        startLevel: 4
-        percentage: 30
     avAddons:
       - aPasscode
       - aAddress
