@@ -243,15 +243,18 @@ class GColoku extends Game {
 	prompt() {
 
 		this.trials = 1;
-		let [rows, cols] = [this.rows, this.cols];// = [4, 4];
-		this.dGrid = mGrid(rows, cols, dTable, { position: 'relative', w: 300, h: 300, gap: 10, bg: 'white' });
+		//let [rows, cols] = [this.rows, this.cols] = [6, 6];
+		let [rows, cols] = [this.rows, this.cols];// = [4, 4]; //
+		this.dGrid = mGrid(rows, cols, dTable, { position: 'relative', w: 400, h: 400, gap: 8, bg: 'white' });
 
-		let o = getSudokuPatternFromDB(4, 4, 1);
+		let o = getSudokuPatternFromDB(rows, cols);
 		//console.log('pattern', o.pattern, 'puzzle', o.puzzle);
 		let [pattern, minPuzzle] = [this.pattern, this.minPuzzle] = [o.pattern, o.puzzle];
 		// let pattern = this.pattern = getSudokuPattern(rows, cols);
-		//printMatrix(pattern, 'pattern');
-		//printMatrix(minPuzzle, 'puzzle');
+		//console.log('pattern',pattern)
+		printMatrix(pattern, 'pattern');
+		printMatrix(minPuzzle, 'puzzle');
+		//return;
 
 		mLinebreak(dTable, 20);
 		this.dChoices = mDiv(dTable);
@@ -268,8 +271,10 @@ class GColoku extends Game {
 	fillGrid(pattern) {
 		//fill grid w/ colored divs
 		let items = this.items = [];
-		let colors = this.colors = [RED, YELLOW, BLUE, GREEN];
 		let [rows, cols, dGrid] = [this.rows, this.cols, this.dGrid];
+		let colors = this.colors = rows == 4 ? [RED, YELLOW, BLUE, GREEN]
+			: rows == 6 ? [RED, YELLOW, BLUE, GREEN, PURPLE, ORANGE]
+				: [BLUEGREEN, PURPLE, ORANGE, RED, YELLOW, BLUE, GREEN, LIGHTBLUE, OLIVE];
 		shuffle(colors);
 		for (let r = 0; r < rows; r++) {
 			let arr = [];
@@ -287,17 +292,23 @@ class GColoku extends Game {
 		return items;
 	}
 	makeLines() {
-		let [wline, dGrid] = [2, this.dGrid];
+		let [wline, dGrid, sz] = [2, this.dGrid, this.rows];
 		let gSize = getSize(dGrid);
 		//console.log('size:', gSize);
-		let rh = makeRect((gSize.w - wline) / 2, 0, wline, gSize.h);
-		let rv = makeRect(0, (gSize.h - wline) / 2, gSize.w, wline);
+		let rh = sz != 9 ? makeRect((gSize.w - wline) / 2, 0, wline, gSize.h) : makeRect((gSize.w - wline) / 3, 0, wline, gSize.h);
+		let rv = sz == 4 ? makeRect(0, (gSize.h - wline) / 2, gSize.w, wline) : makeRect(0, (gSize.h - wline) / 3, gSize.w, wline);
+
+		//bei 4 und 6 nur 1 vertical line in der mitte, bei 9 2 davon!
 		let vLine = mDiv(dGrid, { bg: this.color, position: 'absolute', left: rh.l, top: rh.t, w: rh.w, h: rh.h });
+		if (sz == 9) vLine = mDiv(dGrid, { bg: this.color, position: 'absolute', left: rh.l * 2, top: rh.t, w: rh.w, h: rh.h });
+
+		//bei 4 nur 1 horizontal line in der mitte, bei 6 und 9 2 davon!
 		let hLine = mDiv(dGrid, { bg: this.color, position: 'absolute', left: rv.l, top: rv.t, w: rv.w, h: rv.h });
+		if (sz != 4) vLine = mDiv(dGrid, { bg: this.color, position: 'absolute', left: rv.l, top: 2 * rv.t, w: rv.w, h: rv.h });
 	}
 	setGoal(pattern) {
 		let err = checkSudokuRule(pattern);
-		let answer = (err == null); console.log('correct', answer);
+		let answer = (err == null); //console.log('correct', answer);
 		//if (err) console.log('err', err.type, '[' + err.row + ',' + err.col + ']');
 		//find the tile where the error really is!
 		Goal = { correct: answer, err: err };
@@ -365,7 +376,7 @@ class GColoku extends Game {
 		let sp = 'solve this coloku!'
 		showInstructionX(sp, dTitle, sp);
 
-		showFleetingMessage('rule: each color must be unique in every row, column and quadrant!', 15000);
+		//showFleetingMessage('rule: each color must be unique in every row, column and quadrant!', 15000);
 
 		//containers should be divs of empty (unset) puzzle
 		let itemlist = this.itemlist = arrFlatten(this.items);
@@ -672,11 +683,11 @@ class GHouse extends Game {
 		//#endregion
 
 		let innerStyles = { box: true, align: 'left', position: 'absolute', bg: '#ffffff80', top: 0, left: 0, w: r.w, h: r.h };
-		let g1 = this.graph = new UIGraph(dGraph, {edge: {bg:'blue'},outer:{ align:'left', w: wTotal, h: 400 },inner:innerStyles});//{ box: true, align: 'left', position: 'absolute', bg: '#ffffff80', top: 0, left: 0, w: r.w, h: r.h });
+		let g1 = this.graph = new UIGraph(dGraph, { edge: { bg: 'blue' }, outer: { align: 'left', w: wTotal, h: 400 }, inner: innerStyles });//{ box: true, align: 'left', position: 'absolute', bg: '#ffffff80', top: 0, left: 0, w: r.w, h: r.h });
 		// let els = convertToGraphElements(g1,house);
-		convertToGraphElements(g1,house);
-		console.log('nodes',g1.getNodeIds());
-		console.log('edges',g1.getEdgeIds());
+		convertToGraphElements(g1, house);
+		console.log('nodes', g1.getNodeIds());
+		console.log('edges', g1.getEdgeIds());
 
 		// g1.cy.elements=els; //, els, false); //Username != 'gul');
 		//console.log(g1.getNodeIds())
@@ -1000,7 +1011,6 @@ class GMissingLetter extends Game {
 			showInstruction('', wr, dTitle, true, wr);
 		}
 
-
 		mLinebreak(dTable, 20);
 
 		// create sequence of letter ui
@@ -1023,10 +1033,9 @@ class GMissingLetter extends Game {
 
 		mLinebreak(dTable);
 
-		if (this.instruction == 'all') {
-			let msg = this.composeFleetingMessage();
-			showFleetingMessage(msg, 3000);
-		}
+		let msg = this.composeFleetingMessage();
+		let ms = this.instruction == 'all' ? 3000 : this.instruction == 'spokenGoal' ? 9000 : 15000;
+		showFleetingMessage(msg, ms);
 		this.controller.activateUi.bind(this.controller)();
 
 	}

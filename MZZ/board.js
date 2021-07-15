@@ -1,45 +1,51 @@
 //#region sudoku utilities
-function arrToMatrix(arr,rows,cols){
-	let i=0,res=[];
+function arrToMatrix(arr, rows, cols) {
+	let i = 0, res = [];
 	for (let r = 0; r < rows; r++) {
 		let rarr = [];
 		for (let c = 0; c < cols; c++) {
-			let a = arr[i];i++;
+			let a = arr[i]; i++;
 			rarr.push(a);
 		}
 		res.push(rarr);
 	}
 	return res;
 }
-function sudokuSampleToIndexMatrix(s,rows,cols){
+function sudokuSampleToIndexMatrix(s, rows, cols) {
 	//all 0 entries => ' ', and all numbers>0 => 
-	if (isNumber(s)) s=String(s);
+	if (isNumber(s)) s = String(s);
 	let letters = toLetterArray(s);
 	//console.log('letters',letters);
-	let nums = letters.map(x=>Number(x));
-	let res=[];
-	for(const n of nums){
+	let nums = letters.map(x => Number(x));
+	//console.log('nums',nums);
+	let res = [];
+	for (const n of nums) {
 		if (n === 0) res.push(' ');
-		else res.push(n-1);
+		else res.push(n - 1);
 	}
 	//console.log('numbers',nums);
-	let matrix = arrToMatrix(res,rows,cols);
+	let matrix = arrToMatrix(res, rows, cols);
 	return matrix;
 }
-function stringToMatrix(s,rows,cols){
-	if (isNumber(s)) s=String(s);
+function stringToMatrix(s, rows, cols) {
+	if (isNumber(s)) s = String(s);
 	let letters = toLetterArray(s);
 	//console.log('letters',letters);
-	let nums = letters.map(x=>Number(x));
+	let nums = letters.map(x => Number(x));
 	//console.log('numbers',nums);
-	let matrix = arrToMatrix(nums,rows,cols);
+	let matrix = arrToMatrix(nums, rows, cols);
 }
-function getSudokuPatternFromDB(r,c,index=1){
-	let key=''+r+'x'+c;
-	let sample=DB.games.gColoku.samples[key][index];
-	let pattern=sudokuSampleToIndexMatrix(sample.sol,r,c);
-	let puzzle=sudokuSampleToIndexMatrix(sample.min,r,c);
-	return {pattern:pattern,puzzle:puzzle};
+function getSudokuPatternFromDB(r, c, index) {
+	let key = '' + r + 'x' + c;
+	let numSamples = Object.keys(DB.games.gColoku.samples[key]).length;
+	//console.log('r', r, 'c', c, numSamples)
+	if (nundef(index)) index = randomNumber(0, numSamples - 1); else if (index >= numSamples) index = 1;
+	let sample = DB.games.gColoku.samples[key][index];
+	//console.log('sample', sample, 'index', index, sample.sol, r, c)
+	let pattern = sudokuSampleToIndexMatrix(sample.sol, r, c);
+	//console.log('pattern',pattern);
+	let puzzle = sudokuSampleToIndexMatrix(sample.min, r, c);
+	return { pattern: pattern, puzzle: puzzle };
 }
 function getSudokuPattern(r, c) {
 	//mach das pattern es sollte 16 geben!
@@ -71,8 +77,8 @@ function destroySudokuRule(pattern, rows, cols) {
 	let [r1, r2] = choose(range(0, sz - 1), 2);
 	let c = chooseRandom(range(0, sz - 1));
 	// arrSwap2d(pattern, r1, c, r2, c);
-	
-	
+
+
 	//TEST arrSwap2d(pattern, 0, 3, 1, 3);return;
 
 	//generate row error
@@ -84,7 +90,7 @@ function destroySudokuRule(pattern, rows, cols) {
 }
 function hasDuplicate(arr, efunc) {
 	let di = {};
-	if (nundef(efunc)) efunc = x => {return x === ' '};
+	if (nundef(efunc)) efunc = x => { return x === ' ' };
 	let i = -1;
 	//console.log('check for dupl in',arr)
 	for (const a of arr) {
@@ -127,7 +133,10 @@ function checkSudokuRule(matrix) {
 	// let sub1=bGetSubMatrix(pattern,0,2,2,2);
 	// let sub2=bGetSubMatrix(pattern,2,2,0,2);
 	// let sub3=bGetSubMatrix(pattern,2,2,2,2);
-	let chunks = bGetChunksWithIndices(matrix, 2, 2);
+	let [rows, cols] = [matrix.length, matrix[0].length];
+	let rowsEach = rows==9?3:2;
+	let colsEach = cols==4?2:3;
+		let chunks = bGetChunksWithIndices(matrix, rowsEach, colsEach);
 	//printMatrix(chunks, 'quadrants');
 
 
@@ -248,6 +257,7 @@ function printMatrix(arr2d, title = 'result') {
 	let rows = arr2d.length;
 	let cols = arr2d[0].length;
 	let arr = arrFlatten(arr2d);
+	// console.log('arr', arr,rows,cols)
 	let s = toBoardString(arr, rows, cols);
 	//console.log(title, s)
 }
