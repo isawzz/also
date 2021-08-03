@@ -195,7 +195,9 @@ function mDiv(dParent, styles, id, inner, classes) {
 	return d;
 }
 function mDiv100(dParent, styles, id) { let d = mDiv(dParent, styles, id); mSize(d, 100, 100, '%'); return d; }
-function mDover(dParent) { let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d; }
+function mDover(dParent) {
+	let d = mDiv(dParent); mIfNotRelative(dParent); mStyleX(d, { position: 'absolute', w: '100%', h: '100%' }); return d;
+}
 //#region CLEANUP! edit inputs
 function unfocusOnEnter(ev) {
 	if (ev.key === 'Enter') {
@@ -360,13 +362,13 @@ function mFlex(d, or = 'h') {
 	// d.style.justifyContent = 'stretch';
 }
 function mGap(d, gap = 4) { mText('_', d, { fg: 'transparent', fz: gap, h: gap, w: '100%' }); }
-function mGrid(rows, cols, dParent, styles={}) {
+function mGrid(rows, cols, dParent, styles = {}) {
 	//styles.gap=valf(styles.gap,4);
 	let d = mDiv(dParent, styles);
 	d.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
 	d.style.gridTemplateRows = 'repeat(' + rows + ',1fr)';
 	d.style.display = 'inline-grid';
-	d.style.padding = valf(styles.padding,styles.gap) + 'px';
+	d.style.padding = valf(styles.padding, styles.gap) + 'px';
 	return d;
 }
 function mHasClass(el, className) {
